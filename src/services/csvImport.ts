@@ -1,0 +1,154 @@
+import Papa from 'papaparse';
+
+import type { WordList } from '../domain/wordList';
+import { containsChineseCharacters, toTaiwanTraditional } from './chineseConverter';
+import type { CsvColumn } from './csvFormat';
+import { CSV_COLUMNS, splitMeanings } from './csvFormat';
+import type { DictionaryEntry } from './dictionaryLookup';
+import { toNumberedPinyin } from './pinyin';
+
+/** Imported files are untrusted: these limits keep a bad file from freezing the phone. */
+export const MAX_CSV_BYTES = 5 * 1024 * 1024;
+export const MAX_CSV_ROWS = 10_000;
+const MAX_CELL_LENGTH = 500;
+
+export interface CsvWordRow {
+  rowNumber: number;
+  characters: string;
+  meanings: string[];
+  pinyin?: string;
+}
+
+export interface ParsedCsv {
+  rows: CsvWordRow[];
+  invalidRowNumbers: number[];
+}
+
+export class CsvTooLargeError extends Error {
+  constructor() {
+    super(`CSV files must be under ${MAX_CSV_BYTES / (1024 * 1024)} MB and ${MAX_CSV_ROWS} rows.`);
+  }
+}
+
+/** Maps header names to column positions; files without a header use the export order. */
+function columnPositions(firstRow: readonly string[]): {
+  positions: Record<CsvColumn, number>;
+  hasHeader: boolean;
+} {
+  const normalizedHeader = firstRow.map((cell) => cell.trim().toLowerCase());
+  const hasHeader = normalizedHeader.includes('character');
+  const positions = {} as Record<CsvColumn, number>;
+  CSV_COLUMNS.forEach((column, defaultPosition) => {
+    positions[column] = hasHeader ? normalizedHeader.indexOf(column) : defaultPosition;
+  });
+  return { positions, hasHeader };
+}
+
+/** Undoes the apostrophe that csvExport adds in front of formula-like cells. */
+const ESCAPED_FORMULA_CELL = /^'(?=[=+\-@])/;
+
+function cellAt(row: readonly string[], position: number): string {
+  if (position < 0) return '';
+  return (row[position] ?? '').trim().replace(ESCAPED_FORMULA_CELL, '').slice(0, MAX_CELL_LENGTH);
+}
+
+export function parseWordCsv(csvText: string, byteSize: number = csvText.length): ParsedCsv {
+  if (byteSize > MAX_CSV_BYTES) throw new CsvTooLargeError();
+  const { data } = Papa.parse<string[]>(csvText, { skipEmptyLines: 'greedy' });
+  if (data.length > MAX_CSV_ROWS + 1) throw new CsvTooLargeError();
+  if (data.length === 0) return { rows: [], invalidRowNumbers: [] };
+
+  const { positions, hasHeader } = columnPositions(data[0]);
+  const rows: CsvWordRow[] = [];
+  const invalidRowNumbers: number[] = [];
+  data.slice(hasHeader ? 1 : 0).forEach((row, index) => {
+    const rowNumber = index + (hasHeader ? 2 : 1);
+    const characters = cellAt(row, positions.character);
+    if (!containsChineseCharacters(characters)) {
+      invalidRowNumbers.push(rowNumber);
+      return;
+    }
+    const pinyin = cellAt(row, positions.pinyin);
+    rows.push({
+      rowNumber,
+      characters,
+      meanings: splitMeanings(cellAt(row, positions.meaning)),
+      pinyin: pinyin ? toNumberedPinyin(pinyin) : undefined,
+    });
+  });
+  return { rows, invalidRowNumbers };
+}
+
+export interface ImportWordDraft {
+  traditional: string;
+  simplified?: string;
+  pinyin: string;
+  definitions: string[];
+}
+
+export interface CsvImportPlan {
+  wordsToAdd: ImportWordDraft[];
+  /** Already in the list (or repeated in the file); CSV import never creates duplicates. */
+  skippedDuplicates: string[];
+  /** Not in the dictionary and no meaning given in the file. */
+  unknownCharacters: string[];
+  invalidRowNumbers: number[];
+}
+
+type LookUp = (traditional: string) => Promise<DictionaryEntry[]>;
+
+function chooseEntry(
+  entries: readonly DictionaryEntry[],
+  pinyin: string | undefined,
+): DictionaryEntry | undefined {
+  return entries.find((entry) => entry.pinyin.toLowerCase() === pinyin) ?? entries[0];
+}
+
+async function draftWord(
+  row: CsvWordRow,
+  targetList: WordList,
+  lookUp: LookUp,
+): Promise<ImportWordDraft | null> {
+  const traditional = toTaiwanTraditional(row.characters);
+  const hasEverything = row.meanings.length > 0 && row.pinyin;
+  const entry = hasEverything ? undefined : chooseEntry(await lookUp(traditional), row.pinyin);
+  const definitions =
+    row.meanings.length > 0
+      ? row.meanings
+      : targetList.selectDefaultMeanings(entry?.definitionCandidates ?? []);
+  if (definitions.length === 0) return null;
+  return {
+    traditional,
+    simplified: entry?.simplified,
+    pinyin: row.pinyin ?? entry?.pinyin ?? '',
+    definitions,
+  };
+}
+
+/** Works out what an import would do, so the user can review it before anything is saved. */
+export async function planCsvImport(
+  parsedCsv: ParsedCsv,
+  targetList: WordList,
+  charactersAlreadyInList: ReadonlySet<string>,
+  lookUp: LookUp,
+): Promise<CsvImportPlan> {
+  const plan: CsvImportPlan = {
+    wordsToAdd: [],
+    skippedDuplicates: [],
+    unknownCharacters: [],
+    invalidRowNumbers: [...parsedCsv.invalidRowNumbers],
+  };
+  const seenCharacters = new Set(charactersAlreadyInList);
+  for (const row of parsedCsv.rows) {
+    const traditional = toTaiwanTraditional(row.characters);
+    if (seenCharacters.has(traditional)) {
+      plan.skippedDuplicates.push(traditional);
+      continue;
+    }
+    seenCharacters.add(traditional);
+    const draft = await draftWord(row, targetList, lookUp);
+    if (draft) plan.wordsToAdd.push(draft);
+    else plan.unknownCharacters.push(traditional);
+  }
+  return plan;
+}

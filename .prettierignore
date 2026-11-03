@@ -1,0 +1,6 @@
+android
+ios
+node_modules
+assets
+src/services/generated
+docs/spec.md
