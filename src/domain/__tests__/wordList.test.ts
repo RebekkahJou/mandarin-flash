@@ -1,7 +1,7 @@
 import { GeneralWordList } from '../generalWordList';
 import { PartOfSpeech } from '../partOfSpeech';
 import { PartOfSpeechWordList } from '../partOfSpeechWordList';
-import { definitionsForEntry } from '../wordList';
+import { definitionsForEntry, haveSameMeanings } from '../wordList';
 import { makeWord } from './testWords';
 
 const candidates = [
@@ -63,5 +63,13 @@ describe('PartOfSpeechWordList', () => {
 
   it('does not warn about words the dictionary has no data for', () => {
     expect(verbList.validateWord([])).toBeNull();
+  });
+});
+
+describe('haveSameMeanings', () => {
+  it('compares meanings in order', () => {
+    expect(haveSameMeanings(['a', 'b'], ['a', 'b'])).toBe(true);
+    expect(haveSameMeanings(['a', 'b'], ['b', 'a'])).toBe(false);
+    expect(haveSameMeanings(['a'], ['a', 'b'])).toBe(false);
   });
 });

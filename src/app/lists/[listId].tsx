@@ -9,15 +9,21 @@ import { InfoModal } from '../../ui/components/InfoModal';
 import { MeaningsEditor } from '../../ui/components/MeaningsEditor';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
-import { WordEntryRow } from '../../ui/components/WordEntryRow';
+import { WordRow } from '../../ui/components/WordRow';
 import { useWordListDetail } from '../../ui/hooks/useWordListDetail';
 import { colors, fontSizes, spacing } from '../../ui/theme';
 
 export default function WordListScreen() {
   const { listId } = useLocalSearchParams<{ listId: string }>();
-  const { list, removeEntry, setEntryMeanings, exportCsv, importCsv } = useWordListDetail(
-    Number(listId),
-  );
+  const {
+    list,
+    mismatchedWordIds,
+    mismatchWarning,
+    removeEntry,
+    setEntryMeanings,
+    exportCsv,
+    importCsv,
+  } = useWordListDetail(Number(listId));
   const [editingEntry, setEditingEntry] = useState<WordListEntry | null>(null);
   const [editedMeanings, setEditedMeanings] = useState<string[]>([]);
 
@@ -43,16 +49,25 @@ export default function WordListScreen() {
           isDisabled={!list || list.length === 0}
         />
       </View>
+      {mismatchedWordIds.size > 0 && (
+        <Text style={styles.mismatchSummary}>
+          {mismatchedWordIds.size === 1 ? '1 word' : `${mismatchedWordIds.size} words`} highlighted
+          below may not belong here. Tap ✕ to remove one, or tap the word to edit its meanings.
+        </Text>
+      )}
       <FlatList
         data={list?.words ?? []}
         keyExtractor={(entry) => String(entry.entryId)}
         contentContainerStyle={styles.entries}
         ListEmptyComponent={<Text style={styles.empty}>No words in this list yet.</Text>}
         renderItem={({ item }) => (
-          <WordEntryRow
-            entry={item}
-            onEditMeanings={() => startEditing(item)}
+          <WordRow
+            word={item.word}
+            meanings={definitionsForEntry(item)}
+            onPress={() => startEditing(item)}
+            pressHint="Edit meanings in this list"
             onRemove={() => removeEntry(item.entryId, item.word.traditional)}
+            warning={mismatchedWordIds.has(item.word.id) ? mismatchWarning : undefined}
           />
         )}
       />
@@ -78,6 +93,10 @@ const styles = StyleSheet.create({
   entries: {
     gap: spacing.small,
     paddingBottom: spacing.large,
+  },
+  mismatchSummary: {
+    fontSize: fontSizes.small,
+    color: colors.warning,
   },
   empty: {
     fontSize: fontSizes.body,

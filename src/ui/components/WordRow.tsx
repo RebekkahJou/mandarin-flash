@@ -1,50 +1,67 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import type { WordListEntry } from '../../domain/wordList';
-import { definitionsForEntry } from '../../domain/wordList';
-import { FrequencyTier } from '../../domain/frequencyTier';
+import type { Word } from '../../domain/word';
+import { FREQUENCY_TIER_LABELS } from '../frequencyTierLabels';
 import { ENGLISH_FONT_FAMILY, colors, fontSizes, radii, spacing } from '../theme';
 import { ChineseText } from './ChineseText';
 import { PhoneticText } from './PhoneticText';
 
-const TIER_LABELS: Readonly<Record<FrequencyTier, string>> = {
-  [FrequencyTier.HighIncidence]: 'High incidence',
-  [FrequencyTier.MemoryReinforcement]: 'Reinforcement',
-  [FrequencyTier.Retention]: 'Retention',
-};
-
-interface WordEntryRowProps {
-  entry: WordListEntry;
-  onEditMeanings: () => void;
-  onRemove: () => void;
+interface WordRowProps {
+  word: Word;
+  /** The meanings to show, which may be a list's own meanings rather than the word's. */
+  meanings: readonly string[];
+  onPress: () => void;
+  pressHint: string;
+  /** Extra line under the tier, e.g. the lists the word is in. */
+  detail?: string;
+  /** Shows a remove button when set. */
+  onRemove?: () => void;
+  /** Highlights the row and explains why, e.g. a noun in the Verbs list. */
+  warning?: string;
 }
 
-export function WordEntryRow({ entry, onEditMeanings, onRemove }: WordEntryRowProps) {
+export function WordRow({
+  word,
+  meanings,
+  onPress,
+  pressHint,
+  detail,
+  onRemove,
+  warning,
+}: WordRowProps) {
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, warning !== undefined && styles.warningRow]}>
       <Pressable
         style={styles.details}
-        onPress={onEditMeanings}
+        onPress={onPress}
         accessibilityRole="button"
-        accessibilityHint="Edit meanings in this list"
+        accessibilityHint={pressHint}
       >
-        <ChineseText text={entry.word.traditional} style={styles.character} />
+        <ChineseText text={word.traditional} style={styles.character} />
         <View style={styles.text}>
-          <PhoneticText numberedPinyin={entry.word.pinyin} style={styles.phonetic} />
+          <PhoneticText numberedPinyin={word.pinyin} style={styles.phonetic} />
           <Text style={styles.meanings} numberOfLines={2}>
-            {definitionsForEntry(entry).join('; ')}
+            {meanings.join('; ')}
           </Text>
-          <Text style={styles.tier}>{TIER_LABELS[entry.word.frequencyTier]}</Text>
+          <Text style={styles.secondary}>{FREQUENCY_TIER_LABELS[word.frequencyTier]}</Text>
+          {warning !== undefined && <Text style={styles.warning}>⚠ {warning}</Text>}
+          {detail !== undefined && (
+            <Text style={styles.secondary} numberOfLines={2}>
+              {detail}
+            </Text>
+          )}
         </View>
       </Pressable>
-      <Pressable
-        onPress={onRemove}
-        accessibilityRole="button"
-        accessibilityLabel={`Remove ${entry.word.traditional}`}
-        hitSlop={spacing.small}
-      >
-        <Text style={styles.remove}>✕</Text>
-      </Pressable>
+      {onRemove && (
+        <Pressable
+          onPress={onRemove}
+          accessibilityRole="button"
+          accessibilityLabel={`Remove ${word.traditional}`}
+          hitSlop={spacing.small}
+        >
+          <Text style={styles.remove}>✕</Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -59,6 +76,17 @@ const styles = StyleSheet.create({
     borderRadius: radii.medium,
     padding: spacing.medium,
     gap: spacing.medium,
+  },
+  warningRow: {
+    borderColor: colors.warning,
+    borderWidth: 2,
+    backgroundColor: colors.warningSurface,
+  },
+  warning: {
+    fontFamily: ENGLISH_FONT_FAMILY,
+    fontSize: fontSizes.small,
+    fontWeight: '600',
+    color: colors.warning,
   },
   details: {
     flex: 1,
@@ -83,7 +111,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.small,
     color: colors.textPrimary,
   },
-  tier: {
+  secondary: {
     fontFamily: ENGLISH_FONT_FAMILY,
     fontSize: fontSizes.small,
     color: colors.textSecondary,

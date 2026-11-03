@@ -79,3 +79,9 @@ export function definitionsForEntry(entry: WordListEntry): string[] {
 export function firstMeanings(candidates: readonly DefinitionCandidate[]): string[] {
   return candidates.slice(0, DEFAULT_MEANING_COUNT).map((candidate) => candidate.text);
 }
+
+export function haveSameMeanings(first: readonly string[], second: readonly string[]): boolean {
+  return (
+    first.length === second.length && first.every((meaning, index) => meaning === second[index])
+  );
+}

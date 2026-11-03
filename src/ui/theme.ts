@@ -11,6 +11,8 @@ export const colors = {
   gotten: '#15803D',
   learned: '#1D4ED8',
   disabled: '#BDB6AC',
+  warning: '#B45309',
+  warningSurface: '#FFF7ED',
   overlay: 'rgba(0, 0, 0, 0.4)',
 } as const;
 

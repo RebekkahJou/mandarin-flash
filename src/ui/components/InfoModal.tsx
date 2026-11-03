@@ -9,13 +9,21 @@ interface InfoModalProps {
   onClose: () => void;
   children: ReactNode;
   closeLabel?: string;
+  /** Tapping outside or pressing Back; defaults to onClose. Set it when closing has a side effect. */
+  onDismiss?: () => void;
 }
 
 /** A centered card over a dimmed background; tapping outside closes it. */
-export function InfoModal({ isVisible, onClose, children, closeLabel = 'Close' }: InfoModalProps) {
+export function InfoModal({
+  isVisible,
+  onClose,
+  children,
+  closeLabel = 'Close',
+  onDismiss = onClose,
+}: InfoModalProps) {
   return (
-    <Modal visible={isVisible} transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable style={styles.overlay} onPress={onClose} accessibilityLabel="Close">
+    <Modal visible={isVisible} transparent animationType="fade" onRequestClose={onDismiss}>
+      <Pressable style={styles.overlay} onPress={onDismiss} accessibilityLabel="Close">
         <Pressable style={styles.card} onPress={() => undefined}>
           {children}
           <View style={styles.footer}>

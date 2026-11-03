@@ -1,6 +1,7 @@
 import type { PartOfSpeech } from '../domain/partOfSpeech';
 import type { DefinitionCandidate } from '../domain/word';
 import type { WordList } from '../domain/wordList';
+import { haveSameMeanings } from '../domain/wordList';
 
 export enum AdditionWarningKind {
   AlreadyInList = 'already_in_list',
@@ -30,12 +31,6 @@ export interface WordAdditionRequest {
   definitionCandidates: readonly DefinitionCandidate[];
   wordPartsOfSpeech: readonly PartOfSpeech[];
   listIdsAlreadyContainingWord: ReadonlySet<number>;
-}
-
-function haveSameMeanings(first: readonly string[], second: readonly string[]): boolean {
-  return (
-    first.length === second.length && first.every((meaning, index) => meaning === second[index])
-  );
 }
 
 /**

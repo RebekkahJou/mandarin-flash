@@ -91,6 +91,22 @@ export function createWordListRepository(database: SqlDatabase) {
   }
 
   /** Changes a meaning in this list only; other lists keep the word's own definitions. */
+  async function listIdsContainingWord(wordId: number): Promise<number[]> {
+    const rows = await database.getAll<{ word_list_id: number }>(
+      'SELECT DISTINCT word_list_id FROM word_list_entries WHERE word_id = ?',
+      [wordId],
+    );
+    return rows.map((row) => row.word_list_id);
+  }
+
+  /** Removes every entry of the word in that list, including duplicates. The word itself stays. */
+  async function removeWordFromList(wordId: number, wordListId: number): Promise<void> {
+    await database.run('DELETE FROM word_list_entries WHERE word_id = ? AND word_list_id = ?', [
+      wordId,
+      wordListId,
+    ]);
+  }
+
   async function setEntryDefinitions(
     entryId: number,
     definitions: readonly string[] | null,
@@ -108,6 +124,8 @@ export function createWordListRepository(database: SqlDatabase) {
     charactersInList,
     addWordToLists,
     removeEntry,
+    listIdsContainingWord,
+    removeWordFromList,
     setEntryDefinitions,
   };
 }

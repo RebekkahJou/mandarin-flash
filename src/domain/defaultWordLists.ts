@@ -1,4 +1,5 @@
 import { PartOfSpeech } from './partOfSpeech';
+import type { WordList } from './wordList';
 
 export interface DefaultWordListDefinition {
   name: string;
@@ -16,3 +17,9 @@ export const DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [
   { name: 'Adjectives', partOfSpeech: PartOfSpeech.Adjective },
   { name: 'Phrases' },
 ];
+
+/** New words go to General Vocabulary unless the user picks other lists. */
+export function defaultListIdsForNewWords(lists: readonly WordList[]): Set<number> {
+  const generalList = lists.find((list) => list.name === GENERAL_VOCABULARY_LIST_NAME);
+  return new Set(generalList ? [generalList.id] : []);
+}

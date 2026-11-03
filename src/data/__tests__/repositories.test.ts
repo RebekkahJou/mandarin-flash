@@ -124,6 +124,57 @@ describe('user database', () => {
     expect(phrases?.words[0].definitionsOverride).toBeUndefined();
   });
 
+  it('lists every word with each of its lists once, including words in no list', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const walk = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    const good = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      traditional: '好',
+      pinyin: 'hao3',
+      definitions: ['good'],
+    });
+    await wordListRepository.addWordToLists(walk.id, [
+      { wordListId: listIdByName('Verbs') },
+      { wordListId: listIdByName('Verbs') },
+      { wordListId: listIdByName('General Vocabulary') },
+    ]);
+
+    const words = await wordRepository.listWordsWithListIds(profile.id);
+    const listIdsByCharacter = Object.fromEntries(
+      words.map(({ word, listIds }) => [word.traditional, [...listIds].sort()]),
+    );
+    expect(listIdsByCharacter).toEqual({
+      走: [listIdByName('General Vocabulary'), listIdByName('Verbs')].sort(),
+      好: [],
+    });
+    expect(await wordRepository.countWords(profile.id)).toBe(2);
+    expect(words.find(({ word }) => word.id === good.id)?.word.definitions).toEqual(['good']);
+  });
+
+  it('sets a word tier directly', async () => {
+    const { profile, wordRepository } = await setUp();
+    const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    await wordRepository.setFrequencyTier(word.id, FrequencyTier.Retention);
+    expect((await wordRepository.getWord(word.id))?.frequencyTier).toBe(FrequencyTier.Retention);
+  });
+
+  it('removes a word from one list, duplicates included, and keeps the word', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    await wordListRepository.addWordToLists(word.id, [
+      { wordListId: listIdByName('Verbs') },
+      { wordListId: listIdByName('Verbs') },
+      { wordListId: listIdByName('Phrases') },
+    ]);
+
+    await wordListRepository.removeWordFromList(word.id, listIdByName('Verbs'));
+
+    expect(await wordListRepository.listIdsContainingWord(word.id)).toEqual([
+      listIdByName('Phrases'),
+    ]);
+    expect(await wordRepository.getWord(word.id)).not.toBeNull();
+  });
+
   it('removes an entry and recalculates length', async () => {
     const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
     const generalListId = listIdByName('General Vocabulary');
