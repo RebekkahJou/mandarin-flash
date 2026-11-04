@@ -1,38 +1,34 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 
-import type { WordList } from '../../domain/wordList';
+import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
+import type { WordList, WordListEntry } from '../../domain/wordList';
+import { definitionsOverrideFor } from '../../domain/wordList';
 import { buildWordListCsv, csvFileNameForList } from '../../services/csvExport';
-import type { CsvImportPlan } from '../../services/csvImport';
-import { CsvTooLargeError, parseWordCsv, planCsvImport } from '../../services/csvImport';
+import { findPartOfSpeechMismatches } from '../../services/partOfSpeechCheck';
 import { useAppServices } from '../AppServicesContext';
-import { confirm, showMessage } from '../confirm';
-import { pickCsvFile, shareCsvFile } from '../csvFiles';
-
-function describeImportPlan(plan: CsvImportPlan): string {
-  const lines = [`${plan.wordsToAdd.length} new words will be added.`];
-  if (plan.skippedDuplicates.length > 0) {
-    lines.push(`${plan.skippedDuplicates.length} already in the list (skipped).`);
-  }
-  if (plan.unknownCharacters.length > 0) {
-    lines.push(
-      `${plan.unknownCharacters.length} not found and had no meaning: ${plan.unknownCharacters.join(', ')}`,
-    );
-  }
-  if (plan.invalidRowNumbers.length > 0) {
-    lines.push(`Rows without Chinese characters (skipped): ${plan.invalidRowNumbers.join(', ')}`);
-  }
-  return lines.join('\n');
-}
+import { confirm } from '../confirm';
+import { shareCsvFile } from '../csvFiles';
+import { CsvImportResult, useCsvImport } from './useCsvImport';
 
 /** Loads one word list and handles removing words, editing meanings and CSV import/export. */
 export function useWordListDetail(wordListId: number) {
-  const { profileId, wordListRepository, wordRepository, dictionaryLookup } = useAppServices();
+  const { wordListRepository, dictionaryLookup } = useAppServices();
+  const importCsvIntoLists = useCsvImport();
   const [list, setList] = useState<WordList | null>(null);
+  const [mismatchedWordIds, setMismatchedWordIds] = useState<ReadonlySet<number>>(new Set());
 
   const reload = useCallback(async () => {
-    setList(await wordListRepository.getListWithEntries(wordListId));
-  }, [wordListId, wordListRepository]);
+    const loadedList = await wordListRepository.getListWithEntries(wordListId);
+    setList(loadedList);
+    if (loadedList) {
+      setMismatchedWordIds(await findPartOfSpeechMismatches(loadedList, dictionaryLookup.lookUp));
+    }
+  }, [wordListId, wordListRepository, dictionaryLookup]);
+
+  // Shown on highlighted rows in Nouns, Verbs and Adjectives.
+  const mismatchWarning =
+    list instanceof PartOfSpeechWordList ? `No ${list.partOfSpeech} meaning` : undefined;
 
   useFocusEffect(
     useCallback(() => {
@@ -51,8 +47,11 @@ export function useWordListDetail(wordListId: number) {
     await reload();
   };
 
-  const setEntryMeanings = async (entryId: number, meanings: string[]) => {
-    await wordListRepository.setEntryDefinitions(entryId, meanings.length > 0 ? meanings : null);
+  const setEntryMeanings = async (entry: WordListEntry, meanings: string[]) => {
+    await wordListRepository.setEntryDefinitions(
+      entry.entryId,
+      definitionsOverrideFor(entry.word, meanings),
+    );
     await reload();
   };
 
@@ -63,28 +62,17 @@ export function useWordListDetail(wordListId: number) {
 
   const importCsv = async () => {
     if (!list) return;
-    const picked = await pickCsvFile();
-    if (!picked) return;
-    try {
-      const parsed = parseWordCsv(picked.text, picked.byteSize);
-      const charactersInList = await wordListRepository.charactersInList(list.id);
-      const plan = await planCsvImport(parsed, list, charactersInList, dictionaryLookup.lookUp);
-      if (plan.wordsToAdd.length === 0) {
-        showMessage('Nothing to import', describeImportPlan(plan));
-        return;
-      }
-      if (!(await confirm('Import words?', describeImportPlan(plan), 'Import'))) return;
-      for (const draft of plan.wordsToAdd) {
-        const word = await wordRepository.findOrCreateWord({ profileId, ...draft });
-        await wordListRepository.addWordToLists(word.id, [{ wordListId: list.id }]);
-      }
-      await reload();
-    } catch (error) {
-      const message =
-        error instanceof CsvTooLargeError ? error.message : 'This file could not be read as a CSV.';
-      showMessage('Import failed', message);
-    }
+    if ((await importCsvIntoLists([list])) === CsvImportResult.Imported) await reload();
   };
 
-  return { list, removeEntry, setEntryMeanings, exportCsv, importCsv };
+  return {
+    list,
+    reload,
+    mismatchedWordIds,
+    mismatchWarning,
+    removeEntry,
+    setEntryMeanings,
+    exportCsv,
+    importCsv,
+  };
 }

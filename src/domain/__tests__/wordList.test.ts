@@ -1,7 +1,7 @@
 import { GeneralWordList } from '../generalWordList';
 import { PartOfSpeech } from '../partOfSpeech';
 import { PartOfSpeechWordList } from '../partOfSpeechWordList';
-import { definitionsForEntry } from '../wordList';
+import { definitionsForEntry, definitionsOverrideFor, haveSameMeanings } from '../wordList';
 import { makeWord } from './testWords';
 
 const candidates = [
@@ -63,5 +63,26 @@ describe('PartOfSpeechWordList', () => {
 
   it('does not warn about words the dictionary has no data for', () => {
     expect(verbList.validateWord([])).toBeNull();
+  });
+});
+
+describe('haveSameMeanings', () => {
+  it('compares meanings in order', () => {
+    expect(haveSameMeanings(['a', 'b'], ['a', 'b'])).toBe(true);
+    expect(haveSameMeanings(['a', 'b'], ['b', 'a'])).toBe(false);
+    expect(haveSameMeanings(['a'], ['a', 'b'])).toBe(false);
+  });
+});
+
+describe('definitionsOverrideFor', () => {
+  const word = makeWord(1, { definitions: ['thank you'] });
+
+  it('stores nothing when the list meanings match the word or are empty', () => {
+    expect(definitionsOverrideFor(word, ['thank you'])).toBeNull();
+    expect(definitionsOverrideFor(word, [])).toBeNull();
+  });
+
+  it('stores the list meanings when they differ', () => {
+    expect(definitionsOverrideFor(word, ['thanks'])).toEqual(['thanks']);
   });
 });

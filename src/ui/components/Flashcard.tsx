@@ -29,63 +29,88 @@ export function Flashcard({ word, definitions, font, isRevealed, onReveal }: Fla
     [...word.traditional].length <= SINGLE_CHARACTER_LENGTH
       ? fontSizes.flashcardCharacter
       : fontSizes.flashcardPhrase;
+  const characterStyle = { ...styles.character, fontSize: characterSize };
+  const simplifiedText = word.simplified ?? '';
+  const revealHint = isRevealed ? undefined : 'Reveals pronunciation and meaning';
+  const simplifiedForm = simplifiedIndicator(
+    hasSimplifiedForm,
+    simplifiedDisplay,
+    simplifiedText,
+    () => setIsSimplifiedModalVisible(true),
+  );
+  const answer = isRevealed ? (
+    <>
+      <PhoneticText numberedPinyin={word.pinyin} style={styles.phonetic} />
+      {definitions.map((definition) => (
+        <Text key={definition} style={styles.definition}>
+          {definition}
+        </Text>
+      ))}
+    </>
+  ) : (
+    <Text style={styles.hint}>Tap to reveal</Text>
+  );
 
   return (
     <Pressable
       style={styles.card}
       onPress={onReveal}
       accessibilityRole="button"
-      accessibilityHint={isRevealed ? undefined : 'Reveals pronunciation and meaning'}
+      accessibilityHint={revealHint}
     >
-      {hasSimplifiedForm && simplifiedDisplay === SimplifiedDisplay.CornerBadge && (
-        <Text style={styles.simplifiedBadge} accessibilityLabel={`Simplified: ${word.simplified}`}>
-          简 {word.simplified}
-        </Text>
-      )}
-      {hasSimplifiedForm && simplifiedDisplay === SimplifiedDisplay.ModalButton && (
-        <Pressable
-          style={styles.simplifiedButton}
-          onPress={() => setIsSimplifiedModalVisible(true)}
-          accessibilityRole="button"
-          accessibilityLabel="Show simplified form"
-        >
-          <Text style={styles.simplifiedButtonLabel}>简</Text>
-        </Pressable>
-      )}
+      {simplifiedForm}
 
-      <ChineseText
-        text={word.traditional}
-        font={font}
-        style={{ fontSize: characterSize, color: colors.textPrimary, textAlign: 'center' }}
-      />
+      <ChineseText text={word.traditional} font={font} style={characterStyle} />
 
-      <View style={styles.answer}>
-        {isRevealed ? (
-          <>
-            <PhoneticText numberedPinyin={word.pinyin} style={styles.phonetic} />
-            {definitions.map((definition) => (
-              <Text key={definition} style={styles.definition}>
-                {definition}
-              </Text>
-            ))}
-          </>
-        ) : (
-          <Text style={styles.hint}>Tap to reveal</Text>
-        )}
-      </View>
+      <View style={styles.answer}>{answer}</View>
 
       <InfoModal
         isVisible={isSimplifiedModalVisible}
         onClose={() => setIsSimplifiedModalVisible(false)}
       >
         <Text style={styles.modalLabel}>Simplified</Text>
-        <ChineseText text={word.simplified ?? ''} style={styles.modalCharacter} />
+        <ChineseText text={simplifiedText} style={styles.modalCharacter} />
       </InfoModal>
     </Pressable>
   );
 }
 
+/** The corner badge or the button that opens the Simplified modal, depending on Settings. */
+function simplifiedIndicator(
+  hasSimplifiedForm: boolean,
+  simplifiedDisplay: SimplifiedDisplay,
+  simplifiedText: string,
+  onShowModal: () => void,
+) {
+  if (!hasSimplifiedForm) return null;
+  if (simplifiedDisplay === SimplifiedDisplay.CornerBadge) {
+    const badgeLabel = `Simplified: ${simplifiedText}`;
+    return (
+      <Text style={styles.simplifiedBadge} accessibilityLabel={badgeLabel}>
+        简 {simplifiedText}
+      </Text>
+    );
+  }
+  if (simplifiedDisplay === SimplifiedDisplay.ModalButton) {
+    return (
+      <Pressable
+        style={styles.simplifiedButton}
+        onPress={onShowModal}
+        accessibilityRole="button"
+        accessibilityLabel="Show simplified form"
+      >
+        <Text style={styles.simplifiedButtonLabel}>简</Text>
+      </Pressable>
+    );
+  }
+  return null;
+}
+
 const styles = StyleSheet.create({
+  character: {
+    color: colors.textPrimary,
+    textAlign: 'center',
+  },
   card: {
     flex: 1,
     backgroundColor: colors.surface,
@@ -104,7 +129,7 @@ const styles = StyleSheet.create({
   },
   phonetic: {
     fontSize: fontSizes.heading,
-    color: colors.primary,
+    color: colors.phonetic,
   },
   definition: {
     fontFamily: ENGLISH_FONT_FAMILY,

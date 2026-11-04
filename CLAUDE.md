@@ -44,6 +44,23 @@ The spec lives in docs/spec.md. Read it before adding features.
 - Search src/ui/components and src/services before creating anything new. Extend rather than duplicate.
 - Components are presentational and take props. No direct DB access inside components.
 - Share styling through the theme tokens in src/ui/theme.ts. No inline hex colors.
+- Tappable things use cerulean (`colors.primary`) with white text. Never put text on an orange
+  background: orange (`colors.accent`) is only for highlights, decorations, art and icons. Where
+  orange is itself text or a thin line, use `colors.accentStrong`.
+- Text color pairings must meet WCAG AA contrast (4.5:1).
+- Smoky rose (#825E64) and deep teal (#3F5F57) look almost identical with protanopia and
+  achromatopsia. Never pair them where the user has to tell them apart to use the app (e.g.
+  side-by-side buttons, status colors, legends). If two meanings need different colors,
+  also differ them by label, icon or lightness, and don't use color alone.
+
+## JSX markup
+- No ternaries in JSX markup (the returned elements and their props). This covers conditional
+  rendering (`{isX ? <A /> : <B />}`, `{isX && <A />}`) and conditional props or styles.
+- No other code evaluation inside the markup either: string building, `.join()`, arithmetic,
+  comparisons and function calls that compute a value.
+- Do that logic in the component body (or a hook), assign it to a well-named variable or element
+  (`const mismatchSummary = hasMismatches ? <Text>…</Text> : null;`) and render the variable.
+- Allowed in markup: plain variables and props, event handlers, and `.map()` to render a list.
 
 ## Data model rules
 - A word's frequency tier is stored once, on the `words` row. Lists only reference words, so a tier

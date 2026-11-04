@@ -1,7 +1,15 @@
 import { GeneralWordList } from '../../domain/generalWordList';
+import { PartOfSpeech } from '../../domain/partOfSpeech';
+import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { makeWord } from '../../domain/__tests__/testWords';
 import { buildWordListCsv, csvFileNameForList, escapeFormulaCell } from '../csvExport';
-import { CsvTooLargeError, MAX_CSV_BYTES, parseWordCsv, planCsvImport } from '../csvImport';
+import {
+  CsvTooLargeError,
+  MAX_CSV_BYTES,
+  describeImportPlans,
+  parseWordCsv,
+  planCsvImport,
+} from '../csvImport';
 import type { DictionaryEntry } from '../dictionaryLookup';
 
 const generalList = new GeneralWordList({ id: 1, profileId: 1, name: 'General Vocabulary' });
@@ -61,6 +69,51 @@ describe('planCsvImport', () => {
     const plan = await planCsvImport(parseWordCsv('character\n㐀'), generalList, new Set(), lookUp);
     expect(plan.unknownCharacters).toEqual(['㐀']);
     expect(plan.wordsToAdd).toHaveLength(0);
+  });
+});
+
+describe('describeImportPlans', () => {
+  it('summarizes each list once and the shared problems once', async () => {
+    const parsed = parseWordCsv('character\nhello\n軟體\n學生\n㐀');
+    const generalPlan = await planCsvImport(parsed, generalList, new Set(), lookUp);
+    const focusPlan = await planCsvImport(parsed, generalList, new Set(['軟體']), lookUp);
+    expect(
+      describeImportPlans([
+        { listName: 'General Vocabulary', plan: generalPlan },
+        { listName: 'Focus Vocabulary', plan: focusPlan },
+      ]).split('\n'),
+    ).toEqual([
+      'General Vocabulary: 1 word to add.',
+      'Focus Vocabulary: 0 words to add, 1 already there (skipped).',
+      '2 not found and had no meaning: 學生, 㐀',
+      'Rows without Chinese characters (skipped): 2',
+    ]);
+  });
+});
+
+describe('part-of-speech mismatches', () => {
+  const verbs = new PartOfSpeechWordList({
+    id: 3,
+    profileId: 1,
+    name: 'Verbs',
+    partOfSpeech: PartOfSpeech.Verb,
+  });
+
+  it('flags words with no meaning of the list type, even when the file has every column', async () => {
+    const parsed = parseWordCsv('character,meaning,pinyin\n軟體,software,ruan3 ti3\n㐀,odd,qiu1');
+    const plan = await planCsvImport(parsed, verbs, new Set(), lookUp);
+    expect(plan.wordsToAdd.map((draft) => draft.traditional)).toEqual(['軟體', '㐀']);
+    // 㐀 is not in the dictionary, so it can't be judged and isn't flagged.
+    expect(plan.partOfSpeechMismatches).toEqual(['軟體']);
+    expect(describeImportPlans([{ listName: 'Verbs', plan }]).split('\n')).toEqual([
+      'Verbs: 2 words to add.',
+      '  Not a usual fit for Verbs: 軟體',
+    ]);
+  });
+
+  it('never flags words for general lists', async () => {
+    const plan = await planCsvImport(parseWordCsv('軟體'), generalList, new Set(), lookUp);
+    expect(plan.partOfSpeechMismatches).toEqual([]);
   });
 });
 

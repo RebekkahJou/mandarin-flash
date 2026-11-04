@@ -35,6 +35,57 @@ export default function AddWordScreen() {
   const saveWord = async () => {
     if ((await addWord.save()) === SaveWordResult.Saved) router.back();
   };
+  const lookUpInput = () => addWord.lookUpCharacters(characterInput);
+
+  const selectedReading = addWord.readings[addWord.selectedReadingIndex];
+  const readingChooser =
+    addWord.readings.length > 1 ? (
+      <ChoiceChips
+        choices={readingChoices}
+        selectedValue={addWord.selectedReadingIndex}
+        onSelect={addWord.selectReading}
+      />
+    ) : null;
+  const pronunciation = selectedReading ? (
+    <PhoneticText numberedPinyin={selectedReading.pinyin} style={styles.phonetic} />
+  ) : (
+    <>
+      <Text style={styles.hint}>
+        Not in the dictionary. Enter the pinyin (tone marks or numbers) and a meaning.
+      </Text>
+      <TextInput
+        value={addWord.manualPinyin}
+        onChangeText={addWord.setManualPinyin}
+        placeholder="e.g. xué shēng or xue2 sheng1"
+        placeholderTextColor={colors.textSecondary}
+        style={styles.textInput}
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+    </>
+  );
+  const listsLabel = selectedListNames || 'No list selected';
+  const wordDetails = hasLookedUp ? (
+    <>
+      <ChineseText text={addWord.traditional} style={styles.preview} />
+      {readingChooser}
+      {pronunciation}
+
+      <SectionTitle title="Meanings" />
+      <MeaningsEditor meanings={addWord.meanings} onChange={addWord.setMeanings} />
+
+      <SectionTitle title="Lists" />
+      <Text style={styles.hint}>{listsLabel}</Text>
+      <View style={styles.buttonRow}>
+        <PrimaryButton
+          label="Choose lists"
+          onPress={() => setIsListPickerVisible(true)}
+          isOutlined
+        />
+        <PrimaryButton label="Save word" onPress={saveWord} />
+      </View>
+    </>
+  ) : null;
 
   return (
     <ScreenContainer isScrollable>
@@ -42,8 +93,8 @@ export default function AddWordScreen() {
       <TextInput
         value={characterInput}
         onChangeText={setCharacterInput}
-        onSubmitEditing={() => addWord.lookUpCharacters(characterInput)}
-        onBlur={() => addWord.lookUpCharacters(characterInput)}
+        onSubmitEditing={lookUpInput}
+        onBlur={lookUpInput}
         placeholder="e.g. 學生 or 学生"
         placeholderTextColor={colors.textSecondary}
         style={styles.characterInput}
@@ -51,53 +102,7 @@ export default function AddWordScreen() {
         returnKeyType="search"
       />
 
-      {hasLookedUp && (
-        <>
-          <ChineseText text={addWord.traditional} style={styles.preview} />
-          {addWord.readings.length > 1 && (
-            <ChoiceChips
-              choices={readingChoices}
-              selectedValue={addWord.selectedReadingIndex}
-              onSelect={addWord.selectReading}
-            />
-          )}
-          {addWord.readings.length > 0 ? (
-            <PhoneticText
-              numberedPinyin={addWord.readings[addWord.selectedReadingIndex].pinyin}
-              style={styles.phonetic}
-            />
-          ) : (
-            <>
-              <Text style={styles.hint}>
-                Not in the dictionary. Enter the pinyin (tone marks or numbers) and a meaning.
-              </Text>
-              <TextInput
-                value={addWord.manualPinyin}
-                onChangeText={addWord.setManualPinyin}
-                placeholder="e.g. xué shēng or xue2 sheng1"
-                placeholderTextColor={colors.textSecondary}
-                style={styles.textInput}
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </>
-          )}
-
-          <SectionTitle title="Meanings" />
-          <MeaningsEditor meanings={addWord.meanings} onChange={addWord.setMeanings} />
-
-          <SectionTitle title="Lists" />
-          <Text style={styles.hint}>{selectedListNames || 'No list selected'}</Text>
-          <View style={styles.buttonRow}>
-            <PrimaryButton
-              label="Choose lists"
-              onPress={() => setIsListPickerVisible(true)}
-              isOutlined
-            />
-            <PrimaryButton label="Save word" onPress={saveWord} />
-          </View>
-        </>
-      )}
+      {wordDetails}
 
       <ListPickerModal
         isVisible={isListPickerVisible}
@@ -138,7 +143,7 @@ const styles = StyleSheet.create({
   },
   phonetic: {
     fontSize: fontSizes.title,
-    color: colors.primary,
+    color: colors.phonetic,
     textAlign: 'center',
   },
   hint: {

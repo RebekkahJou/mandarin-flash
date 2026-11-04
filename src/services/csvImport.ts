@@ -5,7 +5,9 @@ import { containsChineseCharacters, toTaiwanTraditional } from './chineseConvert
 import type { CsvColumn } from './csvFormat';
 import { CSV_COLUMNS, splitMeanings } from './csvFormat';
 import type { DictionaryEntry } from './dictionaryLookup';
+import { findReading, partsOfSpeechOf } from './dictionaryLookup';
 import { toNumberedPinyin } from './pinyin';
+import { formatWordCount } from './wordCount';
 
 /** Imported files are untrusted: these limits keep a bad file from freezing the phone. */
 export const MAX_CSV_BYTES = 5 * 1024 * 1024;
@@ -92,6 +94,8 @@ export interface CsvImportPlan {
   skippedDuplicates: string[];
   /** Not in the dictionary and no meaning given in the file. */
   unknownCharacters: string[];
+  /** Words to add that have no meaning of a part-of-speech list's type (e.g. a noun into Verbs). */
+  partOfSpeechMismatches: string[];
   invalidRowNumbers: number[];
 }
 
@@ -101,27 +105,35 @@ function chooseEntry(
   entries: readonly DictionaryEntry[],
   pinyin: string | undefined,
 ): DictionaryEntry | undefined {
-  return entries.find((entry) => entry.pinyin.toLowerCase() === pinyin) ?? entries[0];
+  return findReading(entries, pinyin) ?? entries[0];
+}
+
+interface DraftedWord {
+  draft: ImportWordDraft;
+  fitsList: boolean;
 }
 
 async function draftWord(
   row: CsvWordRow,
   targetList: WordList,
   lookUp: LookUp,
-): Promise<ImportWordDraft | null> {
+): Promise<DraftedWord | null> {
   const traditional = toTaiwanTraditional(row.characters);
-  const hasEverything = row.meanings.length > 0 && row.pinyin;
-  const entry = hasEverything ? undefined : chooseEntry(await lookUp(traditional), row.pinyin);
+  // Looked up even when the file has every column, to check the word fits the list.
+  const entry = chooseEntry(await lookUp(traditional), row.pinyin);
   const definitions =
     row.meanings.length > 0
       ? row.meanings
       : targetList.selectDefaultMeanings(entry?.definitionCandidates ?? []);
   if (definitions.length === 0) return null;
   return {
-    traditional,
-    simplified: entry?.simplified,
-    pinyin: row.pinyin ?? entry?.pinyin ?? '',
-    definitions,
+    draft: {
+      traditional,
+      simplified: entry?.simplified,
+      pinyin: row.pinyin ?? entry?.pinyin ?? '',
+      definitions,
+    },
+    fitsList: targetList.validateWord(partsOfSpeechOf(entry ? [entry] : [])) === null,
   };
 }
 
@@ -136,6 +148,7 @@ export async function planCsvImport(
     wordsToAdd: [],
     skippedDuplicates: [],
     unknownCharacters: [],
+    partOfSpeechMismatches: [],
     invalidRowNumbers: [...parsedCsv.invalidRowNumbers],
   };
   const seenCharacters = new Set(charactersAlreadyInList);
@@ -146,9 +159,46 @@ export async function planCsvImport(
       continue;
     }
     seenCharacters.add(traditional);
-    const draft = await draftWord(row, targetList, lookUp);
-    if (draft) plan.wordsToAdd.push(draft);
-    else plan.unknownCharacters.push(traditional);
+    const drafted = await draftWord(row, targetList, lookUp);
+    if (!drafted) {
+      plan.unknownCharacters.push(traditional);
+      continue;
+    }
+    plan.wordsToAdd.push(drafted.draft);
+    if (!drafted.fitsList) plan.partOfSpeechMismatches.push(traditional);
   }
   return plan;
+}
+
+export interface ListImportPlan {
+  listName: string;
+  plan: CsvImportPlan;
+}
+
+function describeListPlan({ listName, plan }: ListImportPlan): string {
+  const skipped =
+    plan.skippedDuplicates.length > 0
+      ? `, ${plan.skippedDuplicates.length} already there (skipped)`
+      : '';
+  const summary = `${listName}: ${formatWordCount(plan.wordsToAdd.length)} to add${skipped}.`;
+  if (plan.partOfSpeechMismatches.length === 0) return summary;
+  const mismatches = plan.partOfSpeechMismatches.join(', ');
+  return `${summary}\n  Not a usual fit for ${listName}: ${mismatches}`;
+}
+
+/** One summary for an import into one or more lists, shown before anything is saved. */
+export function describeImportPlans(listPlans: readonly ListImportPlan[]): string {
+  const lines = listPlans.map(describeListPlan);
+  const unknownCharacters = new Set(listPlans.flatMap(({ plan }) => plan.unknownCharacters));
+  if (unknownCharacters.size > 0) {
+    lines.push(
+      `${unknownCharacters.size} not found and had no meaning: ${[...unknownCharacters].join(', ')}`,
+    );
+  }
+  // Every list is planned from the same parsed file, so invalid rows are the same for each.
+  const invalidRowNumbers = listPlans[0]?.plan.invalidRowNumbers ?? [];
+  if (invalidRowNumbers.length > 0) {
+    lines.push(`Rows without Chinese characters (skipped): ${invalidRowNumbers.join(', ')}`);
+  }
+  return lines.join('\n');
 }

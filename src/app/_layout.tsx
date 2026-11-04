@@ -22,7 +22,7 @@ export default function RootLayout() {
   if (servicesState.status === 'loading' || !areFontsLoaded) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator color={colors.primary} size="large" />
+        <ActivityIndicator color={colors.accent} size="large" />
       </View>
     );
   }
@@ -40,6 +40,8 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="practice/session" options={{ title: 'Practice' }} />
         <Stack.Screen name="lists/[listId]" options={{ title: 'Word list' }} />
+        <Stack.Screen name="words/index" options={{ title: 'All words' }} />
+        <Stack.Screen name="words/[wordId]" options={{ title: 'Word' }} />
         <Stack.Screen name="words/add" options={{ title: 'Add a word' }} />
         <Stack.Screen name="about" options={{ title: 'About & licenses' }} />
       </Stack>

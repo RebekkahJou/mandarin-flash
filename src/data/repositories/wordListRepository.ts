@@ -1,4 +1,5 @@
 import type { WordList } from '../../domain/wordList';
+import { WordListKind } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 import type { WordListEntryRow, WordListRow } from './rowMappers';
 import { WORD_COLUMNS, serializeDefinitions, toWordList, toWordListEntry } from './rowMappers';
@@ -42,6 +43,43 @@ export function createWordListRepository(database: SqlDatabase) {
       [wordListId],
     );
     return toWordList(listRow, entryRows.map(toWordListEntry));
+  }
+
+  /** User-created lists are general lists, added after every existing list. */
+  async function createGeneralList(profileId: number, name: string): Promise<number> {
+    const row = await database.getFirst<{ next_sort_order: number }>(
+      'SELECT COALESCE(MAX(sort_order), -1) + 1 AS next_sort_order FROM word_lists WHERE profile_id = ?',
+      [profileId],
+    );
+    const result = await database.run(
+      'INSERT INTO word_lists (profile_id, name, kind, part_of_speech, sort_order) VALUES (?, ?, ?, NULL, ?)',
+      [profileId, name, WordListKind.General, row?.next_sort_order ?? 0],
+    );
+    return result.lastInsertRowId;
+  }
+
+  async function renameList(wordListId: number, name: string): Promise<void> {
+    await database.run('UPDATE word_lists SET name = ? WHERE id = ?', [name, wordListId]);
+  }
+
+  /**
+   * Deletes the list and its entries (ON DELETE CASCADE). The words themselves stay, so they
+   * remain in All words and in any other list.
+   */
+  async function deleteList(wordListId: number): Promise<void> {
+    await database.run('DELETE FROM word_lists WHERE id = ?', [wordListId]);
+  }
+
+  /** Saves the order lists are shown in, in one transaction so a failure can't half-apply it. */
+  async function setListOrder(orderedListIds: readonly number[]): Promise<void> {
+    await database.transaction(async () => {
+      for (const [sortOrder, wordListId] of orderedListIds.entries()) {
+        await database.run('UPDATE word_lists SET sort_order = ? WHERE id = ?', [
+          sortOrder,
+          wordListId,
+        ]);
+      }
+    });
   }
 
   /** Ids of lists (among those given) that already contain this character, for duplicate warnings. */
@@ -91,6 +129,22 @@ export function createWordListRepository(database: SqlDatabase) {
   }
 
   /** Changes a meaning in this list only; other lists keep the word's own definitions. */
+  async function listIdsContainingWord(wordId: number): Promise<number[]> {
+    const rows = await database.getAll<{ word_list_id: number }>(
+      'SELECT DISTINCT word_list_id FROM word_list_entries WHERE word_id = ?',
+      [wordId],
+    );
+    return rows.map((row) => row.word_list_id);
+  }
+
+  /** Removes every entry of the word in that list, including duplicates. The word itself stays. */
+  async function removeWordFromList(wordId: number, wordListId: number): Promise<void> {
+    await database.run('DELETE FROM word_list_entries WHERE word_id = ? AND word_list_id = ?', [
+      wordId,
+      wordListId,
+    ]);
+  }
+
   async function setEntryDefinitions(
     entryId: number,
     definitions: readonly string[] | null,
@@ -103,11 +157,17 @@ export function createWordListRepository(database: SqlDatabase) {
 
   return {
     listSummaries,
+    createGeneralList,
+    renameList,
+    deleteList,
+    setListOrder,
     getListWithEntries,
     listIdsContainingCharacter,
     charactersInList,
     addWordToLists,
     removeEntry,
+    listIdsContainingWord,
+    removeWordFromList,
     setEntryDefinitions,
   };
 }

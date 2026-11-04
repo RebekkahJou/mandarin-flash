@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 import { FrequencyTier } from '../../domain/frequencyTier';
+import { GeneralWordList } from '../../domain/generalWordList';
 import { distinctPracticeCards } from '../../domain/practiceCard';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
@@ -122,6 +123,102 @@ describe('user database', () => {
     const phrases = await wordListRepository.getListWithEntries(listIdByName('Phrases'));
     expect(updatedVerbs?.words[0].definitionsOverride).toEqual(['to go']);
     expect(phrases?.words[0].definitionsOverride).toBeUndefined();
+  });
+
+  it('lists every word with each of its lists once, including words in no list', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const walk = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    const good = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      traditional: '好',
+      pinyin: 'hao3',
+      definitions: ['good'],
+    });
+    await wordListRepository.addWordToLists(walk.id, [
+      { wordListId: listIdByName('Verbs') },
+      { wordListId: listIdByName('Verbs') },
+      { wordListId: listIdByName('General Vocabulary') },
+    ]);
+
+    const words = await wordRepository.listWordsWithListIds(profile.id);
+    const listIdsByCharacter = Object.fromEntries(
+      words.map(({ word, listIds }) => [word.traditional, [...listIds].sort()]),
+    );
+    expect(listIdsByCharacter).toEqual({
+      走: [listIdByName('General Vocabulary'), listIdByName('Verbs')].sort(),
+      好: [],
+    });
+    expect(await wordRepository.countWords(profile.id)).toBe(2);
+    expect(words.find(({ word }) => word.id === good.id)?.word.definitions).toEqual(['good']);
+  });
+
+  it('sets a word tier directly', async () => {
+    const { profile, wordRepository } = await setUp();
+    const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    await wordRepository.setFrequencyTier(word.id, FrequencyTier.Retention);
+    expect((await wordRepository.getWord(word.id))?.frequencyTier).toBe(FrequencyTier.Retention);
+  });
+
+  it('removes a word from one list, duplicates included, and keeps the word', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    await wordListRepository.addWordToLists(word.id, [
+      { wordListId: listIdByName('Verbs') },
+      { wordListId: listIdByName('Verbs') },
+      { wordListId: listIdByName('Phrases') },
+    ]);
+
+    await wordListRepository.removeWordFromList(word.id, listIdByName('Verbs'));
+
+    expect(await wordListRepository.listIdsContainingWord(word.id)).toEqual([
+      listIdByName('Phrases'),
+    ]);
+    expect(await wordRepository.getWord(word.id)).not.toBeNull();
+  });
+
+  it('adds a new general list after the existing ones', async () => {
+    const { profile, wordListRepository } = await setUp();
+    const newListId = await wordListRepository.createGeneralList(profile.id, 'Food');
+    const summaries = await wordListRepository.listSummaries(profile.id);
+    const lastSummary = summaries[summaries.length - 1];
+    expect(lastSummary.list.id).toBe(newListId);
+    expect(lastSummary.list).toBeInstanceOf(GeneralWordList);
+    expect(lastSummary.length).toBe(0);
+  });
+
+  it('renames a list', async () => {
+    const { profile, wordListRepository, listIdByName } = await setUp();
+    await wordListRepository.renameList(listIdByName('Phrases'), 'Sayings');
+    const list = await wordListRepository.getListWithEntries(listIdByName('Phrases'));
+    expect(list?.name).toBe('Sayings');
+    expect((await wordListRepository.listSummaries(profile.id)).length).toBe(6);
+  });
+
+  it('deletes a list and its entries but keeps the words', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    await wordListRepository.addWordToLists(word.id, [
+      { wordListId: listIdByName('Verbs') },
+      { wordListId: listIdByName('General Vocabulary') },
+    ]);
+
+    await wordListRepository.deleteList(listIdByName('Verbs'));
+
+    const names = (await wordListRepository.listSummaries(profile.id)).map(({ list }) => list.name);
+    expect(names).not.toContain('Verbs');
+    expect(await wordListRepository.listIdsContainingWord(word.id)).toEqual([
+      listIdByName('General Vocabulary'),
+    ]);
+    expect(await wordRepository.getWord(word.id)).not.toBeNull();
+  });
+
+  it('saves a new list order', async () => {
+    const { profile, wordListRepository } = await setUp();
+    const summaries = await wordListRepository.listSummaries(profile.id);
+    const reversedIds = summaries.map(({ list }) => list.id).reverse();
+    await wordListRepository.setListOrder(reversedIds);
+    const reordered = await wordListRepository.listSummaries(profile.id);
+    expect(reordered.map(({ list }) => list.id)).toEqual(reversedIds);
   });
 
   it('removes an entry and recalculates length', async () => {

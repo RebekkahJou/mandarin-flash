@@ -23,15 +23,18 @@ export function ChoiceChips<Value extends string | number>({
     <View style={styles.row} accessibilityRole="radiogroup">
       {choices.map((choice) => {
         const isSelected = choice.value === selectedValue;
+        const accessibilityState = { selected: isSelected };
+        const chipStyle = [styles.chip, isSelected && styles.selectedChip];
+        const labelStyle = [styles.label, isSelected && styles.selectedLabel];
         return (
           <Pressable
             key={choice.value}
             accessibilityRole="radio"
-            accessibilityState={{ selected: isSelected }}
+            accessibilityState={accessibilityState}
             onPress={() => onSelect(choice.value)}
-            style={[styles.chip, isSelected && styles.selectedChip]}
+            style={chipStyle}
           >
-            <Text style={[styles.label, isSelected && styles.selectedLabel]}>{choice.label}</Text>
+            <Text style={labelStyle}>{choice.label}</Text>
           </Pressable>
         );
       })}
@@ -62,6 +65,6 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   selectedLabel: {
-    color: colors.primaryText,
+    color: colors.onPrimary,
   },
 });

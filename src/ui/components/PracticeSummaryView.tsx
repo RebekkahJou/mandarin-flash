@@ -13,18 +13,20 @@ interface PracticeSummaryViewProps {
 export function PracticeSummaryView({ summary, onDone }: PracticeSummaryViewProps) {
   const hasSeparateDeckTime =
     summary.deckCompletedMs !== undefined && summary.deckCompletedMs !== summary.totalElapsedMs;
+  const deckTime = formatDuration(summary.deckCompletedMs ?? 0);
+  const deckTimeLine = hasSeparateDeckTime ? (
+    <SummaryLine label="Time to get through every card" value={deckTime} />
+  ) : null;
+  const totalTime = formatDuration(summary.totalElapsedMs);
+  const cardCount = String(summary.cardCount);
+  const learnedCount = String(summary.learnedCount);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Set complete</Text>
-      <SummaryLine label="Total time" value={formatDuration(summary.totalElapsedMs)} />
-      {hasSeparateDeckTime && (
-        <SummaryLine
-          label="Time to get through every card"
-          value={formatDuration(summary.deckCompletedMs ?? 0)}
-        />
-      )}
-      <SummaryLine label="Cards in set" value={String(summary.cardCount)} />
-      <SummaryLine label="Marked learned" value={String(summary.learnedCount)} />
+      <SummaryLine label="Total time" value={totalTime} />
+      {deckTimeLine}
+      <SummaryLine label="Cards in set" value={cardCount} />
+      <SummaryLine label="Marked learned" value={learnedCount} />
       <View style={styles.buttonRow}>
         <PrimaryButton label="Done" onPress={onDone} />
       </View>

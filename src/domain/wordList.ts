@@ -79,3 +79,21 @@ export function definitionsForEntry(entry: WordListEntry): string[] {
 export function firstMeanings(candidates: readonly DefinitionCandidate[]): string[] {
   return candidates.slice(0, DEFAULT_MEANING_COUNT).map((candidate) => candidate.text);
 }
+
+export function haveSameMeanings(first: readonly string[], second: readonly string[]): boolean {
+  return (
+    first.length === second.length && first.every((meaning, index) => meaning === second[index])
+  );
+}
+
+/**
+ * What to store as a list's own meanings for a word. Null when they match the word's meanings,
+ * so later changes to the word still show in this list.
+ */
+export function definitionsOverrideFor(
+  word: Word,
+  listMeanings: readonly string[],
+): string[] | null {
+  if (listMeanings.length === 0 || haveSameMeanings(listMeanings, word.definitions)) return null;
+  return [...listMeanings];
+}
