@@ -22,7 +22,7 @@ export default function RootLayout() {
   if (servicesState.status === 'loading' || !areFontsLoaded) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator color={colors.primary} size="large" />
+        <ActivityIndicator color={colors.accent} size="large" />
       </View>
     );
   }

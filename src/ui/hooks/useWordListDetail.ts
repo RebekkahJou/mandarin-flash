@@ -2,7 +2,8 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
-import type { WordList } from '../../domain/wordList';
+import type { WordList, WordListEntry } from '../../domain/wordList';
+import { definitionsOverrideFor } from '../../domain/wordList';
 import { buildWordListCsv, csvFileNameForList } from '../../services/csvExport';
 import { findPartOfSpeechMismatches } from '../../services/partOfSpeechCheck';
 import { useAppServices } from '../AppServicesContext';
@@ -46,8 +47,11 @@ export function useWordListDetail(wordListId: number) {
     await reload();
   };
 
-  const setEntryMeanings = async (entryId: number, meanings: string[]) => {
-    await wordListRepository.setEntryDefinitions(entryId, meanings.length > 0 ? meanings : null);
+  const setEntryMeanings = async (entry: WordListEntry, meanings: string[]) => {
+    await wordListRepository.setEntryDefinitions(
+      entry.entryId,
+      definitionsOverrideFor(entry.word, meanings),
+    );
     await reload();
   };
 
@@ -63,6 +67,7 @@ export function useWordListDetail(wordListId: number) {
 
   return {
     list,
+    reload,
     mismatchedWordIds,
     mismatchWarning,
     removeEntry,

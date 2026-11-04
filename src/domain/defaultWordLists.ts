@@ -23,3 +23,8 @@ export function defaultListIdsForNewWords(lists: readonly WordList[]): Set<numbe
   const generalList = lists.find((list) => list.name === GENERAL_VOCABULARY_LIST_NAME);
   return new Set(generalList ? [generalList.id] : []);
 }
+
+/** General Vocabulary is found by name and receives new words, so it can't be renamed or deleted. */
+export function canRenameOrDeleteList(list: WordList): boolean {
+  return list.name !== GENERAL_VOCABULARY_LIST_NAME;
+}

@@ -25,6 +25,11 @@ export default function PracticeSetupScreen() {
 
   const selectedSummary = summaries.find((summary) => summary.list.id === selectedListId);
   const canStart = selectedSummary !== undefined && selectedSummary.length > 0;
+  const emptyListHint =
+    selectedSummary?.length === 0 ? (
+      <Text style={styles.hint}>This list is empty. Add words from the Word lists tab.</Text>
+    ) : null;
+  const isStartDisabled = !canStart;
 
   const startPractice = () => {
     if (!selectedSummary) return;
@@ -38,25 +43,30 @@ export default function PracticeSetupScreen() {
     <ScreenContainer isScrollable>
       <SectionTitle title="Choose a word list" />
       <View style={styles.lists}>
-        {summaries.map(({ list, length }) => (
-          <WordListRow
-            key={list.id}
-            name={list.name}
-            wordCount={length}
-            isSelected={list.id === selectedListId}
-            onPress={() => setSelectedListId(list.id)}
-          />
-        ))}
+        {summaries.map(({ list, length }) => {
+          const isSelected = list.id === selectedListId;
+          return (
+            <WordListRow
+              key={list.id}
+              name={list.name}
+              wordCount={length}
+              isSelected={isSelected}
+              onPress={() => setSelectedListId(list.id)}
+            />
+          );
+        })}
       </View>
 
       <SectionTitle title="Cards per set" />
       <ChoiceChips choices={SET_SIZE_CHOICES} selectedValue={setSize} onSelect={setChosenSetSize} />
 
-      {selectedSummary?.length === 0 && (
-        <Text style={styles.hint}>This list is empty. Add words from the Word lists tab.</Text>
-      )}
+      {emptyListHint}
       <View style={styles.startRow}>
-        <PrimaryButton label="Start practice" onPress={startPractice} isDisabled={!canStart} />
+        <PrimaryButton
+          label="Start practice"
+          onPress={startPractice}
+          isDisabled={isStartDisabled}
+        />
       </View>
     </ScreenContainer>
   );

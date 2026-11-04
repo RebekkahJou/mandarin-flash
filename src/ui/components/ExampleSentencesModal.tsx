@@ -16,19 +16,22 @@ export function ExampleSentencesModal({
   sentences,
   onClose,
 }: ExampleSentencesModalProps) {
+  const sentenceViews = sentences.map((sentence) => (
+    <View key={sentence.traditional} style={styles.sentence}>
+      <ChineseText text={sentence.traditional} style={styles.chinese} />
+      <Text style={styles.english}>{sentence.english}</Text>
+    </View>
+  ));
+  const content =
+    sentences.length === 0 ? (
+      <Text style={styles.english}>No example sentence is available for this word yet.</Text>
+    ) : (
+      sentenceViews
+    );
   return (
     <InfoModal isVisible={isVisible} onClose={onClose}>
       <Text style={styles.title}>In a sentence</Text>
-      {sentences.length === 0 ? (
-        <Text style={styles.english}>No example sentence is available for this word yet.</Text>
-      ) : (
-        sentences.map((sentence) => (
-          <View key={sentence.traditional} style={styles.sentence}>
-            <ChineseText text={sentence.traditional} style={styles.chinese} />
-            <Text style={styles.english}>{sentence.english}</Text>
-          </View>
-        ))
-      )}
+      {content}
       <Text style={styles.attribution}>Sentences from Tatoeba (CC BY 2.0 FR)</Text>
     </InfoModal>
   );

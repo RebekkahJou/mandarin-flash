@@ -13,9 +13,11 @@ export function formatDuration(durationMs: number): string {
 }
 
 export function TimerDisplay({ elapsedMs }: { elapsedMs: number }) {
+  const duration = formatDuration(elapsedMs);
+  const accessibilityLabel = `Time ${duration}`;
   return (
-    <Text style={styles.timer} accessibilityLabel={`Time ${formatDuration(elapsedMs)}`}>
-      {formatDuration(elapsedMs)}
+    <Text style={styles.timer} accessibilityLabel={accessibilityLabel}>
+      {duration}
     </Text>
   );
 }

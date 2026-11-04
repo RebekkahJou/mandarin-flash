@@ -1,17 +1,26 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
+import type { ListRenderItemInfo } from 'react-native';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 import type { WordListEntry } from '../../domain/wordList';
 import { definitionsForEntry } from '../../domain/wordList';
+import { formatWordCount } from '../../services/wordCount';
 import { ChineseText } from '../../ui/components/ChineseText';
 import { InfoModal } from '../../ui/components/InfoModal';
+import { ListNameModal } from '../../ui/components/ListNameModal';
 import { MeaningsEditor } from '../../ui/components/MeaningsEditor';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { WordRow } from '../../ui/components/WordRow';
+import {
+  ListDeletionResult,
+  useWordListRenameDelete,
+} from '../../ui/hooks/useWordListRenameDelete';
 import { useWordListDetail } from '../../ui/hooks/useWordListDetail';
 import { colors, fontSizes, spacing } from '../../ui/theme';
+
+const entryKey = (entry: WordListEntry) => String(entry.entryId);
 
 export default function WordListScreen() {
   const { listId } = useLocalSearchParams<{ listId: string }>();
@@ -23,7 +32,9 @@ export default function WordListScreen() {
     setEntryMeanings,
     exportCsv,
     importCsv,
+    reload,
   } = useWordListDetail(Number(listId));
+  const renameDelete = useWordListRenameDelete(list, reload);
   const [editingEntry, setEditingEntry] = useState<WordListEntry | null>(null);
   const [editedMeanings, setEditedMeanings] = useState<string[]>([]);
 
@@ -33,53 +44,88 @@ export default function WordListScreen() {
   };
 
   const finishEditing = async () => {
-    if (editingEntry) await setEntryMeanings(editingEntry.entryId, editedMeanings);
+    if (editingEntry) await setEntryMeanings(editingEntry, editedMeanings);
     setEditingEntry(null);
+  };
+
+  const deleteList = async () => {
+    if ((await renameDelete.deleteList()) === ListDeletionResult.Deleted) router.back();
+  };
+  const renameDeleteButtons = renameDelete.canRenameOrDelete ? (
+    <View style={styles.buttonRow}>
+      <PrimaryButton label="Rename" onPress={renameDelete.openRename} isOutlined />
+      <PrimaryButton label="Delete list" onPress={() => void deleteList()} isOutlined />
+    </View>
+  ) : null;
+
+  const screenOptions = { title: list ? `${list.name} (${list.length})` : 'Word list' };
+  const isExportDisabled = !list || list.length === 0;
+  const entries = list?.words ?? [];
+  const mismatchCount = formatWordCount(mismatchedWordIds.size);
+  const mismatchSummary =
+    mismatchedWordIds.size > 0 ? (
+      <Text style={styles.mismatchSummary}>
+        {mismatchCount} highlighted below may not belong here. Tap ✕ to remove one, or tap the word
+        to edit its meanings.
+      </Text>
+    ) : null;
+  const isEditorVisible = editingEntry !== null;
+  const editorContent = editingEntry ? (
+    <>
+      <ChineseText text={editingEntry.word.traditional} style={styles.editingCharacter} />
+      <Text style={styles.empty}>Meanings in this list only</Text>
+      <MeaningsEditor meanings={editedMeanings} onChange={setEditedMeanings} />
+    </>
+  ) : null;
+
+  const renderEntry = ({ item }: ListRenderItemInfo<WordListEntry>) => {
+    const warning = mismatchedWordIds.has(item.word.id) ? mismatchWarning : undefined;
+    const meanings = definitionsForEntry(item);
+    return (
+      <WordRow
+        word={item.word}
+        meanings={meanings}
+        onPress={() => startEditing(item)}
+        pressHint="Edit meanings in this list"
+        onRemove={() => removeEntry(item.entryId, item.word.traditional)}
+        warning={warning}
+      />
+    );
   };
 
   return (
     <ScreenContainer>
-      <Stack.Screen options={{ title: list ? `${list.name} (${list.length})` : 'Word list' }} />
+      <Stack.Screen options={screenOptions} />
       <View style={styles.buttonRow}>
         <PrimaryButton label="Import CSV" onPress={importCsv} isOutlined />
         <PrimaryButton
           label="Export CSV"
           onPress={exportCsv}
           isOutlined
-          isDisabled={!list || list.length === 0}
+          isDisabled={isExportDisabled}
         />
       </View>
-      {mismatchedWordIds.size > 0 && (
-        <Text style={styles.mismatchSummary}>
-          {mismatchedWordIds.size === 1 ? '1 word' : `${mismatchedWordIds.size} words`} highlighted
-          below may not belong here. Tap ✕ to remove one, or tap the word to edit its meanings.
-        </Text>
-      )}
+      {renameDeleteButtons}
+      {mismatchSummary}
       <FlatList
-        data={list?.words ?? []}
-        keyExtractor={(entry) => String(entry.entryId)}
+        data={entries}
+        keyExtractor={entryKey}
         contentContainerStyle={styles.entries}
         ListEmptyComponent={<Text style={styles.empty}>No words in this list yet.</Text>}
-        renderItem={({ item }) => (
-          <WordRow
-            word={item.word}
-            meanings={definitionsForEntry(item)}
-            onPress={() => startEditing(item)}
-            pressHint="Edit meanings in this list"
-            onRemove={() => removeEntry(item.entryId, item.word.traditional)}
-            warning={mismatchedWordIds.has(item.word.id) ? mismatchWarning : undefined}
-          />
-        )}
+        renderItem={renderEntry}
       />
 
-      <InfoModal isVisible={editingEntry !== null} onClose={finishEditing} closeLabel="Save">
-        {editingEntry && (
-          <>
-            <ChineseText text={editingEntry.word.traditional} style={styles.editingCharacter} />
-            <Text style={styles.empty}>Meanings in this list only</Text>
-            <MeaningsEditor meanings={editedMeanings} onChange={setEditedMeanings} />
-          </>
-        )}
+      <ListNameModal
+        isVisible={renameDelete.isRenameVisible}
+        title="Rename list"
+        confirmLabel="Save name"
+        name={renameDelete.nameDraft}
+        onChangeName={renameDelete.setNameDraft}
+        onConfirm={() => void renameDelete.saveRename()}
+        onCancel={renameDelete.closeRename}
+      />
+      <InfoModal isVisible={isEditorVisible} onClose={finishEditing} closeLabel="Save">
+        {editorContent}
       </InfoModal>
     </ScreenContainer>
   );

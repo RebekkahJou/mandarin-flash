@@ -15,17 +15,18 @@ export function ListCheckboxes({ lists, selectedListIds, onToggle }: ListCheckbo
     <View style={styles.options}>
       {lists.map((list) => {
         const isSelected = selectedListIds.has(list.id);
+        const accessibilityState = { checked: isSelected };
+        const checkboxStyle = [styles.checkbox, isSelected && styles.checkedBox];
+        const checkmark = isSelected ? <Text style={styles.checkmark}>✓</Text> : null;
         return (
           <Pressable
             key={list.id}
             onPress={() => onToggle(list)}
             accessibilityRole="checkbox"
-            accessibilityState={{ checked: isSelected }}
+            accessibilityState={accessibilityState}
             style={styles.option}
           >
-            <View style={[styles.checkbox, isSelected && styles.checkedBox]}>
-              {isSelected && <Text style={styles.checkmark}>✓</Text>}
-            </View>
+            <View style={checkboxStyle}>{checkmark}</View>
             <Text style={styles.listName}>{list.name}</Text>
           </Pressable>
         );
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   checkmark: {
-    color: colors.primaryText,
+    color: colors.onPrimary,
     fontWeight: '700',
   },
   listName: {

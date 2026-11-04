@@ -29,8 +29,30 @@ export function WordRow({
   onRemove,
   warning,
 }: WordRowProps) {
+  const hasWarning = warning !== undefined;
+  const rowStyle = [styles.row, hasWarning && styles.warningRow];
+  const meaningsText = meanings.join('; ');
+  const tierLabel = FREQUENCY_TIER_LABELS[word.frequencyTier];
+  const warningLine = hasWarning ? <Text style={styles.warning}>⚠ {warning}</Text> : null;
+  const detailLine =
+    detail === undefined ? null : (
+      <Text style={styles.secondary} numberOfLines={2}>
+        {detail}
+      </Text>
+    );
+  const removeLabel = `Remove ${word.traditional}`;
+  const removeButton = onRemove ? (
+    <Pressable
+      onPress={onRemove}
+      accessibilityRole="button"
+      accessibilityLabel={removeLabel}
+      hitSlop={spacing.small}
+    >
+      <Text style={styles.remove}>✕</Text>
+    </Pressable>
+  ) : null;
   return (
-    <View style={[styles.row, warning !== undefined && styles.warningRow]}>
+    <View style={rowStyle}>
       <Pressable
         style={styles.details}
         onPress={onPress}
@@ -41,27 +63,14 @@ export function WordRow({
         <View style={styles.text}>
           <PhoneticText numberedPinyin={word.pinyin} style={styles.phonetic} />
           <Text style={styles.meanings} numberOfLines={2}>
-            {meanings.join('; ')}
+            {meaningsText}
           </Text>
-          <Text style={styles.secondary}>{FREQUENCY_TIER_LABELS[word.frequencyTier]}</Text>
-          {warning !== undefined && <Text style={styles.warning}>⚠ {warning}</Text>}
-          {detail !== undefined && (
-            <Text style={styles.secondary} numberOfLines={2}>
-              {detail}
-            </Text>
-          )}
+          <Text style={styles.secondary}>{tierLabel}</Text>
+          {warningLine}
+          {detailLine}
         </View>
       </Pressable>
-      {onRemove && (
-        <Pressable
-          onPress={onRemove}
-          accessibilityRole="button"
-          accessibilityLabel={`Remove ${word.traditional}`}
-          hitSlop={spacing.small}
-        >
-          <Text style={styles.remove}>✕</Text>
-        </Pressable>
-      )}
+      {removeButton}
     </View>
   );
 }
@@ -104,7 +113,7 @@ const styles = StyleSheet.create({
   },
   phonetic: {
     fontSize: fontSizes.body,
-    color: colors.primary,
+    color: colors.phonetic,
   },
   meanings: {
     fontFamily: ENGLISH_FONT_FAMILY,

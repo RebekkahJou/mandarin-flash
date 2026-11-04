@@ -7,6 +7,7 @@ import { CSV_COLUMNS, splitMeanings } from './csvFormat';
 import type { DictionaryEntry } from './dictionaryLookup';
 import { findReading, partsOfSpeechOf } from './dictionaryLookup';
 import { toNumberedPinyin } from './pinyin';
+import { formatWordCount } from './wordCount';
 
 /** Imported files are untrusted: these limits keep a bad file from freezing the phone. */
 export const MAX_CSV_BYTES = 5 * 1024 * 1024;
@@ -174,16 +175,12 @@ export interface ListImportPlan {
   plan: CsvImportPlan;
 }
 
-function pluralizeWords(count: number): string {
-  return `${count} ${count === 1 ? 'word' : 'words'}`;
-}
-
 function describeListPlan({ listName, plan }: ListImportPlan): string {
   const skipped =
     plan.skippedDuplicates.length > 0
       ? `, ${plan.skippedDuplicates.length} already there (skipped)`
       : '';
-  const summary = `${listName}: ${pluralizeWords(plan.wordsToAdd.length)} to add${skipped}.`;
+  const summary = `${listName}: ${formatWordCount(plan.wordsToAdd.length)} to add${skipped}.`;
   if (plan.partOfSpeechMismatches.length === 0) return summary;
   const mismatches = plan.partOfSpeechMismatches.join(', ');
   return `${summary}\n  Not a usual fit for ${listName}: ${mismatches}`;

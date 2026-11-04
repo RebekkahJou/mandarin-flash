@@ -19,21 +19,28 @@ export function MeaningsEditor({ meanings, onChange }: MeaningsEditorProps) {
     setNewMeaning('');
   };
 
+  const removeMeaning = (meaning: string) => {
+    onChange(meanings.filter((existing) => existing !== meaning));
+  };
+
   return (
     <View style={styles.container}>
-      {meanings.map((meaning) => (
-        <View key={meaning} style={styles.meaningRow}>
-          <Text style={styles.meaning}>{meaning}</Text>
-          <Pressable
-            onPress={() => onChange(meanings.filter((existing) => existing !== meaning))}
-            accessibilityRole="button"
-            accessibilityLabel={`Remove meaning ${meaning}`}
-            hitSlop={spacing.small}
-          >
-            <Text style={styles.remove}>✕</Text>
-          </Pressable>
-        </View>
-      ))}
+      {meanings.map((meaning) => {
+        const removeLabel = `Remove meaning ${meaning}`;
+        return (
+          <View key={meaning} style={styles.meaningRow}>
+            <Text style={styles.meaning}>{meaning}</Text>
+            <Pressable
+              onPress={() => removeMeaning(meaning)}
+              accessibilityRole="button"
+              accessibilityLabel={removeLabel}
+              hitSlop={spacing.small}
+            >
+              <Text style={styles.remove}>✕</Text>
+            </Pressable>
+          </View>
+        );
+      })}
       <TextInput
         value={newMeaning}
         onChangeText={setNewMeaning}

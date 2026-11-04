@@ -26,12 +26,14 @@ export default function EditWordScreen() {
   );
   if (!word) return <ScreenContainer>{null}</ScreenContainer>;
 
+  const screenOptions = { title: word.traditional };
+  const meaningsText = word.definitions.join('; ');
   return (
     <ScreenContainer isScrollable>
-      <Stack.Screen options={{ title: word.traditional }} />
+      <Stack.Screen options={screenOptions} />
       <ChineseText text={word.traditional} style={styles.character} />
       <PhoneticText numberedPinyin={word.pinyin} style={styles.phonetic} />
-      <Text style={styles.meanings}>{word.definitions.join('; ')}</Text>
+      <Text style={styles.meanings}>{meaningsText}</Text>
 
       <SectionTitle title="Frequency" />
       <Text style={styles.hint}>How often this word comes up in practice sets, in every list.</Text>
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
   },
   phonetic: {
     fontSize: fontSizes.title,
-    color: colors.primary,
+    color: colors.phonetic,
     textAlign: 'center',
   },
   meanings: {
