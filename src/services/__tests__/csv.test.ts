@@ -35,6 +35,25 @@ describe('parseWordCsv', () => {
     ]);
   });
 
+  it('accepts the generic word and reading headers, in any case', () => {
+    for (const header of ['word,meaning,reading', 'Headword,Meaning,Reading']) {
+      const parsed = parseWordCsv(
+        `${header}
+走,to walk,zou3`,
+        mandarin,
+      );
+      expect(parsed.rows).toEqual([
+        { rowNumber: 2, headword: '走', meanings: ['to walk'], reading: 'zou3' },
+      ]);
+    }
+  });
+
+  it('treats a first row that names no headword column as data', () => {
+    const parsed = parseWordCsv('走,meaning,reading', mandarin);
+    expect(parsed.rows).toHaveLength(1);
+    expect(parsed.rows[0].headword).toBe('走');
+  });
+
   it('uses the export order (character, meaning, pinyin) when there is no header', () => {
     const parsed = parseWordCsv('走,to walk / to go,zou3', mandarin);
     expect(parsed.rows[0]).toMatchObject({ meanings: ['to walk', 'to go'], reading: 'zou3' });

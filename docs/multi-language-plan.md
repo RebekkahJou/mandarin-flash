@@ -1,6 +1,16 @@
 # Multi-language and add-ons plan
 
-Status: approved 2026-11-05. Nothing is built yet; next step is Phase 1. Update this file as work lands or decisions change.
+Status: approved 2026-11-05. **Phase 1 done** (2026-11-05); next step is Phase 2. Update this file as
+work lands or decisions change.
+
+Phase 1 notes for later phases:
+- The bundled dictionary.db keeps its old column names (traditional, simplified, pinyin);
+  `dictionaryLookup` maps them to headword, variant, reading until Phase 3 rebuilds it as a pack.
+- CSV export headers are still `character, meaning, pinyin` (from the language module); import also
+  accepts the generic `word`/`headword` and `reading` headers.
+- `PhoneticText`, `ChineseText` and the zhuyin conversion are still Mandarin-only components.
+- On-screen text still says "Chinese characters" and "pinyin" in a few places (Add Word, CSV import
+  summary); generalize it when a second language arrives.
 
 ## Goals
 

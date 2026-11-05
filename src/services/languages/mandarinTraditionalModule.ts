@@ -17,6 +17,7 @@ function pinyinSearchKey(pinyin: string): string {
 
 export const mandarinTraditionalModule: LanguageModule = {
   definition: LANGUAGE_DEFINITIONS[LanguageId.MandarinTraditional],
+  csvHeaders: { headword: 'character', meaning: 'meaning', reading: 'pinyin' },
   normalizeHeadword: toTaiwanTraditional,
   containsLanguageScript: containsChineseCharacters,
   normalizeReading: toNumberedPinyin,

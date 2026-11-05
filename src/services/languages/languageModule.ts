@@ -1,8 +1,11 @@
 import type { LanguageDefinition } from '../../domain/language';
+import type { CsvHeaderNames } from '../csvFormat';
 
 /** Language-specific text handling. Each language gets one; callers never branch on language. */
 export interface LanguageModule {
   definition: LanguageDefinition;
+  /** Header names written on export and accepted on import, e.g. "character" for the headword. */
+  csvHeaders: CsvHeaderNames;
   /** Converts typed or imported text to the stored headword form, e.g. Simplified to Traditional. */
   normalizeHeadword(text: string): string;
   /** True when the text has at least one character of the language's script. */

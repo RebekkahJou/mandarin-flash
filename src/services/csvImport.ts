@@ -1,8 +1,8 @@
 import Papa from 'papaparse';
 
 import type { WordList } from '../domain/wordList';
-import type { CsvColumn } from './csvFormat';
-import { CSV_COLUMNS, splitMeanings } from './csvFormat';
+import type { CsvColumn, CsvHeaderNames } from './csvFormat';
+import { CSV_COLUMNS, acceptedHeaderNames, splitMeanings } from './csvFormat';
 import type { DictionaryEntry } from './dictionaryLookup';
 import { findReading, partsOfSpeechOf } from './dictionaryLookup';
 import type { LanguageModule } from './languages/languageModule';
@@ -32,16 +32,23 @@ export class CsvTooLargeError extends Error {
   }
 }
 
-/** Maps header names to column positions; files without a header use the export order. */
-function columnPositions(firstRow: readonly string[]): {
-  positions: Record<CsvColumn, number>;
-  hasHeader: boolean;
-} {
+/**
+ * Maps header names to column positions; files without a header use the export order. A first
+ * row counts as a header when it names the headword column.
+ */
+function columnPositions(
+  firstRow: readonly string[],
+  languageHeaders: CsvHeaderNames,
+): { positions: Record<CsvColumn, number>; hasHeader: boolean } {
   const normalizedHeader = firstRow.map((cell) => cell.trim().toLowerCase());
-  const hasHeader = normalizedHeader.includes('character');
+  const headerPositionOf = (column: CsvColumn) => {
+    const acceptedNames = acceptedHeaderNames(column, languageHeaders);
+    return normalizedHeader.findIndex((cell) => acceptedNames.includes(cell));
+  };
+  const hasHeader = headerPositionOf('headword') >= 0;
   const positions = {} as Record<CsvColumn, number>;
   CSV_COLUMNS.forEach((column, defaultPosition) => {
-    positions[column] = hasHeader ? normalizedHeader.indexOf(column) : defaultPosition;
+    positions[column] = hasHeader ? headerPositionOf(column) : defaultPosition;
   });
   return { positions, hasHeader };
 }
@@ -64,17 +71,17 @@ export function parseWordCsv(
   if (data.length > MAX_CSV_ROWS + 1) throw new CsvTooLargeError();
   if (data.length === 0) return { rows: [], invalidRowNumbers: [] };
 
-  const { positions, hasHeader } = columnPositions(data[0]);
+  const { positions, hasHeader } = columnPositions(data[0], languageModule.csvHeaders);
   const rows: CsvWordRow[] = [];
   const invalidRowNumbers: number[] = [];
   data.slice(hasHeader ? 1 : 0).forEach((row, index) => {
     const rowNumber = index + (hasHeader ? 2 : 1);
-    const headwordCell = cellAt(row, positions.character);
+    const headwordCell = cellAt(row, positions.headword);
     if (!languageModule.containsLanguageScript(headwordCell)) {
       invalidRowNumbers.push(rowNumber);
       return;
     }
-    const readingCell = cellAt(row, positions.pinyin);
+    const readingCell = cellAt(row, positions.reading);
     rows.push({
       rowNumber,
       headword: languageModule.normalizeHeadword(headwordCell),
