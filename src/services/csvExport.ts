@@ -16,9 +16,9 @@ export function escapeFormulaCell(cell: string): string {
 export function buildWordListCsv(entries: readonly WordListEntry[]): string {
   const rows = entries.map((entry) =>
     [
-      entry.word.traditional,
+      entry.word.headword,
       joinMeanings(definitionsForEntry(entry)),
-      toToneMarkedPinyin(entry.word.pinyin),
+      toToneMarkedPinyin(entry.word.reading),
     ].map(escapeFormulaCell),
   );
   return Papa.unparse({ fields: [...CSV_COLUMNS], data: rows });

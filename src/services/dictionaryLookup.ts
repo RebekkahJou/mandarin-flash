@@ -6,14 +6,15 @@ import type { DefinitionCandidate } from '../domain/word';
 import { toTaiwanTraditional } from './chineseConverter';
 
 export interface DictionaryEntry {
-  traditional: string;
-  simplified?: string;
-  pinyin: string;
+  headword: string;
+  /** Present only when it differs from the headword. */
+  variant?: string;
+  reading: string;
   definitionCandidates: DefinitionCandidate[];
 }
 
 export interface ExampleSentence {
-  traditional: string;
+  text: string;
   english: string;
 }
 
@@ -28,9 +29,9 @@ function partsOfSpeechFromFlags(flags: number): PartOfSpeech[] {
 function toDictionaryEntry(row: DictionaryEntryRow): DictionaryEntry {
   const glosses = JSON.parse(row.glosses) as SerializedGloss[];
   return {
-    traditional: row.traditional,
-    simplified: row.simplified || undefined,
-    pinyin: row.pinyin,
+    headword: row.traditional,
+    variant: row.simplified || undefined,
+    reading: row.pinyin,
     definitionCandidates: glosses.map(([text, flags]) => ({
       text,
       partsOfSpeech: partsOfSpeechFromFlags(flags),
@@ -38,12 +39,12 @@ function toDictionaryEntry(row: DictionaryEntryRow): DictionaryEntry {
   };
 }
 
-/** The reading with this numbered pinyin, if the dictionary has it. */
+/** The entry with this normalized reading (numbered pinyin for Mandarin), if the dictionary has it. */
 export function findReading(
   entries: readonly DictionaryEntry[],
-  numberedPinyin: string | undefined,
+  reading: string | undefined,
 ): DictionaryEntry | undefined {
-  return entries.find((entry) => entry.pinyin.toLowerCase() === numberedPinyin);
+  return entries.find((entry) => entry.reading.toLowerCase() === reading);
 }
 
 /** Every part of speech any reading of the word can take; empty if the word is unknown. */
@@ -69,12 +70,13 @@ export function createDictionaryLookup(dictionaryDatabase: SqlDatabase) {
   }
 
   /** Shortest example sentences containing the word. */
-  async function findExampleSentences(traditional: string): Promise<ExampleSentence[]> {
-    return dictionaryDatabase.getAll<SentenceRow>(
+  async function findExampleSentences(headword: string): Promise<ExampleSentence[]> {
+    const rows = await dictionaryDatabase.getAll<SentenceRow>(
       `SELECT traditional, english FROM sentences
        WHERE instr(traditional, ?) > 0 ORDER BY length(traditional) LIMIT ?`,
-      [traditional, MAX_EXAMPLE_SENTENCES],
+      [headword, MAX_EXAMPLE_SENTENCES],
     );
+    return rows.map((row) => ({ text: row.traditional, english: row.english }));
   }
 
   return { lookUp, findExampleSentences };

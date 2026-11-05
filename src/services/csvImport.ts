@@ -18,7 +18,7 @@ export interface CsvWordRow {
   rowNumber: number;
   characters: string;
   meanings: string[];
-  pinyin?: string;
+  reading?: string;
 }
 
 export interface ParsedCsv {
@@ -75,16 +75,16 @@ export function parseWordCsv(csvText: string, byteSize: number = csvText.length)
       rowNumber,
       characters,
       meanings: splitMeanings(cellAt(row, positions.meaning)),
-      pinyin: pinyin ? toNumberedPinyin(pinyin) : undefined,
+      reading: pinyin ? toNumberedPinyin(pinyin) : undefined,
     });
   });
   return { rows, invalidRowNumbers };
 }
 
 export interface ImportWordDraft {
-  traditional: string;
-  simplified?: string;
-  pinyin: string;
+  headword: string;
+  variant?: string;
+  reading: string;
   definitions: string[];
 }
 
@@ -99,13 +99,13 @@ export interface CsvImportPlan {
   invalidRowNumbers: number[];
 }
 
-type LookUp = (traditional: string) => Promise<DictionaryEntry[]>;
+type LookUp = (headword: string) => Promise<DictionaryEntry[]>;
 
 function chooseEntry(
   entries: readonly DictionaryEntry[],
-  pinyin: string | undefined,
+  reading: string | undefined,
 ): DictionaryEntry | undefined {
-  return findReading(entries, pinyin) ?? entries[0];
+  return findReading(entries, reading) ?? entries[0];
 }
 
 interface DraftedWord {
@@ -118,9 +118,9 @@ async function draftWord(
   targetList: WordList,
   lookUp: LookUp,
 ): Promise<DraftedWord | null> {
-  const traditional = toTaiwanTraditional(row.characters);
+  const headword = toTaiwanTraditional(row.characters);
   // Looked up even when the file has every column, to check the word fits the list.
-  const entry = chooseEntry(await lookUp(traditional), row.pinyin);
+  const entry = chooseEntry(await lookUp(headword), row.reading);
   const definitions =
     row.meanings.length > 0
       ? row.meanings
@@ -128,9 +128,9 @@ async function draftWord(
   if (definitions.length === 0) return null;
   return {
     draft: {
-      traditional,
-      simplified: entry?.simplified,
-      pinyin: row.pinyin ?? entry?.pinyin ?? '',
+      headword,
+      variant: entry?.variant,
+      reading: row.reading ?? entry?.reading ?? '',
       definitions,
     },
     fitsList: targetList.validateWord(partsOfSpeechOf(entry ? [entry] : [])) === null,
@@ -141,7 +141,7 @@ async function draftWord(
 export async function planCsvImport(
   parsedCsv: ParsedCsv,
   targetList: WordList,
-  charactersAlreadyInList: ReadonlySet<string>,
+  headwordsAlreadyInList: ReadonlySet<string>,
   lookUp: LookUp,
 ): Promise<CsvImportPlan> {
   const plan: CsvImportPlan = {
@@ -151,21 +151,21 @@ export async function planCsvImport(
     partOfSpeechMismatches: [],
     invalidRowNumbers: [...parsedCsv.invalidRowNumbers],
   };
-  const seenCharacters = new Set(charactersAlreadyInList);
+  const seenHeadwords = new Set(headwordsAlreadyInList);
   for (const row of parsedCsv.rows) {
-    const traditional = toTaiwanTraditional(row.characters);
-    if (seenCharacters.has(traditional)) {
-      plan.skippedDuplicates.push(traditional);
+    const headword = toTaiwanTraditional(row.characters);
+    if (seenHeadwords.has(headword)) {
+      plan.skippedDuplicates.push(headword);
       continue;
     }
-    seenCharacters.add(traditional);
+    seenHeadwords.add(headword);
     const drafted = await draftWord(row, targetList, lookUp);
     if (!drafted) {
-      plan.unknownCharacters.push(traditional);
+      plan.unknownCharacters.push(headword);
       continue;
     }
     plan.wordsToAdd.push(drafted.draft);
-    if (!drafted.fitsList) plan.partOfSpeechMismatches.push(traditional);
+    if (!drafted.fitsList) plan.partOfSpeechMismatches.push(headword);
   }
   return plan;
 }

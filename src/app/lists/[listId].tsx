@@ -72,7 +72,7 @@ export default function WordListScreen() {
   const isEditorVisible = editingEntry !== null;
   const editorContent = editingEntry ? (
     <>
-      <ChineseText text={editingEntry.word.traditional} style={styles.editingCharacter} />
+      <ChineseText text={editingEntry.word.headword} style={styles.editingCharacter} />
       <Text style={styles.empty}>Meanings in this list only</Text>
       <MeaningsEditor meanings={editedMeanings} onChange={setEditedMeanings} />
     </>
@@ -87,7 +87,7 @@ export default function WordListScreen() {
         meanings={meanings}
         onPress={() => startEditing(item)}
         pressHint="Edit meanings in this list"
-        onRemove={() => removeEntry(item.entryId, item.word.traditional)}
+        onRemove={() => removeEntry(item.entryId, item.word.headword)}
         warning={warning}
       />
     );

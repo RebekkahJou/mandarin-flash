@@ -19,7 +19,7 @@ export enum SaveWordResult {
 /** State and save logic for the Add Word screen. */
 export function useAddWord(lists: readonly WordList[]) {
   const { profileId, dictionaryLookup, wordRepository, wordListRepository } = useAppServices();
-  const [traditional, setTraditional] = useState('');
+  const [headword, setHeadword] = useState('');
   const [readings, setReadings] = useState<DictionaryEntry[]>([]);
   const [selectedReadingIndex, setSelectedReadingIndex] = useState(0);
   const [manualPinyin, setManualPinyin] = useState('');
@@ -33,7 +33,7 @@ export function useAddWord(lists: readonly WordList[]) {
   const lookUpCharacters = useCallback(
     async (input: string) => {
       const converted = toTaiwanTraditional(input);
-      setTraditional(converted);
+      setHeadword(converted);
       const foundReadings = containsChineseCharacters(converted)
         ? await dictionaryLookup.lookUp(converted)
         : [];
@@ -65,17 +65,17 @@ export function useAddWord(lists: readonly WordList[]) {
   };
 
   const save = async (): Promise<SaveWordResult> => {
-    const pinyin = selectedReading?.pinyin ?? toNumberedPinyin(manualPinyin);
-    if (!containsChineseCharacters(traditional) || meanings.length === 0 || !pinyin) {
+    const reading = selectedReading?.reading ?? toNumberedPinyin(manualPinyin);
+    if (!containsChineseCharacters(headword) || meanings.length === 0 || !reading) {
       showMessage('Missing details', 'Enter Chinese characters, pinyin and at least one meaning.');
       return SaveWordResult.NotSaved;
     }
     const selectedLists = lists.filter((list) => selectedListIds.has(list.id));
     const listIdsAlreadyContainingWord = new Set(
-      await wordListRepository.listIdsContainingCharacter([...selectedListIds], traditional),
+      await wordListRepository.listIdsContainingHeadword([...selectedListIds], headword),
     );
     const plan = planWordAddition({
-      traditional,
+      headword,
       selectedLists,
       formMeanings: meanings,
       hasUserEditedMeanings,
@@ -88,9 +88,9 @@ export function useAddWord(lists: readonly WordList[]) {
 
     const word = await wordRepository.findOrCreateWord({
       profileId,
-      traditional,
-      simplified: selectedReading?.simplified,
-      pinyin,
+      headword,
+      variant: selectedReading?.variant,
+      reading,
       definitions: meanings,
     });
     await wordListRepository.addWordToLists(
@@ -101,7 +101,7 @@ export function useAddWord(lists: readonly WordList[]) {
   };
 
   return {
-    traditional,
+    headword,
     readings,
     selectedReadingIndex,
     selectReading,

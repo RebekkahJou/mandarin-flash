@@ -83,29 +83,29 @@ export function createWordListRepository(database: SqlDatabase) {
   }
 
   /** Ids of lists (among those given) that already contain this character, for duplicate warnings. */
-  async function listIdsContainingCharacter(
+  async function listIdsContainingHeadword(
     wordListIds: readonly number[],
-    traditional: string,
+    headword: string,
   ): Promise<number[]> {
     if (wordListIds.length === 0) return [];
     const placeholders = wordListIds.map(() => '?').join(', ');
     const rows = await database.getAll<{ word_list_id: number }>(
       `SELECT DISTINCT word_list_entries.word_list_id
        FROM word_list_entries JOIN words ON words.id = word_list_entries.word_id
-       WHERE words.traditional = ? AND word_list_entries.word_list_id IN (${placeholders})`,
-      [traditional, ...wordListIds],
+       WHERE words.headword = ? AND word_list_entries.word_list_id IN (${placeholders})`,
+      [headword, ...wordListIds],
     );
     return rows.map((row) => row.word_list_id);
   }
 
-  async function charactersInList(wordListId: number): Promise<Set<string>> {
-    const rows = await database.getAll<{ traditional: string }>(
-      `SELECT DISTINCT words.traditional
+  async function headwordsInList(wordListId: number): Promise<Set<string>> {
+    const rows = await database.getAll<{ headword: string }>(
+      `SELECT DISTINCT words.headword
        FROM word_list_entries JOIN words ON words.id = word_list_entries.word_id
        WHERE word_list_entries.word_list_id = ?`,
       [wordListId],
     );
-    return new Set(rows.map((row) => row.traditional));
+    return new Set(rows.map((row) => row.headword));
   }
 
   async function addWordToLists(wordId: number, targets: readonly WordListTarget[]): Promise<void> {
@@ -162,8 +162,8 @@ export function createWordListRepository(database: SqlDatabase) {
     deleteList,
     setListOrder,
     getListWithEntries,
-    listIdsContainingCharacter,
-    charactersInList,
+    listIdsContainingHeadword,
+    headwordsInList,
     addWordToLists,
     removeEntry,
     listIdsContainingWord,

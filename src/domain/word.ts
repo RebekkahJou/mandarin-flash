@@ -1,14 +1,18 @@
 import type { FrequencyTier } from './frequencyTier';
 
-/** A word or phrase the user is studying. One row per profile + traditional + pinyin. */
+/** A word or phrase the user is studying. One row per profile + headword + reading. */
 export interface Word {
   id: number;
   profileId: number;
-  traditional: string;
-  /** Present only when it differs from the traditional form. */
-  simplified?: string;
-  /** Numbered-tone pinyin, e.g. "ni3 hao3". Always stored; display is controlled by settings. */
-  pinyin: string;
+  /** The word as studied, e.g. Traditional characters for Mandarin (Traditional). */
+  headword: string;
+  /** Another written form (e.g. Simplified), present only when it differs from the headword. */
+  variant?: string;
+  /**
+   * Normalized pronunciation, always stored; display is controlled by settings. For Mandarin it
+   * is numbered-tone pinyin, e.g. "ni3 hao3".
+   */
+  reading: string;
   definitions: string[];
   frequencyTier: FrequencyTier;
 }

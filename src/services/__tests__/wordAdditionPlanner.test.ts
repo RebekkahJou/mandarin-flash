@@ -24,7 +24,7 @@ const candidates = [
 ];
 
 const baseRequest = {
-  traditional: '行',
+  headword: '行',
   formMeanings: ['row; line', 'to walk', 'capable'],
   hasUserEditedMeanings: false,
   definitionCandidates: candidates,

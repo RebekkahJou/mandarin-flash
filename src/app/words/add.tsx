@@ -22,14 +22,14 @@ export default function AddWordScreen() {
   const addWord = useAddWord(lists);
   const [characterInput, setCharacterInput] = useState('');
   const [isListPickerVisible, setIsListPickerVisible] = useState(false);
-  const hasLookedUp = addWord.traditional.length > 0;
+  const hasLookedUp = addWord.headword.length > 0;
   const selectedListNames = lists
     .filter((list) => addWord.selectedListIds.has(list.id))
     .map((list) => list.name)
     .join(', ');
   const readingChoices: Choice<number>[] = addWord.readings.map((reading, index) => ({
     value: index,
-    label: toToneMarkedPinyin(reading.pinyin),
+    label: toToneMarkedPinyin(reading.reading),
   }));
 
   const saveWord = async () => {
@@ -47,7 +47,7 @@ export default function AddWordScreen() {
       />
     ) : null;
   const pronunciation = selectedReading ? (
-    <PhoneticText numberedPinyin={selectedReading.pinyin} style={styles.phonetic} />
+    <PhoneticText numberedPinyin={selectedReading.reading} style={styles.phonetic} />
   ) : (
     <>
       <Text style={styles.hint}>
@@ -67,7 +67,7 @@ export default function AddWordScreen() {
   const listsLabel = selectedListNames || 'No list selected';
   const wordDetails = hasLookedUp ? (
     <>
-      <ChineseText text={addWord.traditional} style={styles.preview} />
+      <ChineseText text={addWord.headword} style={styles.preview} />
       {readingChooser}
       {pronunciation}
 

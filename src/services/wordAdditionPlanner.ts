@@ -22,7 +22,7 @@ export interface PlannedListAddition {
 }
 
 export interface WordAdditionRequest {
-  traditional: string;
+  headword: string;
   selectedLists: readonly WordList[];
   /** Meanings shown in the form (the word's own definitions). */
   formMeanings: readonly string[];
@@ -45,7 +45,7 @@ export function planWordAddition(request: WordAdditionRequest): PlannedListAddit
       warnings.push({
         kind: AdditionWarningKind.AlreadyInList,
         wordListId: list.id,
-        message: `${request.traditional} is already in ${list.name}. Add it again?`,
+        message: `${request.headword} is already in ${list.name}. Add it again?`,
       });
     }
     const partOfSpeechWarning = list.validateWord(request.wordPartsOfSpeech);

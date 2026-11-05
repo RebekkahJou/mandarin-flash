@@ -18,9 +18,9 @@ export function matchesWordSearch(word: Word, query: string): boolean {
   if (trimmedQuery.length === 0) return true;
   const pinyinQuery = normalizePinyin(trimmedQuery);
   return (
-    word.traditional.includes(trimmedQuery) ||
-    (word.simplified?.includes(trimmedQuery) ?? false) ||
-    (pinyinQuery.length > 0 && normalizePinyin(word.pinyin).includes(pinyinQuery)) ||
+    word.headword.includes(trimmedQuery) ||
+    (word.variant?.includes(trimmedQuery) ?? false) ||
+    (pinyinQuery.length > 0 && normalizePinyin(word.reading).includes(pinyinQuery)) ||
     word.definitions.some((meaning) => meaning.toLowerCase().includes(trimmedQuery))
   );
 }

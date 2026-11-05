@@ -24,13 +24,13 @@ const SINGLE_CHARACTER_LENGTH = 1;
 export function Flashcard({ word, definitions, font, isRevealed, onReveal }: FlashcardProps) {
   const { simplifiedDisplay } = useSettings().settings;
   const [isSimplifiedModalVisible, setIsSimplifiedModalVisible] = useState(false);
-  const hasSimplifiedForm = word.simplified !== undefined && word.simplified !== word.traditional;
+  const hasSimplifiedForm = word.variant !== undefined && word.variant !== word.headword;
   const characterSize =
-    [...word.traditional].length <= SINGLE_CHARACTER_LENGTH
+    [...word.headword].length <= SINGLE_CHARACTER_LENGTH
       ? fontSizes.flashcardCharacter
       : fontSizes.flashcardPhrase;
   const characterStyle = { ...styles.character, fontSize: characterSize };
-  const simplifiedText = word.simplified ?? '';
+  const simplifiedText = word.variant ?? '';
   const revealHint = isRevealed ? undefined : 'Reveals pronunciation and meaning';
   const simplifiedForm = simplifiedIndicator(
     hasSimplifiedForm,
@@ -40,7 +40,7 @@ export function Flashcard({ word, definitions, font, isRevealed, onReveal }: Fla
   );
   const answer = isRevealed ? (
     <>
-      <PhoneticText numberedPinyin={word.pinyin} style={styles.phonetic} />
+      <PhoneticText numberedPinyin={word.reading} style={styles.phonetic} />
       {definitions.map((definition) => (
         <Text key={definition} style={styles.definition}>
           {definition}
@@ -60,7 +60,7 @@ export function Flashcard({ word, definitions, font, isRevealed, onReveal }: Fla
     >
       {simplifiedForm}
 
-      <ChineseText text={word.traditional} font={font} style={characterStyle} />
+      <ChineseText text={word.headword} font={font} style={characterStyle} />
 
       <View style={styles.answer}>{answer}</View>
 

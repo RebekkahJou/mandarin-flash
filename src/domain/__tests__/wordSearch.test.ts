@@ -2,9 +2,9 @@ import { matchesWordSearch } from '../wordSearch';
 import { makeWord } from './testWords';
 
 const student = makeWord(1, {
-  traditional: '學生',
-  simplified: '学生',
-  pinyin: 'xue2 sheng1',
+  headword: '學生',
+  variant: '学生',
+  reading: 'xue2 sheng1',
   definitions: ['student', 'schoolchild'],
 });
 

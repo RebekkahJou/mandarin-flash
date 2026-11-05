@@ -28,7 +28,7 @@ async function setUp() {
   return { database, profile, wordRepository, wordListRepository, listIdByName };
 }
 
-const walkWord = { traditional: '走', pinyin: 'zou3', definitions: ['to walk'] };
+const walkWord = { headword: '走', reading: 'zou3', definitions: ['to walk'] };
 
 describe('user database', () => {
   it('migrates idempotently', async () => {
@@ -101,7 +101,7 @@ describe('user database', () => {
     const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
     const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
     await wordListRepository.addWordToLists(word.id, [{ wordListId: listIdByName('Verbs') }]);
-    const containing = await wordListRepository.listIdsContainingCharacter(
+    const containing = await wordListRepository.listIdsContainingHeadword(
       [listIdByName('Verbs'), listIdByName('Nouns')],
       '走',
     );
@@ -130,8 +130,8 @@ describe('user database', () => {
     const walk = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
     const good = await wordRepository.findOrCreateWord({
       profileId: profile.id,
-      traditional: '好',
-      pinyin: 'hao3',
+      headword: '好',
+      reading: 'hao3',
       definitions: ['good'],
     });
     await wordListRepository.addWordToLists(walk.id, [
@@ -142,7 +142,7 @@ describe('user database', () => {
 
     const words = await wordRepository.listWordsWithListIds(profile.id);
     const listIdsByCharacter = Object.fromEntries(
-      words.map(({ word, listIds }) => [word.traditional, [...listIds].sort()]),
+      words.map(({ word, listIds }) => [word.headword, [...listIds].sort()]),
     );
     expect(listIdsByCharacter).toEqual({
       走: [listIdByName('General Vocabulary'), listIdByName('Verbs')].sort(),

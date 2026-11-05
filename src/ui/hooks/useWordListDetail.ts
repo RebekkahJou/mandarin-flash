@@ -36,10 +36,10 @@ export function useWordListDetail(wordListId: number) {
     }, [reload]),
   );
 
-  const removeEntry = async (entryId: number, traditional: string) => {
+  const removeEntry = async (entryId: number, headword: string) => {
     const isConfirmed = await confirm(
       'Remove word?',
-      `Remove ${traditional} from this list?`,
+      `Remove ${headword} from this list?`,
       'Remove',
     );
     if (!isConfirmed) return;

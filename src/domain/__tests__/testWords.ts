@@ -5,8 +5,8 @@ export function makeWord(id: number, overrides: Partial<Word> = {}): Word {
   return {
     id,
     profileId: 1,
-    traditional: `字${id}`,
-    pinyin: 'zi4',
+    headword: `字${id}`,
+    reading: 'zi4',
     definitions: [`meaning ${id}`],
     frequencyTier: FrequencyTier.HighIncidence,
     ...overrides,

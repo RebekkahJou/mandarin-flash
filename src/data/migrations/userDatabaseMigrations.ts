@@ -4,7 +4,7 @@ import type { SqlDatabase } from '../sqlDatabase';
  * Each migration runs once, in order; PRAGMA user_version records how many have run.
  * Never edit a released migration — append a new one.
  */
-const USER_DATABASE_MIGRATIONS: readonly string[] = [
+export const USER_DATABASE_MIGRATIONS: readonly string[] = [
   `
   CREATE TABLE profiles (
     id INTEGER PRIMARY KEY,
@@ -62,6 +62,27 @@ const USER_DATABASE_MIGRATIONS: readonly string[] = [
     value TEXT NOT NULL,
     PRIMARY KEY (profile_id, key)
   );
+  `,
+  // Language-neutral words, so other languages fit the same table. The UNIQUE constraint
+  // follows the renamed columns. The default language is written out, not imported, because a
+  // released migration must never change.
+  `
+  ALTER TABLE words RENAME COLUMN traditional TO headword;
+  ALTER TABLE words RENAME COLUMN simplified TO variant;
+  ALTER TABLE words RENAME COLUMN pinyin TO reading;
+
+  ALTER TABLE profiles ADD COLUMN language_id TEXT NOT NULL DEFAULT 'zh-Hant';
+
+  -- One row per practice answer. Kept from the start because history can't be rebuilt later.
+  CREATE TABLE review_events (
+    id INTEGER PRIMARY KEY,
+    profile_id INTEGER NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    word_id INTEGER NOT NULL REFERENCES words(id) ON DELETE CASCADE,
+    answer TEXT NOT NULL,
+    answered_at INTEGER NOT NULL
+  );
+  CREATE INDEX review_events_by_profile ON review_events(profile_id, answered_at);
+  CREATE INDEX review_events_by_word ON review_events(word_id);
   `,
 ];
 

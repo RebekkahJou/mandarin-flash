@@ -39,9 +39,7 @@ export default function PracticeSessionScreen() {
 
   const showSentences = async () => {
     if (!practice.currentCard) return;
-    setSentences(
-      await dictionaryLookup.findExampleSentences(practice.currentCard.word.traditional),
-    );
+    setSentences(await dictionaryLookup.findExampleSentences(practice.currentCard.word.headword));
   };
 
   const answerBySwipe = (answer: SwipeAnswer) => {
