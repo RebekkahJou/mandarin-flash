@@ -6,8 +6,10 @@ import { GeneralWordList } from '../../domain/generalWordList';
 import { LanguageId } from '../../domain/language';
 import { distinctPracticeCards } from '../../domain/practiceCard';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
+import { ReviewAnswer } from '../../domain/reviewEvent';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
 import { createProfileRepository } from '../repositories/profileRepository';
+import { createReviewEventRepository } from '../repositories/reviewEventRepository';
 import { PhoneticDisplay, createSettingsRepository } from '../repositories/settingsRepository';
 import { createWordListRepository } from '../repositories/wordListRepository';
 import { createWordRepository } from '../repositories/wordRepository';
@@ -262,6 +264,31 @@ describe('profiles', () => {
       name: 'Me',
       languageId: LanguageId.MandarinTraditional,
     });
+  });
+});
+
+describe('review events', () => {
+  it('records each answer in order with its time', async () => {
+    const { database, profile, wordRepository } = await setUp();
+    const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    const reviewEventRepository = createReviewEventRepository(database);
+    const answers = [ReviewAnswer.Missed, ReviewAnswer.Gotten, ReviewAnswer.Learned];
+    for (const [index, answer] of answers.entries()) {
+      await reviewEventRepository.recordReviewEvent({
+        profileId: profile.id,
+        wordId: word.id,
+        answer,
+        answeredAtMs: 1000 + index,
+      });
+    }
+    const rows = await database.getAll(
+      'SELECT word_id, answer, answered_at FROM review_events ORDER BY id',
+    );
+    expect(rows).toEqual([
+      { word_id: word.id, answer: 'missed', answered_at: 1000 },
+      { word_id: word.id, answer: 'gotten', answered_at: 1001 },
+      { word_id: word.id, answer: 'learned', answered_at: 1002 },
+    ]);
   });
 });
 

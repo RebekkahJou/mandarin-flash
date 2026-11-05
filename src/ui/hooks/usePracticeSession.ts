@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PracticeCard } from '../../domain/practiceCard';
 import { distinctPracticeCards } from '../../domain/practiceCard';
 import { buildPracticeSet } from '../../domain/practiceSetBuilder';
+import { ReviewAnswer } from '../../domain/reviewEvent';
 import { PracticeSession } from '../../domain/practiceSession';
 import type { CardAnswerResult } from '../../domain/practiceSession';
 import type { SessionTimes } from '../../domain/sessionTimer';
@@ -27,8 +28,13 @@ interface LoadedSession {
 
 /** Runs one practice set: card order, reveal state, font rotation, timers and saving results. */
 export function usePracticeSession(wordListId: number, setSize: number) {
-  const { profileId, wordListRepository, wordRepository, practiceSessionRepository } =
-    useAppServices();
+  const {
+    profileId,
+    wordListRepository,
+    wordRepository,
+    practiceSessionRepository,
+    reviewEventRepository,
+  } = useAppServices();
   const loadedRef = useRef<LoadedSession | null>(null);
   const [currentCard, setCurrentCard] = useState<PracticeCard | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -110,15 +116,34 @@ export function usePracticeSession(wordListId: number, setSize: number) {
     [endSession],
   );
 
+  /** Saved in the background so a slow write never holds up the next card. */
+  const recordAnswer = useCallback(
+    (wordId: number, answer: ReviewAnswer) => {
+      void reviewEventRepository.recordReviewEvent({
+        profileId,
+        wordId,
+        answer,
+        answeredAtMs: Date.now(),
+      });
+    },
+    [profileId, reviewEventRepository],
+  );
+
   const markMissed = useCallback(() => {
     const loaded = loadedRef.current;
-    if (loaded) showNextCard(loaded.session.markMissed());
-  }, [showNextCard]);
+    const wordId = loaded?.session.currentWordId;
+    if (!loaded || wordId === undefined) return;
+    recordAnswer(wordId, ReviewAnswer.Missed);
+    showNextCard(loaded.session.markMissed());
+  }, [recordAnswer, showNextCard]);
 
   const markGotten = useCallback(() => {
     const loaded = loadedRef.current;
-    if (loaded) showNextCard(loaded.session.markGotten());
-  }, [showNextCard]);
+    const wordId = loaded?.session.currentWordId;
+    if (!loaded || wordId === undefined) return;
+    recordAnswer(wordId, ReviewAnswer.Gotten);
+    showNextCard(loaded.session.markGotten());
+  }, [recordAnswer, showNextCard]);
 
   const markLearned = useCallback(async () => {
     const loaded = loadedRef.current;
@@ -131,8 +156,9 @@ export function usePracticeSession(wordListId: number, setSize: number) {
     );
     if (!isConfirmed) return;
     await wordRepository.markWordLearned(wordId);
+    recordAnswer(wordId, ReviewAnswer.Learned);
     showNextCard(loaded.session.markLearned());
-  }, [showNextCard, wordRepository]);
+  }, [recordAnswer, showNextCard, wordRepository]);
 
   return {
     isLoading,

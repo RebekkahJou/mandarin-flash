@@ -5,6 +5,8 @@ import { openDictionaryDatabase, openUserDatabase } from '../data/openDatabases'
 import type { PracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import { createPracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import { createProfileRepository } from '../data/repositories/profileRepository';
+import type { ReviewEventRepository } from '../data/repositories/reviewEventRepository';
+import { createReviewEventRepository } from '../data/repositories/reviewEventRepository';
 import type { AppSettings, SettingsRepository } from '../data/repositories/settingsRepository';
 import {
   DEFAULT_SETTINGS,
@@ -27,6 +29,7 @@ export interface AppServices {
   wordRepository: WordRepository;
   wordListRepository: WordListRepository;
   practiceSessionRepository: PracticeSessionRepository;
+  reviewEventRepository: ReviewEventRepository;
   settingsRepository: SettingsRepository;
   dictionaryLookup: DictionaryLookup;
 }
@@ -43,6 +46,7 @@ async function createAppServices(): Promise<AppServices> {
     wordRepository: createWordRepository(userDatabase),
     wordListRepository: createWordListRepository(userDatabase),
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),
+    reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
     dictionaryLookup: createDictionaryLookup(dictionaryDatabase),
   };
