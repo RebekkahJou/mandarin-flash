@@ -48,6 +48,10 @@ export function isLanguageId(value: string): value is LanguageId {
 }
 
 /** An unknown stored id falls back to the default language rather than hiding the profile. */
+export function toLanguageId(value: string): LanguageId {
+  return isLanguageId(value) ? value : DEFAULT_LANGUAGE_ID;
+}
+
 export function languageDefinitionFor(languageId: string): LanguageDefinition {
-  return LANGUAGE_DEFINITIONS[isLanguageId(languageId) ? languageId : DEFAULT_LANGUAGE_ID];
+  return LANGUAGE_DEFINITIONS[toLanguageId(languageId)];
 }

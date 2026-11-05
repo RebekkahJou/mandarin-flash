@@ -9,7 +9,7 @@ const NO_LIST_LABEL = 'Not in any list';
 
 /** Every word in the profile with the names of its lists, filtered by a search query. */
 export function useAllWords() {
-  const { profileId, wordRepository, wordListRepository } = useAppServices();
+  const { profileId, languageModule, wordRepository, wordListRepository } = useAppServices();
   const [words, setWords] = useState<WordWithListIds[]>([]);
   const [listNamesById, setListNamesById] = useState<ReadonlyMap<number, string>>(new Map());
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,8 +27,11 @@ export function useAllWords() {
   );
 
   const matchingWords = useMemo(
-    () => words.filter(({ word }) => matchesWordSearch(word, searchQuery)),
-    [words, searchQuery],
+    () =>
+      words.filter(({ word }) =>
+        matchesWordSearch(word, searchQuery, languageModule.readingSearchKey),
+      ),
+    [words, searchQuery, languageModule],
   );
 
   const describeLists = (listIds: readonly number[]): string => {

@@ -5,6 +5,7 @@ import {
   ScriptStudySetId,
   isLanguageId,
   languageDefinitionFor,
+  toLanguageId,
 } from '../language';
 import { PartOfSpeech } from '../partOfSpeech';
 
@@ -33,6 +34,16 @@ describe('isLanguageId', () => {
     expect(isLanguageId('zh-Hant')).toBe(true);
     expect(isLanguageId('zh-Hans')).toBe(false);
     expect(isLanguageId('')).toBe(false);
+  });
+});
+
+describe('toLanguageId', () => {
+  it('keeps a known id', () => {
+    expect(toLanguageId('zh-Hant')).toBe(LanguageId.MandarinTraditional);
+  });
+
+  it('falls back to the default language for an unknown id', () => {
+    expect(toLanguageId('xx')).toBe(DEFAULT_LANGUAGE_ID);
   });
 });
 

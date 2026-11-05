@@ -16,10 +16,14 @@ import type { WordRepository } from '../data/repositories/wordRepository';
 import { createWordRepository } from '../data/repositories/wordRepository';
 import type { DictionaryLookup } from '../services/dictionaryLookup';
 import { createDictionaryLookup } from '../services/dictionaryLookup';
+import type { LanguageModule } from '../services/languages/languageModule';
+import { languageModuleFor } from '../services/languages/languageModules';
 
 export interface AppServices {
   /** Single profile for the MVP; every query is already scoped by profile for multi-profile later. */
   profileId: number;
+  /** Text handling for the profile's language. */
+  languageModule: LanguageModule;
   wordRepository: WordRepository;
   wordListRepository: WordListRepository;
   practiceSessionRepository: PracticeSessionRepository;
@@ -35,6 +39,7 @@ async function createAppServices(): Promise<AppServices> {
   const profile = await createProfileRepository(userDatabase).ensureDefaultProfile();
   return {
     profileId: profile.id,
+    languageModule: languageModuleFor(profile.languageId),
     wordRepository: createWordRepository(userDatabase),
     wordListRepository: createWordListRepository(userDatabase),
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),

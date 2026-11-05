@@ -3,6 +3,7 @@
  */
 import { FrequencyTier } from '../../domain/frequencyTier';
 import { GeneralWordList } from '../../domain/generalWordList';
+import { LanguageId } from '../../domain/language';
 import { distinctPracticeCards } from '../../domain/practiceCard';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
@@ -229,6 +230,38 @@ describe('user database', () => {
     const list = await wordListRepository.getListWithEntries(generalListId);
     await wordListRepository.removeEntry(list?.words[0].entryId ?? -1);
     expect((await wordListRepository.getListWithEntries(generalListId))?.length).toBe(0);
+  });
+});
+
+describe('profiles', () => {
+  it('creates the default profile in Mandarin (Traditional)', async () => {
+    const { profile } = await setUp();
+    expect(profile).toMatchObject({ name: 'Me', languageId: LanguageId.MandarinTraditional });
+  });
+
+  it('stores the language a profile is created with', async () => {
+    const database = createInMemoryDatabase();
+    await migrateUserDatabase(database);
+    const created = await createProfileRepository(database).createProfile(
+      'Kid',
+      LanguageId.MandarinTraditional,
+    );
+    const stored = await database.getFirst<{ language_id: string }>(
+      'SELECT language_id FROM profiles WHERE id = ?',
+      [created.id],
+    );
+    expect(stored?.language_id).toBe(LanguageId.MandarinTraditional);
+  });
+
+  it('reads an unknown stored language as the default language', async () => {
+    const { database, profile } = await setUp();
+    await database.run('UPDATE profiles SET language_id = ? WHERE id = ?', ['xx', profile.id]);
+    const reloaded = await createProfileRepository(database).ensureDefaultProfile();
+    expect(reloaded).toEqual({
+      id: profile.id,
+      name: 'Me',
+      languageId: LanguageId.MandarinTraditional,
+    });
   });
 });
 

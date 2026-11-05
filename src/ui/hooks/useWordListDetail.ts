@@ -13,7 +13,7 @@ import { CsvImportResult, useCsvImport } from './useCsvImport';
 
 /** Loads one word list and handles removing words, editing meanings and CSV import/export. */
 export function useWordListDetail(wordListId: number) {
-  const { wordListRepository, dictionaryLookup } = useAppServices();
+  const { languageModule, wordListRepository, dictionaryLookup } = useAppServices();
   const importCsvIntoLists = useCsvImport();
   const [list, setList] = useState<WordList | null>(null);
   const [mismatchedWordIds, setMismatchedWordIds] = useState<ReadonlySet<number>>(new Set());
@@ -57,7 +57,7 @@ export function useWordListDetail(wordListId: number) {
 
   const exportCsv = async () => {
     if (!list) return;
-    await shareCsvFile(csvFileNameForList(list.name), buildWordListCsv(list.words));
+    await shareCsvFile(csvFileNameForList(list.name), buildWordListCsv(list.words, languageModule));
   };
 
   const importCsv = async () => {

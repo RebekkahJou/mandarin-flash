@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { toToneMarkedPinyin } from '../../services/pinyin';
+import { useAppServices } from '../../ui/AppServicesContext';
 import type { Choice } from '../../ui/components/ChoiceChips';
 import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { ChineseText } from '../../ui/components/ChineseText';
@@ -17,6 +17,7 @@ import { useWordListSummaries } from '../../ui/hooks/useWordListSummaries';
 import { colors, fontSizes, radii, spacing } from '../../ui/theme';
 
 export default function AddWordScreen() {
+  const { languageModule } = useAppServices();
   const { summaries } = useWordListSummaries();
   const lists = summaries.map((summary) => summary.list);
   const addWord = useAddWord(lists);
@@ -29,7 +30,7 @@ export default function AddWordScreen() {
     .join(', ');
   const readingChoices: Choice<number>[] = addWord.readings.map((reading, index) => ({
     value: index,
-    label: toToneMarkedPinyin(reading.reading),
+    label: languageModule.formatReading(reading.reading),
   }));
 
   const saveWord = async () => {

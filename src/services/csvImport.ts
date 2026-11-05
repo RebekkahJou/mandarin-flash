@@ -1,12 +1,11 @@
 import Papa from 'papaparse';
 
 import type { WordList } from '../domain/wordList';
-import { containsChineseCharacters, toTaiwanTraditional } from './chineseConverter';
 import type { CsvColumn } from './csvFormat';
 import { CSV_COLUMNS, splitMeanings } from './csvFormat';
 import type { DictionaryEntry } from './dictionaryLookup';
 import { findReading, partsOfSpeechOf } from './dictionaryLookup';
-import { toNumberedPinyin } from './pinyin';
+import type { LanguageModule } from './languages/languageModule';
 import { formatWordCount } from './wordCount';
 
 /** Imported files are untrusted: these limits keep a bad file from freezing the phone. */
@@ -16,7 +15,8 @@ const MAX_CELL_LENGTH = 500;
 
 export interface CsvWordRow {
   rowNumber: number;
-  characters: string;
+  /** Already normalized by the language, e.g. converted to Taiwan Traditional. */
+  headword: string;
   meanings: string[];
   reading?: string;
 }
@@ -54,7 +54,11 @@ function cellAt(row: readonly string[], position: number): string {
   return (row[position] ?? '').trim().replace(ESCAPED_FORMULA_CELL, '').slice(0, MAX_CELL_LENGTH);
 }
 
-export function parseWordCsv(csvText: string, byteSize: number = csvText.length): ParsedCsv {
+export function parseWordCsv(
+  csvText: string,
+  languageModule: LanguageModule,
+  byteSize: number = csvText.length,
+): ParsedCsv {
   if (byteSize > MAX_CSV_BYTES) throw new CsvTooLargeError();
   const { data } = Papa.parse<string[]>(csvText, { skipEmptyLines: 'greedy' });
   if (data.length > MAX_CSV_ROWS + 1) throw new CsvTooLargeError();
@@ -65,17 +69,17 @@ export function parseWordCsv(csvText: string, byteSize: number = csvText.length)
   const invalidRowNumbers: number[] = [];
   data.slice(hasHeader ? 1 : 0).forEach((row, index) => {
     const rowNumber = index + (hasHeader ? 2 : 1);
-    const characters = cellAt(row, positions.character);
-    if (!containsChineseCharacters(characters)) {
+    const headwordCell = cellAt(row, positions.character);
+    if (!languageModule.containsLanguageScript(headwordCell)) {
       invalidRowNumbers.push(rowNumber);
       return;
     }
-    const pinyin = cellAt(row, positions.pinyin);
+    const readingCell = cellAt(row, positions.pinyin);
     rows.push({
       rowNumber,
-      characters,
+      headword: languageModule.normalizeHeadword(headwordCell),
       meanings: splitMeanings(cellAt(row, positions.meaning)),
-      reading: pinyin ? toNumberedPinyin(pinyin) : undefined,
+      reading: readingCell ? languageModule.normalizeReading(readingCell) : undefined,
     });
   });
   return { rows, invalidRowNumbers };
@@ -118,9 +122,8 @@ async function draftWord(
   targetList: WordList,
   lookUp: LookUp,
 ): Promise<DraftedWord | null> {
-  const headword = toTaiwanTraditional(row.characters);
   // Looked up even when the file has every column, to check the word fits the list.
-  const entry = chooseEntry(await lookUp(headword), row.reading);
+  const entry = chooseEntry(await lookUp(row.headword), row.reading);
   const definitions =
     row.meanings.length > 0
       ? row.meanings
@@ -128,7 +131,7 @@ async function draftWord(
   if (definitions.length === 0) return null;
   return {
     draft: {
-      headword,
+      headword: row.headword,
       variant: entry?.variant,
       reading: row.reading ?? entry?.reading ?? '',
       definitions,
@@ -153,7 +156,7 @@ export async function planCsvImport(
   };
   const seenHeadwords = new Set(headwordsAlreadyInList);
   for (const row of parsedCsv.rows) {
-    const headword = toTaiwanTraditional(row.characters);
+    const { headword } = row;
     if (seenHeadwords.has(headword)) {
       plan.skippedDuplicates.push(headword);
       continue;
