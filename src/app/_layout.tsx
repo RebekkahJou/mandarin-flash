@@ -43,6 +43,8 @@ function RootStack() {
       </Stack.Protected>
       <Stack.Screen name="profiles/add" options={{ title: 'Add a new user' }} />
       <Stack.Screen name="about" options={{ title: 'About & licenses' }} />
+      <Stack.Screen name="packs/index" options={{ title: 'Language packs' }} />
+      <Stack.Screen name="packs/install" options={{ title: 'Install language pack' }} />
     </Stack>
   );
 }
