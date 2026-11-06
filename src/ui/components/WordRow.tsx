@@ -40,7 +40,7 @@ export function WordRow({
         {detail}
       </Text>
     );
-  const removeLabel = `Remove ${word.traditional}`;
+  const removeLabel = `Remove ${word.headword}`;
   const removeButton = onRemove ? (
     <Pressable
       onPress={onRemove}
@@ -59,9 +59,9 @@ export function WordRow({
         accessibilityRole="button"
         accessibilityHint={pressHint}
       >
-        <ChineseText text={word.traditional} style={styles.character} />
+        <ChineseText text={word.headword} style={styles.character} />
         <View style={styles.text}>
-          <PhoneticText numberedPinyin={word.pinyin} style={styles.phonetic} />
+          <PhoneticText numberedPinyin={word.reading} style={styles.phonetic} />
           <Text style={styles.meanings} numberOfLines={2}>
             {meaningsText}
           </Text>

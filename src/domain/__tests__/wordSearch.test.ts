@@ -2,32 +2,42 @@ import { matchesWordSearch } from '../wordSearch';
 import { makeWord } from './testWords';
 
 const student = makeWord(1, {
-  traditional: '學生',
-  simplified: '学生',
-  pinyin: 'xue2 sheng1',
+  headword: '學生',
+  variant: '学生',
+  reading: 'xue2 sheng1',
   definitions: ['student', 'schoolchild'],
 });
 
+/** Stands in for a language's folding: ignores spaces and digits. */
+const ignoreSpacesAndDigits = (text: string) => text.replace(/[\s0-9]/g, '').toLowerCase();
+
+function matches(query: string): boolean {
+  return matchesWordSearch(student, query, ignoreSpacesAndDigits);
+}
+
 describe('matchesWordSearch', () => {
   it('matches everything when the query is blank', () => {
-    expect(matchesWordSearch(student, '   ')).toBe(true);
+    expect(matches('   ')).toBe(true);
   });
 
-  it('matches Traditional or Simplified characters', () => {
-    expect(matchesWordSearch(student, '學')).toBe(true);
-    expect(matchesWordSearch(student, '学生')).toBe(true);
-    expect(matchesWordSearch(student, '老')).toBe(false);
+  it('matches the headword or its variant', () => {
+    expect(matches('學')).toBe(true);
+    expect(matches('学生')).toBe(true);
+    expect(matches('老')).toBe(false);
   });
 
-  it('matches pinyin with or without tones and spaces', () => {
-    for (const query of ['xuesheng', 'xue sheng', 'xué shēng', 'xue2 sheng1', 'Sheng']) {
-      expect(matchesWordSearch(student, query)).toBe(true);
-    }
-    expect(matchesWordSearch(student, 'laoshi')).toBe(false);
+  it('matches the reading through the language’s search key', () => {
+    expect(matches('xuesheng')).toBe(true);
+    expect(matches('Xue Sheng')).toBe(true);
+    expect(matches('laoshi')).toBe(false);
+  });
+
+  it('ignores a query that folds to nothing', () => {
+    expect(matches('123')).toBe(false);
   });
 
   it('matches meanings case-insensitively', () => {
-    expect(matchesWordSearch(student, 'SCHOOL')).toBe(true);
-    expect(matchesWordSearch(student, 'teacher')).toBe(false);
+    expect(matches('SCHOOL')).toBe(true);
+    expect(matches('teacher')).toBe(false);
   });
 });

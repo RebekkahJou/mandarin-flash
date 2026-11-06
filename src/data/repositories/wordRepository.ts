@@ -7,9 +7,9 @@ import { WORD_COLUMNS, serializeDefinitions, toWord } from './rowMappers';
 
 export interface NewWord {
   profileId: number;
-  traditional: string;
-  simplified?: string;
-  pinyin: string;
+  headword: string;
+  variant?: string;
+  reading: string;
   definitions: readonly string[];
 }
 
@@ -26,12 +26,12 @@ function parseListIds(joinedIds: string | null): number[] {
 export function createWordRepository(database: SqlDatabase) {
   async function findWord(
     profileId: number,
-    traditional: string,
-    pinyin: string,
+    headword: string,
+    reading: string,
   ): Promise<Word | null> {
     const row = await database.getFirst<WordRow>(
-      `SELECT ${WORD_COLUMNS} FROM words WHERE profile_id = ? AND traditional = ? AND pinyin = ?`,
-      [profileId, traditional, pinyin],
+      `SELECT ${WORD_COLUMNS} FROM words WHERE profile_id = ? AND headword = ? AND reading = ?`,
+      [profileId, headword, reading],
     );
     return row ? toWord(row) : null;
   }
@@ -45,16 +45,16 @@ export function createWordRepository(database: SqlDatabase) {
 
   /** Reuses the existing word (keeping its tier and meanings) so a word is stored only once. */
   async function findOrCreateWord(newWord: NewWord): Promise<Word> {
-    const existing = await findWord(newWord.profileId, newWord.traditional, newWord.pinyin);
+    const existing = await findWord(newWord.profileId, newWord.headword, newWord.reading);
     if (existing) return existing;
     const result = await database.run(
-      `INSERT INTO words (profile_id, traditional, simplified, pinyin, definitions, frequency_tier, created_at)
+      `INSERT INTO words (profile_id, headword, variant, reading, definitions, frequency_tier, created_at)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         newWord.profileId,
-        newWord.traditional,
-        newWord.simplified ?? null,
-        newWord.pinyin,
+        newWord.headword,
+        newWord.variant ?? null,
+        newWord.reading,
         serializeDefinitions(newWord.definitions),
         NEW_WORD_TIER,
         Date.now(),
@@ -63,9 +63,9 @@ export function createWordRepository(database: SqlDatabase) {
     return {
       id: result.lastInsertRowId,
       profileId: newWord.profileId,
-      traditional: newWord.traditional,
-      simplified: newWord.simplified,
-      pinyin: newWord.pinyin,
+      headword: newWord.headword,
+      variant: newWord.variant,
+      reading: newWord.reading,
       definitions: [...newWord.definitions],
       frequencyTier: NEW_WORD_TIER,
     };

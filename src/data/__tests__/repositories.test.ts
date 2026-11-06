@@ -3,10 +3,13 @@
  */
 import { FrequencyTier } from '../../domain/frequencyTier';
 import { GeneralWordList } from '../../domain/generalWordList';
+import { LanguageId } from '../../domain/language';
 import { distinctPracticeCards } from '../../domain/practiceCard';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
+import { ReviewAnswer } from '../../domain/reviewEvent';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
 import { createProfileRepository } from '../repositories/profileRepository';
+import { createReviewEventRepository } from '../repositories/reviewEventRepository';
 import { PhoneticDisplay, createSettingsRepository } from '../repositories/settingsRepository';
 import { createWordListRepository } from '../repositories/wordListRepository';
 import { createWordRepository } from '../repositories/wordRepository';
@@ -28,7 +31,7 @@ async function setUp() {
   return { database, profile, wordRepository, wordListRepository, listIdByName };
 }
 
-const walkWord = { traditional: '走', pinyin: 'zou3', definitions: ['to walk'] };
+const walkWord = { headword: '走', reading: 'zou3', definitions: ['to walk'] };
 
 describe('user database', () => {
   it('migrates idempotently', async () => {
@@ -101,7 +104,7 @@ describe('user database', () => {
     const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
     const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
     await wordListRepository.addWordToLists(word.id, [{ wordListId: listIdByName('Verbs') }]);
-    const containing = await wordListRepository.listIdsContainingCharacter(
+    const containing = await wordListRepository.listIdsContainingHeadword(
       [listIdByName('Verbs'), listIdByName('Nouns')],
       '走',
     );
@@ -130,8 +133,8 @@ describe('user database', () => {
     const walk = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
     const good = await wordRepository.findOrCreateWord({
       profileId: profile.id,
-      traditional: '好',
-      pinyin: 'hao3',
+      headword: '好',
+      reading: 'hao3',
       definitions: ['good'],
     });
     await wordListRepository.addWordToLists(walk.id, [
@@ -142,7 +145,7 @@ describe('user database', () => {
 
     const words = await wordRepository.listWordsWithListIds(profile.id);
     const listIdsByCharacter = Object.fromEntries(
-      words.map(({ word, listIds }) => [word.traditional, [...listIds].sort()]),
+      words.map(({ word, listIds }) => [word.headword, [...listIds].sort()]),
     );
     expect(listIdsByCharacter).toEqual({
       走: [listIdByName('General Vocabulary'), listIdByName('Verbs')].sort(),
@@ -229,6 +232,63 @@ describe('user database', () => {
     const list = await wordListRepository.getListWithEntries(generalListId);
     await wordListRepository.removeEntry(list?.words[0].entryId ?? -1);
     expect((await wordListRepository.getListWithEntries(generalListId))?.length).toBe(0);
+  });
+});
+
+describe('profiles', () => {
+  it('creates the default profile in Mandarin (Traditional)', async () => {
+    const { profile } = await setUp();
+    expect(profile).toMatchObject({ name: 'Me', languageId: LanguageId.MandarinTraditional });
+  });
+
+  it('stores the language a profile is created with', async () => {
+    const database = createInMemoryDatabase();
+    await migrateUserDatabase(database);
+    const created = await createProfileRepository(database).createProfile(
+      'Kid',
+      LanguageId.MandarinTraditional,
+    );
+    const stored = await database.getFirst<{ language_id: string }>(
+      'SELECT language_id FROM profiles WHERE id = ?',
+      [created.id],
+    );
+    expect(stored?.language_id).toBe(LanguageId.MandarinTraditional);
+  });
+
+  it('reads an unknown stored language as the default language', async () => {
+    const { database, profile } = await setUp();
+    await database.run('UPDATE profiles SET language_id = ? WHERE id = ?', ['xx', profile.id]);
+    const reloaded = await createProfileRepository(database).ensureDefaultProfile();
+    expect(reloaded).toEqual({
+      id: profile.id,
+      name: 'Me',
+      languageId: LanguageId.MandarinTraditional,
+    });
+  });
+});
+
+describe('review events', () => {
+  it('records each answer in order with its time', async () => {
+    const { database, profile, wordRepository } = await setUp();
+    const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    const reviewEventRepository = createReviewEventRepository(database);
+    const answers = [ReviewAnswer.Missed, ReviewAnswer.Gotten, ReviewAnswer.Learned];
+    for (const [index, answer] of answers.entries()) {
+      await reviewEventRepository.recordReviewEvent({
+        profileId: profile.id,
+        wordId: word.id,
+        answer,
+        answeredAtMs: 1000 + index,
+      });
+    }
+    const rows = await database.getAll(
+      'SELECT word_id, answer, answered_at FROM review_events ORDER BY id',
+    );
+    expect(rows).toEqual([
+      { word_id: word.id, answer: 'missed', answered_at: 1000 },
+      { word_id: word.id, answer: 'gotten', answered_at: 1001 },
+      { word_id: word.id, answer: 'learned', answered_at: 1002 },
+    ]);
   });
 });
 

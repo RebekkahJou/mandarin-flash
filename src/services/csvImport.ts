@@ -1,12 +1,11 @@
 import Papa from 'papaparse';
 
 import type { WordList } from '../domain/wordList';
-import { containsChineseCharacters, toTaiwanTraditional } from './chineseConverter';
-import type { CsvColumn } from './csvFormat';
-import { CSV_COLUMNS, splitMeanings } from './csvFormat';
+import type { CsvColumn, CsvHeaderNames } from './csvFormat';
+import { CSV_COLUMNS, acceptedHeaderNames, splitMeanings } from './csvFormat';
 import type { DictionaryEntry } from './dictionaryLookup';
 import { findReading, partsOfSpeechOf } from './dictionaryLookup';
-import { toNumberedPinyin } from './pinyin';
+import type { LanguageAdapter } from './languages/languageAdapter';
 import { formatWordCount } from './wordCount';
 
 /** Imported files are untrusted: these limits keep a bad file from freezing the phone. */
@@ -16,9 +15,10 @@ const MAX_CELL_LENGTH = 500;
 
 export interface CsvWordRow {
   rowNumber: number;
-  characters: string;
+  /** Already normalized by the language, e.g. converted to Taiwan Traditional. */
+  headword: string;
   meanings: string[];
-  pinyin?: string;
+  reading?: string;
 }
 
 export interface ParsedCsv {
@@ -32,16 +32,23 @@ export class CsvTooLargeError extends Error {
   }
 }
 
-/** Maps header names to column positions; files without a header use the export order. */
-function columnPositions(firstRow: readonly string[]): {
-  positions: Record<CsvColumn, number>;
-  hasHeader: boolean;
-} {
+/**
+ * Maps header names to column positions; files without a header use the export order. A first
+ * row counts as a header when it names the headword column.
+ */
+function columnPositions(
+  firstRow: readonly string[],
+  languageHeaders: CsvHeaderNames,
+): { positions: Record<CsvColumn, number>; hasHeader: boolean } {
   const normalizedHeader = firstRow.map((cell) => cell.trim().toLowerCase());
-  const hasHeader = normalizedHeader.includes('character');
+  const headerPositionOf = (column: CsvColumn) => {
+    const acceptedNames = acceptedHeaderNames(column, languageHeaders);
+    return normalizedHeader.findIndex((cell) => acceptedNames.includes(cell));
+  };
+  const hasHeader = headerPositionOf('headword') >= 0;
   const positions = {} as Record<CsvColumn, number>;
   CSV_COLUMNS.forEach((column, defaultPosition) => {
-    positions[column] = hasHeader ? normalizedHeader.indexOf(column) : defaultPosition;
+    positions[column] = hasHeader ? headerPositionOf(column) : defaultPosition;
   });
   return { positions, hasHeader };
 }
@@ -54,37 +61,41 @@ function cellAt(row: readonly string[], position: number): string {
   return (row[position] ?? '').trim().replace(ESCAPED_FORMULA_CELL, '').slice(0, MAX_CELL_LENGTH);
 }
 
-export function parseWordCsv(csvText: string, byteSize: number = csvText.length): ParsedCsv {
+export function parseWordCsv(
+  csvText: string,
+  languageBundle: LanguageAdapter,
+  byteSize: number = csvText.length,
+): ParsedCsv {
   if (byteSize > MAX_CSV_BYTES) throw new CsvTooLargeError();
   const { data } = Papa.parse<string[]>(csvText, { skipEmptyLines: 'greedy' });
   if (data.length > MAX_CSV_ROWS + 1) throw new CsvTooLargeError();
   if (data.length === 0) return { rows: [], invalidRowNumbers: [] };
 
-  const { positions, hasHeader } = columnPositions(data[0]);
+  const { positions, hasHeader } = columnPositions(data[0], languageBundle.csvHeaders);
   const rows: CsvWordRow[] = [];
   const invalidRowNumbers: number[] = [];
   data.slice(hasHeader ? 1 : 0).forEach((row, index) => {
     const rowNumber = index + (hasHeader ? 2 : 1);
-    const characters = cellAt(row, positions.character);
-    if (!containsChineseCharacters(characters)) {
+    const headwordCell = cellAt(row, positions.headword);
+    if (!languageBundle.containsLanguageScript(headwordCell)) {
       invalidRowNumbers.push(rowNumber);
       return;
     }
-    const pinyin = cellAt(row, positions.pinyin);
+    const readingCell = cellAt(row, positions.reading);
     rows.push({
       rowNumber,
-      characters,
+      headword: languageBundle.normalizeHeadword(headwordCell),
       meanings: splitMeanings(cellAt(row, positions.meaning)),
-      pinyin: pinyin ? toNumberedPinyin(pinyin) : undefined,
+      reading: readingCell ? languageBundle.normalizeReading(readingCell) : undefined,
     });
   });
   return { rows, invalidRowNumbers };
 }
 
 export interface ImportWordDraft {
-  traditional: string;
-  simplified?: string;
-  pinyin: string;
+  headword: string;
+  variant?: string;
+  reading: string;
   definitions: string[];
 }
 
@@ -99,13 +110,13 @@ export interface CsvImportPlan {
   invalidRowNumbers: number[];
 }
 
-type LookUp = (traditional: string) => Promise<DictionaryEntry[]>;
+type LookUp = (headword: string) => Promise<DictionaryEntry[]>;
 
 function chooseEntry(
   entries: readonly DictionaryEntry[],
-  pinyin: string | undefined,
+  reading: string | undefined,
 ): DictionaryEntry | undefined {
-  return findReading(entries, pinyin) ?? entries[0];
+  return findReading(entries, reading) ?? entries[0];
 }
 
 interface DraftedWord {
@@ -118,9 +129,8 @@ async function draftWord(
   targetList: WordList,
   lookUp: LookUp,
 ): Promise<DraftedWord | null> {
-  const traditional = toTaiwanTraditional(row.characters);
   // Looked up even when the file has every column, to check the word fits the list.
-  const entry = chooseEntry(await lookUp(traditional), row.pinyin);
+  const entry = chooseEntry(await lookUp(row.headword), row.reading);
   const definitions =
     row.meanings.length > 0
       ? row.meanings
@@ -128,9 +138,9 @@ async function draftWord(
   if (definitions.length === 0) return null;
   return {
     draft: {
-      traditional,
-      simplified: entry?.simplified,
-      pinyin: row.pinyin ?? entry?.pinyin ?? '',
+      headword: row.headword,
+      variant: entry?.variant,
+      reading: row.reading ?? entry?.reading ?? '',
       definitions,
     },
     fitsList: targetList.validateWord(partsOfSpeechOf(entry ? [entry] : [])) === null,
@@ -141,7 +151,7 @@ async function draftWord(
 export async function planCsvImport(
   parsedCsv: ParsedCsv,
   targetList: WordList,
-  charactersAlreadyInList: ReadonlySet<string>,
+  headwordsAlreadyInList: ReadonlySet<string>,
   lookUp: LookUp,
 ): Promise<CsvImportPlan> {
   const plan: CsvImportPlan = {
@@ -151,21 +161,21 @@ export async function planCsvImport(
     partOfSpeechMismatches: [],
     invalidRowNumbers: [...parsedCsv.invalidRowNumbers],
   };
-  const seenCharacters = new Set(charactersAlreadyInList);
+  const seenHeadwords = new Set(headwordsAlreadyInList);
   for (const row of parsedCsv.rows) {
-    const traditional = toTaiwanTraditional(row.characters);
-    if (seenCharacters.has(traditional)) {
-      plan.skippedDuplicates.push(traditional);
+    const { headword } = row;
+    if (seenHeadwords.has(headword)) {
+      plan.skippedDuplicates.push(headword);
       continue;
     }
-    seenCharacters.add(traditional);
+    seenHeadwords.add(headword);
     const drafted = await draftWord(row, targetList, lookUp);
     if (!drafted) {
-      plan.unknownCharacters.push(traditional);
+      plan.unknownCharacters.push(headword);
       continue;
     }
     plan.wordsToAdd.push(drafted.draft);
-    if (!drafted.fitsList) plan.partOfSpeechMismatches.push(traditional);
+    if (!drafted.fitsList) plan.partOfSpeechMismatches.push(headword);
   }
   return plan;
 }

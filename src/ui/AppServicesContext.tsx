@@ -5,6 +5,8 @@ import { openDictionaryDatabase, openUserDatabase } from '../data/openDatabases'
 import type { PracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import { createPracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import { createProfileRepository } from '../data/repositories/profileRepository';
+import type { ReviewEventRepository } from '../data/repositories/reviewEventRepository';
+import { createReviewEventRepository } from '../data/repositories/reviewEventRepository';
 import type { AppSettings, SettingsRepository } from '../data/repositories/settingsRepository';
 import {
   DEFAULT_SETTINGS,
@@ -16,13 +18,18 @@ import type { WordRepository } from '../data/repositories/wordRepository';
 import { createWordRepository } from '../data/repositories/wordRepository';
 import type { DictionaryLookup } from '../services/dictionaryLookup';
 import { createDictionaryLookup } from '../services/dictionaryLookup';
+import type { LanguageAdapter } from '../services/languages/languageAdapter';
+import { languageBundleFor } from '../services/languages/languageBundles';
 
 export interface AppServices {
   /** Single profile for the MVP; every query is already scoped by profile for multi-profile later. */
   profileId: number;
+  /** Text handling for the profile's language. */
+  languageBundle: LanguageAdapter;
   wordRepository: WordRepository;
   wordListRepository: WordListRepository;
   practiceSessionRepository: PracticeSessionRepository;
+  reviewEventRepository: ReviewEventRepository;
   settingsRepository: SettingsRepository;
   dictionaryLookup: DictionaryLookup;
 }
@@ -35,9 +42,11 @@ async function createAppServices(): Promise<AppServices> {
   const profile = await createProfileRepository(userDatabase).ensureDefaultProfile();
   return {
     profileId: profile.id,
+    languageBundle: languageBundleFor(profile.languageId),
     wordRepository: createWordRepository(userDatabase),
     wordListRepository: createWordListRepository(userDatabase),
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),
+    reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
     dictionaryLookup: createDictionaryLookup(dictionaryDatabase),
   };

@@ -17,8 +17,8 @@ export function ExampleSentencesModal({
   onClose,
 }: ExampleSentencesModalProps) {
   const sentenceViews = sentences.map((sentence) => (
-    <View key={sentence.traditional} style={styles.sentence}>
-      <ChineseText text={sentence.traditional} style={styles.chinese} />
+    <View key={sentence.text} style={styles.sentence}>
+      <ChineseText text={sentence.text} style={styles.chinese} />
       <Text style={styles.english}>{sentence.english}</Text>
     </View>
   ));

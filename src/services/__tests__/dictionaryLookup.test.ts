@@ -26,7 +26,7 @@ describe('dictionaryLookup', () => {
   it('returns readings most common first, with parts of speech decoded', async () => {
     const lookup = await createLookup();
     const entries = await lookup.lookUp('行');
-    expect(entries.map((entry) => entry.pinyin)).toEqual(['xing2', 'hang2']);
+    expect(entries.map((entry) => entry.reading)).toEqual(['xing2', 'hang2']);
     expect(entries[0].definitionCandidates[1]).toEqual({
       text: 'capable',
       partsOfSpeech: [PartOfSpeech.Adjective],
@@ -37,7 +37,7 @@ describe('dictionaryLookup', () => {
   it('converts Simplified input before looking it up', async () => {
     const lookup = await createLookup();
     const [entry] = await lookup.lookUp('软件');
-    expect(entry).toMatchObject({ traditional: '軟體', simplified: '软体' });
+    expect(entry).toMatchObject({ headword: '軟體', variant: '软体' });
   });
 
   it('finds the shortest example sentences first', async () => {

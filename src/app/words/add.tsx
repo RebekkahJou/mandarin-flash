@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { toToneMarkedPinyin } from '../../services/pinyin';
+import { useAppServices } from '../../ui/AppServicesContext';
 import type { Choice } from '../../ui/components/ChoiceChips';
 import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { ChineseText } from '../../ui/components/ChineseText';
@@ -17,19 +17,20 @@ import { useWordListSummaries } from '../../ui/hooks/useWordListSummaries';
 import { colors, fontSizes, radii, spacing } from '../../ui/theme';
 
 export default function AddWordScreen() {
+  const { languageBundle } = useAppServices();
   const { summaries } = useWordListSummaries();
   const lists = summaries.map((summary) => summary.list);
   const addWord = useAddWord(lists);
   const [characterInput, setCharacterInput] = useState('');
   const [isListPickerVisible, setIsListPickerVisible] = useState(false);
-  const hasLookedUp = addWord.traditional.length > 0;
+  const hasLookedUp = addWord.headword.length > 0;
   const selectedListNames = lists
     .filter((list) => addWord.selectedListIds.has(list.id))
     .map((list) => list.name)
     .join(', ');
   const readingChoices: Choice<number>[] = addWord.readings.map((reading, index) => ({
     value: index,
-    label: toToneMarkedPinyin(reading.pinyin),
+    label: languageBundle.formatReading(reading.reading),
   }));
 
   const saveWord = async () => {
@@ -47,7 +48,7 @@ export default function AddWordScreen() {
       />
     ) : null;
   const pronunciation = selectedReading ? (
-    <PhoneticText numberedPinyin={selectedReading.pinyin} style={styles.phonetic} />
+    <PhoneticText numberedPinyin={selectedReading.reading} style={styles.phonetic} />
   ) : (
     <>
       <Text style={styles.hint}>
@@ -67,7 +68,7 @@ export default function AddWordScreen() {
   const listsLabel = selectedListNames || 'No list selected';
   const wordDetails = hasLookedUp ? (
     <>
-      <ChineseText text={addWord.traditional} style={styles.preview} />
+      <ChineseText text={addWord.headword} style={styles.preview} />
       {readingChooser}
       {pronunciation}
 

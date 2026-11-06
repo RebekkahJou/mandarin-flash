@@ -3,7 +3,7 @@ import { WordListKind } from '../domain/wordList';
 import type { DictionaryEntry } from './dictionaryLookup';
 import { findReading, partsOfSpeechOf } from './dictionaryLookup';
 
-type LookUp = (traditional: string) => Promise<DictionaryEntry[]>;
+type LookUp = (headword: string) => Promise<DictionaryEntry[]>;
 
 /**
  * Ids of words in a part-of-speech list that have no meaning of that type, e.g. nouns in Verbs.
@@ -17,7 +17,7 @@ export async function findPartOfSpeechMismatches(
   if (list.kind !== WordListKind.PartOfSpeech) return mismatchedWordIds;
   for (const { word } of list.words) {
     if (mismatchedWordIds.has(word.id)) continue;
-    const reading = findReading(await lookUp(word.traditional), word.pinyin);
+    const reading = findReading(await lookUp(word.headword), word.reading);
     const partsOfSpeech = partsOfSpeechOf(reading ? [reading] : []);
     if (list.validateWord(partsOfSpeech) !== null) mismatchedWordIds.add(word.id);
   }

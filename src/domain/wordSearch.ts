@@ -1,26 +1,21 @@
 import type { Word } from './word';
 
-const TONE_NUMBERS_AND_SPACES = /[0-9\s]/g;
-const COMBINING_MARKS = /[̀-ͯ]/g;
+/** Folds a reading or query so loosely typed queries still match; supplied by the language. */
+export type ReadingSearchKey = (text: string) => string;
 
-/** Lets "xuesheng", "xue sheng", "xué shēng" and "xue2 sheng1" all find the same word. */
-function normalizePinyin(pinyin: string): string {
-  return pinyin
-    .normalize('NFD')
-    .replace(COMBINING_MARKS, '')
-    .replace(TONE_NUMBERS_AND_SPACES, '')
-    .toLowerCase();
-}
-
-/** True when the query appears in the characters, the pinyin (ignoring tones) or a meaning. */
-export function matchesWordSearch(word: Word, query: string): boolean {
+/** True when the query appears in the headword, its variant, the reading or a meaning. */
+export function matchesWordSearch(
+  word: Word,
+  query: string,
+  readingSearchKey: ReadingSearchKey,
+): boolean {
   const trimmedQuery = query.trim().toLowerCase();
   if (trimmedQuery.length === 0) return true;
-  const pinyinQuery = normalizePinyin(trimmedQuery);
+  const readingQuery = readingSearchKey(trimmedQuery);
   return (
-    word.traditional.includes(trimmedQuery) ||
-    (word.simplified?.includes(trimmedQuery) ?? false) ||
-    (pinyinQuery.length > 0 && normalizePinyin(word.pinyin).includes(pinyinQuery)) ||
+    word.headword.includes(trimmedQuery) ||
+    (word.variant?.includes(trimmedQuery) ?? false) ||
+    (readingQuery.length > 0 && readingSearchKey(word.reading).includes(readingQuery)) ||
     word.definitions.some((meaning) => meaning.toLowerCase().includes(trimmedQuery))
   );
 }

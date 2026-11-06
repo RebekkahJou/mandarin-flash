@@ -2,8 +2,8 @@ import Papa from 'papaparse';
 
 import type { WordListEntry } from '../domain/wordList';
 import { definitionsForEntry } from '../domain/wordList';
-import { CSV_COLUMNS, joinMeanings } from './csvFormat';
-import { toToneMarkedPinyin } from './pinyin';
+import { exportHeaderRow, joinMeanings } from './csvFormat';
+import type { LanguageAdapter } from './languages/languageAdapter';
 
 /** Characters that make spreadsheet apps treat a cell as a formula (CSV injection). */
 const FORMULA_TRIGGER = /^[=+\-@\t\r]/;
@@ -12,16 +12,19 @@ export function escapeFormulaCell(cell: string): string {
   return FORMULA_TRIGGER.test(cell) ? `'${cell}` : cell;
 }
 
-/** Builds "character, meaning, pinyin" CSV text for one word list, using its per-list meanings. */
-export function buildWordListCsv(entries: readonly WordListEntry[]): string {
+/** Builds headword, meaning, reading CSV text for one word list, using its per-list meanings. */
+export function buildWordListCsv(
+  entries: readonly WordListEntry[],
+  languageBundle: LanguageAdapter,
+): string {
   const rows = entries.map((entry) =>
     [
-      entry.word.traditional,
+      entry.word.headword,
       joinMeanings(definitionsForEntry(entry)),
-      toToneMarkedPinyin(entry.word.pinyin),
+      languageBundle.formatReading(entry.word.reading),
     ].map(escapeFormulaCell),
   );
-  return Papa.unparse({ fields: [...CSV_COLUMNS], data: rows });
+  return Papa.unparse({ fields: exportHeaderRow(languageBundle.csvHeaders), data: rows });
 }
 
 /** A safe file name: list names are user-entered, so anything unusual is replaced. */

@@ -37,10 +37,10 @@ export function useWordEditor(wordId: number) {
 
   /** Warns about part-of-speech mismatches, just like adding a new word. */
   const addToList = async (currentWord: Word, list: WordList) => {
-    const readings = await dictionaryLookup.lookUp(currentWord.traditional);
-    const reading = findReading(readings, currentWord.pinyin);
+    const readings = await dictionaryLookup.lookUp(currentWord.headword);
+    const reading = findReading(readings, currentWord.reading);
     const plan = planWordAddition({
-      traditional: currentWord.traditional,
+      headword: currentWord.headword,
       selectedLists: [list],
       formMeanings: currentWord.definitions,
       // Part-of-speech lists suggest their own meanings (e.g. only verb meanings in Verbs);
@@ -58,7 +58,7 @@ export function useWordEditor(wordId: number) {
   };
 
   const removeFromList = async (currentWord: Word, list: WordList) => {
-    const message = `Remove ${currentWord.traditional} from ${list.name}? Any meanings you set for it in that list will be lost.`;
+    const message = `Remove ${currentWord.headword} from ${list.name}? Any meanings you set for it in that list will be lost.`;
     if (!(await confirm('Remove from list?', message, 'Remove'))) return;
     await wordListRepository.removeWordFromList(currentWord.id, list.id);
   };

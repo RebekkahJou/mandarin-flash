@@ -49,7 +49,7 @@ export abstract class WordList {
     return this.entries;
   }
 
-  /** Duplicates are allowed; callers warn the user first using containsCharacter. */
+  /** Duplicates are allowed; callers warn the user first using containsHeadword. */
   addWord(entry: WordListEntry): void {
     this.entries = [...this.entries, entry];
   }
@@ -58,8 +58,8 @@ export abstract class WordList {
     this.entries = this.entries.filter((entry) => entry.entryId !== entryId);
   }
 
-  containsCharacter(traditional: string): boolean {
-    return this.entries.some((entry) => entry.word.traditional === traditional);
+  containsHeadword(headword: string): boolean {
+    return this.entries.some((entry) => entry.word.headword === headword);
   }
 
   selectDefaultMeanings(candidates: readonly DefinitionCandidate[]): string[] {

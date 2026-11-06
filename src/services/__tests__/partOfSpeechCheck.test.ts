@@ -8,37 +8,37 @@ import { findPartOfSpeechMismatches } from '../partOfSpeechCheck';
 const dictionary: Record<string, DictionaryEntry[]> = {
   走: [
     {
-      traditional: '走',
-      pinyin: 'zou3',
+      headword: '走',
+      reading: 'zou3',
       definitionCandidates: [{ text: 'to walk', partsOfSpeech: [PartOfSpeech.Verb] }],
     },
   ],
   朋友: [
     {
-      traditional: '朋友',
-      pinyin: 'peng2 you5',
+      headword: '朋友',
+      reading: 'peng2 you5',
       definitionCandidates: [{ text: 'friend', partsOfSpeech: [PartOfSpeech.Noun] }],
     },
   ],
   行: [
     {
-      traditional: '行',
-      pinyin: 'xing2',
+      headword: '行',
+      reading: 'xing2',
       definitionCandidates: [{ text: 'to walk', partsOfSpeech: [PartOfSpeech.Verb] }],
     },
     {
-      traditional: '行',
-      pinyin: 'hang2',
+      headword: '行',
+      reading: 'hang2',
       definitionCandidates: [{ text: 'row', partsOfSpeech: [PartOfSpeech.Noun] }],
     },
   ],
 };
-const lookUp = async (traditional: string) => dictionary[traditional] ?? [];
+const lookUp = async (headword: string) => dictionary[headword] ?? [];
 
-const walk = makeWord(1, { traditional: '走', pinyin: 'zou3' });
-const friend = makeWord(2, { traditional: '朋友', pinyin: 'peng2 you5' });
-const row = makeWord(3, { traditional: '行', pinyin: 'hang2' });
-const unknown = makeWord(4, { traditional: '㐀', pinyin: 'qiu1' });
+const walk = makeWord(1, { headword: '走', reading: 'zou3' });
+const friend = makeWord(2, { headword: '朋友', reading: 'peng2 you5' });
+const row = makeWord(3, { headword: '行', reading: 'hang2' });
+const unknown = makeWord(4, { headword: '㐀', reading: 'qiu1' });
 const entries = [walk, friend, friend, row, unknown].map((word, index) => ({
   entryId: index + 1,
   word,

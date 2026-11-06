@@ -15,11 +15,11 @@ const candidates = [
 describe('WordList', () => {
   it('tracks length as words are added and removed, allowing duplicates', () => {
     const list = new GeneralWordList({ id: 1, profileId: 1, name: 'General Vocabulary' });
-    const word = makeWord(10, { traditional: '行' });
+    const word = makeWord(10, { headword: '行' });
     list.addWord({ entryId: 1, word });
     list.addWord({ entryId: 2, word });
     expect(list.length).toBe(2);
-    expect(list.containsCharacter('行')).toBe(true);
+    expect(list.containsHeadword('行')).toBe(true);
     list.removeWord(1);
     expect(list.length).toBe(1);
   });

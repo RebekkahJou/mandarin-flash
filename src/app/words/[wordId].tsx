@@ -26,13 +26,13 @@ export default function EditWordScreen() {
   );
   if (!word) return <ScreenContainer>{null}</ScreenContainer>;
 
-  const screenOptions = { title: word.traditional };
+  const screenOptions = { title: word.headword };
   const meaningsText = word.definitions.join('; ');
   return (
     <ScreenContainer isScrollable>
       <Stack.Screen options={screenOptions} />
-      <ChineseText text={word.traditional} style={styles.character} />
-      <PhoneticText numberedPinyin={word.pinyin} style={styles.phonetic} />
+      <ChineseText text={word.headword} style={styles.character} />
+      <PhoneticText numberedPinyin={word.reading} style={styles.phonetic} />
       <Text style={styles.meanings}>{meaningsText}</Text>
 
       <SectionTitle title="Frequency" />

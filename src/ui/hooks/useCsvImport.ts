@@ -17,33 +17,34 @@ export enum CsvImportResult {
   NotImported = 'not_imported',
 }
 
-type LookUp = (traditional: string) => Promise<DictionaryEntry[]>;
+type LookUp = (headword: string) => Promise<DictionaryEntry[]>;
 
 /** Each list is planned separately, so a word is looked up once instead of once per list. */
 function cachedLookUp(lookUp: LookUp): LookUp {
   const cache = new Map<string, Promise<DictionaryEntry[]>>();
-  return (traditional) => {
-    const cached = cache.get(traditional) ?? lookUp(traditional);
-    cache.set(traditional, cached);
+  return (headword) => {
+    const cached = cache.get(headword) ?? lookUp(headword);
+    cache.set(headword, cached);
     return cached;
   };
 }
 
 /** Picks a CSV file, shows what would be imported into the target lists, then saves it. */
 export function useCsvImport() {
-  const { profileId, wordListRepository, wordRepository, dictionaryLookup } = useAppServices();
+  const { profileId, languageBundle, wordListRepository, wordRepository, dictionaryLookup } =
+    useAppServices();
 
   const planImport = async (
     csvText: string,
     byteSize: number,
     targetLists: readonly WordList[],
   ) => {
-    const parsed = parseWordCsv(csvText, byteSize);
+    const parsed = parseWordCsv(csvText, languageBundle, byteSize);
     const lookUp = cachedLookUp(dictionaryLookup.lookUp);
     const listPlans: (ListImportPlan & { wordList: WordList })[] = [];
     for (const wordList of targetLists) {
-      const charactersInList = await wordListRepository.charactersInList(wordList.id);
-      const plan = await planCsvImport(parsed, wordList, charactersInList, lookUp);
+      const headwordsInList = await wordListRepository.headwordsInList(wordList.id);
+      const plan = await planCsvImport(parsed, wordList, headwordsInList, lookUp);
       listPlans.push({ wordList, listName: wordList.name, plan });
     }
     return listPlans;

@@ -3,10 +3,8 @@ import { useCallback, useState } from 'react';
 import { defaultListIdsForNewWords } from '../../domain/defaultWordLists';
 import type { WordList } from '../../domain/wordList';
 import { firstMeanings } from '../../domain/wordList';
-import { containsChineseCharacters, toTaiwanTraditional } from '../../services/chineseConverter';
 import type { DictionaryEntry } from '../../services/dictionaryLookup';
 import { partsOfSpeechOf } from '../../services/dictionaryLookup';
-import { toNumberedPinyin } from '../../services/pinyin';
 import { planWordAddition } from '../../services/wordAdditionPlanner';
 import { useAppServices } from '../AppServicesContext';
 import { confirmPlannedAdditions, showMessage } from '../confirm';
@@ -18,8 +16,9 @@ export enum SaveWordResult {
 
 /** State and save logic for the Add Word screen. */
 export function useAddWord(lists: readonly WordList[]) {
-  const { profileId, dictionaryLookup, wordRepository, wordListRepository } = useAppServices();
-  const [traditional, setTraditional] = useState('');
+  const { profileId, languageBundle, dictionaryLookup, wordRepository, wordListRepository } =
+    useAppServices();
+  const [headword, setHeadword] = useState('');
   const [readings, setReadings] = useState<DictionaryEntry[]>([]);
   const [selectedReadingIndex, setSelectedReadingIndex] = useState(0);
   const [manualPinyin, setManualPinyin] = useState('');
@@ -32,9 +31,9 @@ export function useAddWord(lists: readonly WordList[]) {
 
   const lookUpCharacters = useCallback(
     async (input: string) => {
-      const converted = toTaiwanTraditional(input);
-      setTraditional(converted);
-      const foundReadings = containsChineseCharacters(converted)
+      const converted = languageBundle.normalizeHeadword(input);
+      setHeadword(converted);
+      const foundReadings = languageBundle.containsLanguageScript(converted)
         ? await dictionaryLookup.lookUp(converted)
         : [];
       setReadings(foundReadings);
@@ -42,7 +41,7 @@ export function useAddWord(lists: readonly WordList[]) {
       setMeaningsState(firstMeanings(foundReadings[0]?.definitionCandidates ?? []));
       setHasUserEditedMeanings(false);
     },
-    [dictionaryLookup],
+    [dictionaryLookup, languageBundle],
   );
 
   const selectReading = (index: number) => {
@@ -65,17 +64,17 @@ export function useAddWord(lists: readonly WordList[]) {
   };
 
   const save = async (): Promise<SaveWordResult> => {
-    const pinyin = selectedReading?.pinyin ?? toNumberedPinyin(manualPinyin);
-    if (!containsChineseCharacters(traditional) || meanings.length === 0 || !pinyin) {
+    const reading = selectedReading?.reading ?? languageBundle.normalizeReading(manualPinyin);
+    if (!languageBundle.containsLanguageScript(headword) || meanings.length === 0 || !reading) {
       showMessage('Missing details', 'Enter Chinese characters, pinyin and at least one meaning.');
       return SaveWordResult.NotSaved;
     }
     const selectedLists = lists.filter((list) => selectedListIds.has(list.id));
     const listIdsAlreadyContainingWord = new Set(
-      await wordListRepository.listIdsContainingCharacter([...selectedListIds], traditional),
+      await wordListRepository.listIdsContainingHeadword([...selectedListIds], headword),
     );
     const plan = planWordAddition({
-      traditional,
+      headword,
       selectedLists,
       formMeanings: meanings,
       hasUserEditedMeanings,
@@ -88,9 +87,9 @@ export function useAddWord(lists: readonly WordList[]) {
 
     const word = await wordRepository.findOrCreateWord({
       profileId,
-      traditional,
-      simplified: selectedReading?.simplified,
-      pinyin,
+      headword,
+      variant: selectedReading?.variant,
+      reading,
       definitions: meanings,
     });
     await wordListRepository.addWordToLists(
@@ -101,7 +100,7 @@ export function useAddWord(lists: readonly WordList[]) {
   };
 
   return {
-    traditional,
+    headword,
     readings,
     selectedReadingIndex,
     selectReading,
