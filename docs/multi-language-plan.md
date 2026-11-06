@@ -1,7 +1,7 @@
 # Multi-language and add-ons plan
 
-Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 built** (2026-11-06,
-waiting for a test on the phone); next step is Phase 3. Update this file as work lands or decisions
+Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
+tested on the phone; PR open). Next step is Phase 3. Update this file as work lands or decisions
 change.
 
 Phase 2 decisions (2026-11-06):
@@ -14,6 +14,11 @@ Phase 2 decisions (2026-11-06):
 - Simplified cards use the system font for now; Simplified fonts come with packs, outside the base
   app's size budget.
 - All words lists every meaning a word has in any of its lists (e.g. 車's verb meaning from Verbs).
+- Profiles can be renamed and deleted (Settings → Edit profile). The original (first-created)
+  profile can't be deleted, so there is always at least one. Deleting the active profile opens the
+  only remaining one, or the welcome screen when several remain.
+- A new profile counts as never used until someone picks it, so adding a user doesn't change which
+  language the welcome screen opens on.
 - The word-type tagger no longer defaults small grammatical words to "noun" (應 "should", 可 "but",
   謝謝 "thanks"), and the dictionary was rebuilt from current CC-CEDICT and Tatoeba exports.
 
@@ -22,7 +27,11 @@ Phase 2 notes for later phases:
   language reads it through a `DictionaryForm` until Phase 3 lays packs out as headword, variant
   and reading.
 - Adding a new user returns to the welcome screen so the new person can pick themselves.
-- Profiles can't yet be renamed or deleted.
+- Screens are grouped with `Stack.Protected` in `src/app/_layout.tsx` (first run, welcome, app).
+  `ProfileSessionContext` holds the session; `AppServicesProvider` gives each profile its own
+  language bundle, dictionary lookup and settings.
+- Not yet checked on the phone: first run on a fresh install, and adding a Chinese word as a
+  Simplified user (adb can't type Chinese); automated tests cover both.
 
 Phase 1 notes for later phases:
 - The bundled dictionary.db keeps its old column names (traditional, simplified, pinyin);
