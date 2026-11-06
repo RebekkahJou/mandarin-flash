@@ -11,7 +11,7 @@ import {
   planCsvImport,
 } from '../csvImport';
 import type { DictionaryEntry } from '../dictionaryLookup';
-import { mandarinTraditionalModule as mandarin } from '../languages/mandarinTraditionalModule';
+import { mandarinTraditionalBundle as mandarin } from '../languages/mandarinTraditionalBundle';
 
 const generalList = new GeneralWordList({ id: 1, profileId: 1, name: 'General Vocabulary' });
 

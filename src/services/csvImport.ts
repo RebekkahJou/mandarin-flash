@@ -5,7 +5,7 @@ import type { CsvColumn, CsvHeaderNames } from './csvFormat';
 import { CSV_COLUMNS, acceptedHeaderNames, splitMeanings } from './csvFormat';
 import type { DictionaryEntry } from './dictionaryLookup';
 import { findReading, partsOfSpeechOf } from './dictionaryLookup';
-import type { LanguageModule } from './languages/languageModule';
+import type { LanguageAdapter } from './languages/languageAdapter';
 import { formatWordCount } from './wordCount';
 
 /** Imported files are untrusted: these limits keep a bad file from freezing the phone. */
@@ -63,7 +63,7 @@ function cellAt(row: readonly string[], position: number): string {
 
 export function parseWordCsv(
   csvText: string,
-  languageModule: LanguageModule,
+  languageBundle: LanguageAdapter,
   byteSize: number = csvText.length,
 ): ParsedCsv {
   if (byteSize > MAX_CSV_BYTES) throw new CsvTooLargeError();
@@ -71,22 +71,22 @@ export function parseWordCsv(
   if (data.length > MAX_CSV_ROWS + 1) throw new CsvTooLargeError();
   if (data.length === 0) return { rows: [], invalidRowNumbers: [] };
 
-  const { positions, hasHeader } = columnPositions(data[0], languageModule.csvHeaders);
+  const { positions, hasHeader } = columnPositions(data[0], languageBundle.csvHeaders);
   const rows: CsvWordRow[] = [];
   const invalidRowNumbers: number[] = [];
   data.slice(hasHeader ? 1 : 0).forEach((row, index) => {
     const rowNumber = index + (hasHeader ? 2 : 1);
     const headwordCell = cellAt(row, positions.headword);
-    if (!languageModule.containsLanguageScript(headwordCell)) {
+    if (!languageBundle.containsLanguageScript(headwordCell)) {
       invalidRowNumbers.push(rowNumber);
       return;
     }
     const readingCell = cellAt(row, positions.reading);
     rows.push({
       rowNumber,
-      headword: languageModule.normalizeHeadword(headwordCell),
+      headword: languageBundle.normalizeHeadword(headwordCell),
       meanings: splitMeanings(cellAt(row, positions.meaning)),
-      reading: readingCell ? languageModule.normalizeReading(readingCell) : undefined,
+      reading: readingCell ? languageBundle.normalizeReading(readingCell) : undefined,
     });
   });
   return { rows, invalidRowNumbers };

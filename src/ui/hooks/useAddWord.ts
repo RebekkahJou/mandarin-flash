@@ -16,7 +16,7 @@ export enum SaveWordResult {
 
 /** State and save logic for the Add Word screen. */
 export function useAddWord(lists: readonly WordList[]) {
-  const { profileId, languageModule, dictionaryLookup, wordRepository, wordListRepository } =
+  const { profileId, languageBundle, dictionaryLookup, wordRepository, wordListRepository } =
     useAppServices();
   const [headword, setHeadword] = useState('');
   const [readings, setReadings] = useState<DictionaryEntry[]>([]);
@@ -31,9 +31,9 @@ export function useAddWord(lists: readonly WordList[]) {
 
   const lookUpCharacters = useCallback(
     async (input: string) => {
-      const converted = languageModule.normalizeHeadword(input);
+      const converted = languageBundle.normalizeHeadword(input);
       setHeadword(converted);
-      const foundReadings = languageModule.containsLanguageScript(converted)
+      const foundReadings = languageBundle.containsLanguageScript(converted)
         ? await dictionaryLookup.lookUp(converted)
         : [];
       setReadings(foundReadings);
@@ -41,7 +41,7 @@ export function useAddWord(lists: readonly WordList[]) {
       setMeaningsState(firstMeanings(foundReadings[0]?.definitionCandidates ?? []));
       setHasUserEditedMeanings(false);
     },
-    [dictionaryLookup, languageModule],
+    [dictionaryLookup, languageBundle],
   );
 
   const selectReading = (index: number) => {
@@ -64,8 +64,8 @@ export function useAddWord(lists: readonly WordList[]) {
   };
 
   const save = async (): Promise<SaveWordResult> => {
-    const reading = selectedReading?.reading ?? languageModule.normalizeReading(manualPinyin);
-    if (!languageModule.containsLanguageScript(headword) || meanings.length === 0 || !reading) {
+    const reading = selectedReading?.reading ?? languageBundle.normalizeReading(manualPinyin);
+    if (!languageBundle.containsLanguageScript(headword) || meanings.length === 0 || !reading) {
       showMessage('Missing details', 'Enter Chinese characters, pinyin and at least one meaning.');
       return SaveWordResult.NotSaved;
     }

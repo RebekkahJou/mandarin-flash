@@ -2,7 +2,7 @@ import type { LanguageDefinition } from '../../domain/language';
 import type { CsvHeaderNames } from '../csvFormat';
 
 /** Language-specific text handling. Each language gets one; callers never branch on language. */
-export interface LanguageModule {
+export interface LanguageAdapter {
   definition: LanguageDefinition;
   /** Header names written on export and accepted on import, e.g. "character" for the headword. */
   csvHeaders: CsvHeaderNames;

@@ -6,7 +6,7 @@ work lands or decisions change.
 Phase 1 notes for later phases:
 - The bundled dictionary.db keeps its old column names (traditional, simplified, pinyin);
   `dictionaryLookup` maps them to headword, variant, reading until Phase 3 rebuilds it as a pack.
-- CSV export headers are still `character, meaning, pinyin` (from the language module); import also
+- CSV export headers are still `character, meaning, pinyin` (from the language bundle); import also
   accepts the generic `word`/`headword` and `reading` headers.
 - `PhoneticText`, `ChineseText` and the zhuyin conversion are still Mandarin-only components.
 - On-screen text still says "Chinese characters" and "pinyin" in a few places (Add Word, CSV import
@@ -231,7 +231,7 @@ Each phase ships on its own with tests and `npm run check` passing.
 
 1. **Language-neutral core (no visible change).** `LanguageId` and language definitions
    (including the character-splitting flag and script study sets);
-   `LanguageModule` interface with Chinese first; generic word fields via a column-renaming
+   `LanguageAdapter` interface with Chinese first; generic word fields via a column-renaming
    migration; `profiles.language_id`; `review_events`; extended `PartOfSpeech`; CSV import keeps
    old headers.
 2. **Profiles and welcome screen, Mandarin only.** First-run flow, language tabs, app-level session,

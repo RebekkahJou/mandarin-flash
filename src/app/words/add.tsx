@@ -17,7 +17,7 @@ import { useWordListSummaries } from '../../ui/hooks/useWordListSummaries';
 import { colors, fontSizes, radii, spacing } from '../../ui/theme';
 
 export default function AddWordScreen() {
-  const { languageModule } = useAppServices();
+  const { languageBundle } = useAppServices();
   const { summaries } = useWordListSummaries();
   const lists = summaries.map((summary) => summary.list);
   const addWord = useAddWord(lists);
@@ -30,7 +30,7 @@ export default function AddWordScreen() {
     .join(', ');
   const readingChoices: Choice<number>[] = addWord.readings.map((reading, index) => ({
     value: index,
-    label: languageModule.formatReading(reading.reading),
+    label: languageBundle.formatReading(reading.reading),
   }));
 
   const saveWord = async () => {

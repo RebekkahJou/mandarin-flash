@@ -1,23 +1,23 @@
 import { LanguageId } from '../../domain/language';
 import { matchesWordSearch } from '../../domain/wordSearch';
 import { makeWord } from '../../domain/__tests__/testWords';
-import { LANGUAGE_MODULES, languageModuleFor } from '../languages/languageModules';
-import { mandarinTraditionalModule } from '../languages/mandarinTraditionalModule';
+import { LANGUAGE_BUNDLES, languageBundleFor } from '../languages/languageBundles';
+import { mandarinTraditionalBundle } from '../languages/mandarinTraditionalBundle';
 
-describe('languageModuleFor', () => {
-  it('has a module for every language, matching its definition', () => {
+describe('languageBundleFor', () => {
+  it('has a bundle for every language, matching its definition', () => {
     Object.values(LanguageId).forEach((languageId) => {
-      expect(LANGUAGE_MODULES[languageId].definition.id).toBe(languageId);
+      expect(LANGUAGE_BUNDLES[languageId].definition.id).toBe(languageId);
     });
   });
 
-  it('returns the Mandarin (Traditional) module', () => {
-    expect(languageModuleFor(LanguageId.MandarinTraditional)).toBe(mandarinTraditionalModule);
+  it('returns the Mandarin (Traditional) bundle', () => {
+    expect(languageBundleFor(LanguageId.MandarinTraditional)).toBe(mandarinTraditionalBundle);
   });
 });
 
-describe('mandarinTraditionalModule', () => {
-  const mandarin = mandarinTraditionalModule;
+describe('mandarinTraditionalBundle', () => {
+  const mandarin = mandarinTraditionalBundle;
 
   it('stores headwords as Taiwan Traditional', () => {
     expect(mandarin.normalizeHeadword(' 软件 ')).toBe('軟體');

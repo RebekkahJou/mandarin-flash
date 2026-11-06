@@ -31,7 +31,7 @@ function cachedLookUp(lookUp: LookUp): LookUp {
 
 /** Picks a CSV file, shows what would be imported into the target lists, then saves it. */
 export function useCsvImport() {
-  const { profileId, languageModule, wordListRepository, wordRepository, dictionaryLookup } =
+  const { profileId, languageBundle, wordListRepository, wordRepository, dictionaryLookup } =
     useAppServices();
 
   const planImport = async (
@@ -39,7 +39,7 @@ export function useCsvImport() {
     byteSize: number,
     targetLists: readonly WordList[],
   ) => {
-    const parsed = parseWordCsv(csvText, languageModule, byteSize);
+    const parsed = parseWordCsv(csvText, languageBundle, byteSize);
     const lookUp = cachedLookUp(dictionaryLookup.lookUp);
     const listPlans: (ListImportPlan & { wordList: WordList })[] = [];
     for (const wordList of targetLists) {

@@ -1,7 +1,7 @@
 import { LANGUAGE_DEFINITIONS, LanguageId } from '../../domain/language';
 import { containsChineseCharacters, toTaiwanTraditional } from '../chineseConverter';
 import { toNumberedPinyin, toToneMarkedPinyin } from '../pinyin';
-import type { LanguageModule } from './languageModule';
+import type { LanguageAdapter } from './languageAdapter';
 
 const TONE_NUMBERS_AND_SPACES = /[0-9\s]/g;
 const COMBINING_MARKS = /[̀-ͯ]/g;
@@ -15,7 +15,7 @@ function pinyinSearchKey(pinyin: string): string {
     .toLowerCase();
 }
 
-export const mandarinTraditionalModule: LanguageModule = {
+export const mandarinTraditionalBundle: LanguageAdapter = {
   definition: LANGUAGE_DEFINITIONS[LanguageId.MandarinTraditional],
   csvHeaders: { headword: 'character', meaning: 'meaning', reading: 'pinyin' },
   normalizeHeadword: toTaiwanTraditional,
