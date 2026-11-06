@@ -19,7 +19,10 @@ import { createInMemoryDatabase } from '../testing/nodeSqlDatabase';
 async function setUp() {
   const database: SqlDatabase = createInMemoryDatabase();
   await migrateUserDatabase(database);
-  const profile = await createProfileRepository(database).ensureDefaultProfile();
+  const profile = await createProfileRepository(database).createProfile(
+    'Me',
+    LanguageId.MandarinTraditional,
+  );
   const wordRepository = createWordRepository(database);
   const wordListRepository = createWordListRepository(database);
   const summaries = await wordListRepository.listSummaries(profile.id);
@@ -40,9 +43,8 @@ describe('user database', () => {
     await expect(migrateUserDatabase(database)).resolves.toBeUndefined();
   });
 
-  it('creates the six default lists once, with the right list types', async () => {
-    const { database, profile, wordListRepository } = await setUp();
-    await createProfileRepository(database).ensureDefaultProfile();
+  it('creates the six default lists, with the right list types', async () => {
+    const { profile, wordListRepository } = await setUp();
     const summaries = await wordListRepository.listSummaries(profile.id);
     expect(summaries.map((summary) => summary.list.name)).toEqual([
       'General Vocabulary',
@@ -255,29 +257,24 @@ describe('user database', () => {
 });
 
 describe('profiles', () => {
-  it('creates the default profile in Mandarin (Traditional)', async () => {
-    const { profile } = await setUp();
-    expect(profile).toMatchObject({ name: 'Me', languageId: LanguageId.MandarinTraditional });
-  });
-
   it('stores the language a profile is created with', async () => {
     const database = createInMemoryDatabase();
     await migrateUserDatabase(database);
     const created = await createProfileRepository(database).createProfile(
       'Kid',
-      LanguageId.MandarinTraditional,
+      LanguageId.MandarinSimplified,
     );
     const stored = await database.getFirst<{ language_id: string }>(
       'SELECT language_id FROM profiles WHERE id = ?',
       [created.id],
     );
-    expect(stored?.language_id).toBe(LanguageId.MandarinTraditional);
+    expect(stored?.language_id).toBe(LanguageId.MandarinSimplified);
   });
 
   it('reads an unknown stored language as the default language', async () => {
     const { database, profile } = await setUp();
     await database.run('UPDATE profiles SET language_id = ? WHERE id = ?', ['xx', profile.id]);
-    const reloaded = await createProfileRepository(database).ensureDefaultProfile();
+    const [reloaded] = await createProfileRepository(database).listProfiles();
     expect(reloaded).toMatchObject({
       id: profile.id,
       name: 'Me',
@@ -285,7 +282,7 @@ describe('profiles', () => {
     });
   });
 
-  it('lists profiles most recently used first and opens on that one', async () => {
+  it('lists profiles most recently used first', async () => {
     const { database, profile } = await setUp();
     const profileRepository = createProfileRepository(database);
     const kid = await profileRepository.createProfile('Kid', LanguageId.MandarinTraditional);
@@ -294,7 +291,6 @@ describe('profiles', () => {
     const listed = await profileRepository.listProfiles();
     expect(listed.map(({ name }) => name)).toEqual(['Me', 'Kid']);
     expect(listed[0].lastUsedAtMs).toBe(kid.lastUsedAtMs + 1);
-    expect((await profileRepository.ensureDefaultProfile()).id).toBe(profile.id);
   });
 
   it('gives a new profile its own default lists', async () => {

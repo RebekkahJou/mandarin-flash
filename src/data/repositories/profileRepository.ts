@@ -1,10 +1,11 @@
 import { DEFAULT_WORD_LISTS } from '../../domain/defaultWordLists';
 import type { LanguageId } from '../../domain/language';
-import { DEFAULT_LANGUAGE_ID, toLanguageId } from '../../domain/language';
+import { toLanguageId } from '../../domain/language';
 import type { Profile } from '../../domain/profileGroups';
 import { WordListKind } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 
+/** The name first run suggests for the first profile. */
 export const DEFAULT_PROFILE_NAME = 'Me';
 
 interface ProfileRow {
@@ -63,20 +64,7 @@ export function createProfileRepository(database: SqlDatabase) {
     await database.run('UPDATE profiles SET last_used_at = ? WHERE id = ?', [usedAtMs, profileId]);
   }
 
-  /**
-   * Returns the most recently used profile. Only the default profile is ever created
-   * automatically, on first launch, with the default lists.
-   */
-  async function ensureDefaultProfile(): Promise<Profile> {
-    const existing = await database.getFirst<ProfileRow>(
-      `SELECT ${PROFILE_COLUMNS} FROM profiles ORDER BY last_used_at DESC, id LIMIT 1`,
-    );
-    return existing
-      ? toProfile(existing)
-      : createProfile(DEFAULT_PROFILE_NAME, DEFAULT_LANGUAGE_ID);
-  }
-
-  return { createProfile, listProfiles, markProfileUsed, ensureDefaultProfile };
+  return { createProfile, listProfiles, markProfileUsed };
 }
 
 export type ProfileRepository = ReturnType<typeof createProfileRepository>;

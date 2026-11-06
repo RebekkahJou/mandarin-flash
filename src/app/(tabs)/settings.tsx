@@ -8,6 +8,7 @@ import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
+import { useProfileSwitcher } from '../../ui/hooks/useProfileSwitcher';
 import { colors, fontSizes } from '../../ui/theme';
 
 const PHONETIC_CHOICES = [
@@ -27,10 +28,21 @@ const SET_SIZE_CHOICES = PRACTICE_SET_SIZES.map((size) => ({ value: size, label:
 export default function SettingsScreen() {
   const { settings, updateSetting } = useSettings();
   const { variantName } = useAppServices().languageBundle.definition;
+  const profileSwitcher = useProfileSwitcher();
   const variantSectionTitle = `${variantName} characters`;
   const variantHint = `How to show the ${variantName.toLowerCase()} form on flashcards, when one exists.`;
   return (
     <ScreenContainer isScrollable>
+      <SectionTitle title="Profile" />
+      <Text style={styles.hint}>{profileSwitcher.profileSummary}</Text>
+      <View style={styles.buttonRow}>
+        <PrimaryButton
+          label={profileSwitcher.buttonLabel}
+          onPress={profileSwitcher.onPress}
+          isOutlined
+        />
+      </View>
+
       <SectionTitle title="Pronunciation" />
       <ChoiceChips
         choices={PHONETIC_CHOICES}

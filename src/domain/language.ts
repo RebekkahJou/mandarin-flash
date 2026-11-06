@@ -21,6 +21,8 @@ export interface ScriptStudySet {
 export interface LanguageDefinition {
   id: LanguageId;
   name: string;
+  /** One line telling learners which variety this is, shown when choosing a language. */
+  description: string;
   /** What a word's pronunciation guide is called, e.g. "pinyin". */
   readingName: string;
   /** Characters carry meaning alone, so a compound can be split into characters to study. */
@@ -44,6 +46,7 @@ const MANDARIN_RELIABLE_PARTS_OF_SPEECH = [
 const MANDARIN_TRADITIONAL: LanguageDefinition = {
   id: LanguageId.MandarinTraditional,
   name: 'Mandarin (Traditional)',
+  description: 'Traditional characters, with Taiwan pronunciation and words.',
   readingName: 'pinyin',
   splitsCompoundsIntoCharacters: true,
   scriptStudySets: [{ id: ScriptStudySetId.Zhuyin, name: 'Zhuyin' }],
@@ -56,6 +59,7 @@ const MANDARIN_TRADITIONAL: LanguageDefinition = {
 const MANDARIN_SIMPLIFIED: LanguageDefinition = {
   id: LanguageId.MandarinSimplified,
   name: 'Mandarin (Simplified)',
+  description: 'Simplified characters, with mainland China pronunciation and words.',
   readingName: 'pinyin',
   splitsCompoundsIntoCharacters: true,
   scriptStudySets: [{ id: ScriptStudySetId.Zhuyin, name: 'Zhuyin' }],
