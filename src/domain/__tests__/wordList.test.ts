@@ -1,7 +1,12 @@
 import { GeneralWordList } from '../generalWordList';
 import { PartOfSpeech } from '../partOfSpeech';
 import { PartOfSpeechWordList } from '../partOfSpeechWordList';
-import { definitionsForEntry, definitionsOverrideFor, haveSameMeanings } from '../wordList';
+import {
+  allMeaningsOf,
+  definitionsForEntry,
+  definitionsOverrideFor,
+  haveSameMeanings,
+} from '../wordList';
 import { makeWord } from './testWords';
 
 const candidates = [
@@ -84,5 +89,17 @@ describe('definitionsOverrideFor', () => {
 
   it('stores the list meanings when they differ', () => {
     expect(definitionsOverrideFor(word, ['thanks'])).toEqual(['thanks']);
+  });
+});
+
+describe('allMeaningsOf', () => {
+  it('adds meanings that only some lists use after the word’s own meanings', () => {
+    expect(
+      allMeaningsOf(['car', 'vehicle', 'machine'], [['to shape with a lathe'], ['car', 'auto']]),
+    ).toEqual(['car', 'vehicle', 'machine', 'to shape with a lathe', 'auto']);
+  });
+
+  it('returns the word’s own meanings when no list has its own', () => {
+    expect(allMeaningsOf(['friend'], [])).toEqual(['friend']);
   });
 });

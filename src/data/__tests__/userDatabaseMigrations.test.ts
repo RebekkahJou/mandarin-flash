@@ -9,7 +9,6 @@ import type { SqlDatabase } from '../sqlDatabase';
 import { createInMemoryDatabase } from '../testing/nodeSqlDatabase';
 
 const CREATED_AT = 1_700_000_000_000;
-const LANGUAGE_NEUTRAL_VERSION = 2;
 
 /** Builds a database as an installed app at schema version 1 would have it, with data in it. */
 async function createVersionOneDatabaseWithWords(): Promise<SqlDatabase> {
@@ -43,10 +42,10 @@ async function migratedDatabase(): Promise<SqlDatabase> {
 }
 
 describe('migration to language-neutral words', () => {
-  it('records the new schema version', async () => {
+  it('records the latest schema version', async () => {
     const database = await migratedDatabase();
     const versionRow = await database.getFirst<{ user_version: number }>('PRAGMA user_version');
-    expect(versionRow?.user_version).toBe(LANGUAGE_NEUTRAL_VERSION);
+    expect(versionRow?.user_version).toBe(USER_DATABASE_MIGRATIONS.length);
   });
 
   it('keeps existing words under the renamed columns', async () => {
@@ -92,6 +91,16 @@ describe('migration to language-neutral words', () => {
       'SELECT language_id FROM profiles ORDER BY id',
     );
     expect(profiles.map((profile) => profile.language_id)).toEqual(['zh-Hant', 'zh-Hant']);
+  });
+});
+
+describe('migration adding last-used times', () => {
+  it('starts existing profiles at their creation time', async () => {
+    const database = await migratedDatabase();
+    const profile = await database.getFirst<{ last_used_at: number }>(
+      'SELECT last_used_at FROM profiles WHERE id = 1',
+    );
+    expect(profile?.last_used_at).toBe(CREATED_AT);
   });
 });
 

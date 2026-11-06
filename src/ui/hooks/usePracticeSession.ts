@@ -9,7 +9,7 @@ import type { CardAnswerResult } from '../../domain/practiceSession';
 import type { SessionTimes } from '../../domain/sessionTimer';
 import { SessionTimer } from '../../domain/sessionTimer';
 import type { ChineseFontFamily } from '../../services/fontRotation';
-import { pickNextChineseFont } from '../../services/fontRotation';
+import { SYSTEM_CHINESE_FONT, pickNextChineseFont } from '../../services/fontRotation';
 import { useAppServices } from '../AppServicesContext';
 import { confirm } from '../confirm';
 
@@ -34,12 +34,16 @@ export function usePracticeSession(wordListId: number, setSize: number) {
     wordRepository,
     practiceSessionRepository,
     reviewEventRepository,
+    languageBundle,
   } = useAppServices();
+  const { usesBundledFonts } = languageBundle;
   const loadedRef = useRef<LoadedSession | null>(null);
   const [currentCard, setCurrentCard] = useState<PracticeCard | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [font, setFont] = useState<ChineseFontFamily>(() => pickNextChineseFont(undefined));
+  const [font, setFont] = useState<ChineseFontFamily>(() =>
+    usesBundledFonts ? pickNextChineseFont(undefined) : SYSTEM_CHINESE_FONT,
+  );
   const [elapsedMs, setElapsedMs] = useState(0);
   const [isDeckCompletePromptVisible, setIsDeckCompletePromptVisible] = useState(false);
   const [summary, setSummary] = useState<PracticeSummary | null>(null);
@@ -111,9 +115,9 @@ export function usePracticeSession(wordListId: number, setSize: number) {
       }
       setCurrentCard(loaded.cardsByWordId.get(loaded.session.currentWordId ?? -1) ?? null);
       setIsRevealed(false);
-      setFont((previousFont) => pickNextChineseFont(previousFont));
+      if (usesBundledFonts) setFont((previousFont) => pickNextChineseFont(previousFont));
     },
-    [endSession],
+    [endSession, usesBundledFonts],
   );
 
   /** Saved in the background so a slow write never holds up the next card. */

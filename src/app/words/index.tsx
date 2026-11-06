@@ -22,7 +22,8 @@ export default function AllWordsScreen() {
     return (
       <WordRow
         word={item.word}
-        meanings={item.word.definitions}
+        meanings={item.meanings}
+        showsEveryMeaning
         detail={listNames}
         onPress={openWord}
         pressHint="Change this word's lists and frequency"

@@ -39,7 +39,8 @@ function entryRank(entry: CedictEntry, glossCount: number): number {
 
 function insertEntries(database: Database.Database, cedictPath: string): number {
   const insert = database.prepare(
-    'INSERT INTO entries (traditional, simplified, pinyin, glosses, rank) VALUES (?, ?, ?, ?, ?)',
+    `INSERT INTO entries (traditional, simplified, pinyin, mainland_pinyin, glosses, rank)
+     VALUES (?, ?, ?, ?, ?, ?)`,
   );
   let insertedCount = 0;
   for (const line of readLines(cedictPath)) {
@@ -54,6 +55,7 @@ function insertEntries(database: Database.Database, cedictPath: string): number 
       entry.traditional,
       entry.simplified === entry.traditional ? '' : entry.simplified,
       entry.pinyin,
+      entry.mainlandPinyin === entry.pinyin ? '' : entry.mainlandPinyin,
       JSON.stringify(glosses),
       entryRank(entry, glosses.length),
     );
