@@ -146,7 +146,11 @@ export function tagGloss(gloss: string, entryHasClassifier: boolean): number {
   // Only nouns take measure words, so this outranks the guesses below.
   if (entryHasClassifier) return PART_OF_SPEECH_FLAGS[PartOfSpeech.Noun];
   const phrases = headWords(cleaned);
-  if (isModalVerbGloss(cleaned, phrases)) return PART_OF_SPEECH_FLAGS[PartOfSpeech.Verb];
+  // "can; to have the skill": a later "to ..." meaning makes the gloss a verb too.
+  const hasInfinitive = phrases.some((phrase) => phrase.startsWith('to '));
+  if (hasInfinitive || isModalVerbGloss(cleaned, phrases)) {
+    return PART_OF_SPEECH_FLAGS[PartOfSpeech.Verb];
+  }
   if (phrases.some(isAdjectivePhrase)) return PART_OF_SPEECH_FLAGS[PartOfSpeech.Adjective];
   return functionWordFlags(phrases) ?? PART_OF_SPEECH_FLAGS[PartOfSpeech.Noun];
 }

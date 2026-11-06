@@ -34,6 +34,7 @@ describe('tagGloss', () => {
     ['ought to', VERB], // 應
     ['(legal) shall', VERB], // 應
     ['(prefix) can; may; able to; -able', VERB], // 可
+    ['can; to have the skill; to know how to', VERB], // 會
     ['but; however', CONJUNCTION], // 可
     ['thanks', NONE], // 謝謝
     ['thank you', NONE], // 謝謝

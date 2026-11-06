@@ -1,6 +1,6 @@
 import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
-import { importDatabaseFromAssetAsync, openDatabaseAsync } from 'expo-sqlite';
+import { deleteDatabaseAsync, importDatabaseFromAssetAsync, openDatabaseAsync } from 'expo-sqlite';
 
 import { wrapExpoDatabase } from './expoSqlDatabase';
 import { migrateUserDatabase } from './migrations/userDatabaseMigrations';
@@ -12,8 +12,12 @@ const DATABASE_KEY_BYTES = 32;
 const HEX_KEY_PATTERN = /^[0-9a-f]{64}$/;
 
 /** Bump when the bundled dictionary changes so the new file replaces the old copy. */
-const DICTIONARY_VERSION = 1;
-const DICTIONARY_DATABASE_NAME = `dictionary-v${DICTIONARY_VERSION}.db`;
+const DICTIONARY_VERSION = 2;
+const FIRST_DICTIONARY_VERSION = 1;
+
+function dictionaryDatabaseName(version: number): string {
+  return `dictionary-v${version}.db`;
+}
 
 function toHex(bytes: Uint8Array): string {
   return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
@@ -47,12 +51,22 @@ export async function openUserDatabase(): Promise<SqlDatabase> {
   return wrapped;
 }
 
+/** Removes copies left by earlier app versions; each one is a whole dictionary (about 14 MB). */
+async function deleteOlderDictionaries(): Promise<void> {
+  for (let version = FIRST_DICTIONARY_VERSION; version < DICTIONARY_VERSION; version++) {
+    // Deleting a copy that was never made throws; there is nothing to clean up then.
+    await deleteDatabaseAsync(dictionaryDatabaseName(version)).catch(() => undefined);
+  }
+}
+
 /** Copies the bundled read-only dictionary into app storage on first launch, then opens it. */
 export async function openDictionaryDatabase(): Promise<SqlDatabase> {
-  await importDatabaseFromAssetAsync(DICTIONARY_DATABASE_NAME, {
+  const databaseName = dictionaryDatabaseName(DICTIONARY_VERSION);
+  await importDatabaseFromAssetAsync(databaseName, {
     assetId: require('../../assets/data/dictionary.db') as number,
   });
-  const database = await openDatabaseAsync(DICTIONARY_DATABASE_NAME, {
+  await deleteOlderDictionaries();
+  const database = await openDatabaseAsync(databaseName, {
     enableChangeListener: false,
   });
   await database.execAsync('PRAGMA query_only = ON');
