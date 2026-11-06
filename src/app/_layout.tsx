@@ -68,7 +68,7 @@ export default function RootLayout() {
   }
 
   return (
-    <LanguagePacksProvider initialPacks={coreState.core.initialPacks}>
+    <LanguagePacksProvider core={coreState.core}>
       <ProfileSessionProvider core={coreState.core}>
         <StatusBar style="dark" />
         <RootStack />

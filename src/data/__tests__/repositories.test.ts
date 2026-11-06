@@ -9,6 +9,7 @@ import { distinctPracticeCards } from '../../domain/practiceCard';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { ReviewAnswer } from '../../domain/reviewEvent';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
+import { createInstalledPackRepository } from '../repositories/installedPackRepository';
 import { createProfileRepository } from '../repositories/profileRepository';
 import { createReviewEventRepository } from '../repositories/reviewEventRepository';
 import { PhoneticDisplay, createSettingsRepository } from '../repositories/settingsRepository';
@@ -389,5 +390,29 @@ describe('settings', () => {
     const settings = await settingsRepository.loadSettings(profile.id);
     expect(settings.phoneticDisplay).toBe(PhoneticDisplay.Zhuyin);
     expect(settings.defaultPracticeSetSize).toBe(40);
+  });
+});
+
+describe('installed packs', () => {
+  it('records a pack, replaces an older version and removes it', async () => {
+    const { database } = await setUp();
+    const repository = createInstalledPackRepository(database);
+    const record = {
+      packId: 'mandarin',
+      packVersion: 2,
+      databaseName: 'pack-mandarin-v2.db',
+      installedAtMs: 10,
+    };
+    await repository.saveInstalledPack(record);
+    await repository.saveInstalledPack({
+      ...record,
+      packVersion: 3,
+      databaseName: 'pack-mandarin-v3.db',
+    });
+    expect(await repository.listInstalledPacks()).toEqual([
+      { ...record, packVersion: 3, databaseName: 'pack-mandarin-v3.db' },
+    ]);
+    await repository.removeInstalledPack('mandarin');
+    expect(await repository.listInstalledPacks()).toEqual([]);
   });
 });

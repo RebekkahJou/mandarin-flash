@@ -1,7 +1,10 @@
+import * as Crypto from 'expo-crypto';
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { createExpoPackFileStore } from '../data/expoPackFileStore';
 import { openBuiltInPack, openUserDatabase } from '../data/openDatabases';
+import { createInstalledPackRepository } from '../data/repositories/installedPackRepository';
 import type { PracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import { createPracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import type { ProfileRepository } from '../data/repositories/profileRepository';
@@ -25,6 +28,10 @@ import type { LanguageAdapter } from '../services/languages/languageAdapter';
 import { languageBundleFor } from '../services/languages/languageBundles';
 import type { LoadedPack } from '../services/packs/loadedPack';
 import { packForLanguage } from '../services/packs/loadedPack';
+import type { PackInstaller } from '../services/packs/packInstaller';
+import { createPackInstaller } from '../services/packs/packInstaller';
+import { setSha512ForSignatures } from '../services/packs/packSignature';
+import { TRUSTED_PACK_PUBLIC_KEYS } from '../services/packs/trustedPackKeys';
 import { useLanguagePacks } from './LanguagePacksContext';
 
 /** Everything that doesn't depend on which profile is active; opened once at startup. */
@@ -35,8 +42,9 @@ export interface AppCore {
   practiceSessionRepository: PracticeSessionRepository;
   reviewEventRepository: ReviewEventRepository;
   settingsRepository: SettingsRepository;
-  /** Language packs open at startup. */
+  /** Language packs open at startup: the built-in pack, then installed ones. */
   initialPacks: LoadedPack[];
+  packInstaller: PackInstaller;
   /** Most recently used first. */
   initialProfiles: Profile[];
 }
@@ -54,9 +62,22 @@ export interface AppServices {
   dictionaryLookup: DictionaryLookup;
 }
 
+/** Native SHA-512 for signature checks. Messages are short, so copying them costs nothing. */
+async function sha512(message: Uint8Array): Promise<Uint8Array<ArrayBuffer>> {
+  const digest = await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA512, new Uint8Array(message));
+  return new Uint8Array(digest);
+}
+
 async function createAppCore(): Promise<AppCore> {
+  setSha512ForSignatures(sha512);
   const [userDatabase, builtInPack] = await Promise.all([openUserDatabase(), openBuiltInPack()]);
   const profileRepository = createProfileRepository(userDatabase);
+  const packInstaller = createPackInstaller({
+    fileStore: createExpoPackFileStore(),
+    installedPackRepository: createInstalledPackRepository(userDatabase),
+    trustedPublicKeys: TRUSTED_PACK_PUBLIC_KEYS,
+  });
+  const installedPacks = await packInstaller.loadInstalledPacks();
   return {
     profileRepository,
     wordRepository: createWordRepository(userDatabase),
@@ -64,7 +85,8 @@ async function createAppCore(): Promise<AppCore> {
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),
     reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
-    initialPacks: [{ ...builtInPack, isBuiltIn: true }],
+    initialPacks: [{ ...builtInPack, isBuiltIn: true }, ...installedPacks],
+    packInstaller,
     initialProfiles: await profileRepository.listProfiles(),
   };
 }

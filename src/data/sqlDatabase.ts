@@ -16,4 +16,5 @@ export interface SqlDatabase {
   getAll<Row>(sql: string, params?: SqlParams): Promise<Row[]>;
   getFirst<Row>(sql: string, params?: SqlParams): Promise<Row | null>;
   transaction(task: () => Promise<void>): Promise<void>;
+  close(): Promise<void>;
 }

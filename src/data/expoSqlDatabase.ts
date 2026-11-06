@@ -14,5 +14,6 @@ export function wrapExpoDatabase(database: SQLiteDatabase): SqlDatabase {
     getFirst: <Row>(sql: string, params: SqlParams = []) =>
       database.getFirstAsync<Row>(sql, [...params]),
     transaction: (task: () => Promise<void>) => database.withTransactionAsync(task),
+    close: () => database.closeAsync(),
   };
 }

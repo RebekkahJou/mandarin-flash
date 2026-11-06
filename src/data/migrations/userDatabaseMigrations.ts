@@ -89,6 +89,16 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
   ALTER TABLE profiles ADD COLUMN last_used_at INTEGER NOT NULL DEFAULT 0;
   UPDATE profiles SET last_used_at = created_at;
   `,
+  // Language packs the user installed. The pack files themselves sit outside this database; the
+  // list lives here because which languages someone studies is personal.
+  `
+  CREATE TABLE installed_packs (
+    pack_id TEXT PRIMARY KEY,
+    pack_version INTEGER NOT NULL,
+    database_name TEXT NOT NULL,
+    installed_at INTEGER NOT NULL
+  );
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {

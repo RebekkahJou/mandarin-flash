@@ -39,5 +39,8 @@ function wrapNodeDatabase(database: Database.Database): SqlDatabase {
         throw error;
       }
     },
+    close: async () => {
+      database.close();
+    },
   };
 }
