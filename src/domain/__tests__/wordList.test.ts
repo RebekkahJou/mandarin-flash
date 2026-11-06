@@ -9,6 +9,8 @@ import {
 } from '../wordList';
 import { makeWord } from './testWords';
 
+const RELIABLE = [PartOfSpeech.Noun, PartOfSpeech.Verb, PartOfSpeech.Adjective];
+
 const candidates = [
   { text: 'to walk', partsOfSpeech: [PartOfSpeech.Verb] },
   { text: 'row; line', partsOfSpeech: [PartOfSpeech.Noun] },
@@ -40,7 +42,7 @@ describe('WordList', () => {
   it('general lists pick the first 3 meanings of any kind and never warn', () => {
     const list = new GeneralWordList({ id: 1, profileId: 1, name: 'Focus Vocabulary' });
     expect(list.selectDefaultMeanings(candidates)).toEqual(['to walk', 'row; line', 'capable']);
-    expect(list.validateWord([PartOfSpeech.Noun])).toBeNull();
+    expect(list.validateWord([PartOfSpeech.Noun], RELIABLE)).toBeNull();
   });
 });
 
@@ -62,12 +64,22 @@ describe('PartOfSpeechWordList', () => {
   });
 
   it('warns when the word has no meaning of the list part of speech', () => {
-    expect(verbList.validateWord([PartOfSpeech.Noun])?.listName).toBe('Verbs');
-    expect(verbList.validateWord([PartOfSpeech.Noun, PartOfSpeech.Verb])).toBeNull();
+    expect(verbList.validateWord([PartOfSpeech.Noun], RELIABLE)?.listName).toBe('Verbs');
+    expect(verbList.validateWord([PartOfSpeech.Noun, PartOfSpeech.Verb], RELIABLE)).toBeNull();
   });
 
   it('does not warn about words the dictionary has no data for', () => {
-    expect(verbList.validateWord([])).toBeNull();
+    expect(verbList.validateWord([], RELIABLE)).toBeNull();
+  });
+
+  it('does not warn when the language tags its part of speech loosely', () => {
+    const adverbList = new PartOfSpeechWordList({
+      id: 3,
+      profileId: 1,
+      name: 'Adverbs',
+      partOfSpeech: PartOfSpeech.Adverb,
+    });
+    expect(adverbList.validateWord([PartOfSpeech.Noun], RELIABLE)).toBeNull();
   });
 });
 

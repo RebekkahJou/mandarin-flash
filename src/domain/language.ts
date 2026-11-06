@@ -1,3 +1,4 @@
+import type { DefaultWordListDefinition } from './defaultWordLists';
 import { PartOfSpeech } from './partOfSpeech';
 
 /** BCP 47 tags. Stored in profiles.language_id, so never change an existing value. */
@@ -34,6 +35,8 @@ export interface LanguageDefinition {
   variantName: string;
   /** A one-character label for the other written form, e.g. 简. */
   variantSymbol: string;
+  /** Lists this language's profiles start with after the shared defaults, e.g. Measure words. */
+  extraDefaultWordLists: readonly DefaultWordListDefinition[];
 }
 
 // CC-CEDICT glosses are tagged by an English heuristic that is only dependable for these.
@@ -42,6 +45,10 @@ const MANDARIN_RELIABLE_PARTS_OF_SPEECH = [
   PartOfSpeech.Verb,
   PartOfSpeech.Adjective,
 ] as const;
+
+const MANDARIN_EXTRA_DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [
+  { name: 'Measure words', partOfSpeech: PartOfSpeech.MeasureWord },
+];
 
 const MANDARIN_TRADITIONAL: LanguageDefinition = {
   id: LanguageId.MandarinTraditional,
@@ -53,6 +60,7 @@ const MANDARIN_TRADITIONAL: LanguageDefinition = {
   reliablePartsOfSpeech: MANDARIN_RELIABLE_PARTS_OF_SPEECH,
   variantName: 'Simplified',
   variantSymbol: '简',
+  extraDefaultWordLists: MANDARIN_EXTRA_DEFAULT_WORD_LISTS,
 };
 
 /** Mainland conventions: Simplified characters, mainland readings and word forms. */
@@ -66,6 +74,7 @@ const MANDARIN_SIMPLIFIED: LanguageDefinition = {
   reliablePartsOfSpeech: MANDARIN_RELIABLE_PARTS_OF_SPEECH,
   variantName: 'Traditional',
   variantSymbol: '繁',
+  extraDefaultWordLists: MANDARIN_EXTRA_DEFAULT_WORD_LISTS,
 };
 
 export const LANGUAGE_DEFINITIONS: Readonly<Record<LanguageId, LanguageDefinition>> = {

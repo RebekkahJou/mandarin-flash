@@ -22,9 +22,15 @@ export function useWordListDetail(wordListId: number) {
     const loadedList = await wordListRepository.getListWithEntries(wordListId);
     setList(loadedList);
     if (loadedList) {
-      setMismatchedWordIds(await findPartOfSpeechMismatches(loadedList, dictionaryLookup.lookUp));
+      setMismatchedWordIds(
+        await findPartOfSpeechMismatches(
+          loadedList,
+          dictionaryLookup.lookUp,
+          languageBundle.definition.reliablePartsOfSpeech,
+        ),
+      );
     }
-  }, [wordListId, wordListRepository, dictionaryLookup]);
+  }, [wordListId, wordListRepository, dictionaryLookup, languageBundle]);
 
   // Shown on highlighted rows in Nouns, Verbs and Adjectives.
   const mismatchWarning =

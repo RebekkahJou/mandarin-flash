@@ -13,6 +13,8 @@ import {
 import type { DictionaryEntry } from '../dictionaryLookup';
 import { mandarinTraditionalBundle as mandarin } from '../languages/mandarinTraditionalBundle';
 
+const RELIABLE = mandarin.definition.reliablePartsOfSpeech;
+
 const generalList = new GeneralWordList({ id: 1, profileId: 1, name: 'General Vocabulary' });
 
 const dictionary: Record<string, DictionaryEntry[]> = {
@@ -73,7 +75,7 @@ describe('parseWordCsv', () => {
 describe('planCsvImport', () => {
   it('converts to Traditional, fills missing meanings and skips duplicates', async () => {
     const parsed = parseWordCsv('character\n软件\n學生\n軟體', mandarin);
-    const plan = await planCsvImport(parsed, generalList, new Set(['學生']), lookUp);
+    const plan = await planCsvImport(parsed, generalList, new Set(['學生']), lookUp, RELIABLE);
     expect(plan.wordsToAdd).toEqual([
       {
         headword: '軟體',
@@ -91,6 +93,7 @@ describe('planCsvImport', () => {
       generalList,
       new Set(),
       lookUp,
+      RELIABLE,
     );
     expect(plan.unknownCharacters).toEqual(['㐀']);
     expect(plan.wordsToAdd).toHaveLength(0);
@@ -100,8 +103,8 @@ describe('planCsvImport', () => {
 describe('describeImportPlans', () => {
   it('summarizes each list once and the shared problems once', async () => {
     const parsed = parseWordCsv('character\nhello\n軟體\n學生\n㐀', mandarin);
-    const generalPlan = await planCsvImport(parsed, generalList, new Set(), lookUp);
-    const focusPlan = await planCsvImport(parsed, generalList, new Set(['軟體']), lookUp);
+    const generalPlan = await planCsvImport(parsed, generalList, new Set(), lookUp, RELIABLE);
+    const focusPlan = await planCsvImport(parsed, generalList, new Set(['軟體']), lookUp, RELIABLE);
     expect(
       describeImportPlans([
         { listName: 'General Vocabulary', plan: generalPlan },
@@ -129,7 +132,7 @@ describe('part-of-speech mismatches', () => {
       'character,meaning,pinyin\n軟體,software,ruan3 ti3\n㐀,odd,qiu1',
       mandarin,
     );
-    const plan = await planCsvImport(parsed, verbs, new Set(), lookUp);
+    const plan = await planCsvImport(parsed, verbs, new Set(), lookUp, RELIABLE);
     expect(plan.wordsToAdd.map((draft) => draft.headword)).toEqual(['軟體', '㐀']);
     // 㐀 is not in the dictionary, so it can't be judged and isn't flagged.
     expect(plan.partOfSpeechMismatches).toEqual(['軟體']);
@@ -145,6 +148,7 @@ describe('part-of-speech mismatches', () => {
       generalList,
       new Set(),
       lookUp,
+      RELIABLE,
     );
     expect(plan.partOfSpeechMismatches).toEqual([]);
   });

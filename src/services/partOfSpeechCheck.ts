@@ -1,3 +1,4 @@
+import type { PartOfSpeech } from '../domain/partOfSpeech';
 import type { WordList } from '../domain/wordList';
 import { WordListKind } from '../domain/wordList';
 import type { DictionaryEntry } from './dictionaryLookup';
@@ -12,6 +13,7 @@ type LookUp = (headword: string) => Promise<DictionaryEntry[]>;
 export async function findPartOfSpeechMismatches(
   list: WordList,
   lookUp: LookUp,
+  reliablePartsOfSpeech: readonly PartOfSpeech[],
 ): Promise<Set<number>> {
   const mismatchedWordIds = new Set<number>();
   if (list.kind !== WordListKind.PartOfSpeech) return mismatchedWordIds;
@@ -19,7 +21,8 @@ export async function findPartOfSpeechMismatches(
     if (mismatchedWordIds.has(word.id)) continue;
     const reading = findReading(await lookUp(word.headword), word.reading);
     const partsOfSpeech = partsOfSpeechOf(reading ? [reading] : []);
-    if (list.validateWord(partsOfSpeech) !== null) mismatchedWordIds.add(word.id);
+    if (list.validateWord(partsOfSpeech, reliablePartsOfSpeech) !== null)
+      mismatchedWordIds.add(word.id);
   }
   return mismatchedWordIds;
 }

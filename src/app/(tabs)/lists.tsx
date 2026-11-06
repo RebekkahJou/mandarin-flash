@@ -88,6 +88,8 @@ export default function WordListsScreen() {
         onChangeName={management.setNewListName}
         onConfirm={() => void management.createList()}
         onCancel={management.closeCreator}
+        suggestedNames={management.suggestedListNames}
+        onPickSuggestion={(name) => void management.createSuggestedList(name)}
       />
     </ScreenContainer>
   );

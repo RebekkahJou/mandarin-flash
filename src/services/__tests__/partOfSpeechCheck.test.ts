@@ -5,6 +5,8 @@ import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import type { DictionaryEntry } from '../dictionaryLookup';
 import { findPartOfSpeechMismatches } from '../partOfSpeechCheck';
 
+const RELIABLE = [PartOfSpeech.Noun, PartOfSpeech.Verb, PartOfSpeech.Adjective];
+
 const dictionary: Record<string, DictionaryEntry[]> = {
   走: [
     {
@@ -53,11 +55,13 @@ describe('findPartOfSpeechMismatches', () => {
       partOfSpeech: PartOfSpeech.Verb,
       entries,
     });
-    expect(await findPartOfSpeechMismatches(verbs, lookUp)).toEqual(new Set([friend.id, row.id]));
+    expect(await findPartOfSpeechMismatches(verbs, lookUp, RELIABLE)).toEqual(
+      new Set([friend.id, row.id]),
+    );
   });
 
   it('never flags words in general lists', async () => {
     const general = new GeneralWordList({ id: 2, profileId: 1, name: 'Phrases', entries });
-    expect(await findPartOfSpeechMismatches(general, lookUp)).toEqual(new Set());
+    expect(await findPartOfSpeechMismatches(general, lookUp, RELIABLE)).toEqual(new Set());
   });
 });

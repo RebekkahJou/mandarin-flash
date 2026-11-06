@@ -1,6 +1,6 @@
-import { DEFAULT_WORD_LISTS } from '../../domain/defaultWordLists';
+import { defaultWordListsFor } from '../../domain/defaultWordLists';
 import type { LanguageId } from '../../domain/language';
-import { toLanguageId } from '../../domain/language';
+import { languageDefinitionFor, toLanguageId } from '../../domain/language';
 import type { Profile } from '../../domain/profileGroups';
 import { WordListKind } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
@@ -39,7 +39,8 @@ export function createProfileRepository(database: SqlDatabase) {
         [name, languageId, createdAtMs, NEVER_USED_AT_MS],
       );
       profileId = result.lastInsertRowId;
-      for (const [sortOrder, list] of DEFAULT_WORD_LISTS.entries()) {
+      const { extraDefaultWordLists } = languageDefinitionFor(languageId);
+      for (const [sortOrder, list] of defaultWordListsFor(extraDefaultWordLists).entries()) {
         await database.run(
           'INSERT INTO word_lists (profile_id, name, kind, part_of_speech, sort_order) VALUES (?, ?, ?, ?, ?)',
           [
