@@ -84,6 +84,11 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
   CREATE INDEX review_events_by_profile ON review_events(profile_id, answered_at);
   CREATE INDEX review_events_by_word ON review_events(word_id);
   `,
+  // The welcome screen opens on the most recently used language and profile.
+  `
+  ALTER TABLE profiles ADD COLUMN last_used_at INTEGER NOT NULL DEFAULT 0;
+  UPDATE profiles SET last_used_at = created_at;
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {

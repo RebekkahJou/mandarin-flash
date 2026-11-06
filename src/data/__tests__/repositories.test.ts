@@ -278,11 +278,34 @@ describe('profiles', () => {
     const { database, profile } = await setUp();
     await database.run('UPDATE profiles SET language_id = ? WHERE id = ?', ['xx', profile.id]);
     const reloaded = await createProfileRepository(database).ensureDefaultProfile();
-    expect(reloaded).toEqual({
+    expect(reloaded).toMatchObject({
       id: profile.id,
       name: 'Me',
       languageId: LanguageId.MandarinTraditional,
     });
+  });
+
+  it('lists profiles most recently used first and opens on that one', async () => {
+    const { database, profile } = await setUp();
+    const profileRepository = createProfileRepository(database);
+    const kid = await profileRepository.createProfile('Kid', LanguageId.MandarinTraditional);
+    await profileRepository.markProfileUsed(profile.id, kid.lastUsedAtMs + 1);
+
+    const listed = await profileRepository.listProfiles();
+    expect(listed.map(({ name }) => name)).toEqual(['Me', 'Kid']);
+    expect(listed[0].lastUsedAtMs).toBe(kid.lastUsedAtMs + 1);
+    expect((await profileRepository.ensureDefaultProfile()).id).toBe(profile.id);
+  });
+
+  it('gives a new profile its own default lists', async () => {
+    const { database, wordListRepository } = await setUp();
+    const kid = await createProfileRepository(database).createProfile(
+      'Kid',
+      LanguageId.MandarinTraditional,
+    );
+    const summaries = await wordListRepository.listSummaries(kid.id);
+    expect(summaries.map((summary) => summary.list.name)).toContain('General Vocabulary');
+    expect(summaries.every((summary) => summary.list.profileId === kid.id)).toBe(true);
   });
 });
 
