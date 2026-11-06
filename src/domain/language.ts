@@ -29,8 +29,6 @@ export interface LanguageDefinition {
   /** Characters carry meaning alone, so a compound can be split into characters to study. */
   splitsCompoundsIntoCharacters: boolean;
   scriptStudySets: readonly ScriptStudySet[];
-  /** Word types the dictionary tags well enough to warn when a word doesn't fit a list. */
-  reliablePartsOfSpeech: readonly PartOfSpeech[];
   /** What a word's other written form is called, e.g. "Simplified" when studying Traditional. */
   variantName: string;
   /** A one-character label for the other written form, e.g. 简. */
@@ -38,13 +36,6 @@ export interface LanguageDefinition {
   /** Lists this language's profiles start with after the shared defaults, e.g. Measure words. */
   extraDefaultWordLists: readonly DefaultWordListDefinition[];
 }
-
-// CC-CEDICT glosses are tagged by an English heuristic that is only dependable for these.
-const MANDARIN_RELIABLE_PARTS_OF_SPEECH = [
-  PartOfSpeech.Noun,
-  PartOfSpeech.Verb,
-  PartOfSpeech.Adjective,
-] as const;
 
 const MANDARIN_EXTRA_DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [
   { name: 'Measure words', partOfSpeech: PartOfSpeech.MeasureWord },
@@ -57,7 +48,6 @@ const MANDARIN_TRADITIONAL: LanguageDefinition = {
   readingName: 'pinyin',
   splitsCompoundsIntoCharacters: true,
   scriptStudySets: [{ id: ScriptStudySetId.Zhuyin, name: 'Zhuyin' }],
-  reliablePartsOfSpeech: MANDARIN_RELIABLE_PARTS_OF_SPEECH,
   variantName: 'Simplified',
   variantSymbol: '简',
   extraDefaultWordLists: MANDARIN_EXTRA_DEFAULT_WORD_LISTS,
@@ -71,7 +61,6 @@ const MANDARIN_SIMPLIFIED: LanguageDefinition = {
   readingName: 'pinyin',
   splitsCompoundsIntoCharacters: true,
   scriptStudySets: [{ id: ScriptStudySetId.Zhuyin, name: 'Zhuyin' }],
-  reliablePartsOfSpeech: MANDARIN_RELIABLE_PARTS_OF_SPEECH,
   variantName: 'Traditional',
   variantSymbol: '繁',
   extraDefaultWordLists: MANDARIN_EXTRA_DEFAULT_WORD_LISTS,

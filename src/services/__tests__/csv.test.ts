@@ -13,7 +13,7 @@ import {
 import type { DictionaryEntry } from '../dictionaryLookup';
 import { mandarinTraditionalBundle as mandarin } from '../languages/mandarinTraditionalBundle';
 
-const RELIABLE = mandarin.definition.reliablePartsOfSpeech;
+const RELIABLE = [PartOfSpeech.Noun, PartOfSpeech.Verb, PartOfSpeech.Adjective];
 
 const generalList = new GeneralWordList({ id: 1, profileId: 1, name: 'General Vocabulary' });
 

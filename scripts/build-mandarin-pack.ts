@@ -1,7 +1,8 @@
 /**
- * Builds assets/data/dictionary.db from public data sources. Run on a developer machine only:
+ * Builds the built-in Mandarin pack (assets/data/mandarin-pack.db) from public data sources.
+ * Run on a developer machine only:
  *
- *   npm run build:dictionary -- <sourceDirectory>
+ *   npm run build:mandarin-pack -- <sourceDirectory>
  *
  * <sourceDirectory> must contain (see docs/THIRD_PARTY.md for download links and licenses):
  *   cedict.txt          CC-CEDICT, unzipped
@@ -13,14 +14,14 @@ import Database from 'better-sqlite3';
 import { existsSync, readFileSync, rmSync, statSync } from 'node:fs';
 import path from 'node:path';
 
-import { DICTIONARY_SCHEMA_SQL } from '../src/data/dictionarySchema';
-import type { SerializedGloss } from '../src/data/dictionarySchema';
+import { PACK_SCHEMA_SQL } from '../src/data/packSchema';
+import type { SerializedGloss } from '../src/data/packSchema';
 import { toTaiwanTraditional } from '../src/services/chineseConverter';
 import type { CedictEntry } from './lib/cedictParser';
 import { isCrossReferenceOnly, parseCedictLine, usefulGlosses } from './lib/cedictParser';
+import { MANDARIN_PACK_METADATA, MANDARIN_PACK_PATH, writePackMetadata } from './lib/mandarinPack';
 import { tagGloss } from './lib/partOfSpeechTagger';
 
-const OUTPUT_PATH = path.join(__dirname, '..', 'assets', 'data', 'dictionary.db');
 /** Short sentences are easiest for learners and keep the bundle small. */
 const MAX_SENTENCE_CHARACTERS = 15;
 const MAX_SENTENCES = 25_000;
@@ -39,7 +40,7 @@ function entryRank(entry: CedictEntry, glossCount: number): number {
 
 function insertEntries(database: Database.Database, cedictPath: string): number {
   const insert = database.prepare(
-    `INSERT INTO entries (traditional, simplified, pinyin, mainland_pinyin, glosses, rank)
+    `INSERT INTO entries (headword, variant, reading, variant_reading, glosses, rank)
      VALUES (?, ?, ?, ?, ?, ?)`,
   );
   let insertedCount = 0;
@@ -76,7 +77,7 @@ function readSentences(filePath: string): Map<string, string> {
 function insertSentences(database: Database.Database, sourceDirectory: string): number {
   const mandarinById = readSentences(path.join(sourceDirectory, 'cmn_sentences.tsv'));
   const englishById = readSentences(path.join(sourceDirectory, 'eng_sentences.tsv'));
-  const insert = database.prepare('INSERT INTO sentences (traditional, english) VALUES (?, ?)');
+  const insert = database.prepare('INSERT INTO sentences (text, english) VALUES (?, ?)');
   const seenSentences = new Set<string>();
   const candidates: { traditional: string; english: string }[] = [];
   for (const line of readLines(path.join(sourceDirectory, 'cmn-eng_links.tsv'))) {
@@ -99,13 +100,14 @@ function main(): void {
   const sourceDirectory = process.argv[2];
   if (!sourceDirectory || !existsSync(path.join(sourceDirectory, 'cedict.txt'))) {
     console.error(
-      'Usage: npm run build:dictionary -- <directory containing cedict.txt and Tatoeba TSVs>',
+      'Usage: npm run build:mandarin-pack -- <directory containing cedict.txt and Tatoeba TSVs>',
     );
     process.exit(1);
   }
-  rmSync(OUTPUT_PATH, { force: true });
-  const database = new Database(OUTPUT_PATH);
-  database.exec(DICTIONARY_SCHEMA_SQL);
+  rmSync(MANDARIN_PACK_PATH, { force: true });
+  const database = new Database(MANDARIN_PACK_PATH);
+  database.exec(PACK_SCHEMA_SQL);
+  writePackMetadata(database, MANDARIN_PACK_METADATA);
   const build = database.transaction(() => ({
     entryCount: insertEntries(database, path.join(sourceDirectory, 'cedict.txt')),
     sentenceCount: insertSentences(database, sourceDirectory),
@@ -113,7 +115,7 @@ function main(): void {
   const { entryCount, sentenceCount } = build();
   database.exec('VACUUM');
   database.close();
-  const sizeInMegabytes = (statSync(OUTPUT_PATH).size / BYTES_PER_MEGABYTE).toFixed(1);
+  const sizeInMegabytes = (statSync(MANDARIN_PACK_PATH).size / BYTES_PER_MEGABYTE).toFixed(1);
   console.log(
     `Wrote ${entryCount} entries and ${sentenceCount} sentences (${sizeInMegabytes} MB).`,
   );

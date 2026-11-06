@@ -12,8 +12,7 @@ import { confirm, confirmPlannedAdditions } from '../confirm';
 
 /** Loads one word and changes its frequency tier and the lists it belongs to. */
 export function useWordEditor(wordId: number) {
-  const { profileId, languageBundle, wordRepository, wordListRepository, dictionaryLookup } =
-    useAppServices();
+  const { profileId, wordRepository, wordListRepository, dictionaryLookup } = useAppServices();
   const [word, setWord] = useState<Word | null>(null);
   const [lists, setLists] = useState<WordList[]>([]);
   const [memberListIds, setMemberListIds] = useState<ReadonlySet<number>>(new Set());
@@ -49,7 +48,7 @@ export function useWordEditor(wordId: number) {
       hasUserEditedMeanings: list.kind !== WordListKind.PartOfSpeech,
       definitionCandidates: reading?.definitionCandidates ?? [],
       wordPartsOfSpeech: partsOfSpeechOf(reading ? [reading] : []),
-      reliablePartsOfSpeech: languageBundle.definition.reliablePartsOfSpeech,
+      reliablePartsOfSpeech: dictionaryLookup.reliablePartsOfSpeech,
       listIdsAlreadyContainingWord: new Set(),
     });
     const additions = await confirmPlannedAdditions(plan);

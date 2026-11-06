@@ -48,7 +48,7 @@
     "test": "jest",
     "format": "prettier --write .",
     "check": "tsc --noEmit && expo lint && jest",
-    "build:dictionary": "tsx scripts/build-dictionary.ts",
+    "build:mandarin-pack": "tsx scripts/build-mandarin-pack.ts",
     "build:font-characters": "tsx scripts/build-font-character-list.ts"
   },
   "private": true,

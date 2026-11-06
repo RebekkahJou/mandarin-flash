@@ -26,11 +26,11 @@ export function useWordListDetail(wordListId: number) {
         await findPartOfSpeechMismatches(
           loadedList,
           dictionaryLookup.lookUp,
-          languageBundle.definition.reliablePartsOfSpeech,
+          dictionaryLookup.reliablePartsOfSpeech,
         ),
       );
     }
-  }, [wordListId, wordListRepository, dictionaryLookup, languageBundle]);
+  }, [wordListId, wordListRepository, dictionaryLookup]);
 
   // Shown on highlighted rows in Nouns, Verbs and Adjectives.
   const mismatchWarning =

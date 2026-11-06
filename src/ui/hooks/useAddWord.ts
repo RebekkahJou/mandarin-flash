@@ -80,7 +80,7 @@ export function useAddWord(lists: readonly WordList[]) {
       hasUserEditedMeanings,
       definitionCandidates: selectedReading?.definitionCandidates ?? [],
       wordPartsOfSpeech: partsOfSpeechOf(selectedReading ? [selectedReading] : []),
-      reliablePartsOfSpeech: languageBundle.definition.reliablePartsOfSpeech,
+      reliablePartsOfSpeech: dictionaryLookup.reliablePartsOfSpeech,
       listIdsAlreadyContainingWord,
     });
     const additions = await confirmPlannedAdditions(plan);

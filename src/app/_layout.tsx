@@ -5,6 +5,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 import { BUNDLED_CHINESE_FONTS } from '../services/fontRotation';
 import { useAppCoreLoader } from '../ui/AppServicesContext';
+import { LanguagePacksProvider } from '../ui/LanguagePacksContext';
 import { ProfileSessionProvider, useProfileSession } from '../ui/ProfileSessionContext';
 import { colors, fontSizes, spacing } from '../ui/theme';
 
@@ -67,10 +68,12 @@ export default function RootLayout() {
   }
 
   return (
-    <ProfileSessionProvider core={coreState.core}>
-      <StatusBar style="dark" />
-      <RootStack />
-    </ProfileSessionProvider>
+    <LanguagePacksProvider initialPacks={coreState.core.initialPacks}>
+      <ProfileSessionProvider core={coreState.core}>
+        <StatusBar style="dark" />
+        <RootStack />
+      </ProfileSessionProvider>
+    </LanguagePacksProvider>
   );
 }
 

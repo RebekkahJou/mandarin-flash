@@ -2,8 +2,10 @@ import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 import { deleteDatabaseAsync, importDatabaseFromAssetAsync, openDatabaseAsync } from 'expo-sqlite';
 
+import type { PackMetadata } from '../domain/packMetadata';
 import { wrapExpoDatabase } from './expoSqlDatabase';
 import { migrateUserDatabase } from './migrations/userDatabaseMigrations';
+import { readPackMetadata } from './packValidation';
 import type { SqlDatabase } from './sqlDatabase';
 
 const USER_DATABASE_NAME = 'user.db';
@@ -11,11 +13,14 @@ const USER_DATABASE_KEY_NAME = 'userDatabaseKey';
 const DATABASE_KEY_BYTES = 32;
 const HEX_KEY_PATTERN = /^[0-9a-f]{64}$/;
 
-/** Bump when the bundled dictionary changes so the new file replaces the old copy. */
-const DICTIONARY_VERSION = 3;
-const FIRST_DICTIONARY_VERSION = 1;
+/**
+ * Bump when the built-in Mandarin pack (assets/data/mandarin-pack.db) changes so the new file
+ * replaces the old copy. Versions 1–3 were the dictionary before it became a pack.
+ */
+const BUILT_IN_PACK_COPY_VERSION = 4;
+const FIRST_BUILT_IN_PACK_COPY_VERSION = 1;
 
-function dictionaryDatabaseName(version: number): string {
+function builtInPackDatabaseName(version: number): string {
   return `dictionary-v${version}.db`;
 }
 
@@ -51,24 +56,45 @@ export async function openUserDatabase(): Promise<SqlDatabase> {
   return wrapped;
 }
 
-/** Removes copies left by earlier app versions; each one is a whole dictionary (about 14 MB). */
-async function deleteOlderDictionaries(): Promise<void> {
-  for (let version = FIRST_DICTIONARY_VERSION; version < DICTIONARY_VERSION; version++) {
+/** Removes copies left by earlier app versions; each one is a whole dictionary (about 15 MB). */
+async function deleteOlderBuiltInPacks(): Promise<void> {
+  for (
+    let version = FIRST_BUILT_IN_PACK_COPY_VERSION;
+    version < BUILT_IN_PACK_COPY_VERSION;
+    version++
+  ) {
     // Deleting a copy that was never made throws; there is nothing to clean up then.
-    await deleteDatabaseAsync(dictionaryDatabaseName(version)).catch(() => undefined);
+    await deleteDatabaseAsync(builtInPackDatabaseName(version)).catch(() => undefined);
   }
 }
 
-/** Copies the bundled read-only dictionary into app storage on first launch, then opens it. */
-export async function openDictionaryDatabase(): Promise<SqlDatabase> {
-  const databaseName = dictionaryDatabaseName(DICTIONARY_VERSION);
-  await importDatabaseFromAssetAsync(databaseName, {
-    assetId: require('../../assets/data/dictionary.db') as number,
-  });
-  await deleteOlderDictionaries();
-  const database = await openDatabaseAsync(databaseName, {
-    enableChangeListener: false,
-  });
+/** Opens a pack read-only. */
+export async function openPackDatabase(
+  databaseName: string,
+  directory?: string,
+): Promise<SqlDatabase> {
+  const database = await openDatabaseAsync(
+    databaseName,
+    { enableChangeListener: false },
+    directory,
+  );
   await database.execAsync('PRAGMA query_only = ON');
   return wrapExpoDatabase(database);
+}
+
+/**
+ * Copies the built-in Mandarin pack into app storage on first launch, then opens it. It ships
+ * inside the app, so it is trusted and only its metadata is read.
+ */
+export async function openBuiltInPack(): Promise<{
+  metadata: PackMetadata;
+  database: SqlDatabase;
+}> {
+  const databaseName = builtInPackDatabaseName(BUILT_IN_PACK_COPY_VERSION);
+  await importDatabaseFromAssetAsync(databaseName, {
+    assetId: require('../../assets/data/mandarin-pack.db') as number,
+  });
+  await deleteOlderBuiltInPacks();
+  const database = await openPackDatabase(databaseName);
+  return { metadata: await readPackMetadata(database), database };
 }

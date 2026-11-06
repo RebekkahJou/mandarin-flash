@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { openDictionaryDatabase, openUserDatabase } from '../data/openDatabases';
+import { openBuiltInPack, openUserDatabase } from '../data/openDatabases';
 import type { PracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import { createPracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import type { ProfileRepository } from '../data/repositories/profileRepository';
@@ -17,13 +17,15 @@ import type { WordListRepository } from '../data/repositories/wordListRepository
 import { createWordListRepository } from '../data/repositories/wordListRepository';
 import type { WordRepository } from '../data/repositories/wordRepository';
 import { createWordRepository } from '../data/repositories/wordRepository';
-import type { SqlDatabase } from '../data/sqlDatabase';
 import type { LanguageId } from '../domain/language';
 import type { Profile } from '../domain/profileGroups';
 import type { DictionaryLookup } from '../services/dictionaryLookup';
 import { createDictionaryLookup } from '../services/dictionaryLookup';
 import type { LanguageAdapter } from '../services/languages/languageAdapter';
 import { languageBundleFor } from '../services/languages/languageBundles';
+import type { LoadedPack } from '../services/packs/loadedPack';
+import { packForLanguage } from '../services/packs/loadedPack';
+import { useLanguagePacks } from './LanguagePacksContext';
 
 /** Everything that doesn't depend on which profile is active; opened once at startup. */
 export interface AppCore {
@@ -33,7 +35,8 @@ export interface AppCore {
   practiceSessionRepository: PracticeSessionRepository;
   reviewEventRepository: ReviewEventRepository;
   settingsRepository: SettingsRepository;
-  dictionaryDatabase: SqlDatabase;
+  /** Language packs open at startup. */
+  initialPacks: LoadedPack[];
   /** Most recently used first. */
   initialProfiles: Profile[];
 }
@@ -52,10 +55,7 @@ export interface AppServices {
 }
 
 async function createAppCore(): Promise<AppCore> {
-  const [userDatabase, dictionaryDatabase] = await Promise.all([
-    openUserDatabase(),
-    openDictionaryDatabase(),
-  ]);
+  const [userDatabase, builtInPack] = await Promise.all([openUserDatabase(), openBuiltInPack()]);
   const profileRepository = createProfileRepository(userDatabase);
   return {
     profileRepository,
@@ -64,7 +64,7 @@ async function createAppCore(): Promise<AppCore> {
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),
     reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
-    dictionaryDatabase,
+    initialPacks: [{ ...builtInPack, isBuiltIn: true }],
     initialProfiles: await profileRepository.listProfiles(),
   };
 }
@@ -91,10 +91,14 @@ export function useAppCoreLoader(): AppCoreState {
 
 function createProfileServices(
   core: AppCore,
+  packs: readonly LoadedPack[],
   profileId: number,
   languageId: LanguageId,
 ): AppServices {
   const languageBundle = languageBundleFor(languageId);
+  const pack = packForLanguage(packs, languageId);
+  // Mandarin is built in, so only a broken build could have a language without a pack.
+  if (!pack) throw new Error(`No language pack for ${languageBundle.definition.name}.`);
   return {
     profileId,
     languageBundle,
@@ -104,8 +108,9 @@ function createProfileServices(
     reviewEventRepository: core.reviewEventRepository,
     settingsRepository: core.settingsRepository,
     dictionaryLookup: createDictionaryLookup(
-      core.dictionaryDatabase,
+      pack.database,
       languageBundle.dictionaryForm,
+      pack.metadata.reliablePartsOfSpeech,
     ),
   };
 }
@@ -136,9 +141,10 @@ export function AppServicesProvider({
   languageId,
   children,
 }: AppServicesProviderProps) {
+  const { packs } = useLanguagePacks();
   const services = useMemo(
-    () => createProfileServices(core, profileId, languageId),
-    [core, profileId, languageId],
+    () => createProfileServices(core, packs, profileId, languageId),
+    [core, packs, profileId, languageId],
   );
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
 

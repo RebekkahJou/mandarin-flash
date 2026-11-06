@@ -49,7 +49,7 @@ export function useCsvImport() {
         wordList,
         headwordsInList,
         lookUp,
-        languageBundle.definition.reliablePartsOfSpeech,
+        dictionaryLookup.reliablePartsOfSpeech,
       );
       listPlans.push({ wordList, listName: wordList.name, plan });
     }
