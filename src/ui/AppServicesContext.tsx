@@ -40,15 +40,16 @@ async function createAppServices(): Promise<AppServices> {
     openDictionaryDatabase(),
   ]);
   const profile = await createProfileRepository(userDatabase).ensureDefaultProfile();
+  const languageBundle = languageBundleFor(profile.languageId);
   return {
     profileId: profile.id,
-    languageBundle: languageBundleFor(profile.languageId),
+    languageBundle,
     wordRepository: createWordRepository(userDatabase),
     wordListRepository: createWordListRepository(userDatabase),
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),
     reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
-    dictionaryLookup: createDictionaryLookup(dictionaryDatabase),
+    dictionaryLookup: createDictionaryLookup(dictionaryDatabase, languageBundle.dictionaryForm),
   };
 }
 

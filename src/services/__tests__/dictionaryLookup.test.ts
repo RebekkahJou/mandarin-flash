@@ -4,27 +4,44 @@
 import { DICTIONARY_SCHEMA_SQL } from '../../data/dictionarySchema';
 import { createInMemoryDatabase } from '../../data/testing/nodeSqlDatabase';
 import { PartOfSpeech } from '../../domain/partOfSpeech';
-import { createDictionaryLookup, partsOfSpeechOf } from '../dictionaryLookup';
+import type { DictionaryForm } from '../dictionaryLookup';
+import { ChineseScript, createDictionaryLookup, partsOfSpeechOf } from '../dictionaryLookup';
 
-async function createLookup() {
+const TRADITIONAL_TAIWAN: DictionaryForm = {
+  script: ChineseScript.Traditional,
+  usesMainlandReadings: false,
+  convertSentence: (text) => text,
+};
+
+const SIMPLIFIED_MAINLAND: DictionaryForm = {
+  script: ChineseScript.Simplified,
+  usesMainlandReadings: true,
+  // Stands in for the real Traditional → Simplified converter.
+  convertSentence: (text) => text.replace('們', '们'),
+};
+
+async function createLookup(form: DictionaryForm) {
   const database = createInMemoryDatabase();
   await database.exec(DICTIONARY_SCHEMA_SQL);
-  const insertEntry =
-    'INSERT INTO entries (traditional, simplified, pinyin, glosses, rank) VALUES (?, ?, ?, ?, ?)';
-  await database.run(insertEntry, ['行', '', 'hang2', '[["row; line",1]]', -1]);
-  await database.run(insertEntry, ['行', '', 'xing2', '[["to walk",2],["capable",4]]', -2]);
-  await database.run(insertEntry, ['軟體', '软体', 'ruan3 ti3', '[["(Tw) software",1]]', -1]);
-  await database.run('INSERT INTO sentences (traditional, english) VALUES (?, ?)', [
-    '我想走路。',
-    'I want to walk.',
-  ]);
-  await database.run('INSERT INTO sentences (traditional, english) VALUES (?, ?)', ['走！', 'Go!']);
-  return createDictionaryLookup(database);
+  const insertEntry = `INSERT INTO entries (traditional, simplified, pinyin, mainland_pinyin, glosses, rank)
+     VALUES (?, ?, ?, ?, ?, ?)`;
+  await database.run(insertEntry, ['行', '', 'hang2', '', '[["row; line",1]]', -1]);
+  await database.run(insertEntry, ['行', '', 'xing2', '', '[["to walk",2],["capable",4]]', -2]);
+  await database.run(insertEntry, ['軟體', '软体', 'ruan3 ti3', '', '[["(Tw) software",1]]', -1]);
+  await database.run(insertEntry, ['軟件', '软件', 'ruan3 jian4', '', '[["software",1]]', -2]);
+  await database.run(insertEntry, ['垃圾', '', 'le4 se4', 'la1 ji1', '[["trash",1]]', -1]);
+  await database.run(insertEntry, ['髮', '发', 'fa3', '', '[["hair",1]]', -1]);
+  await database.run(insertEntry, ['發', '发', 'fa1', '', '[["to send out",2]]', -3]);
+  const insertSentence = 'INSERT INTO sentences (traditional, english) VALUES (?, ?)';
+  await database.run(insertSentence, ['我們想走路。', 'We want to walk.']);
+  await database.run(insertSentence, ['走！', 'Go!']);
+  await database.run(insertSentence, ['我們用軟件。', 'We use software.']);
+  return createDictionaryLookup(database, form);
 }
 
-describe('dictionaryLookup', () => {
+describe('dictionaryLookup in Traditional with Taiwan readings', () => {
   it('returns readings most common first, with parts of speech decoded', async () => {
-    const lookup = await createLookup();
+    const lookup = await createLookup(TRADITIONAL_TAIWAN);
     const entries = await lookup.lookUp('行');
     expect(entries.map((entry) => entry.reading)).toEqual(['xing2', 'hang2']);
     expect(entries[0].definitionCandidates[1]).toEqual({
@@ -34,15 +51,44 @@ describe('dictionaryLookup', () => {
     expect(partsOfSpeechOf(entries).sort()).toEqual(['adjective', 'noun', 'verb']);
   });
 
-  it('converts Simplified input before looking it up', async () => {
-    const lookup = await createLookup();
-    const [entry] = await lookup.lookUp('软件');
-    expect(entry).toMatchObject({ headword: '軟體', variant: '软体' });
+  it('shows the Simplified form as the variant and the Taiwan reading', async () => {
+    const lookup = await createLookup(TRADITIONAL_TAIWAN);
+    expect(await lookup.lookUp('軟體')).toMatchObject([{ headword: '軟體', variant: '软体' }]);
+    expect(await lookup.lookUp('垃圾')).toMatchObject([{ headword: '垃圾', reading: 'le4 se4' }]);
   });
 
   it('finds the shortest example sentences first', async () => {
-    const lookup = await createLookup();
-    const sentences = await lookup.findExampleSentences('走');
-    expect(sentences.map((sentence) => sentence.english)).toEqual(['Go!', 'I want to walk.']);
+    const lookup = await createLookup(TRADITIONAL_TAIWAN);
+    const sentences = await lookup.findExampleSentences({ headword: '走' });
+    expect(sentences.map((sentence) => sentence.english)).toEqual(['Go!', 'We want to walk.']);
+  });
+});
+
+describe('dictionaryLookup in Simplified with mainland readings', () => {
+  it('finds words by their Simplified form, with the Traditional form as the variant', async () => {
+    const lookup = await createLookup(SIMPLIFIED_MAINLAND);
+    expect(await lookup.lookUp('软件')).toMatchObject([
+      { headword: '软件', variant: '軟件', reading: 'ruan3 jian4' },
+    ]);
+  });
+
+  it('returns every Traditional word that shares a Simplified form', async () => {
+    const lookup = await createLookup(SIMPLIFIED_MAINLAND);
+    const entries = await lookup.lookUp('发');
+    expect(entries.map((entry) => entry.variant)).toEqual(['發', '髮']);
+  });
+
+  it('finds words written the same both ways, with the mainland reading', async () => {
+    const lookup = await createLookup(SIMPLIFIED_MAINLAND);
+    expect(await lookup.lookUp('垃圾')).toEqual([
+      expect.objectContaining({ headword: '垃圾', variant: undefined, reading: 'la1 ji1' }),
+    ]);
+    expect(await lookup.lookUp('行')).toHaveLength(2);
+  });
+
+  it('searches sentences by the Traditional form and shows them in Simplified', async () => {
+    const lookup = await createLookup(SIMPLIFIED_MAINLAND);
+    const sentences = await lookup.findExampleSentences({ headword: '软件', variant: '軟件' });
+    expect(sentences).toEqual([{ text: '我们用軟件。', english: 'We use software.' }]);
   });
 });

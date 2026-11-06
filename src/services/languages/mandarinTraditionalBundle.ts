@@ -1,5 +1,6 @@
 import { LANGUAGE_DEFINITIONS, LanguageId } from '../../domain/language';
 import { containsChineseCharacters, toTaiwanTraditional } from '../chineseConverter';
+import { ChineseScript } from '../dictionaryLookup';
 import { toNumberedPinyin, toToneMarkedPinyin } from '../pinyin';
 import type { LanguageAdapter } from './languageAdapter';
 
@@ -18,6 +19,12 @@ function pinyinSearchKey(pinyin: string): string {
 export const mandarinTraditionalBundle: LanguageAdapter = {
   definition: LANGUAGE_DEFINITIONS[LanguageId.MandarinTraditional],
   csvHeaders: { headword: 'character', meaning: 'meaning', reading: 'pinyin' },
+  // The dictionary's sentences are already Taiwan Traditional.
+  dictionaryForm: {
+    script: ChineseScript.Traditional,
+    usesMainlandReadings: false,
+    convertSentence: (text) => text,
+  },
   normalizeHeadword: toTaiwanTraditional,
   containsLanguageScript: containsChineseCharacters,
   normalizeReading: toNumberedPinyin,

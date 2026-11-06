@@ -12,7 +12,7 @@ const DATABASE_KEY_BYTES = 32;
 const HEX_KEY_PATTERN = /^[0-9a-f]{64}$/;
 
 /** Bump when the bundled dictionary changes so the new file replaces the old copy. */
-const DICTIONARY_VERSION = 2;
+const DICTIONARY_VERSION = 3;
 const FIRST_DICTIONARY_VERSION = 1;
 
 function dictionaryDatabaseName(version: number): string {

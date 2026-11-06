@@ -1,11 +1,14 @@
 import type { LanguageDefinition } from '../../domain/language';
 import type { CsvHeaderNames } from '../csvFormat';
+import type { DictionaryForm } from '../dictionaryLookup';
 
 /** Language-specific text handling. Each language gets one; callers never branch on language. */
 export interface LanguageAdapter {
   definition: LanguageDefinition;
   /** Header names written on export and accepted on import, e.g. "character" for the headword. */
   csvHeaders: CsvHeaderNames;
+  /** How this language reads the bundled dictionary. */
+  dictionaryForm: DictionaryForm;
   /** Converts typed or imported text to the stored headword form, e.g. Simplified to Traditional. */
   normalizeHeadword(text: string): string;
   /** True when the text has at least one character of the language's script. */
