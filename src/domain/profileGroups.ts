@@ -32,6 +32,22 @@ export function groupProfilesByLanguage(profiles: readonly Profile[]): LanguageP
   }));
 }
 
+/** The first profile created. It can't be deleted, so there is always someone to practice as. */
+export function isOriginalProfile(profile: Profile, profiles: readonly Profile[]): boolean {
+  return profiles.every((other) => other.id >= profile.id);
+}
+
+/** Names already used in a language, other than this profile's own, for checking a new name. */
+export function otherNamesInLanguage(
+  profiles: readonly Profile[],
+  languageId: LanguageId,
+  exceptProfileId?: number,
+): string[] {
+  return profiles
+    .filter((profile) => profile.languageId === languageId && profile.id !== exceptProfileId)
+    .map((profile) => profile.name);
+}
+
 /**
  * Names that can be copied when adding a language: every other language's profile names, once
  * each (ignoring case), minus names the new language already has.

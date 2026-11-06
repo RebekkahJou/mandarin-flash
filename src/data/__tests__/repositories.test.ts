@@ -293,6 +293,36 @@ describe('profiles', () => {
     expect(listed[0].lastUsedAtMs).toBe(kid.lastUsedAtMs + 1);
   });
 
+  it('starts a new profile as never used, after profiles someone has picked', async () => {
+    const { database, profile } = await setUp();
+    const profileRepository = createProfileRepository(database);
+    await profileRepository.markProfileUsed(profile.id, 1000);
+    const kid = await profileRepository.createProfile('Kid', LanguageId.MandarinSimplified);
+    expect(kid.lastUsedAtMs).toBe(0);
+    expect((await profileRepository.listProfiles()).map(({ name }) => name)).toEqual(['Me', 'Kid']);
+  });
+
+  it('renames a profile', async () => {
+    const { database, profile } = await setUp();
+    const profileRepository = createProfileRepository(database);
+    await profileRepository.renameProfile(profile.id, 'Rebekkah');
+    expect((await profileRepository.listProfiles())[0].name).toBe('Rebekkah');
+  });
+
+  it('deletes a profile with its lists and words, leaving other profiles alone', async () => {
+    const { database, profile, wordRepository, wordListRepository } = await setUp();
+    const profileRepository = createProfileRepository(database);
+    const kid = await profileRepository.createProfile('Kid', LanguageId.MandarinTraditional);
+    await wordRepository.findOrCreateWord({ profileId: kid.id, ...walkWord });
+    await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+
+    await profileRepository.deleteProfile(kid.id);
+    expect((await profileRepository.listProfiles()).map(({ id }) => id)).toEqual([profile.id]);
+    expect(await wordRepository.countWords(kid.id)).toBe(0);
+    expect(await wordListRepository.listSummaries(kid.id)).toEqual([]);
+    expect(await wordRepository.countWords(profile.id)).toBe(1);
+  });
+
   it('gives a new profile its own default lists', async () => {
     const { database, wordListRepository } = await setUp();
     const kid = await createProfileRepository(database).createProfile(

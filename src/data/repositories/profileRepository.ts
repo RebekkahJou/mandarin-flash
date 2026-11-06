@@ -26,6 +26,9 @@ function toProfile(row: ProfileRow): Profile {
   };
 }
 
+/** A profile nobody has picked yet, so it doesn't decide which language the welcome screen opens on. */
+const NEVER_USED_AT_MS = 0;
+
 export function createProfileRepository(database: SqlDatabase) {
   async function createProfile(name: string, languageId: LanguageId): Promise<Profile> {
     let profileId = 0;
@@ -33,7 +36,7 @@ export function createProfileRepository(database: SqlDatabase) {
     await database.transaction(async () => {
       const result = await database.run(
         'INSERT INTO profiles (name, language_id, created_at, last_used_at) VALUES (?, ?, ?, ?)',
-        [name, languageId, createdAtMs, createdAtMs],
+        [name, languageId, createdAtMs, NEVER_USED_AT_MS],
       );
       profileId = result.lastInsertRowId;
       for (const [sortOrder, list] of DEFAULT_WORD_LISTS.entries()) {
@@ -49,7 +52,7 @@ export function createProfileRepository(database: SqlDatabase) {
         );
       }
     });
-    return { id: profileId, name, languageId, lastUsedAtMs: createdAtMs };
+    return { id: profileId, name, languageId, lastUsedAtMs: NEVER_USED_AT_MS };
   }
 
   async function listProfiles(): Promise<Profile[]> {
@@ -64,7 +67,16 @@ export function createProfileRepository(database: SqlDatabase) {
     await database.run('UPDATE profiles SET last_used_at = ? WHERE id = ?', [usedAtMs, profileId]);
   }
 
-  return { createProfile, listProfiles, markProfileUsed };
+  async function renameProfile(profileId: number, name: string): Promise<void> {
+    await database.run('UPDATE profiles SET name = ? WHERE id = ?', [name, profileId]);
+  }
+
+  /** Foreign keys cascade, so the profile's lists, words, settings and history go with it. */
+  async function deleteProfile(profileId: number): Promise<void> {
+    await database.run('DELETE FROM profiles WHERE id = ?', [profileId]);
+  }
+
+  return { createProfile, listProfiles, markProfileUsed, renameProfile, deleteProfile };
 }
 
 export type ProfileRepository = ReturnType<typeof createProfileRepository>;

@@ -19,20 +19,25 @@ export interface ProfileSession {
   addProfiles: (names: readonly string[], languageId: LanguageId) => Promise<Profile[]>;
   /** Goes back to the welcome screen to pick someone else. */
   chooseAnotherProfile: () => void;
+  renameProfile: (profileId: number, name: string) => Promise<void>;
+  /**
+   * Deletes a profile and everything in it. If it was the active one, the only remaining profile
+   * opens, or the welcome screen shows when several remain.
+   */
+  deleteProfile: (profileId: number) => Promise<void>;
 }
 
 const ProfileSessionContext = createContext<ProfileSession | null>(null);
 
 /** A single profile opens straight away; with several, the welcome screen asks who is practicing. */
-function initialActiveProfile(profiles: readonly Profile[]): Profile | null {
-  return profiles.length === 1 ? profiles[0] : null;
+function onlyProfileId(profiles: readonly Profile[]): number | null {
+  return profiles.length === 1 ? profiles[0].id : null;
 }
 
 function useProfileSessionState(core: AppCore): ProfileSession {
   const [profiles, setProfiles] = useState(core.initialProfiles);
-  const [activeProfile, setActiveProfile] = useState(() =>
-    initialActiveProfile(core.initialProfiles),
-  );
+  // An id rather than a profile, so a rename shows at once and a deleted profile can't linger.
+  const [activeProfileId, setActiveProfileId] = useState(() => onlyProfileId(core.initialProfiles));
   const [isChoosingProfile, setIsChoosingProfile] = useState(false);
 
   const reloadProfiles = useCallback(async () => {
@@ -42,7 +47,7 @@ function useProfileSessionState(core: AppCore): ProfileSession {
   const selectProfile = useCallback(
     async (profile: Profile) => {
       await core.profileRepository.markProfileUsed(profile.id, Date.now());
-      setActiveProfile(profile);
+      setActiveProfileId(profile.id);
       setIsChoosingProfile(false);
       await reloadProfiles();
     },
@@ -63,8 +68,30 @@ function useProfileSessionState(core: AppCore): ProfileSession {
 
   const chooseAnotherProfile = useCallback(() => setIsChoosingProfile(true), []);
 
+  const renameProfile = useCallback(
+    async (profileId: number, name: string) => {
+      await core.profileRepository.renameProfile(profileId, name);
+      await reloadProfiles();
+    },
+    [core, reloadProfiles],
+  );
+
+  const deleteProfile = useCallback(
+    async (profileId: number) => {
+      await core.profileRepository.deleteProfile(profileId);
+      const remainingProfiles = await core.profileRepository.listProfiles();
+      setProfiles(remainingProfiles);
+      if (profileId !== activeProfileId) return;
+      const nextProfileId = onlyProfileId(remainingProfiles);
+      setActiveProfileId(nextProfileId);
+      setIsChoosingProfile(nextProfileId === null);
+    },
+    [core, activeProfileId],
+  );
+
   return useMemo(() => {
     const showsFirstRun = profiles.length === 0;
+    const activeProfile = profiles.find((profile) => profile.id === activeProfileId) ?? null;
     return {
       profiles,
       activeProfile,
@@ -73,14 +100,18 @@ function useProfileSessionState(core: AppCore): ProfileSession {
       selectProfile,
       addProfiles,
       chooseAnotherProfile,
+      renameProfile,
+      deleteProfile,
     };
   }, [
     profiles,
-    activeProfile,
+    activeProfileId,
     isChoosingProfile,
     selectProfile,
     addProfiles,
     chooseAnotherProfile,
+    renameProfile,
+    deleteProfile,
   ]);
 }
 

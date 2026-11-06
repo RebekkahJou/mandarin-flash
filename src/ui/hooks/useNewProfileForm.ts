@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { LanguageId } from '../../domain/language';
 import { DEFAULT_LANGUAGE_ID, LANGUAGE_DEFINITIONS } from '../../domain/language';
 import type { Profile } from '../../domain/profileGroups';
-import { profileNamesToCopy } from '../../domain/profileGroups';
+import { otherNamesInLanguage, profileNamesToCopy } from '../../domain/profileGroups';
 import { namesToCreate, profileNameProblem } from '../../domain/profileName';
 import { showMessage } from '../confirm';
 import { useProfileSession } from '../ProfileSessionContext';
@@ -27,9 +27,7 @@ function namesProblem(
   languageId: LanguageId,
 ) {
   if (names.length === 0) return 'Enter a name.';
-  const namesInLanguage = profiles
-    .filter((profile) => profile.languageId === languageId)
-    .map((profile) => profile.name);
+  const namesInLanguage = otherNamesInLanguage(profiles, languageId);
   for (const name of names) {
     const problem = profileNameProblem(name, namesInLanguage);
     if (problem) return problem;

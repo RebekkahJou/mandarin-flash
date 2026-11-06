@@ -42,6 +42,13 @@ export default function SettingsScreen() {
           isOutlined
         />
       </View>
+      <View style={styles.buttonRow}>
+        <PrimaryButton
+          label="Edit profile"
+          onPress={() => router.push('/profiles/edit')}
+          isOutlined
+        />
+      </View>
 
       <SectionTitle title="Pronunciation" />
       <ChoiceChips

@@ -18,11 +18,15 @@ export default function WelcomeScreen() {
         onSelect={welcome.selectLanguage}
       />
     ) : null;
+  // With tabs, the selected tab already names the language.
+  const languageLabel = welcome.hasSeveralLanguages ? null : (
+    <Text style={styles.language}>{welcome.selectedLanguageName}</Text>
+  );
   return (
     <ScreenContainer isScrollable>
       <SectionTitle title="Who's practicing?" />
       {languageTabs}
-      <Text style={styles.language}>{welcome.selectedLanguageName}</Text>
+      {languageLabel}
       <View style={styles.profiles}>
         {welcome.profiles.map((profile) => (
           <PrimaryButton

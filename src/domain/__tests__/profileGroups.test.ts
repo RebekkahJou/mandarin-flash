@@ -1,6 +1,11 @@
 import { LanguageId } from '../language';
 import type { Profile } from '../profileGroups';
-import { groupProfilesByLanguage, profileNamesToCopy } from '../profileGroups';
+import {
+  groupProfilesByLanguage,
+  isOriginalProfile,
+  otherNamesInLanguage,
+  profileNamesToCopy,
+} from '../profileGroups';
 
 const MANDARIN = LanguageId.MandarinTraditional;
 const OTHER_LANGUAGE = LanguageId.MandarinSimplified;
@@ -46,5 +51,19 @@ describe('profileNamesToCopy', () => {
   it('compares names ignoring case', () => {
     const mixedCase = [makeProfile(1, 'me', MANDARIN, 1), makeProfile(2, 'ME', OTHER_LANGUAGE, 2)];
     expect(profileNamesToCopy(mixedCase, MANDARIN)).toEqual([]);
+  });
+});
+
+describe('isOriginalProfile', () => {
+  it('is true only for the first profile created', () => {
+    expect(isOriginalProfile(profiles[0], profiles)).toBe(true);
+    expect(isOriginalProfile(profiles[2], profiles)).toBe(false);
+  });
+});
+
+describe('otherNamesInLanguage', () => {
+  it('lists the language’s names, leaving out the profile being renamed', () => {
+    expect(otherNamesInLanguage(profiles, MANDARIN)).toEqual(['Me', 'Kid']);
+    expect(otherNamesInLanguage(profiles, MANDARIN, 1)).toEqual(['Kid']);
   });
 });
