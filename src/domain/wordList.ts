@@ -80,6 +80,17 @@ export function firstMeanings(candidates: readonly DefinitionCandidate[]): strin
   return candidates.slice(0, DEFAULT_MEANING_COUNT).map((candidate) => candidate.text);
 }
 
+/**
+ * Every meaning a word shows in any list: its own meanings first, then meanings that only some
+ * lists use (e.g. the verb meaning picked for Verbs), each once.
+ */
+export function allMeaningsOf(
+  ownMeanings: readonly string[],
+  listMeanings: readonly (readonly string[])[],
+): string[] {
+  return [...new Set([...ownMeanings, ...listMeanings.flat()])];
+}
+
 export function haveSameMeanings(first: readonly string[], second: readonly string[]): boolean {
   return (
     first.length === second.length && first.every((meaning, index) => meaning === second[index])

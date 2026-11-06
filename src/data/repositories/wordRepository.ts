@@ -1,9 +1,10 @@
 import type { FrequencyTier } from '../../domain/frequencyTier';
 import { NEW_WORD_TIER, downgradeTier } from '../../domain/frequencyTier';
 import type { Word } from '../../domain/word';
+import { allMeaningsOf } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 import type { WordRow } from './rowMappers';
-import { WORD_COLUMNS, serializeDefinitions, toWord } from './rowMappers';
+import { WORD_COLUMNS, parseDefinitions, serializeDefinitions, toWord } from './rowMappers';
 
 export interface NewWord {
   profileId: number;
@@ -17,6 +18,8 @@ export interface WordWithListIds {
   word: Word;
   /** Each list the word is in, once, even if the list holds it more than once. */
   listIds: number[];
+  /** The word's own meanings plus any meanings only some of its lists use. */
+  meanings: string[];
 }
 
 function parseListIds(joinedIds: string | null): number[] {
@@ -71,8 +74,27 @@ export function createWordRepository(database: SqlDatabase) {
     };
   }
 
+  /** Lists' own meanings for each word, in list display order. */
+  async function listMeaningsByWordId(profileId: number): Promise<Map<number, string[][]>> {
+    const rows = await database.getAll<{ word_id: number; definitions_override: string }>(
+      `SELECT word_list_entries.word_id, word_list_entries.definitions_override
+       FROM word_list_entries JOIN word_lists ON word_lists.id = word_list_entries.word_list_id
+       WHERE word_lists.profile_id = ? AND word_list_entries.definitions_override IS NOT NULL
+       ORDER BY word_lists.sort_order, word_lists.id, word_list_entries.id`,
+      [profileId],
+    );
+    const meaningsByWordId = new Map<number, string[][]>();
+    for (const row of rows) {
+      const wordMeanings = meaningsByWordId.get(row.word_id) ?? [];
+      wordMeanings.push(parseDefinitions(row.definitions_override));
+      meaningsByWordId.set(row.word_id, wordMeanings);
+    }
+    return meaningsByWordId;
+  }
+
   /** Newest first. Words that are in no list are included so they can be put back into one. */
   async function listWordsWithListIds(profileId: number): Promise<WordWithListIds[]> {
+    const listMeanings = await listMeaningsByWordId(profileId);
     const rows = await database.getAll<WordRow & { list_ids: string | null }>(
       `SELECT ${WORD_COLUMNS}, GROUP_CONCAT(DISTINCT word_list_entries.word_list_id) AS list_ids
        FROM words LEFT JOIN word_list_entries ON word_list_entries.word_id = words.id
@@ -81,7 +103,14 @@ export function createWordRepository(database: SqlDatabase) {
        ORDER BY words.created_at DESC, words.id DESC`,
       [profileId],
     );
-    return rows.map((row) => ({ word: toWord(row), listIds: parseListIds(row.list_ids) }));
+    return rows.map((row) => {
+      const word = toWord(row);
+      return {
+        word,
+        listIds: parseListIds(row.list_ids),
+        meanings: allMeaningsOf(word.definitions, listMeanings.get(word.id) ?? []),
+      };
+    });
   }
 
   async function countWords(profileId: number): Promise<number> {

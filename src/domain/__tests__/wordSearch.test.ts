@@ -36,6 +36,12 @@ describe('matchesWordSearch', () => {
     expect(matches('123')).toBe(false);
   });
 
+  it('matches extra meanings the caller passes, e.g. ones only some lists use', () => {
+    const extraMeanings = [...student.definitions, 'pupil'];
+    expect(matchesWordSearch(student, 'pupil', ignoreSpacesAndDigits, extraMeanings)).toBe(true);
+    expect(matches('pupil')).toBe(false);
+  });
+
   it('matches meanings case-insensitively', () => {
     expect(matches('SCHOOL')).toBe(true);
     expect(matches('teacher')).toBe(false);

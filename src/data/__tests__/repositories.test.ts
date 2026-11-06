@@ -155,6 +155,25 @@ describe('user database', () => {
     expect(words.find(({ word }) => word.id === good.id)?.word.definitions).toEqual(['good']);
   });
 
+  it('lists a word with every meaning its lists show, its own first', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const car = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: '車',
+      reading: 'che1',
+      definitions: ['car', 'vehicle', 'machine'],
+    });
+    await wordListRepository.addWordToLists(car.id, [
+      { wordListId: listIdByName('General Vocabulary') },
+      { wordListId: listIdByName('Verbs'), definitionsOverride: ['to shape with a lathe'] },
+      { wordListId: listIdByName('Nouns'), definitionsOverride: ['car', 'vehicle'] },
+    ]);
+
+    const [listed] = await wordRepository.listWordsWithListIds(profile.id);
+    expect(listed.meanings).toEqual(['car', 'vehicle', 'machine', 'to shape with a lathe']);
+    expect(listed.word.definitions).toEqual(['car', 'vehicle', 'machine']);
+  });
+
   it('sets a word tier directly', async () => {
     const { profile, wordRepository } = await setUp();
     const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
