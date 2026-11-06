@@ -1,33 +1,18 @@
 import { LANGUAGE_DEFINITIONS, LanguageId } from '../../domain/language';
-import { containsChineseCharacters, toTaiwanTraditional } from '../chineseConverter';
+import { toTaiwanTraditional } from '../chineseConverter';
 import { ChineseScript } from '../dictionaryLookup';
-import { toNumberedPinyin, toToneMarkedPinyin } from '../pinyin';
 import type { LanguageAdapter } from './languageAdapter';
-
-const TONE_NUMBERS_AND_SPACES = /[0-9\s]/g;
-const COMBINING_MARKS = /[̀-ͯ]/g;
-
-/** Lets "xuesheng", "xue sheng", "xué shēng" and "xue2 sheng1" all find the same word. */
-function pinyinSearchKey(pinyin: string): string {
-  return pinyin
-    .normalize('NFD')
-    .replace(COMBINING_MARKS, '')
-    .replace(TONE_NUMBERS_AND_SPACES, '')
-    .toLowerCase();
-}
+import { MANDARIN_SHARED } from './mandarinShared';
 
 export const mandarinTraditionalBundle: LanguageAdapter = {
+  ...MANDARIN_SHARED,
   definition: LANGUAGE_DEFINITIONS[LanguageId.MandarinTraditional],
-  csvHeaders: { headword: 'character', meaning: 'meaning', reading: 'pinyin' },
   // The dictionary's sentences are already Taiwan Traditional.
   dictionaryForm: {
     script: ChineseScript.Traditional,
     usesMainlandReadings: false,
     convertSentence: (text) => text,
   },
+  usesBundledFonts: true,
   normalizeHeadword: toTaiwanTraditional,
-  containsLanguageScript: containsChineseCharacters,
-  normalizeReading: toNumberedPinyin,
-  formatReading: toToneMarkedPinyin,
-  readingSearchKey: pinyinSearchKey,
 };

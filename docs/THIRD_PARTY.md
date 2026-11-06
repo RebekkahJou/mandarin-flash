@@ -9,7 +9,7 @@ Keep this list in sync with the About screen (`src/app/about.tsx`).
 | Noto Serif TC | Flashcard font, subset (`assets/fonts/NotoSerifTC-subset.otf`) | SIL OFL 1.1 | https://github.com/notofonts/noto-cjk |
 | LXGW WenKai TC | Flashcard font, subset (`assets/fonts/LXGWWenKaiTC-subset.ttf`) | SIL OFL 1.1 | https://github.com/lxgw/LxgwWenkaiTC |
 | jf open-huninn | Flashcard font, subset (`assets/fonts/OpenHuninn-subset.ttf`) | SIL OFL 1.1 | https://github.com/justfont/open-huninn-font |
-| opencc-js | Simplified → Taiwan Traditional conversion | MIT + Apache 2.0 (dictionaries) | https://github.com/nk2028/opencc-js |
+| opencc-js | Conversion between Simplified and Traditional characters | MIT + Apache 2.0 (dictionaries) | https://github.com/nk2028/opencc-js |
 
 The dictionary database is a derived work of CC-CEDICT, so it is shared under CC BY-SA 4.0.
 OFL fonts may be subset and bundled. The subsets keep their original font names here because

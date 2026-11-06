@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { PhoneticDisplay, SimplifiedDisplay } from '../../data/repositories/settingsRepository';
 import { PRACTICE_SET_SIZES } from '../../domain/practiceSetBuilder';
-import { useSettings } from '../../ui/AppServicesContext';
+import { useAppServices, useSettings } from '../../ui/AppServicesContext';
 import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
@@ -26,6 +26,9 @@ const SET_SIZE_CHOICES = PRACTICE_SET_SIZES.map((size) => ({ value: size, label:
 
 export default function SettingsScreen() {
   const { settings, updateSetting } = useSettings();
+  const { variantName } = useAppServices().languageBundle.definition;
+  const variantSectionTitle = `${variantName} characters`;
+  const variantHint = `How to show the ${variantName.toLowerCase()} form on flashcards, when one exists.`;
   return (
     <ScreenContainer isScrollable>
       <SectionTitle title="Pronunciation" />
@@ -35,10 +38,8 @@ export default function SettingsScreen() {
         onSelect={(value) => updateSetting('phoneticDisplay', value)}
       />
 
-      <SectionTitle title="Simplified characters" />
-      <Text style={styles.hint}>
-        How to show the simplified form on flashcards, when one exists.
-      </Text>
+      <SectionTitle title={variantSectionTitle} />
+      <Text style={styles.hint}>{variantHint}</Text>
       <ChoiceChips
         choices={SIMPLIFIED_CHOICES}
         selectedValue={settings.simplifiedDisplay}

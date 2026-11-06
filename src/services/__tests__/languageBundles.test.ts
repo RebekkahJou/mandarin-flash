@@ -2,6 +2,8 @@ import { LanguageId } from '../../domain/language';
 import { matchesWordSearch } from '../../domain/wordSearch';
 import { makeWord } from '../../domain/__tests__/testWords';
 import { LANGUAGE_BUNDLES, languageBundleFor } from '../languages/languageBundles';
+import { ChineseScript } from '../dictionaryLookup';
+import { mandarinSimplifiedBundle } from '../languages/mandarinSimplifiedBundle';
 import { mandarinTraditionalBundle } from '../languages/mandarinTraditionalBundle';
 
 describe('languageBundleFor', () => {
@@ -47,5 +49,27 @@ describe('mandarinTraditionalBundle', () => {
       expect(matchesWordSearch(student, query, mandarin.readingSearchKey)).toBe(true);
     }
     expect(matchesWordSearch(student, 'laoshi', mandarin.readingSearchKey)).toBe(false);
+  });
+});
+
+describe('mandarinSimplifiedBundle', () => {
+  const simplified = mandarinSimplifiedBundle;
+
+  it('stores headwords as mainland Simplified', () => {
+    expect(simplified.normalizeHeadword(' 軟體 ')).toBe('软件');
+    expect(simplified.normalizeHeadword('学生')).toBe('学生');
+  });
+
+  it('reads the dictionary in Simplified with mainland readings', () => {
+    expect(simplified.dictionaryForm.script).toBe(ChineseScript.Simplified);
+    expect(simplified.dictionaryForm.usesMainlandReadings).toBe(true);
+    expect(simplified.dictionaryForm.convertSentence('我們走吧。')).toBe('我们走吧。');
+  });
+
+  it('shares pinyin handling with Traditional but uses the system font', () => {
+    expect(simplified.formatReading('ni3 hao3')).toBe('nǐ hǎo');
+    expect(simplified.csvHeaders).toEqual(mandarinTraditionalBundle.csvHeaders);
+    expect(simplified.usesBundledFonts).toBe(false);
+    expect(mandarinTraditionalBundle.usesBundledFonts).toBe(true);
   });
 });

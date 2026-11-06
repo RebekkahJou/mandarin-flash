@@ -1,11 +1,9 @@
-import type { LanguageId } from '../language';
-import { LanguageId as Languages } from '../language';
+import { LanguageId } from '../language';
 import type { Profile } from '../profileGroups';
 import { groupProfilesByLanguage, profileNamesToCopy } from '../profileGroups';
 
-// Only one language exists so far; a stand-in id lets these tests cover several languages.
-const OTHER_LANGUAGE = 'xx-test' as LanguageId;
-const MANDARIN = Languages.MandarinTraditional;
+const MANDARIN = LanguageId.MandarinTraditional;
+const OTHER_LANGUAGE = LanguageId.MandarinSimplified;
 
 function makeProfile(id: number, name: string, languageId: LanguageId, lastUsedAtMs: number) {
   return { id, name, languageId, lastUsedAtMs } satisfies Profile;

@@ -27,12 +27,20 @@ describe('LANGUAGE_DEFINITIONS', () => {
       PartOfSpeech.Adjective,
     ]);
   });
+
+  it('describes Mandarin (Simplified) with Traditional as its variant', () => {
+    const simplified = LANGUAGE_DEFINITIONS[LanguageId.MandarinSimplified];
+    expect(simplified.name).toBe('Mandarin (Simplified)');
+    expect(simplified.variantName).toBe('Traditional');
+    expect(LANGUAGE_DEFINITIONS[LanguageId.MandarinTraditional].variantName).toBe('Simplified');
+  });
 });
 
 describe('isLanguageId', () => {
   it('accepts known ids only', () => {
     expect(isLanguageId('zh-Hant')).toBe(true);
-    expect(isLanguageId('zh-Hans')).toBe(false);
+    expect(isLanguageId('zh-Hans')).toBe(true);
+    expect(isLanguageId('ja')).toBe(false);
     expect(isLanguageId('')).toBe(false);
   });
 });

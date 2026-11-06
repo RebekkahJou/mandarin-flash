@@ -9,6 +9,8 @@ export interface LanguageAdapter {
   csvHeaders: CsvHeaderNames;
   /** How this language reads the bundled dictionary. */
   dictionaryForm: DictionaryForm;
+  /** False when the bundled fonts don't cover this script, so cards use the system font only. */
+  usesBundledFonts: boolean;
   /** Converts typed or imported text to the stored headword form, e.g. Simplified to Traditional. */
   normalizeHeadword(text: string): string;
   /** True when the text has at least one character of the language's script. */
