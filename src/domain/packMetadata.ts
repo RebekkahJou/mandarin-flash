@@ -149,6 +149,22 @@ export function packMetadataRows(
   ];
 }
 
+/**
+ * Credits for every open pack, each listed once: an installed update of a pack usually credits
+ * the same sources as the built-in version it replaces.
+ */
+export function distinctLicensesOf(packs: readonly PackMetadata[]): PackLicense[] {
+  const seen = new Set<string>();
+  return packs
+    .flatMap((metadata) => metadata.licenses)
+    .filter((license) => {
+      const identity = JSON.stringify([license.name, license.license, license.source]);
+      if (seen.has(identity)) return false;
+      seen.add(identity);
+      return true;
+    });
+}
+
 /** The pack's languages this app version can teach. */
 export function supportedLanguageIdsOf(metadata: PackMetadata): LanguageId[] {
   return metadata.languageIds.filter(isLanguageId);

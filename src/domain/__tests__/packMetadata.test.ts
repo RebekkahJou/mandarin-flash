@@ -3,6 +3,7 @@ import type { PackMetadata } from '../packMetadata';
 import {
   PackMetadataKey,
   PackRejectedError,
+  distinctLicensesOf,
   packMetadataRows,
   parsePackMetadata,
   supportedLanguageIdsOf,
@@ -56,6 +57,19 @@ describe('parsePackMetadata', () => {
     const values = valuesWith({});
     values.delete(PackMetadataKey.PackVersion);
     expect(() => parsePackMetadata(values, FORMAT)).toThrow(PackRejectedError);
+  });
+});
+
+describe('distinctLicensesOf', () => {
+  it('lists each credit once across packs', () => {
+    const tatoeba = {
+      name: 'Tatoeba',
+      usage: 'Sentences',
+      license: 'CC BY 2.0 FR',
+      source: 'tatoeba.org',
+    };
+    const update = { ...METADATA, packVersion: 4, licenses: [...METADATA.licenses, tatoeba] };
+    expect(distinctLicensesOf([METADATA, update])).toEqual([...METADATA.licenses, tatoeba]);
   });
 });
 

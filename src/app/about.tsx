@@ -1,6 +1,7 @@
 import { StyleSheet, Text } from 'react-native';
 
 import type { PackLicense } from '../domain/packMetadata';
+import { distinctLicensesOf } from '../domain/packMetadata';
 import { LicenseNotices } from '../ui/components/LicenseNotices';
 import { ScreenContainer } from '../ui/components/ScreenContainer';
 import { SectionTitle } from '../ui/components/SectionTitle';
@@ -46,6 +47,7 @@ const APP_THIRD_PARTY_NOTICES: readonly PackLicense[] = [
 
 export default function AboutScreen() {
   const { packs } = useLanguagePacks();
+  const languageDataLicenses = distinctLicensesOf(packs.map((pack) => pack.metadata));
   return (
     <ScreenContainer isScrollable>
       <SectionTitle title="Mandarin Flash" />
@@ -54,9 +56,7 @@ export default function AboutScreen() {
         this device.
       </Text>
       <SectionTitle title="Language data" />
-      {packs.map((pack) => (
-        <LicenseNotices key={pack.metadata.packId} licenses={pack.metadata.licenses} />
-      ))}
+      <LicenseNotices licenses={languageDataLicenses} />
       <SectionTitle title="Fonts and code" />
       <LicenseNotices licenses={APP_THIRD_PARTY_NOTICES} />
     </ScreenContainer>
