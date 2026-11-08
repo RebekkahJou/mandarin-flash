@@ -2,6 +2,7 @@ import type { PackMetadata } from '../domain/packMetadata';
 import { PackRejectedError, parsePackMetadata } from '../domain/packMetadata';
 import {
   MIN_SUPPORTED_PACK_SCHEMA_VERSION,
+  PACK_FILE_NAME_PATTERN,
   PACK_FORMAT_NAME,
   PACK_INDEX_NAMES,
   PACK_SCHEMA_VERSION,
@@ -144,6 +145,11 @@ async function checkValues(database: SqlDatabase): Promise<void> {
   }
 }
 
+async function checkFileNames(database: SqlDatabase): Promise<void> {
+  const rows = await database.getAll<{ name: string }>('SELECT name FROM pack_files');
+  if (!rows.every((row) => PACK_FILE_NAME_PATTERN.test(row.name))) reject();
+}
+
 async function checkIntegrity(database: SqlDatabase): Promise<void> {
   const result = await database.getFirst<{ quick_check: string }>('PRAGMA quick_check');
   if (result?.quick_check !== 'ok') reject();
@@ -162,6 +168,7 @@ export async function validatePackDatabase(database: SqlDatabase): Promise<PackM
     const metadata = await readPackMetadata(database);
     await checkRowCounts(database);
     await checkValues(database);
+    await checkFileNames(database);
     return metadata;
   } catch (error) {
     // SQLite errors (e.g. "file is not a database") mean the same thing to the user.

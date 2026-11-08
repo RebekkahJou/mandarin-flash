@@ -6,6 +6,7 @@ import Database from 'better-sqlite3';
 import { createHash } from 'node:crypto';
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
@@ -52,13 +53,22 @@ function createNodeFileStore(directory: string): PackFileStore {
       const filePath = path.join(directory, databaseName);
       return existsSync(filePath) ? openNodeDatabase(filePath) : null;
     },
-    deleteDatabasesExcept: async (databaseNames) => {
+    deletePacksExcept: async (databaseNames) => {
       for (const fileName of readdirSync(directory)) {
-        if (fileName.startsWith('pack-') && !databaseNames.includes(fileName)) {
-          rmSync(path.join(directory, fileName));
+        const isKept = databaseNames.some((name) => fileName.startsWith(name));
+        if (fileName.startsWith('pack-') && !isKept) {
+          rmSync(path.join(directory, fileName), { recursive: true });
         }
       }
     },
+    hasPackFile: (databaseName, fileName) =>
+      existsSync(path.join(directory, `${databaseName}-files`, fileName)),
+    writePackFile: async (databaseName, fileName, data) => {
+      mkdirSync(path.join(directory, `${databaseName}-files`), { recursive: true });
+      writeFileSync(path.join(directory, `${databaseName}-files`, fileName), data);
+    },
+    packFileUri: (databaseName, fileName) =>
+      `file://${path.join(directory, `${databaseName}-files`, fileName)}`,
   };
 }
 
@@ -77,13 +87,21 @@ afterEach(() => {
   rmSync(directory, { recursive: true, force: true });
 });
 
+const FONT_BYTES = new Uint8Array([0, 1, 0, 0, 42]);
+
 /** Writes a signed .mfpack file and returns its path. */
-async function writeSignedPack(metadata: PackMetadata, secretKey = keys.secretKey) {
+async function writeSignedPack(
+  metadata: PackMetadata,
+  secretKey = keys.secretKey,
+  fontNames: readonly string[] = [],
+) {
   const databasePath = path.join(directory, 'source.db');
   const database = new Database(databasePath);
   database.exec(PACK_SCHEMA_SQL);
   const insert = database.prepare('INSERT INTO pack_metadata (key, value) VALUES (?, ?)');
   for (const [key, value] of packMetadataRows(metadata, PACK_FORMAT_NAME)) insert.run(key, value);
+  const insertFile = database.prepare('INSERT INTO pack_files (name, kind, data) VALUES (?, ?, ?)');
+  for (const fontName of fontNames) insertFile.run(fontName, 'font', FONT_BYTES);
   database.close();
   const databaseBytes = new Uint8Array(readFileSync(databasePath));
   rmSync(databasePath);
@@ -108,6 +126,7 @@ async function setUp() {
     metadata: TEST_PACK_METADATA,
     database: createInMemoryDatabase(),
     isBuiltIn: true,
+    fonts: [],
   };
   return { installer, installedPackRepository, builtIn };
 }
@@ -133,6 +152,27 @@ describe('packInstaller', () => {
     const reopened = await installer.loadInstalledPacks();
     expect(reopened.map((pack) => pack.metadata)).toEqual([UPDATE_METADATA]);
     await reopened[0].database.close();
+  });
+
+  it('writes out the pack fonts and writes them again if they go missing', async () => {
+    const { installer, builtIn } = await setUp();
+    const packPath = await writeSignedPack(UPDATE_METADATA, keys.secretKey, ['NotoSansSC.otf']);
+    const installed = await installer.install(packPath, [builtIn]);
+    expect(installed.fonts).toEqual([
+      {
+        family: 'mandarin-NotoSansSC',
+        uri: expect.stringContaining('NotoSansSC.otf'),
+      },
+    ]);
+    const fontPath = path.join(directory, 'pack-mandarin-v2.db-files', 'NotoSansSC.otf');
+    expect(new Uint8Array(readFileSync(fontPath))).toEqual(FONT_BYTES);
+    await installed.database.close();
+
+    rmSync(fontPath);
+    const [reopened] = await installer.loadInstalledPacks();
+    expect(reopened.fonts.map((font) => font.family)).toEqual(['mandarin-NotoSansSC']);
+    expect(existsSync(fontPath)).toBe(true);
+    await reopened.database.close();
   });
 
   it('rejects a pack signed by an untrusted key and keeps nothing', async () => {

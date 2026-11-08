@@ -1,16 +1,18 @@
+import { listPackFileNames, readPackFileData } from '../../data/packFileQueries';
+import { PackFileKind } from '../../data/packSchema';
 import { readPackMetadata, validatePackDatabase } from '../../data/packValidation';
 import type { InstalledPackRepository } from '../../data/repositories/installedPackRepository';
 import type { SqlDatabase } from '../../data/sqlDatabase';
 import type { PackMetadata } from '../../domain/packMetadata';
 import { PackRejectedError } from '../../domain/packMetadata';
 import { packInstallProblem } from '../../domain/packInstallRules';
-import type { LoadedPack } from './loadedPack';
+import type { LoadedPack, PackFont } from './loadedPack';
 import { PACK_HEADER_BYTES, readPackSignature, verifyPackSignature } from './packSignature';
 
 /** Far above any real pack (about 25 MB at most), low enough to refuse a runaway file early. */
 export const MAX_PACK_FILE_BYTES = 60 * 1024 * 1024;
 
-/** Where pack databases are kept. The app implements it with the phone's file system. */
+/** Where pack databases and their files are kept. The app implements it with the phone's file system. */
 export interface PackFileStore {
   /**
    * Copies a pack file into app storage: returns its header and keeps the rest as the staged
@@ -24,8 +26,15 @@ export interface PackFileStore {
   discardStagedDatabase(): Promise<void>;
   /** Opens an installed pack read-only; null when its file is missing. */
   openInstalledDatabase(databaseName: string): Promise<SqlDatabase | null>;
-  /** Deletes installed pack databases other than these, e.g. versions replaced by an update. */
-  deleteDatabasesExcept(databaseNames: readonly string[]): Promise<void>;
+  /**
+   * Deletes installed pack databases other than these, and their file folders, e.g. versions
+   * replaced by an update.
+   */
+  deletePacksExcept(databaseNames: readonly string[]): Promise<void>;
+  /** Files such as fonts are written to a folder per installed pack. */
+  hasPackFile(databaseName: string, fileName: string): boolean;
+  writePackFile(databaseName: string, fileName: string, data: Uint8Array): Promise<void>;
+  packFileUri(databaseName: string, fileName: string): string;
 }
 
 interface PackInstallerDependencies {
@@ -38,6 +47,13 @@ interface PackInstallerDependencies {
 export function installedPackDatabaseName(metadata: PackMetadata): string {
   // Pack ids are limited to [a-z0-9-] by parsePackMetadata, so this is a safe file name.
   return `pack-${metadata.packId}-v${metadata.packVersion}.db`;
+}
+
+const FILE_EXTENSION = /\.[^.]+$/;
+
+/** e.g. "mandarin-NotoSansSC" for NotoSansSC.otf in the mandarin pack; unique across packs. */
+export function packFontFamily(packId: string, fileName: string): string {
+  return `${packId}-${fileName.replace(FILE_EXTENSION, '')}`;
 }
 
 export function createPackInstaller({
@@ -67,9 +83,43 @@ export function createPackInstaller({
     }
   }
 
+  /** Writes out any of the pack's fonts that aren't on disk yet, e.g. after an install. */
+  async function preparePackFonts(
+    databaseName: string,
+    database: SqlDatabase,
+    packId: string,
+  ): Promise<PackFont[]> {
+    const fonts: PackFont[] = [];
+    for (const fileName of await listPackFileNames(database, PackFileKind.Font)) {
+      if (!fileStore.hasPackFile(databaseName, fileName)) {
+        const data = await readPackFileData(database, fileName);
+        if (!data) continue;
+        await fileStore.writePackFile(databaseName, fileName, data);
+      }
+      fonts.push({
+        family: packFontFamily(packId, fileName),
+        uri: fileStore.packFileUri(databaseName, fileName),
+      });
+    }
+    return fonts;
+  }
+
+  async function openInstalledPack(databaseName: string): Promise<LoadedPack | null> {
+    const database = await fileStore.openInstalledDatabase(databaseName);
+    if (!database) return null;
+    try {
+      const metadata = await readPackMetadata(database);
+      const fonts = await preparePackFonts(databaseName, database, metadata.packId);
+      return { metadata, database, isBuiltIn: false, fonts };
+    } catch {
+      await database.close();
+      return null;
+    }
+  }
+
   /**
    * Verifies, checks and installs a pack file, and returns it opened. An older installed version
-   * of the same pack stays open until the app restarts; its file is deleted then.
+   * of the same pack stays open until the app restarts; its files are deleted then.
    */
   async function install(sourceUri: string, openPacks: readonly LoadedPack[]): Promise<LoadedPack> {
     let metadata: PackMetadata;
@@ -92,20 +142,9 @@ export function createPackInstaller({
       databaseName,
       installedAtMs: now(),
     });
-    const database = await fileStore.openInstalledDatabase(databaseName);
-    if (!database) throw new Error(`The installed pack ${databaseName} could not be opened.`);
-    return { metadata, database, isBuiltIn: false };
-  }
-
-  async function openInstalledPack(databaseName: string): Promise<LoadedPack | null> {
-    const database = await fileStore.openInstalledDatabase(databaseName);
-    if (!database) return null;
-    try {
-      return { metadata: await readPackMetadata(database), database, isBuiltIn: false };
-    } catch {
-      await database.close();
-      return null;
-    }
+    const pack = await openInstalledPack(databaseName);
+    if (!pack) throw new Error(`The installed pack ${databaseName} could not be opened.`);
+    return pack;
   }
 
   /**
@@ -124,7 +163,7 @@ export function createPackInstaller({
       packs.push(pack);
       keptDatabaseNames.push(record.databaseName);
     }
-    await fileStore.deleteDatabasesExcept(keptDatabaseNames);
+    await fileStore.deletePacksExcept(keptDatabaseNames);
     return packs;
   }
 

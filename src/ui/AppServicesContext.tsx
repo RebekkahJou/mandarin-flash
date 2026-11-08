@@ -23,6 +23,8 @@ import { createWordRepository } from '../data/repositories/wordRepository';
 import type { LanguageId } from '../domain/language';
 import type { Profile } from '../domain/profileGroups';
 import type { DictionaryLookup } from '../services/dictionaryLookup';
+import type { CardFontFamily } from '../services/fontRotation';
+import { cardFontRotation } from '../services/fontRotation';
 import { createDictionaryLookup } from '../services/dictionaryLookup';
 import type { LanguageAdapter } from '../services/languages/languageAdapter';
 import { languageBundleFor } from '../services/languages/languageBundles';
@@ -33,6 +35,7 @@ import { createPackInstaller } from '../services/packs/packInstaller';
 import { setSha512ForSignatures } from '../services/packs/packSignature';
 import { TRUSTED_PACK_PUBLIC_KEYS } from '../services/packs/trustedPackKeys';
 import { useLanguagePacks } from './LanguagePacksContext';
+import { withRegisteredFonts } from './packFonts';
 
 /** Everything that doesn't depend on which profile is active; opened once at startup. */
 export interface AppCore {
@@ -54,6 +57,8 @@ export interface AppServices {
   profileId: number;
   /** Text handling for the profile's language. */
   languageBundle: LanguageAdapter;
+  /** Font families flashcards rotate through for this language. */
+  cardFonts: readonly CardFontFamily[];
   wordRepository: WordRepository;
   wordListRepository: WordListRepository;
   practiceSessionRepository: PracticeSessionRepository;
@@ -77,7 +82,9 @@ async function createAppCore(): Promise<AppCore> {
     installedPackRepository: createInstalledPackRepository(userDatabase),
     trustedPublicKeys: TRUSTED_PACK_PUBLIC_KEYS,
   });
-  const installedPacks = await packInstaller.loadInstalledPacks();
+  const installedPacks = await Promise.all(
+    (await packInstaller.loadInstalledPacks()).map(withRegisteredFonts),
+  );
   return {
     profileRepository,
     wordRepository: createWordRepository(userDatabase),
@@ -85,7 +92,7 @@ async function createAppCore(): Promise<AppCore> {
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),
     reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
-    initialPacks: [{ ...builtInPack, isBuiltIn: true }, ...installedPacks],
+    initialPacks: [{ ...builtInPack, isBuiltIn: true, fonts: [] }, ...installedPacks],
     packInstaller,
     initialProfiles: await profileRepository.listProfiles(),
   };
@@ -124,6 +131,10 @@ function createProfileServices(
   return {
     profileId,
     languageBundle,
+    cardFonts: cardFontRotation(
+      languageBundle.usesBundledFonts,
+      pack.fonts.map((font) => font.family),
+    ),
     wordRepository: core.wordRepository,
     wordListRepository: core.wordListRepository,
     practiceSessionRepository: core.practiceSessionRepository,

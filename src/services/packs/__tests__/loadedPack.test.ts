@@ -12,6 +12,7 @@ function pack(packVersion: number, languageIds: string[], isBuiltIn = false): Lo
     metadata: { ...TEST_PACK_METADATA, packVersion, languageIds },
     database: createInMemoryDatabase(),
     isBuiltIn,
+    fonts: [],
   };
 }
 

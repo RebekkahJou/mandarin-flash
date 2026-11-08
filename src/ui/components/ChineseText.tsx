@@ -1,12 +1,12 @@
 import type { TextStyle } from 'react-native';
 import { Text } from 'react-native';
 
-import type { ChineseFontFamily } from '../../services/fontRotation';
+import type { CardFontFamily } from '../../services/fontRotation';
 import { SYSTEM_CHINESE_FONT, fontForText } from '../../services/fontRotation';
 
 interface ChineseTextProps {
   text: string;
-  font?: ChineseFontFamily;
+  font?: CardFontFamily;
   style?: TextStyle;
 }
 

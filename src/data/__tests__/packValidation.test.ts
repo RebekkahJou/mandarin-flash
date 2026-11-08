@@ -74,6 +74,16 @@ describe('validatePackDatabase', () => {
     await expectRejected(database);
   });
 
+  it('rejects file names that could reach outside the pack folder', async () => {
+    const database = await createValidPack();
+    await database.run('INSERT INTO pack_files (name, kind, data) VALUES (?, ?, ?)', [
+      '../font.ttf',
+      'font',
+      new Uint8Array([1, 2, 3]),
+    ]);
+    await expectRejected(database);
+  });
+
   it('rejects files stored as text instead of bytes', async () => {
     const database = await createValidPack();
     await database.run('INSERT INTO pack_files (name, kind, data) VALUES (?, ?, ?)', [

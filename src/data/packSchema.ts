@@ -78,6 +78,12 @@ export enum PackFileKind {
   Font = 'font',
 }
 
+/**
+ * Pack file names become file names on the phone, so only plain names are allowed: no folders,
+ * no "..", one extension.
+ */
+export const PACK_FILE_NAME_PATTERN = /^[A-Za-z0-9_-]{1,60}\.[a-z0-9]{1,8}$/;
+
 export interface PackEntryRow {
   headword: string;
   variant: string;

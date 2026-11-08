@@ -1,5 +1,5 @@
 import type { FileHandle } from 'expo-file-system';
-import { Directory, File, FileMode } from 'expo-file-system';
+import { Directory, File, FileMode, Paths } from 'expo-file-system';
 import { defaultDatabaseDirectory } from 'expo-sqlite';
 
 import { PackRejectedError } from '../domain/packMetadata';
@@ -13,6 +13,8 @@ const PACK_DATABASE_EXTENSION = '.db';
 /** Starts with the prefix, so a copy left by an interrupted install is cleaned up at start. */
 const STAGED_DATABASE_NAME = `${PACK_DATABASE_PREFIX}staging${PACK_DATABASE_EXTENSION}`;
 const COPY_CHUNK_BYTES = 1024 * 1024;
+/** Fonts and other pack files: one folder per installed pack, named after its database. */
+const PACK_FILES_DIRECTORY_NAME = 'packs';
 
 const TOO_LARGE_MESSAGE = 'This file is too large to be a language pack.';
 const NOT_A_PACK_MESSAGE = 'This file is not a language pack.';
@@ -25,8 +27,37 @@ function databaseFile(databaseName: string): File {
   return new File(databaseDirectory(), databaseName);
 }
 
-function deleteIfPresent(file: File): void {
+function deleteIfPresent(file: File | Directory): void {
   if (file.exists) file.delete();
+}
+
+function packFilesRoot(): Directory {
+  return new Directory(Paths.document, PACK_FILES_DIRECTORY_NAME);
+}
+
+function packFilesFolderName(databaseName: string): string {
+  return databaseName.slice(0, -PACK_DATABASE_EXTENSION.length);
+}
+
+function packFilesFolder(databaseName: string): Directory {
+  return new Directory(packFilesRoot(), packFilesFolderName(databaseName));
+}
+
+function deleteOtherPackDatabases(keptNames: readonly string[]): void {
+  for (const entry of databaseDirectory().list()) {
+    const isPackDatabase =
+      entry.name.startsWith(PACK_DATABASE_PREFIX) && entry.name.endsWith(PACK_DATABASE_EXTENSION);
+    if (entry instanceof File && isPackDatabase && !keptNames.includes(entry.name)) entry.delete();
+  }
+}
+
+function deleteOtherPackFolders(keptNames: readonly string[]): void {
+  const root = packFilesRoot();
+  if (!root.exists) return;
+  const keptFolders = keptNames.map(packFilesFolderName);
+  for (const entry of root.list()) {
+    if (!keptFolders.includes(entry.name)) entry.delete();
+  }
 }
 
 /** Copies everything after the header in chunks, so a large pack never sits in memory whole. */
@@ -75,15 +106,20 @@ export function createExpoPackFileStore(): PackFileStore {
     discardStagedDatabase: async () => deleteIfPresent(stagedFile()),
     openInstalledDatabase: async (databaseName) =>
       databaseFile(databaseName).exists ? openPackDatabase(databaseName) : null,
-    deleteDatabasesExcept: async (databaseNames) => {
-      for (const entry of databaseDirectory().list()) {
-        const isPackDatabase =
-          entry.name.startsWith(PACK_DATABASE_PREFIX) &&
-          entry.name.endsWith(PACK_DATABASE_EXTENSION);
-        if (entry instanceof File && isPackDatabase && !databaseNames.includes(entry.name)) {
-          entry.delete();
-        }
-      }
+    deletePacksExcept: async (databaseNames) => {
+      deleteOtherPackDatabases(databaseNames);
+      deleteOtherPackFolders(databaseNames);
     },
+    hasPackFile: (databaseName, fileName) =>
+      new File(packFilesFolder(databaseName), fileName).exists,
+    writePackFile: async (databaseName, fileName, data) => {
+      const folder = packFilesFolder(databaseName);
+      if (!folder.exists) folder.create({ intermediates: true });
+      const file = new File(folder, fileName);
+      deleteIfPresent(file);
+      file.create();
+      file.write(data);
+    },
+    packFileUri: (databaseName, fileName) => new File(packFilesFolder(databaseName), fileName).uri,
   };
 }

@@ -5,6 +5,7 @@ import { PackRejectedError } from '../domain/packMetadata';
 import { packRemovalProblem } from '../domain/packInstallRules';
 import type { LoadedPack } from '../services/packs/loadedPack';
 import type { AppCore } from './AppServicesContext';
+import { withRegisteredFonts } from './packFonts';
 
 export interface LanguagePacks {
   /** Every open pack: the built-in Mandarin pack and any the user installed. */
@@ -28,7 +29,9 @@ export function LanguagePacksProvider({ core, children }: LanguagePacksProviderP
 
   const installPack = useCallback(
     async (sourceUri: string) => {
-      const installed = await core.packInstaller.install(sourceUri, packs);
+      const installed = await withRegisteredFonts(
+        await core.packInstaller.install(sourceUri, packs),
+      );
       setPacks((current) => [...current, installed]);
       return installed;
     },
