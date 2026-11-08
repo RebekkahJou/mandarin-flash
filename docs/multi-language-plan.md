@@ -48,6 +48,21 @@ Phase 3 decisions (2026-11-08):
   variant. Add it (schema 2) with the first language that needs folded lookups (German case,
   Russian stress marks).
 
+Phase 3 phone test results (2026-11-08, Pixel 8 Pro, Android 17):
+- Passed: suggested lists in "+" (an older profile is offered Adverbs and Measure words); Language
+  packs screen; the tampered pack and a non-pack file are refused with the right messages;
+  installing the signed version 2 writes its database and font; version 2 survives a restart;
+  Remove works and the files are deleted at the next start; word-type checks still read the pack.
+- Passed, real route B: Chrome downloaded the pack (served from the PC over adb reverse) and
+  "Open" → Mandarin Flash showed the install screen and installed it; Done returns to the app.
+- Fixed: About listed CC-CEDICT and Tatoeba twice when an update was installed.
+- **Open issue:** opening a pack from Files by Google starts a second copy of the app's activity
+  inside the Files task (Android 17 ignores `singleTask` there), so the app shows Practice with a
+  "multiple navigation containers" warning instead of the install screen. Chrome's "Open" is
+  unaffected. Options: a small separate activity for opened files (config plugin), or document
+  "Install a pack file" as the way from file managers.
+- Not checked: pack fonts on Simplified cards (needs a Simplified profile).
+
 Phase 3 notes for later phases:
 - `starter_words` exists in the pack schema but is empty; Phase 4 fills it for Mandarin. Since the
   built-in pack is version 1 on every phone, a starter-words update can ship either in the app or
