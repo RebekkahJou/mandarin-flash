@@ -52,6 +52,7 @@
     "build:mandarin-pack": "tsx scripts/build-mandarin-pack.ts",
     "build:font-characters": "tsx scripts/build-font-character-list.ts",
     "pack:generate-key": "tsx scripts/generate-pack-signing-key.ts",
+    "pack:derive": "tsx scripts/derive-pack.ts",
     "pack:sign": "tsx scripts/sign-pack.ts"
   },
   "private": true,
