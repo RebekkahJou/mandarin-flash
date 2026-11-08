@@ -1,8 +1,8 @@
 # Multi-language and add-ons plan
 
 Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
-tested on the phone; PR open). **Phase 3 built** (2026-11-08, branch lang-compatibility-p3,
-waiting for a test on the phone; see "Phase 3 phone test" below). Next step is Phase 4. Update
+tested on the phone; PR open). **Phase 3 built and mostly phone-tested** (2026-11-08,
+branch lang-compatibility-p3; see "Phase 3 phone test results" and "Next session" below). Next step is Phase 4. Update
 this file as work lands or decisions change.
 
 Phase 3 decisions (2026-11-08):
@@ -59,9 +59,18 @@ Phase 3 phone test results (2026-11-08, Pixel 8 Pro, Android 17):
 - **Open issue:** opening a pack from Files by Google starts a second copy of the app's activity
   inside the Files task (Android 17 ignores `singleTask` there), so the app shows Practice with a
   "multiple navigation containers" warning instead of the install screen. Chrome's "Open" is
-  unaffected. Options: a small separate activity for opened files (config plugin), or document
-  "Install a pack file" as the way from file managers.
+  unaffected. **Decided 2026-11-08: fix it with a small separate activity for opened files**,
+  added through a config plugin (no hand edits to android/). It receives the file and hands it to
+  MainActivity (singleTask), so only one copy of the app runs.
 - Not checked: pack fonts on Simplified cards (needs a Simplified profile).
+
+Next session (Phase 3 wrap-up):
+1. Build the opened-files activity (config plugin), rebuild, and retest opening a pack from Files
+   by Google and from Chrome's "Open".
+2. Create a Simplified test profile on the phone (the user agreed) to check pack fonts on
+   Simplified cards with Mandarin pack version 2 installed, plus practice, Add Word and example
+   sentences in Simplified. Delete the test profile afterwards.
+3. Then mark Phase 3 done and move to Phase 4.
 
 Phase 3 notes for later phases:
 - `starter_words` exists in the pack schema but is empty; Phase 4 fills it for Mandarin. Since the
