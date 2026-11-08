@@ -1,8 +1,78 @@
 # Multi-language and add-ons plan
 
 Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
-tested on the phone; PR open). Next step is Phase 3. Update this file as work lands or decisions
-change.
+tested on the phone; PR open). **Phase 3 built** (2026-11-08, branch lang-compatibility-p3,
+waiting for a test on the phone; see "Phase 3 phone test" below). Next step is Phase 4. Update
+this file as work lands or decisions change.
+
+Phase 3 decisions (2026-11-08):
+- **Pack file (.mfpack):** an 8-byte magic ("MFPACK", 0, format version 1), a 64-byte Ed25519
+  signature, then the pack's SQLite database. The signature covers a context string plus the
+  database's SHA-512, so the phone hashes the file natively instead of loading it into JavaScript.
+- **Signature library:** `@noble/ed25519` (MIT, audited, one file, no dependencies, no network
+  use), smaller than `@noble/curves`. Its hashing uses expo-crypto on the phone.
+- **Signing key:** created with `npm run pack:generate-key`; the private key is at
+  `~/.mandarin-flash/pack-signing-key.hex` on the development PC, never in the repository. Its
+  public key is in `src/services/packs/trustedPackKeys.ts`. Back it up offline (docs/RELEASE.md).
+  If you'd rather make a fresh key before the first published pack, do it before any pack ships.
+- **One Mandarin pack serves Traditional and Simplified.** Entries are headword (Traditional),
+  variant (Simplified), reading (Taiwan pinyin) and variant_reading (mainland pinyin); Simplified
+  reads the pack through its variants (`DictionaryForm.readsVariants`). Sentences are stored once,
+  in Taiwan Traditional, and converted for Simplified.
+- **The built-in Mandarin pack** (`assets/data/mandarin-pack.db`, version 1) was converted from the
+  Phase 2 dictionary without re-downloading sources, so its data is unchanged. The build script is
+  now `npm run build:mandarin-pack`.
+- **An installed pack replaces the built-in one** for its languages when its version is higher
+  (e.g. a Mandarin data update without an app update). The same or an older version is refused.
+- **Reliable word types and data licenses come from the pack** (pack metadata), not the language
+  definition. The About screen lists every open pack's licenses, then the app's fonts and code.
+- **Installed packs** are listed in the encrypted user database (`installed_packs`); the pack
+  files live in app storage (databases next to the built-in copy, fonts in `packs/<name>/`). A
+  replaced or removed pack's files are deleted at the next start, once nothing reads them.
+- **Removing a pack** is refused while profiles learn a language no other pack serves. The
+  built-in pack can't be removed.
+- **Pack fonts** are used by languages without bundled fonts (Simplified now; future languages).
+  Traditional keeps the three bundled Traditional fonts. Pack fonts are assumed to cover their
+  language; Android fills any missing glyph from system fonts.
+- **Route B** registers the app for downloaded files (`application/octet-stream`, and `.mfpack`
+  paths); `src/app/+native-intent.tsx` sends an opened file to the install screen. Route C ("Install
+  a pack file" on Settings → Language packs) uses the system file picker. iOS document types wait
+  for the iOS port.
+- **Default lists:** every profile also gets Adverbs; Mandarin profiles get Measure words. The
+  Components list waits for Phase 4 (it needs its own list kind). Profiles made before Phase 3 can
+  add Adverbs and Measure words from the "+" dialog, which also offers the suggested lists
+  (Pronouns, Prepositions, Conjunctions, Numbers, Question words, Particles, Time words).
+- **Mismatch warnings only judge reliable word types**, so Adverbs or Measure words never warn
+  until a pack tags those reliably.
+- The pack schema has no `search_key` column yet: Mandarin looks words up by exact headword or
+  variant. Add it (schema 2) with the first language that needs folded lookups (German case,
+  Russian stress marks).
+
+Phase 3 notes for later phases:
+- `starter_words` exists in the pack schema but is empty; Phase 4 fills it for Mandarin. Since the
+  built-in pack is version 1 on every phone, a starter-words update can ship either in the app or
+  as a Mandarin pack version 2.
+- `npm run pack:derive -- <pack.db> <out.db> --version <n> --font <file>` makes a new pack version
+  (optionally with fonts); `npm run pack:sign -- <pack.db> <out>.mfpack` validates and signs it.
+- Packs aren't hosted anywhere yet. A Simplified font pack needs SC font subsets (fonttools isn't
+  installed on the development PC).
+- Opening a pack from the browser's download notification (real route B) can only be checked once
+  a pack is hosted, e.g. on a GitHub release.
+
+Phase 3 phone test (needs `npx expo prebuild --platform android` first, because app.json gained
+intent filters; then `npx expo run:android`). Test packs are in `dist/test-packs/` (git-ignored);
+copy them with `adb push dist/test-packs/<file> /sdcard/Download/`:
+1. Lists tab → "+": the suggested lists show; adding Pronouns makes a part-of-speech list. A new
+   profile has Adverbs and Measure words.
+2. Settings → Language packs: the built-in Mandarin pack, version 1. About shows CC-CEDICT and
+   Tatoeba under "Language data" and noble-ed25519 under "Fonts and code".
+3. Install `mandarin-v2-with-font.mfpack` with "Install a pack file": installed message; the list
+   shows version 2; a Simplified profile's cards sometimes use the pack's font (jf open-huninn).
+   Restart the app: version 2 is still in use. Remove it: the built-in pack is used again.
+4. Open `mandarin-v2-with-font.mfpack` from the Files app ("Open with Mandarin Flash"): the install
+   screen shows and installs it (route B, as far as it can be tested without hosting).
+5. `mandarin-v2-tampered.mfpack` is refused as not signed; `not-a-pack.mfpack` as not a pack.
+6. Practice, Add Word and example sentences still work in Traditional and Simplified.
 
 Phase 2 decisions (2026-11-06):
 - The welcome screen shows on launch only when there are two or more profiles; with one, the app
@@ -23,9 +93,8 @@ Phase 2 decisions (2026-11-06):
   謝謝 "thanks"), and the dictionary was rebuilt from current CC-CEDICT and Tatoeba exports.
 
 Phase 2 notes for later phases:
-- The bundled dictionary now stores mainland pinyin and has a Simplified index (15.6 MB). Each
-  language reads it through a `DictionaryForm` until Phase 3 lays packs out as headword, variant
-  and reading.
+- The bundled dictionary now stores mainland pinyin and has a Simplified index (15.6 MB).
+  (Phase 3 turned it into the built-in Mandarin pack.)
 - Adding a new user returns to the welcome screen so the new person can pick themselves.
 - Screens are grouped with `Stack.Protected` in `src/app/_layout.tsx` (first run, welcome, app).
   `ProfileSessionContext` holds the session; `AppServicesProvider` gives each profile its own
@@ -34,8 +103,7 @@ Phase 2 notes for later phases:
   Simplified user (adb can't type Chinese); automated tests cover both.
 
 Phase 1 notes for later phases:
-- The bundled dictionary.db keeps its old column names (traditional, simplified, pinyin);
-  `dictionaryLookup` maps them to headword, variant, reading until Phase 3 rebuilds it as a pack.
+- (Done in Phase 3: the dictionary is now a pack with headword, variant and reading columns.)
 - CSV export headers are still `character, meaning, pinyin` (from the language bundle); import also
   accepts the generic `word`/`headword` and `reading` headers.
 - `PhoneticText`, `ChineseText` and the zhuyin conversion are still Mandarin-only components.

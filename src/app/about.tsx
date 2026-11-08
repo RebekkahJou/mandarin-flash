@@ -36,6 +36,12 @@ const APP_THIRD_PARTY_NOTICES: readonly PackLicense[] = [
     license: 'Apache License 2.0 / MIT',
     source: 'github.com/nk2028/opencc-js',
   },
+  {
+    name: 'noble-ed25519',
+    usage: 'Checking that language packs are genuine',
+    license: 'MIT License',
+    source: 'github.com/paulmillr/noble-ed25519',
+  },
 ];
 
 export default function AboutScreen() {

@@ -12,6 +12,7 @@ Mandarin pack that is `scripts/lib/mandarinPack.ts`.
 | LXGW WenKai TC | Flashcard font, subset (`assets/fonts/LXGWWenKaiTC-subset.ttf`) | SIL OFL 1.1 | https://github.com/lxgw/LxgwWenkaiTC |
 | jf open-huninn | Flashcard font, subset (`assets/fonts/OpenHuninn-subset.ttf`) | SIL OFL 1.1 | https://github.com/justfont/open-huninn-font |
 | opencc-js | Conversion between Simplified and Traditional characters | MIT + Apache 2.0 (dictionaries) | https://github.com/nk2028/opencc-js |
+| @noble/ed25519 | Verifying language pack signatures (pure JavaScript, no network use) | MIT | https://github.com/paulmillr/noble-ed25519 |
 
 The Mandarin pack is a derived work of CC-CEDICT, so it is shared under CC BY-SA 4.0.
 OFL fonts may be subset and bundled. The subsets keep their original font names here because

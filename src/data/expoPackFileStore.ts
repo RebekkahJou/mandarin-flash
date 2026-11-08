@@ -27,6 +27,15 @@ function databaseFile(databaseName: string): File {
   return new File(databaseDirectory(), databaseName);
 }
 
+/** Some content providers can't report a size; the copy enforces the limit then. */
+function sizeIfKnown(file: File): number {
+  try {
+    return file.size;
+  } catch {
+    return 0;
+  }
+}
+
 function deleteIfPresent(file: File | Directory): void {
   if (file.exists) file.delete();
 }
@@ -78,7 +87,7 @@ export function createExpoPackFileStore(): PackFileStore {
 
   async function stagePackFile(sourceUri: string, headerBytes: number, maxBytes: number) {
     const source = new File(sourceUri);
-    if (source.size > maxBytes) throw new PackRejectedError(TOO_LARGE_MESSAGE);
+    if (sizeIfKnown(source) > maxBytes) throw new PackRejectedError(TOO_LARGE_MESSAGE);
     const staged = stagedFile();
     deleteIfPresent(staged);
     staged.create();
