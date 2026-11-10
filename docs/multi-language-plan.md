@@ -3,8 +3,8 @@
 Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
 tested on the phone; merged into main). **Phase 3 done** (2026-11-10, branch
 lang-compatibility-p3, phone-tested, merged into main; see "Phase 3 wrap-up" below). **Phase 4
-built** (2026-11-10, branch lang-compatibility-p4; see "Phase 4 decisions" below). Update this
-file as work lands or decisions change.
+built and phone-tested** (2026-11-10, branch lang-compatibility-p4; see "Phase 4 decisions"
+below). Update this file as work lands or decisions change.
 
 Phase 4 decisions (2026-11-10):
 - **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency
@@ -39,6 +39,17 @@ Phase 4 decisions (2026-11-10):
   "as in 八 bā". Turning it off, or choosing zhuyin-only display, hides the list
   (`word_lists.is_hidden`) and keeps progress. Hidden lists' words still show in All words.
 - No Unihan data was needed: the Components list only uses the curated names and meanings.
+
+Phase 4 phone test (2026-11-10, Pixel 8 Pro, temporary profiles, deleted afterwards):
+- Passed (Simplified profile): adding starter set 1 adds 50 words in Simplified with mainland
+  readings, creates the missing lists, asks once to add 10 characters and shows "Set 1 of 10:
+  0 of 50 learned". The Add Word split dialog for 杂货店 works (checked by the user).
+- Passed (Traditional profile): the Components list fills with 59 cards (田: tián zì páng,
+  field, 田字旁). Learn zhuyin adds a 42-card Zhuyin list (ㄚ: ā, a, as in 啊 ā); choosing
+  zhuyin-only display hides the list and the checkbox, and Pinyin brings both back.
+- Development note: a reload that copies the built-in pack while the update script is still
+  writing it leaves an old copy (fixed by deleting files/SQLite/dictionary-v6.db with run-as).
+  Released builds can't hit this.
 
 Phase 4 notes for later phases:
 - Starter words use the dictionary's first meanings for their list type, which can include odd
