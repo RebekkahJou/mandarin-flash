@@ -381,21 +381,31 @@ today. Planned 2026-11-10 at the user's request; part of the MVP.
   language). It opens a modal listing the sets with checkboxes and word counts. Sets the profile
   already added are greyed out, marked "Added" and listed at the bottom. Users can come back and
   add more sets later from the same place.
-- **Target lists:** added words always go into a new default list, **Health-related words**, and
-  into General Vocabulary. The modal also lets the user pick other lists (Focus Vocabulary or
-  their own lists), unticked by default.
+- **Target lists:** added words always go into **Health-related words** and General Vocabulary,
+  and into the word-type list matching each entry's curated word type (Nouns, Verbs…), created if
+  missing, as starter words do. The modal also lets the user pick other lists (Focus Vocabulary
+  or their own lists), unticked by default. (Decided 2026-11-10.)
+- **Health-related words list:** a default list that appears only when the profile adds its first
+  set; it is created again if it was deleted. Profiles that never add a set don't get an empty
+  list. (Decided 2026-11-10.)
 - **Repeats are skipped:** some words appear in more than one set (醫生, 藥局) or are already in
   the profile (from starter sets, CSV or Add Word). A word is stored once, matched by headword
-  and reading, as with starter sets. The add summary says how many were new and how many the
-  profile already had.
+  and reading, as with starter sets. A word the profile already has keeps its meanings but is
+  still added to the Health-related words list (if not there yet), so that list holds every word
+  of the chosen sets. The add summary says how many were new and how many the profile already
+  had. (Decided 2026-11-10.)
 - **Remembering added sets:** a user-database table records which sets each profile added
   (profile, pack id, set id, time), so the modal can grey them out even if words are later
   removed from lists.
 - **Compound splitting:** health words are mostly compounds, so after adding sets the app asks
   once whether to add their characters, as for starter sets (nouns only).
-- **Word types:** the Health-related words list is a general list, so no word-type warnings.
-  Entries may carry a curated word type; if they do, they could also go into the matching
-  word-type list (see open questions).
+- **Word types:** every entry carries a curated word type (a part of speech, "phrase" or "time
+  word", as for starter words). The Health-related words list is a general list, so it never
+  shows word-type warnings.
+- **Simplified:** obvious mainland equivalents (医保卡, 药店) are written now as Simplified-only
+  entries; uncertain ones are marked for a mainland reviewer. (Decided 2026-11-10.)
+- **Later, not in the MVP:** when a pack update adds words to a set a profile already added,
+  offer "N new words in sets you added". (Decided 2026-11-10.)
 
 ## Splitting multi-character words
 
@@ -485,20 +495,4 @@ Each phase ships on its own with tests and `npm run check` passing.
 
 ## Open questions
 
-Health-related word sets (to settle before building Phase 4b; recommendations in brackets):
-1. A word the profile already has: skip it entirely, or still add it to the Health-related words
-   list (without changing its meanings)? [Add it to the list, so the list holds every word of
-   the sets the user chose.]
-2. Health-related words list: create it for every new profile (empty until a set is added), or
-   only when the first set is added? [Only when the first set is added, so profiles that never
-   use health sets don't get an empty list; re-create it if it was deleted.]
-3. Should health words with a curated word type also go into Nouns, Verbs and so on, as starter
-   words do? [No: keep them in Health-related words, General Vocabulary and the lists the user
-   picks, so word-type lists don't fill with medical terms.]
-4. Mainland (Simplified) equivalents: write mainland-only entries now, or leave Taiwan-only terms
-   out of Simplified until a mainland reviewer checks them? [Write the obvious ones (医保卡,
-   药店) now and mark uncertain ones for review.]
-5. When a pack update adds words to a set a profile already added, offer "N new words in sets
-   you added"? [Later; not needed for the MVP.]
-
-Items marked "verify" above are checks to do during the relevant phase.
+None at the moment (the health word set questions were answered 2026-11-10). Items marked "verify" above are checks to do during the relevant phase.
