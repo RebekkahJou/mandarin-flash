@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@noble/ed25519": "^3.2.0",
     "expo": "~58.0.21",
     "expo-asset": "~58.0.19",
     "expo-constants": "~58.0.14",
@@ -48,8 +49,11 @@
     "test": "jest",
     "format": "prettier --write .",
     "check": "tsc --noEmit && expo lint && jest",
-    "build:dictionary": "tsx scripts/build-dictionary.ts",
-    "build:font-characters": "tsx scripts/build-font-character-list.ts"
+    "build:mandarin-pack": "tsx scripts/build-mandarin-pack.ts",
+    "build:font-characters": "tsx scripts/build-font-character-list.ts",
+    "pack:generate-key": "tsx scripts/generate-pack-signing-key.ts",
+    "pack:derive": "tsx scripts/derive-pack.ts",
+    "pack:sign": "tsx scripts/sign-pack.ts"
   },
   "private": true,
   "jest": {
@@ -61,6 +65,11 @@
     ],
     "testMatch": [
       "**/?(*.)test.[jt]s?(x)"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(.pnpm|react-native|@react-native|@react-native-community|expo|@expo|@expo-google-fonts|react-navigation|@react-navigation|@noble))",
+      "/node_modules/react-native-reanimated/plugin/",
+      "/node_modules/@react-native/babel-preset/"
     ]
   }
 }

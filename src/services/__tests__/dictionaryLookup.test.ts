@@ -1,30 +1,29 @@
 /**
  * @jest-environment node
  */
-import { DICTIONARY_SCHEMA_SQL } from '../../data/dictionarySchema';
 import { createInMemoryDatabase } from '../../data/testing/nodeSqlDatabase';
+import { INSERT_PACK_ENTRY_SQL, writeTestPack } from '../../data/testing/testPack';
 import { PartOfSpeech } from '../../domain/partOfSpeech';
 import type { DictionaryForm } from '../dictionaryLookup';
-import { ChineseScript, createDictionaryLookup, partsOfSpeechOf } from '../dictionaryLookup';
+import { createDictionaryLookup, partsOfSpeechOf } from '../dictionaryLookup';
 
 const TRADITIONAL_TAIWAN: DictionaryForm = {
-  script: ChineseScript.Traditional,
-  usesMainlandReadings: false,
+  readsVariants: false,
   convertSentence: (text) => text,
 };
 
 const SIMPLIFIED_MAINLAND: DictionaryForm = {
-  script: ChineseScript.Simplified,
-  usesMainlandReadings: true,
+  readsVariants: true,
   // Stands in for the real Traditional → Simplified converter.
   convertSentence: (text) => text.replace('們', '们'),
 };
 
+const RELIABLE = [PartOfSpeech.Noun, PartOfSpeech.Verb, PartOfSpeech.Adjective];
+
 async function createLookup(form: DictionaryForm) {
   const database = createInMemoryDatabase();
-  await database.exec(DICTIONARY_SCHEMA_SQL);
-  const insertEntry = `INSERT INTO entries (traditional, simplified, pinyin, mainland_pinyin, glosses, rank)
-     VALUES (?, ?, ?, ?, ?, ?)`;
+  await writeTestPack(database);
+  const insertEntry = INSERT_PACK_ENTRY_SQL;
   await database.run(insertEntry, ['行', '', 'hang2', '', '[["row; line",1]]', -1]);
   await database.run(insertEntry, ['行', '', 'xing2', '', '[["to walk",2],["capable",4]]', -2]);
   await database.run(insertEntry, ['軟體', '软体', 'ruan3 ti3', '', '[["(Tw) software",1]]', -1]);
@@ -32,11 +31,12 @@ async function createLookup(form: DictionaryForm) {
   await database.run(insertEntry, ['垃圾', '', 'le4 se4', 'la1 ji1', '[["trash",1]]', -1]);
   await database.run(insertEntry, ['髮', '发', 'fa3', '', '[["hair",1]]', -1]);
   await database.run(insertEntry, ['發', '发', 'fa1', '', '[["to send out",2]]', -3]);
-  const insertSentence = 'INSERT INTO sentences (traditional, english) VALUES (?, ?)';
+  const insertSentence = 'INSERT INTO sentences (text, english) VALUES (?, ?)';
   await database.run(insertSentence, ['我們想走路。', 'We want to walk.']);
   await database.run(insertSentence, ['走！', 'Go!']);
   await database.run(insertSentence, ['我們用軟件。', 'We use software.']);
-  return createDictionaryLookup(database, form);
+  await database.run(insertEntry, ['壞', '坏', 'huai4', '', '{not json', -1]);
+  return createDictionaryLookup(database, form, RELIABLE);
 }
 
 describe('dictionaryLookup in Traditional with Taiwan readings', () => {
@@ -90,5 +90,17 @@ describe('dictionaryLookup in Simplified with mainland readings', () => {
     const lookup = await createLookup(SIMPLIFIED_MAINLAND);
     const sentences = await lookup.findExampleSentences({ headword: '软件', variant: '軟件' });
     expect(sentences).toEqual([{ text: '我们用軟件。', english: 'We use software.' }]);
+  });
+});
+
+describe('dictionaryLookup with damaged data', () => {
+  it('drops meanings it cannot read instead of failing', async () => {
+    const lookup = await createLookup(TRADITIONAL_TAIWAN);
+    expect(await lookup.lookUp('壞')).toMatchObject([{ headword: '壞', definitionCandidates: [] }]);
+  });
+
+  it('passes on the word types the pack tags reliably', async () => {
+    const lookup = await createLookup(TRADITIONAL_TAIWAN);
+    expect(lookup.reliablePartsOfSpeech).toEqual(RELIABLE);
   });
 });

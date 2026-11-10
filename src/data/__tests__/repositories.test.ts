@@ -4,10 +4,12 @@
 import { FrequencyTier } from '../../domain/frequencyTier';
 import { GeneralWordList } from '../../domain/generalWordList';
 import { LanguageId } from '../../domain/language';
+import { PartOfSpeech } from '../../domain/partOfSpeech';
 import { distinctPracticeCards } from '../../domain/practiceCard';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { ReviewAnswer } from '../../domain/reviewEvent';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
+import { createInstalledPackRepository } from '../repositories/installedPackRepository';
 import { createProfileRepository } from '../repositories/profileRepository';
 import { createReviewEventRepository } from '../repositories/reviewEventRepository';
 import { PhoneticDisplay, createSettingsRepository } from '../repositories/settingsRepository';
@@ -43,7 +45,7 @@ describe('user database', () => {
     await expect(migrateUserDatabase(database)).resolves.toBeUndefined();
   });
 
-  it('creates the six default lists, with the right list types', async () => {
+  it("creates the default lists plus the language's own, with the right list types", async () => {
     const { profile, wordListRepository } = await setUp();
     const summaries = await wordListRepository.listSummaries(profile.id);
     expect(summaries.map((summary) => summary.list.name)).toEqual([
@@ -52,7 +54,9 @@ describe('user database', () => {
       'Nouns',
       'Verbs',
       'Adjectives',
+      'Adverbs',
       'Phrases',
+      'Measure words',
     ]);
     const verbs = summaries.find((summary) => summary.list.name === 'Verbs')?.list;
     expect(verbs).toBeInstanceOf(PartOfSpeechWordList);
@@ -202,7 +206,7 @@ describe('user database', () => {
 
   it('adds a new general list after the existing ones', async () => {
     const { profile, wordListRepository } = await setUp();
-    const newListId = await wordListRepository.createGeneralList(profile.id, 'Food');
+    const newListId = await wordListRepository.createList(profile.id, { name: 'Food' });
     const summaries = await wordListRepository.listSummaries(profile.id);
     const lastSummary = summaries[summaries.length - 1];
     expect(lastSummary.list.id).toBe(newListId);
@@ -210,12 +214,22 @@ describe('user database', () => {
     expect(lastSummary.length).toBe(0);
   });
 
+  it('creates a suggested list with its part of speech', async () => {
+    const { profile, wordListRepository } = await setUp();
+    const listId = await wordListRepository.createList(profile.id, {
+      name: 'Pronouns',
+      partOfSpeech: PartOfSpeech.Pronoun,
+    });
+    const list = await wordListRepository.getListWithEntries(listId);
+    expect(list).toBeInstanceOf(PartOfSpeechWordList);
+  });
+
   it('renames a list', async () => {
     const { profile, wordListRepository, listIdByName } = await setUp();
     await wordListRepository.renameList(listIdByName('Phrases'), 'Sayings');
     const list = await wordListRepository.getListWithEntries(listIdByName('Phrases'));
     expect(list?.name).toBe('Sayings');
-    expect((await wordListRepository.listSummaries(profile.id)).length).toBe(6);
+    expect((await wordListRepository.listSummaries(profile.id)).length).toBe(8);
   });
 
   it('deletes a list and its entries but keeps the words', async () => {
@@ -376,5 +390,29 @@ describe('settings', () => {
     const settings = await settingsRepository.loadSettings(profile.id);
     expect(settings.phoneticDisplay).toBe(PhoneticDisplay.Zhuyin);
     expect(settings.defaultPracticeSetSize).toBe(40);
+  });
+});
+
+describe('installed packs', () => {
+  it('records a pack, replaces an older version and removes it', async () => {
+    const { database } = await setUp();
+    const repository = createInstalledPackRepository(database);
+    const record = {
+      packId: 'mandarin',
+      packVersion: 2,
+      databaseName: 'pack-mandarin-v2.db',
+      installedAtMs: 10,
+    };
+    await repository.saveInstalledPack(record);
+    await repository.saveInstalledPack({
+      ...record,
+      packVersion: 3,
+      databaseName: 'pack-mandarin-v3.db',
+    });
+    expect(await repository.listInstalledPacks()).toEqual([
+      { ...record, packVersion: 3, databaseName: 'pack-mandarin-v3.db' },
+    ]);
+    await repository.removeInstalledPack('mandarin');
+    expect(await repository.listInstalledPacks()).toEqual([]);
   });
 });

@@ -22,7 +22,13 @@ export function useWordListDetail(wordListId: number) {
     const loadedList = await wordListRepository.getListWithEntries(wordListId);
     setList(loadedList);
     if (loadedList) {
-      setMismatchedWordIds(await findPartOfSpeechMismatches(loadedList, dictionaryLookup.lookUp));
+      setMismatchedWordIds(
+        await findPartOfSpeechMismatches(
+          loadedList,
+          dictionaryLookup.lookUp,
+          dictionaryLookup.reliablePartsOfSpeech,
+        ),
+      );
     }
   }, [wordListId, wordListRepository, dictionaryLookup]);
 

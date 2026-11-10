@@ -5,6 +5,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 import { BUNDLED_CHINESE_FONTS } from '../services/fontRotation';
 import { useAppCoreLoader } from '../ui/AppServicesContext';
+import { LanguagePacksProvider } from '../ui/LanguagePacksContext';
 import { ProfileSessionProvider, useProfileSession } from '../ui/ProfileSessionContext';
 import { colors, fontSizes, spacing } from '../ui/theme';
 
@@ -42,6 +43,8 @@ function RootStack() {
       </Stack.Protected>
       <Stack.Screen name="profiles/add" options={{ title: 'Add a new user' }} />
       <Stack.Screen name="about" options={{ title: 'About & licenses' }} />
+      <Stack.Screen name="packs/index" options={{ title: 'Language packs' }} />
+      <Stack.Screen name="packs/install" options={{ title: 'Install language pack' }} />
     </Stack>
   );
 }
@@ -67,10 +70,12 @@ export default function RootLayout() {
   }
 
   return (
-    <ProfileSessionProvider core={coreState.core}>
-      <StatusBar style="dark" />
-      <RootStack />
-    </ProfileSessionProvider>
+    <LanguagePacksProvider core={coreState.core}>
+      <ProfileSessionProvider core={coreState.core}>
+        <StatusBar style="dark" />
+        <RootStack />
+      </ProfileSessionProvider>
+    </LanguagePacksProvider>
   );
 }
 

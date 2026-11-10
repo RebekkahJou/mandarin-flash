@@ -7,7 +7,7 @@ export interface LanguageAdapter {
   definition: LanguageDefinition;
   /** Header names written on export and accepted on import, e.g. "character" for the headword. */
   csvHeaders: CsvHeaderNames;
-  /** How this language reads the bundled dictionary. */
+  /** How this language reads its language pack. */
   dictionaryForm: DictionaryForm;
   /** False when the bundled fonts don't cover this script, so cards use the system font only. */
   usesBundledFonts: boolean;

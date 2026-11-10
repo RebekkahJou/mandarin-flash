@@ -48,6 +48,7 @@ export function useWordEditor(wordId: number) {
       hasUserEditedMeanings: list.kind !== WordListKind.PartOfSpeech,
       definitionCandidates: reading?.definitionCandidates ?? [],
       wordPartsOfSpeech: partsOfSpeechOf(reading ? [reading] : []),
+      reliablePartsOfSpeech: dictionaryLookup.reliablePartsOfSpeech,
       listIdsAlreadyContainingWord: new Set(),
     });
     const additions = await confirmPlannedAdditions(plan);

@@ -66,8 +66,14 @@ export abstract class WordList {
     return firstMeanings(candidates);
   }
 
-  /** Returns a warning when the word doesn't fit this list, or null when it does. */
-  validateWord(_wordPartsOfSpeech: readonly PartOfSpeech[]): WordListValidationWarning | null {
+  /**
+   * Returns a warning when the word doesn't fit this list, or null when it does. Only word types
+   * the language's dictionary tags reliably are judged.
+   */
+  validateWord(
+    _wordPartsOfSpeech: readonly PartOfSpeech[],
+    _reliablePartsOfSpeech: readonly PartOfSpeech[],
+  ): WordListValidationWarning | null {
     return null;
   }
 }

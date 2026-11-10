@@ -44,7 +44,13 @@ export function useCsvImport() {
     const listPlans: (ListImportPlan & { wordList: WordList })[] = [];
     for (const wordList of targetLists) {
       const headwordsInList = await wordListRepository.headwordsInList(wordList.id);
-      const plan = await planCsvImport(parsed, wordList, headwordsInList, lookUp);
+      const plan = await planCsvImport(
+        parsed,
+        wordList,
+        headwordsInList,
+        lookUp,
+        dictionaryLookup.reliablePartsOfSpeech,
+      );
       listPlans.push({ wordList, listName: wordList.name, plan });
     }
     return listPlans;

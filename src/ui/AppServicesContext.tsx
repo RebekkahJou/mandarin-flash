@@ -1,7 +1,10 @@
+import * as Crypto from 'expo-crypto';
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { openDictionaryDatabase, openUserDatabase } from '../data/openDatabases';
+import { createExpoPackFileStore } from '../data/expoPackFileStore';
+import { openBuiltInPack, openUserDatabase } from '../data/openDatabases';
+import { createInstalledPackRepository } from '../data/repositories/installedPackRepository';
 import type { PracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import { createPracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import type { ProfileRepository } from '../data/repositories/profileRepository';
@@ -17,13 +20,22 @@ import type { WordListRepository } from '../data/repositories/wordListRepository
 import { createWordListRepository } from '../data/repositories/wordListRepository';
 import type { WordRepository } from '../data/repositories/wordRepository';
 import { createWordRepository } from '../data/repositories/wordRepository';
-import type { SqlDatabase } from '../data/sqlDatabase';
 import type { LanguageId } from '../domain/language';
 import type { Profile } from '../domain/profileGroups';
 import type { DictionaryLookup } from '../services/dictionaryLookup';
+import type { CardFontFamily } from '../services/fontRotation';
+import { cardFontRotation } from '../services/fontRotation';
 import { createDictionaryLookup } from '../services/dictionaryLookup';
 import type { LanguageAdapter } from '../services/languages/languageAdapter';
 import { languageBundleFor } from '../services/languages/languageBundles';
+import type { LoadedPack } from '../services/packs/loadedPack';
+import { packForLanguage } from '../services/packs/loadedPack';
+import type { PackInstaller } from '../services/packs/packInstaller';
+import { createPackInstaller } from '../services/packs/packInstaller';
+import { setSha512ForSignatures } from '../services/packs/packSignature';
+import { TRUSTED_PACK_PUBLIC_KEYS } from '../services/packs/trustedPackKeys';
+import { useLanguagePacks } from './LanguagePacksContext';
+import { withRegisteredFonts } from './packFonts';
 
 /** Everything that doesn't depend on which profile is active; opened once at startup. */
 export interface AppCore {
@@ -33,7 +45,9 @@ export interface AppCore {
   practiceSessionRepository: PracticeSessionRepository;
   reviewEventRepository: ReviewEventRepository;
   settingsRepository: SettingsRepository;
-  dictionaryDatabase: SqlDatabase;
+  /** Language packs open at startup: the built-in pack, then installed ones. */
+  initialPacks: LoadedPack[];
+  packInstaller: PackInstaller;
   /** Most recently used first. */
   initialProfiles: Profile[];
 }
@@ -43,6 +57,8 @@ export interface AppServices {
   profileId: number;
   /** Text handling for the profile's language. */
   languageBundle: LanguageAdapter;
+  /** Font families flashcards rotate through for this language. */
+  cardFonts: readonly CardFontFamily[];
   wordRepository: WordRepository;
   wordListRepository: WordListRepository;
   practiceSessionRepository: PracticeSessionRepository;
@@ -51,12 +67,24 @@ export interface AppServices {
   dictionaryLookup: DictionaryLookup;
 }
 
+/** Native SHA-512 for signature checks. Messages are short, so copying them costs nothing. */
+async function sha512(message: Uint8Array): Promise<Uint8Array<ArrayBuffer>> {
+  const digest = await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA512, new Uint8Array(message));
+  return new Uint8Array(digest);
+}
+
 async function createAppCore(): Promise<AppCore> {
-  const [userDatabase, dictionaryDatabase] = await Promise.all([
-    openUserDatabase(),
-    openDictionaryDatabase(),
-  ]);
+  setSha512ForSignatures(sha512);
+  const [userDatabase, builtInPack] = await Promise.all([openUserDatabase(), openBuiltInPack()]);
   const profileRepository = createProfileRepository(userDatabase);
+  const packInstaller = createPackInstaller({
+    fileStore: createExpoPackFileStore(),
+    installedPackRepository: createInstalledPackRepository(userDatabase),
+    trustedPublicKeys: TRUSTED_PACK_PUBLIC_KEYS,
+  });
+  const installedPacks = await Promise.all(
+    (await packInstaller.loadInstalledPacks()).map(withRegisteredFonts),
+  );
   return {
     profileRepository,
     wordRepository: createWordRepository(userDatabase),
@@ -64,7 +92,8 @@ async function createAppCore(): Promise<AppCore> {
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),
     reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
-    dictionaryDatabase,
+    initialPacks: [{ ...builtInPack, isBuiltIn: true, fonts: [] }, ...installedPacks],
+    packInstaller,
     initialProfiles: await profileRepository.listProfiles(),
   };
 }
@@ -91,21 +120,30 @@ export function useAppCoreLoader(): AppCoreState {
 
 function createProfileServices(
   core: AppCore,
+  packs: readonly LoadedPack[],
   profileId: number,
   languageId: LanguageId,
 ): AppServices {
   const languageBundle = languageBundleFor(languageId);
+  const pack = packForLanguage(packs, languageId);
+  // Mandarin is built in, so only a broken build could have a language without a pack.
+  if (!pack) throw new Error(`No language pack for ${languageBundle.definition.name}.`);
   return {
     profileId,
     languageBundle,
+    cardFonts: cardFontRotation(
+      languageBundle.usesBundledFonts,
+      pack.fonts.map((font) => font.family),
+    ),
     wordRepository: core.wordRepository,
     wordListRepository: core.wordListRepository,
     practiceSessionRepository: core.practiceSessionRepository,
     reviewEventRepository: core.reviewEventRepository,
     settingsRepository: core.settingsRepository,
     dictionaryLookup: createDictionaryLookup(
-      core.dictionaryDatabase,
+      pack.database,
       languageBundle.dictionaryForm,
+      pack.metadata.reliablePartsOfSpeech,
     ),
   };
 }
@@ -136,9 +174,10 @@ export function AppServicesProvider({
   languageId,
   children,
 }: AppServicesProviderProps) {
+  const { packs } = useLanguagePacks();
   const services = useMemo(
-    () => createProfileServices(core, profileId, languageId),
-    [core, profileId, languageId],
+    () => createProfileServices(core, packs, profileId, languageId),
+    [core, packs, profileId, languageId],
   );
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
 

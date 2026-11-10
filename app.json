@@ -30,7 +30,8 @@
       "expo-secure-store",
       "expo-sharing",
       "expo-font",
-      "expo-asset"
+      "expo-asset",
+      "./plugins/withOpenedFileActivity.ts"
     ]
   }
 }

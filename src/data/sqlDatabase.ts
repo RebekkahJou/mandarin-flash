@@ -1,4 +1,4 @@
-export type SqlValue = string | number | null;
+export type SqlValue = string | number | Uint8Array | null;
 export type SqlParams = readonly SqlValue[];
 
 export interface SqlRunResult {
@@ -16,4 +16,5 @@ export interface SqlDatabase {
   getAll<Row>(sql: string, params?: SqlParams): Promise<Row[]>;
   getFirst<Row>(sql: string, params?: SqlParams): Promise<Row | null>;
   transaction(task: () => Promise<void>): Promise<void>;
+  close(): Promise<void>;
 }

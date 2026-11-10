@@ -21,10 +21,8 @@ describe('LANGUAGE_DEFINITIONS', () => {
     expect(mandarin.readingName).toBe('pinyin');
     expect(mandarin.splitsCompoundsIntoCharacters).toBe(true);
     expect(mandarin.scriptStudySets.map((set) => set.id)).toEqual([ScriptStudySetId.Zhuyin]);
-    expect(mandarin.reliablePartsOfSpeech).toEqual([
-      PartOfSpeech.Noun,
-      PartOfSpeech.Verb,
-      PartOfSpeech.Adjective,
+    expect(mandarin.extraDefaultWordLists).toEqual([
+      { name: 'Measure words', partOfSpeech: PartOfSpeech.MeasureWord },
     ]);
   });
 

@@ -2,10 +2,21 @@ import Database from 'better-sqlite3';
 
 import type { SqlDatabase, SqlParams } from '../sqlDatabase';
 
-/** In-memory SQLite for repository tests. Not bundled into the app. */
+// SQLite in Node (better-sqlite3) behind the app's SqlDatabase interface. Not bundled into the app.
+
+/** In-memory SQLite for repository tests. */
 export function createInMemoryDatabase(): SqlDatabase {
   const database = new Database(':memory:');
   database.pragma('foreign_keys = ON');
+  return wrapNodeDatabase(database);
+}
+
+/** A database file opened in Node, for build scripts such as the pack signer. */
+export function openNodeDatabase(filePath: string): SqlDatabase {
+  return wrapNodeDatabase(new Database(filePath, { readonly: true, fileMustExist: true }));
+}
+
+function wrapNodeDatabase(database: Database.Database): SqlDatabase {
   return {
     exec: async (sql: string) => {
       database.exec(sql);
@@ -27,6 +38,9 @@ export function createInMemoryDatabase(): SqlDatabase {
         database.exec('ROLLBACK');
         throw error;
       }
+    },
+    close: async () => {
+      database.close();
     },
   };
 }

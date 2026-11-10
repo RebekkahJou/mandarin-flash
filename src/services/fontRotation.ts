@@ -2,9 +2,9 @@ import type { RandomSource } from '../domain/random';
 import { SUBSET_FONT_CHARACTERS } from './generated/fontCharacters';
 
 /**
- * Font families used for Chinese characters on flashcards. The system font costs 0 MB;
- * the bundled ones are subset to common Traditional characters (see scripts/subset-fonts.py).
- * English text always uses the system sans-serif.
+ * Font families used for the studied language on flashcards. The system font costs 0 MB;
+ * the bundled ones are subset to common Traditional characters (see scripts/subset-fonts.py),
+ * and language packs may bring fonts of their own. English text always uses the system sans-serif.
  */
 export const SYSTEM_CHINESE_FONT = 'system';
 
@@ -16,29 +16,49 @@ export const BUNDLED_CHINESE_FONTS = {
   OpenHuninn: require('../../assets/fonts/OpenHuninn-subset.ttf') as number,
 } as const;
 
-export type ChineseFontFamily = keyof typeof BUNDLED_CHINESE_FONTS | typeof SYSTEM_CHINESE_FONT;
+/** A registered font family name: the system font, a bundled font or a pack's font. */
+export type CardFontFamily = string;
 
-export const CHINESE_FONT_ROTATION: readonly ChineseFontFamily[] = [
+const BUNDLED_FONT_NAMES: readonly string[] = Object.keys(BUNDLED_CHINESE_FONTS);
+
+export const CHINESE_FONT_ROTATION: readonly CardFontFamily[] = [
   SYSTEM_CHINESE_FONT,
-  ...(Object.keys(BUNDLED_CHINESE_FONTS) as (keyof typeof BUNDLED_CHINESE_FONTS)[]),
+  ...BUNDLED_FONT_NAMES,
 ];
 
-/** Picks a random font, never the same one twice in a row. */
-export function pickNextChineseFont(
-  previousFont: ChineseFontFamily | undefined,
+/**
+ * The fonts a language's cards rotate through: the bundled Traditional fonts for languages that
+ * use them, otherwise the system font plus any fonts the language's pack brought.
+ */
+export function cardFontRotation(
+  usesBundledFonts: boolean,
+  packFontFamilies: readonly CardFontFamily[],
+): readonly CardFontFamily[] {
+  if (usesBundledFonts) return CHINESE_FONT_ROTATION;
+  return [SYSTEM_CHINESE_FONT, ...packFontFamilies];
+}
+
+/** Picks a random font from the rotation, never the same one twice in a row when there's a choice. */
+export function pickNextCardFont(
+  rotation: readonly CardFontFamily[],
+  previousFont: CardFontFamily | undefined,
   random: RandomSource = Math.random,
-): ChineseFontFamily {
-  const choices = CHINESE_FONT_ROTATION.filter((font) => font !== previousFont);
+): CardFontFamily {
+  const choices = rotation.filter((font) => font !== previousFont);
+  if (choices.length === 0) return rotation[0] ?? SYSTEM_CHINESE_FONT;
   return choices[Math.floor(random() * choices.length)];
 }
 
-/** A subset font may lack a rare character; such cards fall back to the system font. */
+/**
+ * A bundled subset font may lack a rare character; such cards fall back to the system font.
+ * Pack fonts are built to cover their language, and Android fills any gap from system fonts.
+ */
 export function fontForText(
-  font: ChineseFontFamily,
+  font: CardFontFamily,
   text: string,
   supportedCharacters: ReadonlySet<string> = SUBSET_FONT_CHARACTER_SET,
-): ChineseFontFamily {
-  if (font === SYSTEM_CHINESE_FONT) return font;
+): CardFontFamily {
+  if (!BUNDLED_FONT_NAMES.includes(font)) return font;
   const isFullySupported = [...text].every((character) => supportedCharacters.has(character));
   return isFullySupported ? font : SYSTEM_CHINESE_FONT;
 }

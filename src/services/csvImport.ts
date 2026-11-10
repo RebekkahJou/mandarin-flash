@@ -1,5 +1,6 @@
 import Papa from 'papaparse';
 
+import type { PartOfSpeech } from '../domain/partOfSpeech';
 import type { WordList } from '../domain/wordList';
 import type { CsvColumn, CsvHeaderNames } from './csvFormat';
 import { CSV_COLUMNS, acceptedHeaderNames, splitMeanings } from './csvFormat';
@@ -128,6 +129,7 @@ async function draftWord(
   row: CsvWordRow,
   targetList: WordList,
   lookUp: LookUp,
+  reliablePartsOfSpeech: readonly PartOfSpeech[],
 ): Promise<DraftedWord | null> {
   // Looked up even when the file has every column, to check the word fits the list.
   const entry = chooseEntry(await lookUp(row.headword), row.reading);
@@ -143,7 +145,9 @@ async function draftWord(
       reading: row.reading ?? entry?.reading ?? '',
       definitions,
     },
-    fitsList: targetList.validateWord(partsOfSpeechOf(entry ? [entry] : [])) === null,
+    fitsList:
+      targetList.validateWord(partsOfSpeechOf(entry ? [entry] : []), reliablePartsOfSpeech) ===
+      null,
   };
 }
 
@@ -153,6 +157,7 @@ export async function planCsvImport(
   targetList: WordList,
   headwordsAlreadyInList: ReadonlySet<string>,
   lookUp: LookUp,
+  reliablePartsOfSpeech: readonly PartOfSpeech[],
 ): Promise<CsvImportPlan> {
   const plan: CsvImportPlan = {
     wordsToAdd: [],
@@ -169,7 +174,7 @@ export async function planCsvImport(
       continue;
     }
     seenHeadwords.add(headword);
-    const drafted = await draftWord(row, targetList, lookUp);
+    const drafted = await draftWord(row, targetList, lookUp, reliablePartsOfSpeech);
     if (!drafted) {
       plan.unknownCharacters.push(headword);
       continue;

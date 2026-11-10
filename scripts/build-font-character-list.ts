@@ -1,5 +1,5 @@
 /**
- * Chooses which characters the bundled fonts keep (run after build-dictionary):
+ * Chooses which characters the bundled fonts keep (run after build-mandarin-pack):
  *
  *   npm run build:font-characters
  *
@@ -11,8 +11,9 @@ import Database from 'better-sqlite3';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { MANDARIN_PACK_PATH } from './lib/mandarinPack';
+
 const ROOT = path.join(__dirname, '..');
-const DICTIONARY_PATH = path.join(ROOT, 'assets', 'data', 'dictionary.db');
 const CHARACTER_LIST_PATH = path.join(ROOT, 'assets', 'fonts', 'subset-characters.txt');
 const GENERATED_MODULE_PATH = path.join(ROOT, 'src', 'services', 'generated', 'fontCharacters.ts');
 /** Covers everyday Taiwan text while keeping each subset font to a few MB. */
@@ -35,9 +36,9 @@ function countCharacters(
 }
 
 function main(): void {
-  const database = new Database(DICTIONARY_PATH, { readonly: true });
-  const words = database.prepare('SELECT traditional FROM entries').pluck().all() as string[];
-  const sentences = database.prepare('SELECT traditional FROM sentences').pluck().all() as string[];
+  const database = new Database(MANDARIN_PACK_PATH, { readonly: true });
+  const words = database.prepare('SELECT headword FROM entries').pluck().all() as string[];
+  const sentences = database.prepare('SELECT text FROM sentences').pluck().all() as string[];
   database.close();
 
   // A character that appears in many words and sentences is a common character.

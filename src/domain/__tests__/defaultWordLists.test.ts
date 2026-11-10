@@ -1,5 +1,39 @@
-import { canRenameOrDeleteList, defaultListIdsForNewWords } from '../defaultWordLists';
+import {
+  canRenameOrDeleteList,
+  defaultListIdsForNewWords,
+  defaultWordListsFor,
+  suggestedWordListsFor,
+} from '../defaultWordLists';
 import { GeneralWordList } from '../generalWordList';
+import { PartOfSpeech } from '../partOfSpeech';
+
+const MEASURE_WORDS = { name: 'Measure words', partOfSpeech: PartOfSpeech.MeasureWord };
+
+describe('defaultWordListsFor', () => {
+  it("adds the language's own lists after the shared ones", () => {
+    const names = defaultWordListsFor([MEASURE_WORDS]).map((list) => list.name);
+    expect(names.slice(0, 2)).toEqual(['General Vocabulary', 'Focus Vocabulary']);
+    expect(names).toContain('Adverbs');
+    expect(names[names.length - 1]).toBe('Measure words');
+  });
+});
+
+describe('suggestedWordListsFor', () => {
+  it('offers missing default lists and suggestions, skipping names in use', () => {
+    const names = suggestedWordListsFor(
+      [MEASURE_WORDS],
+      defaultWordListsFor([]).map((list) => list.name),
+    ).map((list) => list.name);
+    expect(names[0]).toBe('Measure words');
+    expect(names).toContain('Pronouns');
+    expect(names).not.toContain('Nouns');
+  });
+
+  it('compares names ignoring case', () => {
+    const names = suggestedWordListsFor([], ['pronouns']).map((list) => list.name);
+    expect(names).not.toContain('Pronouns');
+  });
+});
 
 describe('defaultListIdsForNewWords', () => {
   it('selects General Vocabulary', () => {

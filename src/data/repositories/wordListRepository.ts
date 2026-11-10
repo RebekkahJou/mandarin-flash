@@ -1,3 +1,4 @@
+import type { DefaultWordListDefinition } from '../../domain/defaultWordLists';
 import type { WordList } from '../../domain/wordList';
 import { WordListKind } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
@@ -45,15 +46,22 @@ export function createWordListRepository(database: SqlDatabase) {
     return toWordList(listRow, entryRows.map(toWordListEntry));
   }
 
-  /** User-created lists are general lists, added after every existing list. */
-  async function createGeneralList(profileId: number, name: string): Promise<number> {
+  /**
+   * Adds a list after every existing one. Lists the user names are general lists; suggested lists
+   * such as Pronouns carry their part of speech.
+   */
+  async function createList(
+    profileId: number,
+    { name, partOfSpeech }: DefaultWordListDefinition,
+  ): Promise<number> {
     const row = await database.getFirst<{ next_sort_order: number }>(
       'SELECT COALESCE(MAX(sort_order), -1) + 1 AS next_sort_order FROM word_lists WHERE profile_id = ?',
       [profileId],
     );
+    const kind = partOfSpeech ? WordListKind.PartOfSpeech : WordListKind.General;
     const result = await database.run(
-      'INSERT INTO word_lists (profile_id, name, kind, part_of_speech, sort_order) VALUES (?, ?, ?, NULL, ?)',
-      [profileId, name, WordListKind.General, row?.next_sort_order ?? 0],
+      'INSERT INTO word_lists (profile_id, name, kind, part_of_speech, sort_order) VALUES (?, ?, ?, ?, ?)',
+      [profileId, name, kind, partOfSpeech ?? null, row?.next_sort_order ?? 0],
     );
     return result.lastInsertRowId;
   }
@@ -157,7 +165,7 @@ export function createWordListRepository(database: SqlDatabase) {
 
   return {
     listSummaries,
-    createGeneralList,
+    createList,
     renameList,
     deleteList,
     setListOrder,

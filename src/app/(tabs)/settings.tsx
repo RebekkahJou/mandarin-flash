@@ -72,6 +72,11 @@ export default function SettingsScreen() {
         onSelect={(value) => updateSetting('defaultPracticeSetSize', value)}
       />
 
+      <SectionTitle title="Languages" />
+      <View style={styles.buttonRow}>
+        <PrimaryButton label="Language packs" onPress={() => router.push('/packs')} isOutlined />
+      </View>
+
       <SectionTitle title="Privacy" />
       <Text style={styles.hint}>
         Everything stays on this phone, in an encrypted database. The app has no internet access.

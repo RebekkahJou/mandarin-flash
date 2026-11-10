@@ -29,6 +29,7 @@ const baseRequest = {
   hasUserEditedMeanings: false,
   definitionCandidates: candidates,
   wordPartsOfSpeech: [PartOfSpeech.Noun, PartOfSpeech.Verb, PartOfSpeech.Adjective],
+  reliablePartsOfSpeech: [PartOfSpeech.Noun, PartOfSpeech.Verb, PartOfSpeech.Adjective],
   listIdsAlreadyContainingWord: new Set<number>(),
 };
 
@@ -68,5 +69,15 @@ describe('planWordAddition', () => {
       selectedLists: [nounList],
     });
     expect(plan[0].warnings[0].kind).toBe(AdditionWarningKind.PartOfSpeechMismatch);
+  });
+
+  it('does not warn about word types the language tags loosely', () => {
+    const plan = planWordAddition({
+      ...baseRequest,
+      wordPartsOfSpeech: [PartOfSpeech.Verb],
+      reliablePartsOfSpeech: [PartOfSpeech.Verb],
+      selectedLists: [nounList],
+    });
+    expect(plan[0].warnings).toEqual([]);
   });
 });

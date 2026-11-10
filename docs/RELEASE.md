@@ -58,3 +58,17 @@ cd android && ./gradlew assembleRelease # sideloading (.apk)
 4. The database is encrypted: run `adb exec-out run-as com.mandarinflash.app cat databases/user.db`
    on a test device. The output must not start with `SQLite format 3`.
 5. docs/THIRD_PARTY.md and the About screen list every bundled data file and font.
+
+## Language packs
+
+Packs other than the built-in Mandarin one are installed from signed `.mfpack` files. The app
+accepts a pack only if a key in `src/services/packs/trustedPackKeys.ts` signed it.
+
+- **Signing key.** `npm run pack:generate-key` created the private key at
+  `~/.mandarin-flash/pack-signing-key.hex` (2026-11-06). It never goes in the repository. Back it
+  up offline: if it is lost, new packs need an app update that trusts a new key; if it leaks,
+  remove its public key from `trustedPackKeys.ts` in the next release.
+- **Signing a pack.** `npm run pack:sign -- <pack.db> <name>.mfpack` validates the pack exactly as
+  the app does, signs it and checks the signature against the trusted keys.
+- **Publishing.** Attach the `.mfpack` to a GitHub release (or any static host). The app opens
+  `.mfpack` files from the browser's download notification ("Open").

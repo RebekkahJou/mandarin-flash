@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { SimplifiedDisplay } from '../../data/repositories/settingsRepository';
 import type { Word } from '../../domain/word';
-import type { ChineseFontFamily } from '../../services/fontRotation';
+import type { CardFontFamily } from '../../services/fontRotation';
 import { useSettings } from '../AppServicesContext';
 import { ENGLISH_FONT_FAMILY, colors, fontSizes, radii, spacing } from '../theme';
 import { ChineseText } from './ChineseText';
@@ -19,7 +19,7 @@ export interface VariantLabels {
 interface FlashcardProps {
   word: Word;
   definitions: readonly string[];
-  font: ChineseFontFamily;
+  font: CardFontFamily;
   variantLabels: VariantLabels;
   isRevealed: boolean;
   onReveal: () => void;

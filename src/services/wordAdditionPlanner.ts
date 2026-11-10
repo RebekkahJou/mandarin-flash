@@ -30,6 +30,8 @@ export interface WordAdditionRequest {
   hasUserEditedMeanings: boolean;
   definitionCandidates: readonly DefinitionCandidate[];
   wordPartsOfSpeech: readonly PartOfSpeech[];
+  /** Word types the language's dictionary tags well enough to warn about. */
+  reliablePartsOfSpeech: readonly PartOfSpeech[];
   listIdsAlreadyContainingWord: ReadonlySet<number>;
 }
 
@@ -48,7 +50,10 @@ export function planWordAddition(request: WordAdditionRequest): PlannedListAddit
         message: `${request.headword} is already in ${list.name}. Add it again?`,
       });
     }
-    const partOfSpeechWarning = list.validateWord(request.wordPartsOfSpeech);
+    const partOfSpeechWarning = list.validateWord(
+      request.wordPartsOfSpeech,
+      request.reliablePartsOfSpeech,
+    );
     if (partOfSpeechWarning) {
       warnings.push({
         kind: AdditionWarningKind.PartOfSpeechMismatch,

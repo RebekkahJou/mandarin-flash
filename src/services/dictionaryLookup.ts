@@ -1,4 +1,4 @@
-import type { DictionaryEntryRow, SentenceRow, SerializedGloss } from '../data/dictionarySchema';
+import type { PackEntryRow, PackSentenceRow } from '../data/packSchema';
 import type { SqlDatabase } from '../data/sqlDatabase';
 import type { PartOfSpeech } from '../domain/partOfSpeech';
 import { PartOfSpeech as PartsOfSpeech, hasPartOfSpeech } from '../domain/partOfSpeech';
@@ -17,26 +17,19 @@ export interface ExampleSentence {
   english: string;
 }
 
-export enum ChineseScript {
-  Traditional = 'traditional',
-  Simplified = 'simplified',
-}
-
-/**
- * How one language reads the bundled Mandarin dictionary. Interim until Phase 3, when each
- * language gets a pack already laid out as headword, variant and reading.
- */
+/** How one language reads a pack that may serve several (e.g. Traditional and Simplified). */
 export interface DictionaryForm {
-  /** The script headwords are written in; the other script becomes the variant. */
-  script: ChineseScript;
-  /** Mainland pronunciations instead of Taiwan ones, where CC-CEDICT gives both. */
-  usesMainlandReadings: boolean;
-  /** Example sentences are stored in Taiwan Traditional; this converts them for display. */
+  /**
+   * Reads the pack through its variants: the variant becomes the headword and the variant
+   * reading the reading (Simplified with mainland pinyin, from the Mandarin pack).
+   */
+  readsVariants: boolean;
+  /** Sentences are stored like headwords; this converts them for display. */
   convertSentence: (text: string) => string;
 }
 
 const MAX_EXAMPLE_SENTENCES = 3;
-const ENTRY_COLUMNS = 'traditional, simplified, pinyin, mainland_pinyin, glosses, rank';
+const ENTRY_COLUMNS = 'headword, variant, reading, variant_reading, glosses, rank';
 
 function partsOfSpeechFromFlags(flags: number): PartOfSpeech[] {
   return Object.values(PartsOfSpeech).filter((partOfSpeech) =>
@@ -44,22 +37,44 @@ function partsOfSpeechFromFlags(flags: number): PartOfSpeech[] {
   );
 }
 
-function definitionCandidatesFrom(serializedGlosses: string): DefinitionCandidate[] {
-  const glosses = JSON.parse(serializedGlosses) as SerializedGloss[];
-  return glosses.map(([text, flags]) => ({ text, partsOfSpeech: partsOfSpeechFromFlags(flags) }));
+function isSerializedGloss(value: unknown): value is [string, number] {
+  return (
+    Array.isArray(value) &&
+    value.length === 2 &&
+    typeof value[0] === 'string' &&
+    Number.isInteger(value[1])
+  );
 }
 
-/** The simplified column is empty when both scripts write the word the same way. */
-function toDictionaryEntry(row: DictionaryEntryRow, form: DictionaryForm): DictionaryEntry {
-  const isSimplified = form.script === ChineseScript.Simplified;
-  const hasSimplifiedForm = row.simplified !== '';
-  const simplifiedForm = hasSimplifiedForm ? row.simplified : row.traditional;
-  const otherScriptForm = isSimplified ? row.traditional : row.simplified;
-  const usesMainlandReading = form.usesMainlandReadings && row.mainland_pinyin !== '';
+/** Packs are validated on install, but a malformed gloss list still only loses its meanings. */
+function definitionCandidatesFrom(serializedGlosses: string): DefinitionCandidate[] {
+  let glosses: unknown;
+  try {
+    glosses = JSON.parse(serializedGlosses);
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(glosses)) return [];
+  return glosses
+    .filter(isSerializedGloss)
+    .map(([text, flags]) => ({ text, partsOfSpeech: partsOfSpeechFromFlags(flags) }));
+}
+
+/** The variant columns are empty when they match the headword's. */
+function toDictionaryEntry(row: PackEntryRow, form: DictionaryForm): DictionaryEntry {
+  const hasVariant = row.variant !== '';
+  if (!form.readsVariants) {
+    return {
+      headword: row.headword,
+      variant: hasVariant ? row.variant : undefined,
+      reading: row.reading,
+      definitionCandidates: definitionCandidatesFrom(row.glosses),
+    };
+  }
   return {
-    headword: isSimplified ? simplifiedForm : row.traditional,
-    variant: hasSimplifiedForm ? otherScriptForm : undefined,
-    reading: usesMainlandReading ? row.mainland_pinyin : row.pinyin,
+    headword: hasVariant ? row.variant : row.headword,
+    variant: hasVariant ? row.headword : undefined,
+    reading: row.variant_reading !== '' ? row.variant_reading : row.reading,
     definitionCandidates: definitionCandidatesFrom(row.glosses),
   };
 }
@@ -83,22 +98,26 @@ export function partsOfSpeechOf(entries: readonly DictionaryEntry[]): PartOfSpee
 }
 
 /**
- * Reads the bundled, read-only dictionary the way one language needs it. Headwords passed in
- * must already be normalized by that language (e.g. converted to Taiwan Traditional).
+ * Reads a language pack the way one language needs it. Headwords passed in must already be
+ * normalized by that language (e.g. converted to Taiwan Traditional).
  */
-export function createDictionaryLookup(dictionaryDatabase: SqlDatabase, form: DictionaryForm) {
-  async function findRows(headword: string): Promise<DictionaryEntryRow[]> {
-    if (form.script === ChineseScript.Traditional) {
-      return dictionaryDatabase.getAll<DictionaryEntryRow>(
-        `SELECT ${ENTRY_COLUMNS} FROM entries WHERE traditional = ? ORDER BY rank`,
+export function createDictionaryLookup(
+  packDatabase: SqlDatabase,
+  form: DictionaryForm,
+  reliablePartsOfSpeech: readonly PartOfSpeech[],
+) {
+  async function findRows(headword: string): Promise<PackEntryRow[]> {
+    if (!form.readsVariants) {
+      return packDatabase.getAll<PackEntryRow>(
+        `SELECT ${ENTRY_COLUMNS} FROM entries WHERE headword = ? ORDER BY rank`,
         [headword],
       );
     }
-    // Two branches so each can use its own index; "simplified <> ''" lets SQLite use the partial one.
-    return dictionaryDatabase.getAll<DictionaryEntryRow>(
-      `SELECT ${ENTRY_COLUMNS} FROM entries WHERE simplified = ? AND simplified <> ''
+    // Two branches so each can use its own index; "variant <> ''" lets SQLite use the partial one.
+    return packDatabase.getAll<PackEntryRow>(
+      `SELECT ${ENTRY_COLUMNS} FROM entries WHERE variant = ? AND variant <> ''
        UNION ALL
-       SELECT ${ENTRY_COLUMNS} FROM entries WHERE traditional = ? AND simplified = ''
+       SELECT ${ENTRY_COLUMNS} FROM entries WHERE headword = ? AND variant = ''
        ORDER BY rank`,
       [headword, headword],
     );
@@ -114,20 +133,22 @@ export function createDictionaryLookup(dictionaryDatabase: SqlDatabase, form: Di
   async function findExampleSentences(
     word: Pick<Word, 'headword' | 'variant'>,
   ): Promise<ExampleSentence[]> {
-    const isSimplified = form.script === ChineseScript.Simplified;
-    const traditionalForm = isSimplified ? (word.variant ?? word.headword) : word.headword;
-    const rows = await dictionaryDatabase.getAll<SentenceRow>(
-      `SELECT traditional, english FROM sentences
-       WHERE instr(traditional, ?) > 0 ORDER BY length(traditional) LIMIT ?`,
-      [traditionalForm, MAX_EXAMPLE_SENTENCES],
+    // Sentences are stored the way the pack writes headwords.
+    const storedForm = form.readsVariants ? (word.variant ?? word.headword) : word.headword;
+    const rows = await packDatabase.getAll<PackSentenceRow>(
+      `SELECT text, english FROM sentences
+       WHERE instr(text, ?) > 0 ORDER BY length(text) LIMIT ?`,
+      [storedForm, MAX_EXAMPLE_SENTENCES],
     );
-    return rows.map((row) => ({
-      text: form.convertSentence(row.traditional),
-      english: row.english,
-    }));
+    return rows.map((row) => ({ text: form.convertSentence(row.text), english: row.english }));
   }
 
-  return { lookUp, findExampleSentences };
+  return {
+    lookUp,
+    findExampleSentences,
+    /** Word types the pack tags well enough to warn when a word doesn't fit a list. */
+    reliablePartsOfSpeech,
+  };
 }
 
 export type DictionaryLookup = ReturnType<typeof createDictionaryLookup>;

@@ -15,7 +15,7 @@ Built with React Native, TypeScript and Expo.
 | `npm run android` | Builds and runs a development build on an emulator or phone |
 | `npm run check` | Runs typecheck, lint and all tests |
 | `npm test` | Runs the tests only |
-| `npm run build:dictionary -- <dir>` | Rebuilds `assets/data/dictionary.db` |
+| `npm run build:mandarin-pack -- <dir>` | Rebuilds the built-in Mandarin pack, `assets/data/mandarin-pack.db` |
 | `npm run build:font-characters` | Rebuilds the character list for the font subsets |
 
 ## Privacy

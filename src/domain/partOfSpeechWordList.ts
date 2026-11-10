@@ -25,8 +25,11 @@ export class PartOfSpeechWordList extends WordList {
 
   override validateWord(
     wordPartsOfSpeech: readonly PartOfSpeech[],
+    reliablePartsOfSpeech: readonly PartOfSpeech[],
   ): WordListValidationWarning | null {
-    // An unknown word (no dictionary data) can't be judged, so it isn't flagged.
+    // A word type the dictionary tags loosely (e.g. adverbs from CC-CEDICT) would cause false
+    // warnings, and an unknown word (no dictionary data) can't be judged; neither is flagged.
+    if (!reliablePartsOfSpeech.includes(this.partOfSpeech)) return null;
     if (wordPartsOfSpeech.length === 0 || wordPartsOfSpeech.includes(this.partOfSpeech)) {
       return null;
     }

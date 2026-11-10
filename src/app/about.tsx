@@ -1,30 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
+import type { PackLicense } from '../domain/packMetadata';
+import { distinctLicensesOf } from '../domain/packMetadata';
+import { LicenseNotices } from '../ui/components/LicenseNotices';
 import { ScreenContainer } from '../ui/components/ScreenContainer';
 import { SectionTitle } from '../ui/components/SectionTitle';
-import { colors, fontSizes, radii, spacing } from '../ui/theme';
+import { useLanguagePacks } from '../ui/LanguagePacksContext';
+import { colors, fontSizes } from '../ui/theme';
 
-interface ThirdPartyNotice {
-  name: string;
-  usage: string;
-  license: string;
-  source: string;
-}
-
-/** Keep in sync with docs/THIRD_PARTY.md. */
-const THIRD_PARTY_NOTICES: readonly ThirdPartyNotice[] = [
-  {
-    name: 'CC-CEDICT',
-    usage: 'Dictionary meanings and pinyin',
-    license: 'Creative Commons Attribution-ShareAlike 4.0',
-    source: 'mdbg.net/chinese/dictionary?page=cc-cedict',
-  },
-  {
-    name: 'Tatoeba',
-    usage: 'Example sentences',
-    license: 'Creative Commons Attribution 2.0 France',
-    source: 'tatoeba.org',
-  },
+/**
+ * Fonts and code inside the app itself. Each language pack lists its own data sources, shown
+ * above these. Keep in sync with docs/THIRD_PARTY.md.
+ */
+const APP_THIRD_PARTY_NOTICES: readonly PackLicense[] = [
   {
     name: 'Noto Serif TC',
     usage: 'Flashcard font (subset)',
@@ -49,48 +37,35 @@ const THIRD_PARTY_NOTICES: readonly ThirdPartyNotice[] = [
     license: 'Apache License 2.0 / MIT',
     source: 'github.com/nk2028/opencc-js',
   },
+  {
+    name: 'noble-ed25519',
+    usage: 'Checking that language packs are genuine',
+    license: 'MIT License',
+    source: 'github.com/paulmillr/noble-ed25519',
+  },
 ];
 
 export default function AboutScreen() {
+  const { packs } = useLanguagePacks();
+  const languageDataLicenses = distinctLicensesOf(packs.map((pack) => pack.metadata));
   return (
     <ScreenContainer isScrollable>
       <SectionTitle title="Mandarin Flash" />
       <Text style={styles.body}>
-        Flashcards for Traditional Chinese as used in Taiwan. All data stays on this device.
+        Flashcards for learning Mandarin in Traditional or Simplified characters. All data stays on
+        this device.
       </Text>
-      <SectionTitle title="Data and fonts" />
-      {THIRD_PARTY_NOTICES.map((notice) => (
-        <View key={notice.name} style={styles.notice}>
-          <Text style={styles.name}>{notice.name}</Text>
-          <Text style={styles.body}>{notice.usage}</Text>
-          <Text style={styles.detail}>{notice.license}</Text>
-          <Text style={styles.detail}>{notice.source}</Text>
-        </View>
-      ))}
+      <SectionTitle title="Language data" />
+      <LicenseNotices licenses={languageDataLicenses} />
+      <SectionTitle title="Fonts and code" />
+      <LicenseNotices licenses={APP_THIRD_PARTY_NOTICES} />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  notice: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radii.medium,
-    padding: spacing.medium,
-    gap: spacing.extraSmall,
-  },
-  name: {
-    fontSize: fontSizes.body,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
   body: {
     fontSize: fontSizes.body,
     color: colors.textPrimary,
-  },
-  detail: {
-    fontSize: fontSizes.small,
-    color: colors.textSecondary,
   },
 });

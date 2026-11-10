@@ -2,7 +2,6 @@ import { LanguageId } from '../../domain/language';
 import { matchesWordSearch } from '../../domain/wordSearch';
 import { makeWord } from '../../domain/__tests__/testWords';
 import { LANGUAGE_BUNDLES, languageBundleFor } from '../languages/languageBundles';
-import { ChineseScript } from '../dictionaryLookup';
 import { mandarinSimplifiedBundle } from '../languages/mandarinSimplifiedBundle';
 import { mandarinTraditionalBundle } from '../languages/mandarinTraditionalBundle';
 
@@ -60,9 +59,8 @@ describe('mandarinSimplifiedBundle', () => {
     expect(simplified.normalizeHeadword('学生')).toBe('学生');
   });
 
-  it('reads the dictionary in Simplified with mainland readings', () => {
-    expect(simplified.dictionaryForm.script).toBe(ChineseScript.Simplified);
-    expect(simplified.dictionaryForm.usesMainlandReadings).toBe(true);
+  it('reads the Mandarin pack through its Simplified variants', () => {
+    expect(simplified.dictionaryForm.readsVariants).toBe(true);
     expect(simplified.dictionaryForm.convertSentence('我們走吧。')).toBe('我们走吧。');
   });
 
