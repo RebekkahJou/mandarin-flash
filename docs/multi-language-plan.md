@@ -4,7 +4,8 @@ Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (20
 tested on the phone; merged into main). **Phase 3 done** (2026-11-10, branch
 lang-compatibility-p3, phone-tested, merged into main; see "Phase 3 wrap-up" below). **Phase 4
 built and phone-tested** (2026-11-10, branch lang-compatibility-p4; see "Phase 4 decisions"
-below). Update this file as work lands or decisions change.
+below). **Next: Phase 4b, health-related word sets** (planned 2026-11-10; see "Health-related
+word sets" below). Update this file as work lands or decisions change.
 
 Phase 4 decisions (2026-11-10):
 - **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency
@@ -350,6 +351,52 @@ conjunction, measure word / counter, particle, numeral, question word); bump the
     reviewed by hand; the Scottish Gaelic beta tester can check that pack.
   - The same curation guideline applies: each set mixes word types.
 
+## Health-related word sets
+
+Optional sets of health vocabulary a learner can add when they need them, such as a short-term
+traveler with diabetes adding only First aid and Diabetes, a woman with a broken leg adding Going
+to the doctor, Injuries and Women's health, or a student adding Cold/Flu because they feel ill
+today. Planned 2026-11-10 at the user's request; part of the MVP.
+
+- **Sets (Mandarin, first draft):** Going to the doctor, Cold/Flu, Diabetes, Women's health,
+  Wound infection, Chronic ailments, Medicine (including forgotten medication, refills and
+  urgent refills during travel delays), First aid, Dental issues (including orthodontics) and
+  Injuries. The user's draft lists are in `src/domain/healthRelatedWordLists.ts` (not yet
+  committed); they become a curated data file under `scripts/data/`, like the starter words.
+- **Where they live:** inside each language pack, like starter vocabulary, so "downloading" a
+  set needs no network. The app stays offline; adding a set copies its words from the pack into
+  the profile. On-screen text says "Add", not "download". A pack with no health sets hides the
+  option. Each language's pack brings its own sets, curated for that language.
+- **Curated meanings:** each entry carries its own English meaning(s), so health words don't
+  depend on the dictionary's first glosses. Phrases that aren't dictionary words ("我的藥吃完了")
+  are allowed.
+- **Pack schema 3:** `word_sets` (set id, title, position) and `word_set_entries` (set id,
+  position, headword, variant, reading, variant reading, meanings, languages). Entries are
+  written like headwords (Traditional, Taiwan readings); Simplified reads them through the
+  variants, like dictionary entries. An entry can be limited to one of the pack's languages,
+  because some health terms differ by region (健保卡 is Taiwan's insurance card; mainland terms
+  differ for some clinics and medicine brands such as 普拿疼). The tables are generic word sets,
+  so later topics (travel, food) can reuse them.
+- **In Settings:** "Add common health-related word sets" in each profile's Settings (each
+  language). It opens a modal listing the sets with checkboxes and word counts. Sets the profile
+  already added are greyed out, marked "Added" and listed at the bottom. Users can come back and
+  add more sets later from the same place.
+- **Target lists:** added words always go into a new default list, **Health-related words**, and
+  into General Vocabulary. The modal also lets the user pick other lists (Focus Vocabulary or
+  their own lists), unticked by default.
+- **Repeats are skipped:** some words appear in more than one set (醫生, 藥局) or are already in
+  the profile (from starter sets, CSV or Add Word). A word is stored once, matched by headword
+  and reading, as with starter sets. The add summary says how many were new and how many the
+  profile already had.
+- **Remembering added sets:** a user-database table records which sets each profile added
+  (profile, pack id, set id, time), so the modal can grey them out even if words are later
+  removed from lists.
+- **Compound splitting:** health words are mostly compounds, so after adding sets the app asks
+  once whether to add their characters, as for starter sets (nouns only).
+- **Word types:** the Health-related words list is a general list, so no word-type warnings.
+  Entries may carry a curated word type; if they do, they could also go into the matching
+  word-type list (see open questions).
+
 ## Splitting multi-character words
 
 When the user adds a noun made of several distinct characters, such as 雜貨店 (zá huò diàn,
@@ -424,6 +471,9 @@ Each phase ships on its own with tests and `npm run check` passing.
 4. **Starter vocabulary and Mandarin extras.** Curated Mandarin sets, set-by-set adding, unlock
    rule, progress display; splitting compounds into characters (`word_parts`); the Components
    list; zhuyin study cards.
+4b. **Health-related word sets (MVP).** Curated Mandarin health sets in the pack (schema 3), the
+   Settings modal for adding sets, the Health-related words default list, skipped repeats,
+   remembering added sets, and the bulk character-splitting question.
 5. **Store-hosted packs (route A):** Play Asset Delivery, then Apple-hosted packs with the iOS
    port.
 6. **Add-ons framework and games.**
@@ -435,4 +485,20 @@ Each phase ships on its own with tests and `npm run check` passing.
 
 ## Open questions
 
-None at the moment. Items marked "verify" above are checks to do during the relevant phase.
+Health-related word sets (to settle before building Phase 4b; recommendations in brackets):
+1. A word the profile already has: skip it entirely, or still add it to the Health-related words
+   list (without changing its meanings)? [Add it to the list, so the list holds every word of
+   the sets the user chose.]
+2. Health-related words list: create it for every new profile (empty until a set is added), or
+   only when the first set is added? [Only when the first set is added, so profiles that never
+   use health sets don't get an empty list; re-create it if it was deleted.]
+3. Should health words with a curated word type also go into Nouns, Verbs and so on, as starter
+   words do? [No: keep them in Health-related words, General Vocabulary and the lists the user
+   picks, so word-type lists don't fill with medical terms.]
+4. Mainland (Simplified) equivalents: write mainland-only entries now, or leave Taiwan-only terms
+   out of Simplified until a mainland reviewer checks them? [Write the obvious ones (医保卡,
+   药店) now and mark uncertain ones for review.]
+5. When a pack update adds words to a set a profile already added, offer "N new words in sets
+   you added"? [Later; not needed for the MVP.]
+
+Items marked "verify" above are checks to do during the relevant phase.
