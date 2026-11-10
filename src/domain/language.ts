@@ -1,5 +1,7 @@
 import type { DefaultWordListDefinition } from './defaultWordLists';
+import { COMPONENTS_LIST_NAME } from './defaultWordLists';
 import { PartOfSpeech } from './partOfSpeech';
+import { WordListKind } from './wordList';
 
 /** BCP 47 tags. Stored in profiles.language_id, so never change an existing value. */
 export enum LanguageId {
@@ -39,6 +41,7 @@ export interface LanguageDefinition {
 
 const MANDARIN_EXTRA_DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [
   { name: 'Measure words', partOfSpeech: PartOfSpeech.MeasureWord },
+  { name: COMPONENTS_LIST_NAME, kind: WordListKind.Components },
 ];
 
 const MANDARIN_TRADITIONAL: LanguageDefinition = {

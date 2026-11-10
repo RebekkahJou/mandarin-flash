@@ -1,7 +1,7 @@
 import type { FrequencyTier } from '../../domain/frequencyTier';
 import { NEW_WORD_TIER, downgradeTier } from '../../domain/frequencyTier';
 import type { Word } from '../../domain/word';
-import { allMeaningsOf } from '../../domain/wordList';
+import { WordListKind, allMeaningsOf } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 import type { WordRow } from './rowMappers';
 import {
@@ -148,11 +148,18 @@ export function createWordRepository(database: SqlDatabase) {
     return newTier;
   }
 
-  /** Any of the profile's words written this way, whatever its reading. */
+  /**
+   * Any of the profile's words written this way, whatever its reading. Component cards (氵, 口
+   * as a radical) are left out: they study the component, not the character.
+   */
   async function findWordByHeadword(profileId: number, headword: string): Promise<Word | null> {
     const row = await database.getFirst<WordRow>(
-      `SELECT ${WORD_COLUMNS} FROM words WHERE profile_id = ? AND headword = ? ORDER BY id LIMIT 1`,
-      [profileId, headword],
+      `SELECT ${WORD_COLUMNS} FROM words
+       WHERE profile_id = ? AND headword = ? AND NOT EXISTS (
+         SELECT 1 FROM word_list_entries JOIN word_lists ON word_lists.id = word_list_entries.word_list_id
+         WHERE word_list_entries.word_id = words.id AND word_lists.kind = ?)
+       ORDER BY id LIMIT 1`,
+      [profileId, headword, WordListKind.Components],
     );
     return row ? toWord(row) : null;
   }

@@ -118,6 +118,20 @@ describe('characterParts', () => {
   });
 });
 
+describe('characterParts and component cards', () => {
+  it('does not count a component card as already having the character', async () => {
+    const { services, addWord } = await setUp();
+    const summaries = await services.wordListRepository.listSummaries(services.profileId);
+    const componentsList = summaries.find(({ list }) => list.name === 'Components');
+    const shopComponent = await addWord('店', 'dian4 zi4 pang2');
+    await services.wordListRepository.addWordToLists(shopComponent.id, [
+      { wordListId: componentsList?.list.id ?? 0 },
+    ]);
+    const parts = await findCharacterParts(services, '書店');
+    expect(partsToAdd(parts).map((part) => part.character)).toEqual(['書', '店']);
+  });
+});
+
 describe('character part text', () => {
   const formatReading = (reading: string) => `[${reading}]`;
 

@@ -12,6 +12,8 @@ export interface WordListEntry {
 export enum WordListKind {
   General = 'general',
   PartOfSpeech = 'part_of_speech',
+  /** Character components (radicals), filled from the language pack. */
+  Components = 'components',
 }
 
 export interface WordListValidationWarning {

@@ -115,6 +115,11 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
   );
   CREATE INDEX word_parts_by_part ON word_parts(part_word_id);
   `,
+  // When a list filled from the language pack (Components) was filled, so emptying it later
+  // doesn't fill it again.
+  `
+  ALTER TABLE word_lists ADD COLUMN filled_at INTEGER;
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {

@@ -1,14 +1,18 @@
 import { PartOfSpeech } from './partOfSpeech';
 import type { WordList } from './wordList';
+import { WordListKind } from './wordList';
 
 export interface DefaultWordListDefinition {
   name: string;
   partOfSpeech?: PartOfSpeech;
+  /** Only for lists of a special kind, such as Components; otherwise derived from partOfSpeech. */
+  kind?: WordListKind.Components;
 }
 
 export const GENERAL_VOCABULARY_LIST_NAME = 'General Vocabulary';
 export const PHRASES_LIST_NAME = 'Phrases';
 export const TIME_WORDS_LIST_NAME = 'Time words';
+export const COMPONENTS_LIST_NAME = 'Components';
 
 /** Created for every new profile, in display order, before the language's own extra lists. */
 export const DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [
@@ -51,6 +55,12 @@ export function suggestedWordListsFor(
   const usedNames = new Set(existingListNames.map((name) => name.toLowerCase()));
   const candidates = [...defaultWordListsFor(languageExtraLists), ...SUGGESTED_WORD_LISTS];
   return candidates.filter((list) => !usedNames.has(list.name.toLowerCase()));
+}
+
+/** The kind of list a definition creates. */
+export function listKindFor(definition: DefaultWordListDefinition): WordListKind {
+  if (definition.kind) return definition.kind;
+  return definition.partOfSpeech ? WordListKind.PartOfSpeech : WordListKind.General;
 }
 
 /** New words go to General Vocabulary unless the user picks other lists. */

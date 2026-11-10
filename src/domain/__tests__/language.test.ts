@@ -8,6 +8,7 @@ import {
   toLanguageId,
 } from '../language';
 import { PartOfSpeech } from '../partOfSpeech';
+import { WordListKind } from '../wordList';
 
 describe('LANGUAGE_DEFINITIONS', () => {
   it('defines every language under its own id', () => {
@@ -23,6 +24,7 @@ describe('LANGUAGE_DEFINITIONS', () => {
     expect(mandarin.scriptStudySets.map((set) => set.id)).toEqual([ScriptStudySetId.Zhuyin]);
     expect(mandarin.extraDefaultWordLists).toEqual([
       { name: 'Measure words', partOfSpeech: PartOfSpeech.MeasureWord },
+      { name: 'Components', kind: WordListKind.Components },
     ]);
   });
 
