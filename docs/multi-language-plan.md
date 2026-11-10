@@ -2,8 +2,49 @@
 
 Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
 tested on the phone; merged into main). **Phase 3 done** (2026-11-10, branch
-lang-compatibility-p3, phone-tested; see "Phase 3 wrap-up" below). **Phase 4 in progress**
-(branch lang-compatibility-p4). Update this file as work lands or decisions change.
+lang-compatibility-p3, phone-tested, merged into main; see "Phase 3 wrap-up" below). **Phase 4
+built** (2026-11-10, branch lang-compatibility-p4; see "Phase 4 decisions" below). Update this
+file as work lands or decisions change.
+
+Phase 4 decisions (2026-11-10):
+- **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency
+  data; entry rank only orders readings) in scripts/data/mandarin-starter-words.tsv, each with a
+  curated word type (a part of speech, "phrase" or "time word"). Every set mixes word types.
+  Words used in only one region (腳踏車, 計程車) were avoided so both Mandarin languages share them.
+  Every word must match a pack entry by headword and reading.
+- **The built-in Mandarin pack is version 2, schema 2** (starter words and components; the
+  dictionary is unchanged). `npm run update:mandarin-curated-data` writes both curated files
+  into it; `npm run build:mandarin-pack` includes them too. Test packs must now be version 3+.
+- **Starter sets are offered on the Lists tab** ("Starter vocabulary" card) rather than during
+  profile setup, because a new profile isn't active yet when it is created. The next set unlocks
+  when 90% of the latest set is at Memory reinforcement or Retention. Words already in the
+  profile count toward the set (`words.starter_set`) and aren't added again. Each new word goes
+  into General Vocabulary and the list for its word type (created if missing), with that
+  list's suggested meanings.
+- **Splitting compounds:** offered for multi-character nouns (by dictionary word type, or the
+  curated type for starter words). Add Word shows checkboxes; CSV import and starter sets ask
+  once. Chosen characters get their first dictionary meanings in General Vocabulary. Every
+  character the profile has is linked in `word_parts` (compound, position, part). Component
+  cards don't count as already having a character.
+- **Components:** 59 curated components in scripts/data/mandarin-components.tsv, shipped in the
+  pack's new `components` table (pack schema 2; schema 1 packs stay valid and have none). Names
+  are stored in Traditional and converted for Simplified; components with a Simplified form
+  (言/讠, 門/门) carry it as a variant. Each component is a word in a Components list (a new list
+  kind, no word-type checks): reading = the name's pinyin, meanings = [meaning, name]. The list
+  is a Mandarin default, filled once from the pack (`word_lists.filled_at`) the first time lists
+  load; older profiles add it from "+". A pack without components leaves it waiting.
+- **Zhuyin study cards:** a "Learn zhuyin" checkbox in Settings when pronunciation is Pinyin or
+  Both. It adds a Zhuyin list (list kind script_study) of the 37 symbols and 5 tone marks, kept
+  in code. Each card's reading is an example character's and its meanings are the sound and
+  "as in 八 bā". Turning it off, or choosing zhuyin-only display, hides the list
+  (`word_lists.is_hidden`) and keeps progress. Hidden lists' words still show in All words.
+- No Unihan data was needed: the Components list only uses the curated names and meanings.
+
+Phase 4 notes for later phases:
+- Starter words use the dictionary's first meanings for their list type, which can include odd
+  ones (不客气: "impolite"). Curated meanings could be added to starter_words later.
+- `word_parts` isn't shown on cards yet ("a card can later show its breakdown").
+- A Simplified font pack still needs Simplified font subsets.
 
 Phase 3 decisions (2026-11-08):
 - **Pack file (.mfpack):** an 8-byte magic ("MFPACK", 0, format version 1), a 64-byte Ed25519
