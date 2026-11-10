@@ -75,6 +75,8 @@ Phase 3 wrap-up (2026-11-10, phone-tested):
   practice and example sentences show Simplified. The test font is a Traditional subset, so
   Simplified-only characters (气, 书) fall back to the system font inside a card. A real Simplified
   font pack needs Simplified subsets.
+- Fixed: the Language packs list repeated a key when an installed pack and the built-in pack had
+  the same id and version.
 
 Phase 3 is done; Phase 4 started on branch lang-compatibility-p4.
 
