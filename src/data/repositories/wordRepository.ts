@@ -4,7 +4,13 @@ import type { Word } from '../../domain/word';
 import { allMeaningsOf } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 import type { WordRow } from './rowMappers';
-import { WORD_COLUMNS, parseDefinitions, serializeDefinitions, toWord } from './rowMappers';
+import {
+  WORD_COLUMNS,
+  parseDefinitions,
+  serializeDefinitions,
+  toFrequencyTier,
+  toWord,
+} from './rowMappers';
 
 export interface NewWord {
   profileId: number;
@@ -12,6 +18,13 @@ export interface NewWord {
   variant?: string;
   reading: string;
   definitions: readonly string[];
+}
+
+/** How many of a profile's words from one starter set sit in one tier. */
+export interface StarterSetTierCount {
+  setNumber: number;
+  frequencyTier: FrequencyTier;
+  wordCount: number;
 }
 
 export interface WordWithListIds {
@@ -135,6 +148,32 @@ export function createWordRepository(database: SqlDatabase) {
     return newTier;
   }
 
+  /** Counts a word toward a starter set, unless it already counts toward an earlier one. */
+  async function assignStarterSet(wordId: number, setNumber: number): Promise<void> {
+    await database.run('UPDATE words SET starter_set = ? WHERE id = ? AND starter_set IS NULL', [
+      setNumber,
+      wordId,
+    ]);
+  }
+
+  async function starterSetTierCounts(profileId: number): Promise<StarterSetTierCount[]> {
+    const rows = await database.getAll<{
+      starter_set: number;
+      frequency_tier: string;
+      word_count: number;
+    }>(
+      `SELECT starter_set, frequency_tier, COUNT(*) AS word_count FROM words
+       WHERE profile_id = ? AND starter_set IS NOT NULL
+       GROUP BY starter_set, frequency_tier`,
+      [profileId],
+    );
+    return rows.map((row) => ({
+      setNumber: row.starter_set,
+      frequencyTier: toFrequencyTier(row.frequency_tier),
+      wordCount: row.word_count,
+    }));
+  }
+
   return {
     findWord,
     getWord,
@@ -143,6 +182,8 @@ export function createWordRepository(database: SqlDatabase) {
     countWords,
     setFrequencyTier,
     markWordLearned,
+    assignStarterSet,
+    starterSetTierCounts,
   };
 }
 

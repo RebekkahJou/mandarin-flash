@@ -99,6 +99,11 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
     installed_at INTEGER NOT NULL
   );
   `,
+  // Which starter set a word came from (or counts toward), for starter set progress.
+  `
+  ALTER TABLE words ADD COLUMN starter_set INTEGER;
+  CREATE INDEX words_by_starter_set ON words(profile_id, starter_set) WHERE starter_set IS NOT NULL;
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {

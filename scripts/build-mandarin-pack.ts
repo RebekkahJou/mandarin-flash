@@ -19,8 +19,18 @@ import type { SerializedGloss } from '../src/data/packSchema';
 import { toTaiwanTraditional } from '../src/services/chineseConverter';
 import type { CedictEntry } from './lib/cedictParser';
 import { isCrossReferenceOnly, parseCedictLine, usefulGlosses } from './lib/cedictParser';
-import { MANDARIN_PACK_METADATA, MANDARIN_PACK_PATH, writePackMetadata } from './lib/mandarinPack';
+import {
+  MANDARIN_PACK_METADATA,
+  MANDARIN_PACK_PATH,
+  MANDARIN_STARTER_WORDS_PATH,
+  writePackMetadata,
+} from './lib/mandarinPack';
 import { tagGloss } from './lib/partOfSpeechTagger';
+import {
+  findStarterWordProblems,
+  parseStarterWordsFile,
+  writeStarterWords,
+} from './lib/starterWordsFile';
 
 /** Short sentences are easiest for learners and keep the bundle small. */
 const MAX_SENTENCE_CHARACTERS = 15;
@@ -113,6 +123,10 @@ function main(): void {
     sentenceCount: insertSentences(database, sourceDirectory),
   }));
   const { entryCount, sentenceCount } = build();
+  const starterWords = parseStarterWordsFile(readFileSync(MANDARIN_STARTER_WORDS_PATH, 'utf8'));
+  // A dictionary update can drop a reading; report it so the word list gets fixed.
+  for (const problem of findStarterWordProblems(database, starterWords)) console.error(problem);
+  writeStarterWords(database, starterWords);
   database.exec('VACUUM');
   database.close();
   const sizeInMegabytes = (statSync(MANDARIN_PACK_PATH).size / BYTES_PER_MEGABYTE).toFixed(1);

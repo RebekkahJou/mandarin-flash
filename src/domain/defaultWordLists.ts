@@ -7,6 +7,8 @@ export interface DefaultWordListDefinition {
 }
 
 export const GENERAL_VOCABULARY_LIST_NAME = 'General Vocabulary';
+export const PHRASES_LIST_NAME = 'Phrases';
+export const TIME_WORDS_LIST_NAME = 'Time words';
 
 /** Created for every new profile, in display order, before the language's own extra lists. */
 export const DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [
@@ -16,7 +18,7 @@ export const DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [
   { name: 'Verbs', partOfSpeech: PartOfSpeech.Verb },
   { name: 'Adjectives', partOfSpeech: PartOfSpeech.Adjective },
   { name: 'Adverbs', partOfSpeech: PartOfSpeech.Adverb },
-  { name: 'Phrases' },
+  { name: PHRASES_LIST_NAME },
 ];
 
 /** Offered when the user creates a list, in every language. */
@@ -27,7 +29,7 @@ export const SUGGESTED_WORD_LISTS: readonly DefaultWordListDefinition[] = [
   { name: 'Numbers', partOfSpeech: PartOfSpeech.Numeral },
   { name: 'Question words', partOfSpeech: PartOfSpeech.QuestionWord },
   { name: 'Particles', partOfSpeech: PartOfSpeech.Particle },
-  { name: 'Time words' },
+  { name: TIME_WORDS_LIST_NAME },
 ];
 
 /** Every list a new profile of this language starts with, in display order. */

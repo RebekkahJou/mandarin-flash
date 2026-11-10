@@ -41,6 +41,11 @@ export function parseDefinitions(serialized: string): string[] {
   return Array.isArray(parsed) ? parsed.filter((item) => typeof item === 'string') : [];
 }
 
+/** An unexpected stored value falls back to the most frequent tier rather than hiding the word. */
+export function toFrequencyTier(storedTier: string): FrequencyTier {
+  return isFrequencyTier(storedTier) ? storedTier : FrequencyTier.HighIncidence;
+}
+
 export function toWord(row: WordRow): Word {
   return {
     id: row.id,
@@ -49,10 +54,7 @@ export function toWord(row: WordRow): Word {
     variant: row.variant ?? undefined,
     reading: row.reading,
     definitions: parseDefinitions(row.definitions),
-    // An unexpected stored value falls back to the most frequent tier rather than hiding the word.
-    frequencyTier: isFrequencyTier(row.frequency_tier)
-      ? row.frequency_tier
-      : FrequencyTier.HighIncidence,
+    frequencyTier: toFrequencyTier(row.frequency_tier),
   };
 }
 

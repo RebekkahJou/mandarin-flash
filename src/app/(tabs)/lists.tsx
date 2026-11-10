@@ -9,8 +9,10 @@ import { ListNameModal } from '../../ui/components/ListNameModal';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
+import { StarterVocabularyCard } from '../../ui/components/StarterVocabularyCard';
 import { WordListRow } from '../../ui/components/WordListRow';
 import { useListsTabImport } from '../../ui/hooks/useListsTabImport';
+import { useStarterVocabulary } from '../../ui/hooks/useStarterVocabulary';
 import { useWordListManagement } from '../../ui/hooks/useWordListManagement';
 import { useWordListSummaries } from '../../ui/hooks/useWordListSummaries';
 import { spacing } from '../../ui/theme';
@@ -24,6 +26,14 @@ export default function WordListsScreen() {
   const lists = summaries.map((summary) => summary.list);
   const csvImport = useListsTabImport(lists, () => void refresh());
   const management = useWordListManagement(lists, refresh);
+  const starterVocabulary = useStarterVocabulary(() => void refresh());
+  const starterCard = starterVocabulary.cardText ? (
+    <StarterVocabularyCard
+      text={starterVocabulary.cardText}
+      isAdding={starterVocabulary.isAdding}
+      onAdd={() => void starterVocabulary.addNextSet()}
+    />
+  ) : null;
   const reorderLabel = management.isReordering ? 'Done' : 'Reorder';
 
   const renderListRow = ({ list, length }: WordListSummary) => (
@@ -57,6 +67,7 @@ export default function WordListsScreen() {
         isFeatured
         onPress={() => router.push('/words')}
       />
+      {starterCard}
       <View style={styles.listsHeader}>
         <View style={styles.listsTitle}>
           <SectionTitle title="Your lists" />
