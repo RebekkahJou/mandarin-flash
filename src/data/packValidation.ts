@@ -1,12 +1,13 @@
 import type { PackMetadata } from '../domain/packMetadata';
 import { PackRejectedError, parsePackMetadata } from '../domain/packMetadata';
 import {
+  COMPONENTS_TABLE_SCHEMA_VERSION,
   MIN_SUPPORTED_PACK_SCHEMA_VERSION,
   PACK_FILE_NAME_PATTERN,
   PACK_FORMAT_NAME,
   PACK_INDEX_NAMES,
   PACK_SCHEMA_VERSION,
-  PACK_TABLE_COLUMNS,
+  packTableColumnsFor,
 } from './packSchema';
 import type { SqlDatabase } from './sqlDatabase';
 
@@ -15,6 +16,8 @@ export const PACK_LIMITS = {
   maxEntries: 600_000,
   maxSentences: 200_000,
   maxStarterWords: 1_000,
+  maxComponents: 1_000,
+  maxComponentFieldLength: 200,
   maxFiles: 20,
   maxHeadwordLength: 100,
   maxReadingLength: 300,
@@ -37,11 +40,11 @@ function reject(message = DAMAGED_PACK_MESSAGE): never {
 }
 
 /** Only the expected tables and indexes; a view or trigger could run unexpected SQL. */
-async function checkSchemaObjects(database: SqlDatabase): Promise<void> {
+async function checkSchemaObjects(database: SqlDatabase, schemaVersion: number): Promise<void> {
   const objects = await database.getAll<{ type: string; name: string }>(
     'SELECT type, name FROM sqlite_master',
   );
-  const expectedTables = new Set(Object.keys(PACK_TABLE_COLUMNS));
+  const expectedTables = new Set(Object.keys(packTableColumnsFor(schemaVersion)));
   const expectedIndexes = new Set(PACK_INDEX_NAMES);
   for (const { type, name } of objects) {
     if (name.startsWith(SQLITE_INTERNAL_PREFIX)) continue;
@@ -52,8 +55,8 @@ async function checkSchemaObjects(database: SqlDatabase): Promise<void> {
   }
 }
 
-async function checkColumns(database: SqlDatabase): Promise<void> {
-  for (const [table, expectedColumns] of Object.entries(PACK_TABLE_COLUMNS)) {
+async function checkColumns(database: SqlDatabase, schemaVersion: number): Promise<void> {
+  for (const [table, expectedColumns] of Object.entries(packTableColumnsFor(schemaVersion))) {
     const rows = await database.getAll<{ name: string }>('SELECT name FROM pragma_table_info(?)', [
       table,
     ]);
@@ -79,20 +82,23 @@ export async function readPackMetadata(database: SqlDatabase): Promise<PackMetad
 }
 
 async function countRows(database: SqlDatabase, table: string): Promise<number> {
-  // Table names come from PACK_TABLE_COLUMNS, never from the pack, so interpolating is safe.
+  // Table names come from packSchema.ts, never from the pack, so interpolating is safe.
   const row = await database.getFirst<{ row_count: number }>(
     `SELECT COUNT(*) AS row_count FROM ${table}`,
   );
   return row?.row_count ?? 0;
 }
 
-async function checkRowCounts(database: SqlDatabase): Promise<void> {
+async function checkRowCounts(database: SqlDatabase, schemaVersion: number): Promise<void> {
   const limits: [table: string, maxRows: number][] = [
     ['entries', PACK_LIMITS.maxEntries],
     ['sentences', PACK_LIMITS.maxSentences],
     ['starter_words', PACK_LIMITS.maxStarterWords],
     ['pack_files', PACK_LIMITS.maxFiles],
   ];
+  if (schemaVersion >= COMPONENTS_TABLE_SCHEMA_VERSION) {
+    limits.push(['components', PACK_LIMITS.maxComponents]);
+  }
   for (const [table, maxRows] of limits) {
     if ((await countRows(database, table)) > maxRows) reject();
   }
@@ -106,7 +112,13 @@ async function hasAnyRow(database: SqlDatabase, sql: string, params: number[]): 
  * Every text value must really be text and within its length limit, and every rank an integer.
  * SQLite doesn't enforce column types, so a pack could otherwise hold blobs or huge strings.
  */
-async function checkValues(database: SqlDatabase): Promise<void> {
+const BAD_COMPONENT_QUERY = `SELECT 1 FROM components WHERE typeof(position) <> 'integer'
+  OR typeof(component) <> 'text' OR typeof(variant) <> 'text' OR typeof(name) <> 'text'
+  OR typeof(reading) <> 'text' OR typeof(meaning) <> 'text'
+  OR length(component) NOT BETWEEN 1 AND ? OR length(variant) > ? OR length(name) > ?
+  OR length(reading) > ? OR length(meaning) > ? LIMIT 1`;
+
+async function checkValues(database: SqlDatabase, schemaVersion: number): Promise<void> {
   const badRowQueries: [sql: string, params: number[]][] = [
     [
       `SELECT 1 FROM entries WHERE typeof(headword) <> 'text' OR typeof(variant) <> 'text'
@@ -140,6 +152,19 @@ async function checkValues(database: SqlDatabase): Promise<void> {
       [PACK_LIMITS.maxFileNameLength, PACK_LIMITS.maxFileBytes],
     ],
   ];
+  if (schemaVersion >= COMPONENTS_TABLE_SCHEMA_VERSION) {
+    const fieldLength = PACK_LIMITS.maxComponentFieldLength;
+    badRowQueries.push([
+      BAD_COMPONENT_QUERY,
+      [
+        PACK_LIMITS.maxHeadwordLength,
+        PACK_LIMITS.maxHeadwordLength,
+        fieldLength,
+        fieldLength,
+        fieldLength,
+      ],
+    ]);
+  }
   for (const [sql, params] of badRowQueries) {
     if (await hasAnyRow(database, sql, params)) reject();
   }
@@ -163,11 +188,12 @@ async function checkIntegrity(database: SqlDatabase): Promise<void> {
 export async function validatePackDatabase(database: SqlDatabase): Promise<PackMetadata> {
   try {
     await checkIntegrity(database);
-    await checkSchemaObjects(database);
-    await checkColumns(database);
+    // The metadata says which schema version's tables to expect.
     const metadata = await readPackMetadata(database);
-    await checkRowCounts(database);
-    await checkValues(database);
+    await checkSchemaObjects(database, metadata.schemaVersion);
+    await checkColumns(database, metadata.schemaVersion);
+    await checkRowCounts(database, metadata.schemaVersion);
+    await checkValues(database, metadata.schemaVersion);
     await checkFileNames(database);
     return metadata;
   } catch (error) {

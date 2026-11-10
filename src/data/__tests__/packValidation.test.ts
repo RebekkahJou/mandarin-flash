@@ -52,6 +52,31 @@ describe('validatePackDatabase', () => {
     await expectRejected(database);
   });
 
+  it('accepts a schema 1 pack, which has no components table', async () => {
+    const database = await createValidPack();
+    await database.exec('DROP TABLE components');
+    await database.run('UPDATE pack_metadata SET value = ? WHERE key = ?', [
+      '1',
+      PackMetadataKey.SchemaVersion,
+    ]);
+    expect((await validatePackDatabase(database)).schemaVersion).toBe(1);
+  });
+
+  it('rejects a schema 2 pack without its components table', async () => {
+    const database = await createValidPack();
+    await database.exec('DROP TABLE components');
+    await expectRejected(database);
+  });
+
+  it('rejects a component stored as bytes', async () => {
+    const database = await createValidPack();
+    await database.run(
+      "INSERT INTO components (position, component, variant, name, reading, meaning) VALUES (1, x'2A', ?, ?, ?, ?)",
+      ['', '三點水', 'san1 dian3 shui3', 'water'],
+    );
+    await expectRejected(database);
+  });
+
   it('asks for an app update when the pack schema is newer', async () => {
     const database = await createValidPack();
     await database.run('UPDATE pack_metadata SET value = ? WHERE key = ?', [

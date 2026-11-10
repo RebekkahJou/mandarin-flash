@@ -173,3 +173,53 @@ describe('dictionaryLookup starter words', () => {
     expect(await lookup.starterSetSizes()).toEqual(new Map());
   });
 });
+
+describe('dictionaryLookup components', () => {
+  async function lookupWithComponents(form: DictionaryForm) {
+    const database = createInMemoryDatabase();
+    await writeTestPack(database);
+    const insert =
+      'INSERT INTO components (position, component, variant, name, reading, meaning) VALUES (?, ?, ?, ?, ?, ?)';
+    await database.run(insert, [2, '言', '讠', '言字旁', 'yan2 zi4 pang2', 'speech']);
+    await database.run(insert, [1, '氵', '', '三點水', 'san1 dian3 shui3', 'water']);
+    return createDictionaryLookup(database, form, RELIABLE);
+  }
+
+  it('lists components in teaching order with their Simplified form as the variant', async () => {
+    const lookup = await lookupWithComponents(TRADITIONAL_TAIWAN);
+    expect(await lookup.components()).toEqual([
+      {
+        component: '氵',
+        variant: undefined,
+        name: '三點水',
+        reading: 'san1 dian3 shui3',
+        meaning: 'water',
+      },
+      {
+        component: '言',
+        variant: '讠',
+        name: '言字旁',
+        reading: 'yan2 zi4 pang2',
+        meaning: 'speech',
+      },
+    ]);
+  });
+
+  it('reads components through their variants for Simplified', async () => {
+    const lookup = await lookupWithComponents({
+      readsVariants: true,
+      convertSentence: (text) => text.replace('點', '点'),
+    });
+    const [water, speech] = await lookup.components();
+    expect(water.name).toBe('三点水');
+    expect(speech).toMatchObject({ component: '讠', variant: '言' });
+  });
+
+  it('has no components in a schema 1 pack', async () => {
+    const database = createInMemoryDatabase();
+    await writeTestPack(database);
+    await database.exec('DROP TABLE components');
+    const lookup = createDictionaryLookup(database, TRADITIONAL_TAIWAN, RELIABLE);
+    expect(await lookup.components()).toEqual([]);
+  });
+});

@@ -1,4 +1,4 @@
-import type { PackEntryRow, PackSentenceRow } from '../data/packSchema';
+import type { PackComponentRow, PackEntryRow, PackSentenceRow } from '../data/packSchema';
 import type { SqlDatabase } from '../data/sqlDatabase';
 import type { PartOfSpeech } from '../domain/partOfSpeech';
 import { PartOfSpeech as PartsOfSpeech, hasPartOfSpeech } from '../domain/partOfSpeech';
@@ -35,6 +35,18 @@ export interface StarterWord {
   position: number;
   wordType: StarterWordType;
   entry: DictionaryEntry;
+}
+
+/** A character component (radical) for the Components list, in the profile's script. */
+export interface CharacterComponent {
+  component: string;
+  /** Present only when it differs from the component. */
+  variant?: string;
+  /** Its usual name, e.g. 三點水. */
+  name: string;
+  /** The name's reading, e.g. "san1 dian3 shui3". */
+  reading: string;
+  meaning: string;
 }
 
 const MAX_EXAMPLE_SENTENCES = 3;
@@ -192,9 +204,33 @@ export function createDictionaryLookup(
     );
   }
 
+  /** The pack's components in teaching order; none for packs older than schema 2. */
+  async function components(): Promise<CharacterComponent[]> {
+    const table = await packDatabase.getFirst(
+      "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'components'",
+    );
+    if (!table) return [];
+    const rows = await packDatabase.getAll<PackComponentRow>(
+      'SELECT component, variant, name, reading, meaning FROM components ORDER BY position',
+    );
+    return rows.map((row) => {
+      const hasVariant = row.variant !== '';
+      const readsVariant = form.readsVariants && hasVariant;
+      const otherForm = readsVariant ? row.component : row.variant;
+      return {
+        component: readsVariant ? row.variant : row.component,
+        variant: hasVariant ? otherForm : undefined,
+        name: form.convertSentence(row.name),
+        reading: row.reading,
+        meaning: row.meaning,
+      };
+    });
+  }
+
   return {
     lookUp,
     findExampleSentences,
+    components,
     starterSetSizes,
     starterWords,
     /** Word types the pack tags well enough to warn when a word doesn't fit a list. */

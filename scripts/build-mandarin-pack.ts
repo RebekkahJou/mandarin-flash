@@ -19,7 +19,9 @@ import type { SerializedGloss } from '../src/data/packSchema';
 import { toTaiwanTraditional } from '../src/services/chineseConverter';
 import type { CedictEntry } from './lib/cedictParser';
 import { isCrossReferenceOnly, parseCedictLine, usefulGlosses } from './lib/cedictParser';
+import { parseComponentsFile, writeComponents } from './lib/componentsFile';
 import {
+  MANDARIN_COMPONENTS_PATH,
   MANDARIN_PACK_METADATA,
   MANDARIN_PACK_PATH,
   MANDARIN_STARTER_WORDS_PATH,
@@ -127,6 +129,7 @@ function main(): void {
   // A dictionary update can drop a reading; report it so the word list gets fixed.
   for (const problem of findStarterWordProblems(database, starterWords)) console.error(problem);
   writeStarterWords(database, starterWords);
+  writeComponents(database, parseComponentsFile(readFileSync(MANDARIN_COMPONENTS_PATH, 'utf8')));
   database.exec('VACUUM');
   database.close();
   const sizeInMegabytes = (statSync(MANDARIN_PACK_PATH).size / BYTES_PER_MEGABYTE).toFixed(1);

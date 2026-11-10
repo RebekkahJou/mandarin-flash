@@ -31,6 +31,14 @@ export const MANDARIN_STARTER_WORDS_PATH = path.join(
   'mandarin-starter-words.tsv',
 );
 
+/** Curated character components for the Components list. */
+export const MANDARIN_COMPONENTS_PATH = path.join(
+  __dirname,
+  '..',
+  'data',
+  'mandarin-components.tsv',
+);
+
 /** One pack serves Traditional and Simplified; Simplified reads it through the variants. */
 export const MANDARIN_PACK_METADATA: PackMetadata = {
   packId: 'mandarin',
