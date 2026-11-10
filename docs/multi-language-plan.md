@@ -1,9 +1,9 @@
 # Multi-language and add-ons plan
 
 Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
-tested on the phone; PR open). **Phase 3 built and mostly phone-tested** (2026-11-08,
-branch lang-compatibility-p3; see "Phase 3 phone test results" and "Next session" below). Next step is Phase 4. Update
-this file as work lands or decisions change.
+tested on the phone; PR open). **Phase 3 done** (2026-11-10,
+branch lang-compatibility-p3; two phone checks pending, see "Phase 3 wrap-up" below). **Phase 4 in
+progress** (branch lang-compatibility-p4). Update this file as work lands or decisions change.
 
 Phase 3 decisions (2026-11-08):
 - **Pack file (.mfpack):** an 8-byte magic ("MFPACK", 0, format version 1), a 64-byte Ed25519
@@ -35,7 +35,9 @@ Phase 3 decisions (2026-11-08):
   Traditional keeps the three bundled Traditional fonts. Pack fonts are assumed to cover their
   language; Android fills any missing glyph from system fonts.
 - **Route B** registers the app for downloaded files (`application/octet-stream`, and `.mfpack`
-  paths); `src/app/+native-intent.tsx` sends an opened file to the install screen. Route C ("Install
+  paths) through `OpenedFileActivity`, a windowless activity added by
+  `plugins/withOpenedFileActivity.ts`. It forwards the file to MainActivity in the app's own task;
+  `src/app/+native-intent.tsx` sends an opened file to the install screen. Route C ("Install
   a pack file" on Settings → Language packs) uses the system file picker. iOS document types wait
   for the iOS port.
 - **Default lists:** every profile also gets Adverbs; Mandarin profiles get Measure words. The
@@ -56,7 +58,7 @@ Phase 3 phone test results (2026-11-08, Pixel 8 Pro, Android 17):
 - Passed, real route B: Chrome downloaded the pack (served from the PC over adb reverse) and
   "Open" → Mandarin Flash showed the install screen and installed it; Done returns to the app.
 - Fixed: About listed CC-CEDICT and Tatoeba twice when an update was installed.
-- **Open issue:** opening a pack from Files by Google starts a second copy of the app's activity
+- **Fixed (2026-11-10, phone retest pending):** opening a pack from Files by Google starts a second copy of the app's activity
   inside the Files task (Android 17 ignores `singleTask` there), so the app shows Practice with a
   "multiple navigation containers" warning instead of the install screen. Chrome's "Open" is
   unaffected. **Decided 2026-11-08: fix it with a small separate activity for opened files**,
@@ -64,13 +66,15 @@ Phase 3 phone test results (2026-11-08, Pixel 8 Pro, Android 17):
   MainActivity (singleTask), so only one copy of the app runs.
 - Not checked: pack fonts on Simplified cards (needs a Simplified profile).
 
-Next session (Phase 3 wrap-up):
-1. Build the opened-files activity (config plugin), rebuild, and retest opening a pack from Files
-   by Google and from Chrome's "Open".
+Phase 3 wrap-up (2026-11-10): the opened-files activity is built and installed on the phone, but
+the phone locked before it could be retested. Still to check on the phone:
+1. Open a pack from Files by Google and from Chrome's "Open": the install screen shows in the app's
+   own task (no second copy in the Files task).
 2. Create a Simplified test profile on the phone (the user agreed) to check pack fonts on
    Simplified cards with Mandarin pack version 2 installed, plus practice, Add Word and example
    sentences in Simplified. Delete the test profile afterwards.
-3. Then mark Phase 3 done and move to Phase 4.
+
+Phase 3 is otherwise done; Phase 4 started on branch lang-compatibility-p4.
 
 Phase 3 notes for later phases:
 - `starter_words` exists in the pack schema but is empty; Phase 4 fills it for Mandarin. Since the
