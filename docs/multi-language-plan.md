@@ -1,7 +1,28 @@
 # Multi-language and add-ons plan
 
-Status: approved 2026-11-05. **Phase 1 done** (2026-11-05); next step is Phase 2. Update this file as
-work lands or decisions change.
+Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 built** (2026-11-06,
+waiting for a test on the phone); next step is Phase 3. Update this file as work lands or decisions
+change.
+
+Phase 2 decisions (2026-11-06):
+- The welcome screen shows on launch only when there are two or more profiles; with one, the app
+  opens straight into it. Settings shows "Switch profile" with several profiles and "Add a new
+  user" with one.
+- First run asks Traditional or Simplified and a name (default "Me").
+- Mandarin (Simplified) follows mainland conventions: mainland readings (垃圾 lā jī) and word forms
+  (软件, with 軟件 as its Traditional variant).
+- Simplified cards use the system font for now; Simplified fonts come with packs, outside the base
+  app's size budget.
+- All words lists every meaning a word has in any of its lists (e.g. 車's verb meaning from Verbs).
+- The word-type tagger no longer defaults small grammatical words to "noun" (應 "should", 可 "but",
+  謝謝 "thanks"), and the dictionary was rebuilt from current CC-CEDICT and Tatoeba exports.
+
+Phase 2 notes for later phases:
+- The bundled dictionary now stores mainland pinyin and has a Simplified index (15.6 MB). Each
+  language reads it through a `DictionaryForm` until Phase 3 lays packs out as headword, variant
+  and reading.
+- Adding a new user returns to the welcome screen so the new person can pick themselves.
+- Profiles can't yet be renamed or deleted.
 
 Phase 1 notes for later phases:
 - The bundled dictionary.db keeps its old column names (traditional, simplified, pinyin);
@@ -10,7 +31,7 @@ Phase 1 notes for later phases:
   accepts the generic `word`/`headword` and `reading` headers.
 - `PhoneticText`, `ChineseText` and the zhuyin conversion are still Mandarin-only components.
 - On-screen text still says "Chinese characters" and "pinyin" in a few places (Add Word, CSV import
-  summary); generalize it when a second language arrives.
+  summary); generalize it when a non-Mandarin language arrives.
 
 ## Goals
 

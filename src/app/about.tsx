@@ -45,7 +45,7 @@ const THIRD_PARTY_NOTICES: readonly ThirdPartyNotice[] = [
   },
   {
     name: 'OpenCC (opencc-js)',
-    usage: 'Simplified to Taiwan Traditional conversion',
+    usage: 'Conversion between Simplified and Traditional characters',
     license: 'Apache License 2.0 / MIT',
     source: 'github.com/nk2028/opencc-js',
   },

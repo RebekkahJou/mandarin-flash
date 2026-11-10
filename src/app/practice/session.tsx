@@ -34,12 +34,14 @@ export default function PracticeSessionScreen() {
   const wordListId = Number(params.listId);
   const setSize = Number(params.setSize) || DEFAULT_PRACTICE_SET_SIZE;
   const practice = usePracticeSession(wordListId, setSize);
-  const { dictionaryLookup } = useAppServices();
+  const { dictionaryLookup, languageBundle } = useAppServices();
+  const { variantName, variantSymbol } = languageBundle.definition;
+  const variantLabels = { name: variantName, symbol: variantSymbol };
   const [sentences, setSentences] = useState<ExampleSentence[] | null>(null);
 
   const showSentences = async () => {
     if (!practice.currentCard) return;
-    setSentences(await dictionaryLookup.findExampleSentences(practice.currentCard.word.headword));
+    setSentences(await dictionaryLookup.findExampleSentences(practice.currentCard.word));
   };
 
   const answerBySwipe = (answer: SwipeAnswer) => {
@@ -82,6 +84,7 @@ export default function PracticeSessionScreen() {
           word={practice.currentCard.word}
           definitions={practice.currentCard.definitions}
           font={practice.font}
+          variantLabels={variantLabels}
           isRevealed={practice.isRevealed}
           onReveal={practice.reveal}
         />

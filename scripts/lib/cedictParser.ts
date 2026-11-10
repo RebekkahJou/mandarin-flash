@@ -3,6 +3,8 @@ export interface CedictEntry {
   simplified: string;
   /** Numbered-tone pinyin, using the Taiwan pronunciation when CC-CEDICT lists one for the whole word. */
   pinyin: string;
+  /** CC-CEDICT's main (mainland) pinyin; differs from pinyin only when a Taiwan one is listed. */
+  mainlandPinyin: string;
   glosses: string[];
   /** CC-CEDICT lists measure words ("CL:") only for nouns. */
   hasClassifier: boolean;
@@ -36,7 +38,14 @@ export function parseCedictLine(line: string): CedictEntry | null {
       glosses.push(rawGloss.replace(LOW_VALUE_LABELS, '').trim());
     }
   }
-  return { traditional, simplified, pinyin: taiwanPinyin ?? pinyin, glosses, hasClassifier };
+  return {
+    traditional,
+    simplified,
+    pinyin: taiwanPinyin ?? pinyin,
+    mainlandPinyin: pinyin,
+    glosses,
+    hasClassifier,
+  };
 }
 
 const NON_DEFINITION_GLOSS =

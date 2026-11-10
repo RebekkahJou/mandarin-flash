@@ -28,8 +28,8 @@ export function useAllWords() {
 
   const matchingWords = useMemo(
     () =>
-      words.filter(({ word }) =>
-        matchesWordSearch(word, searchQuery, languageBundle.readingSearchKey),
+      words.filter(({ word, meanings }) =>
+        matchesWordSearch(word, searchQuery, languageBundle.readingSearchKey, meanings),
       ),
     [words, searchQuery, languageBundle],
   );

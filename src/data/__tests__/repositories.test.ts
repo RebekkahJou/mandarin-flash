@@ -19,7 +19,10 @@ import { createInMemoryDatabase } from '../testing/nodeSqlDatabase';
 async function setUp() {
   const database: SqlDatabase = createInMemoryDatabase();
   await migrateUserDatabase(database);
-  const profile = await createProfileRepository(database).ensureDefaultProfile();
+  const profile = await createProfileRepository(database).createProfile(
+    'Me',
+    LanguageId.MandarinTraditional,
+  );
   const wordRepository = createWordRepository(database);
   const wordListRepository = createWordListRepository(database);
   const summaries = await wordListRepository.listSummaries(profile.id);
@@ -40,9 +43,8 @@ describe('user database', () => {
     await expect(migrateUserDatabase(database)).resolves.toBeUndefined();
   });
 
-  it('creates the six default lists once, with the right list types', async () => {
-    const { database, profile, wordListRepository } = await setUp();
-    await createProfileRepository(database).ensureDefaultProfile();
+  it('creates the six default lists, with the right list types', async () => {
+    const { profile, wordListRepository } = await setUp();
     const summaries = await wordListRepository.listSummaries(profile.id);
     expect(summaries.map((summary) => summary.list.name)).toEqual([
       'General Vocabulary',
@@ -155,6 +157,25 @@ describe('user database', () => {
     expect(words.find(({ word }) => word.id === good.id)?.word.definitions).toEqual(['good']);
   });
 
+  it('lists a word with every meaning its lists show, its own first', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const car = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: '車',
+      reading: 'che1',
+      definitions: ['car', 'vehicle', 'machine'],
+    });
+    await wordListRepository.addWordToLists(car.id, [
+      { wordListId: listIdByName('General Vocabulary') },
+      { wordListId: listIdByName('Verbs'), definitionsOverride: ['to shape with a lathe'] },
+      { wordListId: listIdByName('Nouns'), definitionsOverride: ['car', 'vehicle'] },
+    ]);
+
+    const [listed] = await wordRepository.listWordsWithListIds(profile.id);
+    expect(listed.meanings).toEqual(['car', 'vehicle', 'machine', 'to shape with a lathe']);
+    expect(listed.word.definitions).toEqual(['car', 'vehicle', 'machine']);
+  });
+
   it('sets a word tier directly', async () => {
     const { profile, wordRepository } = await setUp();
     const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
@@ -236,34 +257,81 @@ describe('user database', () => {
 });
 
 describe('profiles', () => {
-  it('creates the default profile in Mandarin (Traditional)', async () => {
-    const { profile } = await setUp();
-    expect(profile).toMatchObject({ name: 'Me', languageId: LanguageId.MandarinTraditional });
-  });
-
   it('stores the language a profile is created with', async () => {
     const database = createInMemoryDatabase();
     await migrateUserDatabase(database);
     const created = await createProfileRepository(database).createProfile(
       'Kid',
-      LanguageId.MandarinTraditional,
+      LanguageId.MandarinSimplified,
     );
     const stored = await database.getFirst<{ language_id: string }>(
       'SELECT language_id FROM profiles WHERE id = ?',
       [created.id],
     );
-    expect(stored?.language_id).toBe(LanguageId.MandarinTraditional);
+    expect(stored?.language_id).toBe(LanguageId.MandarinSimplified);
   });
 
   it('reads an unknown stored language as the default language', async () => {
     const { database, profile } = await setUp();
     await database.run('UPDATE profiles SET language_id = ? WHERE id = ?', ['xx', profile.id]);
-    const reloaded = await createProfileRepository(database).ensureDefaultProfile();
-    expect(reloaded).toEqual({
+    const [reloaded] = await createProfileRepository(database).listProfiles();
+    expect(reloaded).toMatchObject({
       id: profile.id,
       name: 'Me',
       languageId: LanguageId.MandarinTraditional,
     });
+  });
+
+  it('lists profiles most recently used first', async () => {
+    const { database, profile } = await setUp();
+    const profileRepository = createProfileRepository(database);
+    const kid = await profileRepository.createProfile('Kid', LanguageId.MandarinTraditional);
+    await profileRepository.markProfileUsed(profile.id, kid.lastUsedAtMs + 1);
+
+    const listed = await profileRepository.listProfiles();
+    expect(listed.map(({ name }) => name)).toEqual(['Me', 'Kid']);
+    expect(listed[0].lastUsedAtMs).toBe(kid.lastUsedAtMs + 1);
+  });
+
+  it('starts a new profile as never used, after profiles someone has picked', async () => {
+    const { database, profile } = await setUp();
+    const profileRepository = createProfileRepository(database);
+    await profileRepository.markProfileUsed(profile.id, 1000);
+    const kid = await profileRepository.createProfile('Kid', LanguageId.MandarinSimplified);
+    expect(kid.lastUsedAtMs).toBe(0);
+    expect((await profileRepository.listProfiles()).map(({ name }) => name)).toEqual(['Me', 'Kid']);
+  });
+
+  it('renames a profile', async () => {
+    const { database, profile } = await setUp();
+    const profileRepository = createProfileRepository(database);
+    await profileRepository.renameProfile(profile.id, 'Rebekkah');
+    expect((await profileRepository.listProfiles())[0].name).toBe('Rebekkah');
+  });
+
+  it('deletes a profile with its lists and words, leaving other profiles alone', async () => {
+    const { database, profile, wordRepository, wordListRepository } = await setUp();
+    const profileRepository = createProfileRepository(database);
+    const kid = await profileRepository.createProfile('Kid', LanguageId.MandarinTraditional);
+    await wordRepository.findOrCreateWord({ profileId: kid.id, ...walkWord });
+    await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+
+    await profileRepository.deleteProfile(kid.id);
+    expect((await profileRepository.listProfiles()).map(({ id }) => id)).toEqual([profile.id]);
+    expect(await wordRepository.countWords(kid.id)).toBe(0);
+    expect(await wordListRepository.listSummaries(kid.id)).toEqual([]);
+    expect(await wordRepository.countWords(profile.id)).toBe(1);
+  });
+
+  it('gives a new profile its own default lists', async () => {
+    const { database, wordListRepository } = await setUp();
+    const kid = await createProfileRepository(database).createProfile(
+      'Kid',
+      LanguageId.MandarinTraditional,
+    );
+    const summaries = await wordListRepository.listSummaries(kid.id);
+    expect(summaries.map((summary) => summary.list.name)).toContain('General Vocabulary');
+    expect(summaries.every((summary) => summary.list.profileId === kid.id)).toBe(true);
   });
 });
 

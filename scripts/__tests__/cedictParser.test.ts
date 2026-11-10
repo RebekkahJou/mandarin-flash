@@ -12,6 +12,7 @@ describe('parseCedictLine', () => {
       traditional: '學生',
       simplified: '学生',
       pinyin: 'xue2 sheng5',
+      mainlandPinyin: 'xue2 sheng5',
       glosses: ['student', 'schoolchild'],
       hasClassifier: true,
     });
@@ -20,6 +21,7 @@ describe('parseCedictLine', () => {
   it('uses the whole-word Taiwan pronunciation when one is listed', () => {
     const entry = parseCedictLine('下頦 下颏 [xia4 ke1] /chin/Taiwan pr. [xia4hai2]/');
     expect(entry?.pinyin).toBe('xia4 hai2');
+    expect(entry?.mainlandPinyin).toBe('xia4 ke1');
     expect(entry?.glosses).toEqual(['chin']);
   });
 

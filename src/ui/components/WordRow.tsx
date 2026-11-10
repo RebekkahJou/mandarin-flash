@@ -6,10 +6,14 @@ import { ENGLISH_FONT_FAMILY, colors, fontSizes, radii, spacing } from '../theme
 import { ChineseText } from './ChineseText';
 import { PhoneticText } from './PhoneticText';
 
+const COLLAPSED_MEANING_LINES = 2;
+
 interface WordRowProps {
   word: Word;
   /** The meanings to show, which may be a list's own meanings rather than the word's. */
   meanings: readonly string[];
+  /** Shows every meaning in full instead of cutting the text off after a couple of lines. */
+  showsEveryMeaning?: boolean;
   onPress: () => void;
   pressHint: string;
   /** Extra line under the tier, e.g. the lists the word is in. */
@@ -23,6 +27,7 @@ interface WordRowProps {
 export function WordRow({
   word,
   meanings,
+  showsEveryMeaning = false,
   onPress,
   pressHint,
   detail,
@@ -32,6 +37,7 @@ export function WordRow({
   const hasWarning = warning !== undefined;
   const rowStyle = [styles.row, hasWarning && styles.warningRow];
   const meaningsText = meanings.join('; ');
+  const meaningLineLimit = showsEveryMeaning ? undefined : COLLAPSED_MEANING_LINES;
   const tierLabel = FREQUENCY_TIER_LABELS[word.frequencyTier];
   const warningLine = hasWarning ? <Text style={styles.warning}>⚠ {warning}</Text> : null;
   const detailLine =
@@ -62,7 +68,7 @@ export function WordRow({
         <ChineseText text={word.headword} style={styles.character} />
         <View style={styles.text}>
           <PhoneticText numberedPinyin={word.reading} style={styles.phonetic} />
-          <Text style={styles.meanings} numberOfLines={2}>
+          <Text style={styles.meanings} numberOfLines={meaningLineLimit}>
             {meaningsText}
           </Text>
           <Text style={styles.secondary}>{tierLabel}</Text>

@@ -1,34 +1,42 @@
 import { DEFAULT_WORD_LISTS } from '../../domain/defaultWordLists';
 import type { LanguageId } from '../../domain/language';
-import { DEFAULT_LANGUAGE_ID, toLanguageId } from '../../domain/language';
+import { toLanguageId } from '../../domain/language';
+import type { Profile } from '../../domain/profileGroups';
 import { WordListKind } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 
+/** The name first run suggests for the first profile. */
 export const DEFAULT_PROFILE_NAME = 'Me';
-
-export interface Profile {
-  id: number;
-  name: string;
-  languageId: LanguageId;
-}
 
 interface ProfileRow {
   id: number;
   name: string;
   language_id: string;
+  last_used_at: number;
 }
 
+const PROFILE_COLUMNS = 'id, name, language_id, last_used_at';
+
 function toProfile(row: ProfileRow): Profile {
-  return { id: row.id, name: row.name, languageId: toLanguageId(row.language_id) };
+  return {
+    id: row.id,
+    name: row.name,
+    languageId: toLanguageId(row.language_id),
+    lastUsedAtMs: row.last_used_at,
+  };
 }
+
+/** A profile nobody has picked yet, so it doesn't decide which language the welcome screen opens on. */
+const NEVER_USED_AT_MS = 0;
 
 export function createProfileRepository(database: SqlDatabase) {
   async function createProfile(name: string, languageId: LanguageId): Promise<Profile> {
     let profileId = 0;
+    const createdAtMs = Date.now();
     await database.transaction(async () => {
       const result = await database.run(
-        'INSERT INTO profiles (name, language_id, created_at) VALUES (?, ?, ?)',
-        [name, languageId, Date.now()],
+        'INSERT INTO profiles (name, language_id, created_at, last_used_at) VALUES (?, ?, ?, ?)',
+        [name, languageId, createdAtMs, NEVER_USED_AT_MS],
       );
       profileId = result.lastInsertRowId;
       for (const [sortOrder, list] of DEFAULT_WORD_LISTS.entries()) {
@@ -44,20 +52,31 @@ export function createProfileRepository(database: SqlDatabase) {
         );
       }
     });
-    return { id: profileId, name, languageId };
+    return { id: profileId, name, languageId, lastUsedAtMs: NEVER_USED_AT_MS };
   }
 
-  /** Returns the first profile, creating it (with the default lists) on first launch. */
-  async function ensureDefaultProfile(): Promise<Profile> {
-    const existing = await database.getFirst<ProfileRow>(
-      'SELECT id, name, language_id FROM profiles ORDER BY id LIMIT 1',
+  async function listProfiles(): Promise<Profile[]> {
+    const rows = await database.getAll<ProfileRow>(
+      `SELECT ${PROFILE_COLUMNS} FROM profiles ORDER BY last_used_at DESC, id`,
     );
-    return existing
-      ? toProfile(existing)
-      : createProfile(DEFAULT_PROFILE_NAME, DEFAULT_LANGUAGE_ID);
+    return rows.map(toProfile);
   }
 
-  return { createProfile, ensureDefaultProfile };
+  /** Records that the user switched to this profile, so the welcome screen opens on it next. */
+  async function markProfileUsed(profileId: number, usedAtMs: number): Promise<void> {
+    await database.run('UPDATE profiles SET last_used_at = ? WHERE id = ?', [usedAtMs, profileId]);
+  }
+
+  async function renameProfile(profileId: number, name: string): Promise<void> {
+    await database.run('UPDATE profiles SET name = ? WHERE id = ?', [name, profileId]);
+  }
+
+  /** Foreign keys cascade, so the profile's lists, words, settings and history go with it. */
+  async function deleteProfile(profileId: number): Promise<void> {
+    await database.run('DELETE FROM profiles WHERE id = ?', [profileId]);
+  }
+
+  return { createProfile, listProfiles, markProfileUsed, renameProfile, deleteProfile };
 }
 
 export type ProfileRepository = ReturnType<typeof createProfileRepository>;

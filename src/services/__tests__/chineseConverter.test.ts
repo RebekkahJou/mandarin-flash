@@ -1,4 +1,8 @@
-import { containsChineseCharacters, toTaiwanTraditional } from '../chineseConverter';
+import {
+  containsChineseCharacters,
+  toMainlandSimplified,
+  toTaiwanTraditional,
+} from '../chineseConverter';
 
 describe('toTaiwanTraditional', () => {
   it('converts Simplified to Taiwan Traditional, including Taiwan phrasing', () => {
@@ -9,6 +13,18 @@ describe('toTaiwanTraditional', () => {
 
   it('leaves Traditional input unchanged and trims whitespace', () => {
     expect(toTaiwanTraditional(' 學習 ')).toBe('學習');
+  });
+});
+
+describe('toMainlandSimplified', () => {
+  it('converts Traditional to Simplified, including mainland phrasing', () => {
+    expect(toMainlandSimplified('軟體')).toBe('软件');
+    expect(toMainlandSimplified('計程車')).toBe('出租车');
+    expect(toMainlandSimplified('頭髮')).toBe('头发');
+  });
+
+  it('leaves Simplified input unchanged and trims whitespace', () => {
+    expect(toMainlandSimplified(' 学习 ')).toBe('学习');
   });
 });
 

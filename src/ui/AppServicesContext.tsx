@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { openDictionaryDatabase, openUserDatabase } from '../data/openDatabases';
 import type { PracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import { createPracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
+import type { ProfileRepository } from '../data/repositories/profileRepository';
 import { createProfileRepository } from '../data/repositories/profileRepository';
 import type { ReviewEventRepository } from '../data/repositories/reviewEventRepository';
 import { createReviewEventRepository } from '../data/repositories/reviewEventRepository';
@@ -16,13 +17,29 @@ import type { WordListRepository } from '../data/repositories/wordListRepository
 import { createWordListRepository } from '../data/repositories/wordListRepository';
 import type { WordRepository } from '../data/repositories/wordRepository';
 import { createWordRepository } from '../data/repositories/wordRepository';
+import type { SqlDatabase } from '../data/sqlDatabase';
+import type { LanguageId } from '../domain/language';
+import type { Profile } from '../domain/profileGroups';
 import type { DictionaryLookup } from '../services/dictionaryLookup';
 import { createDictionaryLookup } from '../services/dictionaryLookup';
 import type { LanguageAdapter } from '../services/languages/languageAdapter';
 import { languageBundleFor } from '../services/languages/languageBundles';
 
+/** Everything that doesn't depend on which profile is active; opened once at startup. */
+export interface AppCore {
+  profileRepository: ProfileRepository;
+  wordRepository: WordRepository;
+  wordListRepository: WordListRepository;
+  practiceSessionRepository: PracticeSessionRepository;
+  reviewEventRepository: ReviewEventRepository;
+  settingsRepository: SettingsRepository;
+  dictionaryDatabase: SqlDatabase;
+  /** Most recently used first. */
+  initialProfiles: Profile[];
+}
+
+/** What screens and hooks use while a profile is active. */
 export interface AppServices {
-  /** Single profile for the MVP; every query is already scoped by profile for multi-profile later. */
   profileId: number;
   /** Text handling for the profile's language. */
   languageBundle: LanguageAdapter;
@@ -34,34 +51,34 @@ export interface AppServices {
   dictionaryLookup: DictionaryLookup;
 }
 
-async function createAppServices(): Promise<AppServices> {
+async function createAppCore(): Promise<AppCore> {
   const [userDatabase, dictionaryDatabase] = await Promise.all([
     openUserDatabase(),
     openDictionaryDatabase(),
   ]);
-  const profile = await createProfileRepository(userDatabase).ensureDefaultProfile();
+  const profileRepository = createProfileRepository(userDatabase);
   return {
-    profileId: profile.id,
-    languageBundle: languageBundleFor(profile.languageId),
+    profileRepository,
     wordRepository: createWordRepository(userDatabase),
     wordListRepository: createWordListRepository(userDatabase),
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),
     reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
-    dictionaryLookup: createDictionaryLookup(dictionaryDatabase),
+    dictionaryDatabase,
+    initialProfiles: await profileRepository.listProfiles(),
   };
 }
 
-export type AppServicesState =
+export type AppCoreState =
   | { status: 'loading' }
   | { status: 'failed'; errorMessage: string }
-  | { status: 'ready'; services: AppServices };
+  | { status: 'ready'; core: AppCore };
 
-export function useAppServicesLoader(): AppServicesState {
-  const [state, setState] = useState<AppServicesState>({ status: 'loading' });
+export function useAppCoreLoader(): AppCoreState {
+  const [state, setState] = useState<AppCoreState>({ status: 'loading' });
   useEffect(() => {
-    createAppServices()
-      .then((services) => setState({ status: 'ready', services }))
+    createAppCore()
+      .then((core) => setState({ status: 'ready', core }))
       .catch((error: unknown) =>
         setState({
           status: 'failed',
@@ -70,6 +87,27 @@ export function useAppServicesLoader(): AppServicesState {
       );
   }, []);
   return state;
+}
+
+function createProfileServices(
+  core: AppCore,
+  profileId: number,
+  languageId: LanguageId,
+): AppServices {
+  const languageBundle = languageBundleFor(languageId);
+  return {
+    profileId,
+    languageBundle,
+    wordRepository: core.wordRepository,
+    wordListRepository: core.wordListRepository,
+    practiceSessionRepository: core.practiceSessionRepository,
+    reviewEventRepository: core.reviewEventRepository,
+    settingsRepository: core.settingsRepository,
+    dictionaryLookup: createDictionaryLookup(
+      core.dictionaryDatabase,
+      languageBundle.dictionaryForm,
+    ),
+  };
 }
 
 const AppServicesContext = createContext<AppServices | null>(null);
@@ -81,13 +119,27 @@ interface SettingsContextValue {
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
 
-export function AppServicesProvider({
-  services,
-  children,
-}: {
-  services: AppServices;
+interface AppServicesProviderProps {
+  core: AppCore;
+  profileId: number;
+  languageId: LanguageId;
   children: ReactNode;
-}) {
+}
+
+/**
+ * Provides one profile's services and settings to the screens below it. Keyed on id and language
+ * rather than the profile object, so refreshing the profile list doesn't reload everything.
+ */
+export function AppServicesProvider({
+  core,
+  profileId,
+  languageId,
+  children,
+}: AppServicesProviderProps) {
+  const services = useMemo(
+    () => createProfileServices(core, profileId, languageId),
+    [core, profileId, languageId],
+  );
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
 
   useEffect(() => {
@@ -113,12 +165,12 @@ export function AppServicesProvider({
 
 export function useAppServices(): AppServices {
   const services = useContext(AppServicesContext);
-  if (!services) throw new Error('useAppServices must be used inside AppServicesProvider.');
+  if (!services) throw new Error('useAppServices must be used while a profile is active.');
   return services;
 }
 
 export function useSettings(): SettingsContextValue {
   const value = useContext(SettingsContext);
-  if (!value) throw new Error('useSettings must be used inside AppServicesProvider.');
+  if (!value) throw new Error('useSettings must be used while a profile is active.');
   return value;
 }
