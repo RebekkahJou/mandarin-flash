@@ -18,15 +18,22 @@ export interface AppSettings {
   phoneticDisplay: PhoneticDisplay;
   simplifiedDisplay: SimplifiedDisplay;
   defaultPracticeSetSize: PracticeSetSize;
+  /** Show the Zhuyin study list (only while pronunciation isn't shown as zhuyin alone). */
+  learnZhuyin: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
   phoneticDisplay: PhoneticDisplay.Pinyin,
   simplifiedDisplay: SimplifiedDisplay.Hidden,
   defaultPracticeSetSize: DEFAULT_PRACTICE_SET_SIZE,
+  learnZhuyin: false,
 };
 
-function oneOf<T extends string | number>(allowed: readonly T[], value: unknown, fallback: T): T {
+function oneOf<T extends string | number | boolean>(
+  allowed: readonly T[],
+  value: unknown,
+  fallback: T,
+): T {
   return allowed.includes(value as T) ? (value as T) : fallback;
 }
 
@@ -48,6 +55,7 @@ function parseSettings(storedValues: Record<string, unknown>): AppSettings {
       storedValues.defaultPracticeSetSize,
       DEFAULT_SETTINGS.defaultPracticeSetSize,
     ),
+    learnZhuyin: oneOf([true, false], storedValues.learnZhuyin, DEFAULT_SETTINGS.learnZhuyin),
   };
 }
 

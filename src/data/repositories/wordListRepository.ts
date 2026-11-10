@@ -24,7 +24,7 @@ export function createWordListRepository(database: SqlDatabase) {
     const rows = await database.getAll<WordListRow & { entry_count: number }>(
       `SELECT ${WORD_LIST_COLUMNS},
               (SELECT COUNT(*) FROM word_list_entries WHERE word_list_id = word_lists.id) AS entry_count
-       FROM word_lists WHERE profile_id = ? ORDER BY sort_order, id`,
+       FROM word_lists WHERE profile_id = ? AND is_hidden = 0 ORDER BY sort_order, id`,
       [profileId],
     );
     return rows.map((row) => ({ list: toWordList(row), length: row.entry_count }));
@@ -74,6 +74,23 @@ export function createWordListRepository(database: SqlDatabase) {
       [profileId, kind],
     );
     return rows.map((row) => row.id);
+  }
+
+  /** The profile's first list of this kind, shown or hidden; null when it has none. */
+  async function findListIdByKind(profileId: number, kind: WordListKind): Promise<number | null> {
+    const row = await database.getFirst<{ id: number }>(
+      'SELECT id FROM word_lists WHERE profile_id = ? AND kind = ? ORDER BY id LIMIT 1',
+      [profileId, kind],
+    );
+    return row?.id ?? null;
+  }
+
+  /** A hidden list keeps its words and their progress but isn't listed. */
+  async function setListHidden(wordListId: number, isHidden: boolean): Promise<void> {
+    await database.run('UPDATE word_lists SET is_hidden = ? WHERE id = ?', [
+      isHidden ? 1 : 0,
+      wordListId,
+    ]);
   }
 
   async function markListFilled(wordListId: number): Promise<void> {
@@ -185,6 +202,8 @@ export function createWordListRepository(database: SqlDatabase) {
     createList,
     listIdsAwaitingFill,
     markListFilled,
+    findListIdByKind,
+    setListHidden,
     renameList,
     deleteList,
     setListOrder,

@@ -6,7 +6,7 @@ export interface DefaultWordListDefinition {
   name: string;
   partOfSpeech?: PartOfSpeech;
   /** Only for lists of a special kind, such as Components; otherwise derived from partOfSpeech. */
-  kind?: WordListKind.Components;
+  kind?: WordListKind.Components | WordListKind.ScriptStudy;
 }
 
 export const GENERAL_VOCABULARY_LIST_NAME = 'General Vocabulary';

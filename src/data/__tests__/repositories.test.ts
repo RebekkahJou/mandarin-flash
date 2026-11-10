@@ -395,6 +395,14 @@ describe('settings', () => {
     expect(settings.phoneticDisplay).toBe(PhoneticDisplay.Zhuyin);
     expect(settings.defaultPracticeSetSize).toBe(40);
   });
+
+  it('keeps Learn zhuyin off by default and remembers it', async () => {
+    const { database, profile } = await setUp();
+    const settingsRepository = createSettingsRepository(database);
+    expect((await settingsRepository.loadSettings(profile.id)).learnZhuyin).toBe(false);
+    await settingsRepository.saveSetting(profile.id, 'learnZhuyin', true);
+    expect((await settingsRepository.loadSettings(profile.id)).learnZhuyin).toBe(true);
+  });
 });
 
 describe('installed packs', () => {

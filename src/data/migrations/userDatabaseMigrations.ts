@@ -120,6 +120,11 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
   `
   ALTER TABLE word_lists ADD COLUMN filled_at INTEGER;
   `,
+  // Hidden lists (e.g. Zhuyin study cards turned off in Settings) keep their words and progress
+  // but don't show on the Practice and Word lists tabs.
+  `
+  ALTER TABLE word_lists ADD COLUMN is_hidden INTEGER NOT NULL DEFAULT 0;
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {
