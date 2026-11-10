@@ -1,9 +1,9 @@
 # Multi-language and add-ons plan
 
 Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
-tested on the phone; PR open). **Phase 3 done** (2026-11-10,
-branch lang-compatibility-p3; two phone checks pending, see "Phase 3 wrap-up" below). **Phase 4 in
-progress** (branch lang-compatibility-p4). Update this file as work lands or decisions change.
+tested on the phone; merged into main). **Phase 3 done** (2026-11-10, branch
+lang-compatibility-p3, phone-tested; see "Phase 3 wrap-up" below). **Phase 4 in progress**
+(branch lang-compatibility-p4). Update this file as work lands or decisions change.
 
 Phase 3 decisions (2026-11-08):
 - **Pack file (.mfpack):** an 8-byte magic ("MFPACK", 0, format version 1), a 64-byte Ed25519
@@ -66,15 +66,17 @@ Phase 3 phone test results (2026-11-08, Pixel 8 Pro, Android 17):
   MainActivity (singleTask), so only one copy of the app runs.
 - Not checked: pack fonts on Simplified cards (needs a Simplified profile).
 
-Phase 3 wrap-up (2026-11-10): the opened-files activity is built and installed on the phone, but
-the phone locked before it could be retested. Still to check on the phone:
-1. Open a pack from Files by Google and from Chrome's "Open": the install screen shows in the app's
-   own task (no second copy in the Files task).
-2. Create a Simplified test profile on the phone (the user agreed) to check pack fonts on
-   Simplified cards with Mandarin pack version 2 installed, plus practice, Add Word and example
-   sentences in Simplified. Delete the test profile afterwards.
+Phase 3 wrap-up (2026-11-10, phone-tested):
+- Passed: opening a pack from Files by Google ("Open with" → Mandarin Flash) now shows the install
+  screen in the app's own task; only one MainActivity runs and there is no "multiple navigation
+  containers" warning.
+- Passed, Simplified test profile with a Mandarin pack version 3 (with the jf open-huninn font)
+  installed: cards alternate between the system font and the pack font, right after installing;
+  practice and example sentences show Simplified. The test font is a Traditional subset, so
+  Simplified-only characters (气, 书) fall back to the system font inside a card. A real Simplified
+  font pack needs Simplified subsets.
 
-Phase 3 is otherwise done; Phase 4 started on branch lang-compatibility-p4.
+Phase 3 is done; Phase 4 started on branch lang-compatibility-p4.
 
 Phase 3 notes for later phases:
 - `starter_words` exists in the pack schema but is empty; Phase 4 fills it for Mandarin. Since the
