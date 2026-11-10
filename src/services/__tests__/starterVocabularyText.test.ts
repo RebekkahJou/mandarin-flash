@@ -69,11 +69,11 @@ describe('describeStarterSetAddition', () => {
       definitions: ['I'],
       frequencyTier: FrequencyTier.HighIncidence,
     };
-    expect(describeStarterSetAddition({ addedWords: [word], alreadyHadCount: 0 })).toBe(
-      'Added 1 word to General Vocabulary and their word-type lists.',
-    );
-    expect(describeStarterSetAddition({ addedWords: [], alreadyHadCount: 2 })).toContain(
-      '2 words you already had count toward the set.',
-    );
+    expect(
+      describeStarterSetAddition({ addedWords: [word], addedNouns: [], alreadyHadCount: 0 }),
+    ).toBe('Added 1 word to General Vocabulary and their word-type lists.');
+    expect(
+      describeStarterSetAddition({ addedWords: [], addedNouns: [], alreadyHadCount: 2 }),
+    ).toContain('2 words you already had count toward the set.');
   });
 });

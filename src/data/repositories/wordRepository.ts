@@ -148,6 +148,40 @@ export function createWordRepository(database: SqlDatabase) {
     return newTier;
   }
 
+  /** Any of the profile's words written this way, whatever its reading. */
+  async function findWordByHeadword(profileId: number, headword: string): Promise<Word | null> {
+    const row = await database.getFirst<WordRow>(
+      `SELECT ${WORD_COLUMNS} FROM words WHERE profile_id = ? AND headword = ? ORDER BY id LIMIT 1`,
+      [profileId, headword],
+    );
+    return row ? toWord(row) : null;
+  }
+
+  /** Records which words make up a compound; a position already linked is replaced. */
+  async function linkWordParts(
+    compoundWordId: number,
+    parts: readonly { position: number; partWordId: number }[],
+  ): Promise<void> {
+    await database.transaction(async () => {
+      for (const { position, partWordId } of parts) {
+        await database.run(
+          'INSERT OR REPLACE INTO word_parts (compound_word_id, position, part_word_id) VALUES (?, ?, ?)',
+          [compoundWordId, position, partWordId],
+        );
+      }
+    });
+  }
+
+  /** The words a compound is made of, in the order they appear in it. */
+  async function listWordParts(compoundWordId: number): Promise<Word[]> {
+    const rows = await database.getAll<WordRow>(
+      `SELECT ${WORD_COLUMNS} FROM word_parts JOIN words ON words.id = word_parts.part_word_id
+       WHERE word_parts.compound_word_id = ? ORDER BY word_parts.position`,
+      [compoundWordId],
+    );
+    return rows.map(toWord);
+  }
+
   /** Counts a word toward a starter set, unless it already counts toward an earlier one. */
   async function assignStarterSet(wordId: number, setNumber: number): Promise<void> {
     await database.run('UPDATE words SET starter_set = ? WHERE id = ? AND starter_set IS NULL', [
@@ -184,6 +218,9 @@ export function createWordRepository(database: SqlDatabase) {
     markWordLearned,
     assignStarterSet,
     starterSetTierCounts,
+    findWordByHeadword,
+    linkWordParts,
+    listWordParts,
   };
 }
 

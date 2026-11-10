@@ -12,6 +12,7 @@ import {
 } from '../../services/starterVocabularyText';
 import { useAppServices } from '../AppServicesContext';
 import { showMessage } from '../confirm';
+import { useCharacterSplit } from './useCharacterSplit';
 
 /** Starter set progress for the Lists tab, refreshed on focus, and adding the next set. */
 export function useStarterVocabulary(onAdded: () => void) {
@@ -19,6 +20,7 @@ export function useStarterVocabulary(onAdded: () => void) {
     useAppServices();
   const [status, setStatus] = useState<StarterVocabularyStatus | null>(null);
   const [isAdding, setIsAdding] = useState(false);
+  const characterSplit = useCharacterSplit();
   const services = useMemo<StarterVocabularyServices>(
     () => ({
       profileId,
@@ -45,6 +47,7 @@ export function useStarterVocabulary(onAdded: () => void) {
     setIsAdding(true);
     try {
       const addition = await addStarterSet(services, status.next.setNumber);
+      await characterSplit.offerForBulkAdd(addition.addedNouns);
       showMessage('Starter words added', describeStarterSetAddition(addition));
       onAdded();
     } catch (error) {

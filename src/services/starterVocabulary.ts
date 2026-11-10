@@ -2,6 +2,7 @@ import type { WordListRepository } from '../data/repositories/wordListRepository
 import type { WordRepository } from '../data/repositories/wordRepository';
 import type { DefaultWordListDefinition } from '../domain/defaultWordLists';
 import { GENERAL_VOCABULARY_LIST_NAME } from '../domain/defaultWordLists';
+import { PartOfSpeech } from '../domain/partOfSpeech';
 import { PartOfSpeechWordList } from '../domain/partOfSpeechWordList';
 import type { NextStarterSet, StarterSetProgress } from '../domain/starterVocabulary';
 import {
@@ -35,6 +36,8 @@ export interface StarterVocabularyStatus {
 export interface StarterSetAddition {
   /** New words, in teaching order. */
   addedWords: Word[];
+  /** The new words curated as nouns, which can be split into characters. */
+  addedNouns: Word[];
   /** Words the profile already had; they count toward the set but aren't added again. */
   alreadyHadCount: number;
 }
@@ -121,7 +124,11 @@ export async function addStarterSet(
   const { profileId, wordRepository, wordListRepository } = services;
   const starterWords = await services.dictionaryLookup.starterWords(setNumber);
   const { generalList, listForWord } = await listsForStarterWords(services, starterWords);
-  const addition: StarterSetAddition = { addedWords: [], alreadyHadCount: 0 };
+  const addition: StarterSetAddition = {
+    addedWords: [],
+    addedNouns: [],
+    alreadyHadCount: 0,
+  };
   for (const starterWord of starterWords) {
     const { headword, variant, reading, definitionCandidates } = starterWord.entry;
     const existing = await wordRepository.findWord(profileId, headword, reading);
@@ -146,6 +153,7 @@ export async function addStarterSet(
     );
     await wordRepository.assignStarterSet(word.id, setNumber);
     addition.addedWords.push(word);
+    if (starterWord.wordType === PartOfSpeech.Noun) addition.addedNouns.push(word);
   }
   return addition;
 }
