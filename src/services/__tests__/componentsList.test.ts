@@ -6,11 +6,19 @@ import { createProfileRepository } from '../../data/repositories/profileReposito
 import { createWordListRepository } from '../../data/repositories/wordListRepository';
 import { createWordRepository } from '../../data/repositories/wordRepository';
 import { createInMemoryDatabase } from '../../data/testing/nodeSqlDatabase';
+import { writeTestPack } from '../../data/testing/testPack';
+import { COMPONENTS_LIST_NAME } from '../../domain/defaultWordLists';
 import { LanguageId } from '../../domain/language';
 import { WordListKind } from '../../domain/wordList';
 import type { ComponentsListServices } from '../componentsList';
 import { fillPendingComponentLists } from '../componentsList';
-import type { CharacterComponent } from '../dictionaryLookup';
+import type { CharacterComponent, DictionaryForm } from '../dictionaryLookup';
+import { createDictionaryLookup } from '../dictionaryLookup';
+
+const TRADITIONAL_TAIWAN: DictionaryForm = {
+  readsVariants: false,
+  convertSentence: (text) => text,
+};
 
 const WATER: CharacterComponent = {
   component: '氵',
@@ -78,5 +86,37 @@ describe('fillPendingComponentLists', () => {
     const withComponents = { ...services, dictionaryLookup: { components: async () => [WATER] } };
     await fillPendingComponentLists(withComponents);
     expect((await componentsList(services))?.length).toBe(1);
+  });
+
+  it('leaves the list waiting, not marked filled, with a schema 1 pack', async () => {
+    const services = await setUp([]);
+    const pack = createInMemoryDatabase();
+    await writeTestPack(pack);
+    await pack.exec('DROP TABLE components');
+    const schemaOneLookup = createDictionaryLookup(pack, TRADITIONAL_TAIWAN, []);
+    await fillPendingComponentLists({ ...services, dictionaryLookup: schemaOneLookup });
+    const { profileId, wordListRepository } = services;
+    const waiting = await wordListRepository.listIdsAwaitingFill(
+      profileId,
+      WordListKind.Components,
+    );
+    expect(waiting).toHaveLength(1);
+    expect((await componentsList(services))?.length).toBe(0);
+  });
+
+  it('fills a Components list an older profile adds from "+"', async () => {
+    const services = await setUp([WATER, SPEECH]);
+    const { profileId, wordListRepository } = services;
+    const defaultListId = await wordListRepository.findListIdByKind(
+      profileId,
+      WordListKind.Components,
+    );
+    await wordListRepository.deleteList(defaultListId ?? 0);
+    await wordListRepository.createList(profileId, {
+      name: COMPONENTS_LIST_NAME,
+      kind: WordListKind.Components,
+    });
+    await fillPendingComponentLists(services);
+    expect((await componentsList(services))?.length).toBe(2);
   });
 });

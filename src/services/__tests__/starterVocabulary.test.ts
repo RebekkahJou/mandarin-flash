@@ -134,6 +134,34 @@ describe('starter vocabulary', () => {
     expect(status.next).toEqual({ setNumber: 2, isUnlocked: true });
   });
 
+  it('counts Memory reinforcement and Retention words together as learned', async () => {
+    const services = await setUp();
+    const [me, walk, hello] = (await addStarterSet(services, 1)).addedWords;
+    await services.wordRepository.setFrequencyTier(me.id, FrequencyTier.MemoryReinforcement);
+    await services.wordRepository.setFrequencyTier(walk.id, FrequencyTier.Retention);
+    expect((await loadStarterVocabularyStatus(services)).next).toMatchObject({
+      isUnlocked: false,
+    });
+    await services.wordRepository.setFrequencyTier(hello.id, FrequencyTier.MemoryReinforcement);
+    const status = await loadStarterVocabularyStatus(services);
+    expect(status.addedSets).toEqual([{ setNumber: 1, setSize: 3, learnedCount: 3 }]);
+    expect(status.next).toEqual({ setNumber: 2, isUnlocked: true });
+  });
+
+  it('counts a word the profile had already learned toward unlocking', async () => {
+    const services = await setUp();
+    const walk = await services.wordRepository.findOrCreateWord({
+      profileId: services.profileId,
+      headword: '走',
+      reading: 'zou3',
+      definitions: ['to go'],
+    });
+    await services.wordRepository.setFrequencyTier(walk.id, FrequencyTier.Retention);
+    await addStarterSet(services, 1);
+    const status = await loadStarterVocabularyStatus(services);
+    expect(status.addedSets).toEqual([{ setNumber: 1, setSize: 3, learnedCount: 1 }]);
+  });
+
   it('puts time words in a new Time words list and has nothing left after the last set', async () => {
     const services = await setUp();
     await addStarterSet(services, 1);

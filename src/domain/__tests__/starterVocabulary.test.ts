@@ -40,6 +40,17 @@ describe('nextStarterSet', () => {
     expect(nextStarterSet([latest], ALL_SETS)).toEqual({ setNumber: 2, isUnlocked: true });
   });
 
+  it('keeps the next set locked one word short of 90%', () => {
+    const latest = { setNumber: 1, setSize: 50, learnedCount: 44 };
+    expect(nextStarterSet([latest], ALL_SETS)).toMatchObject({ isUnlocked: false });
+  });
+
+  it('rounds the words needed up for sets that are not a multiple of 10', () => {
+    expect(learnedNeededToUnlock(10)).toBe(9);
+    expect(learnedNeededToUnlock(11)).toBe(10);
+    expect(learnedNeededToUnlock(7)).toBe(7);
+  });
+
   it('keeps the next set locked and says how many words are needed', () => {
     const latest = { setNumber: 2, setSize: 50, learnedCount: 38 };
     const earlier = { setNumber: 1, setSize: 50, learnedCount: 50 };
