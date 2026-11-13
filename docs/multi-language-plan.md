@@ -8,16 +8,40 @@ below). **Phases 4b and 4c built** (2026-11-13, branch lang-compatibility-p4b; a
 pass, phone test pending; see "Phase 4b and 4c decisions" below). Update this file as work lands
 or decisions change.
 
+Taiwan reading audit (2026-11-13). Traditional Mandarin always uses Taiwan readings; Simplified
+keeps mainland ones:
+- **Source:** CC-CEDICT gave a Taiwan reading for only 444 of 117,501 entries. Taiwan readings now
+  come from Wiktionary (CC BY-SA 4.0, via kaikki.org): `npm run extract:taiwan-readings` writes
+  scripts/data/mandarin-taiwan-readings.tsv (3,448 words whose Taiwan reading differs), and both
+  pack scripts apply it. The Taiwan reading becomes `reading`; the mainland one `variant_reading`.
+  Wiktionary is credited in the pack's licenses (About screen) and docs/THIRD_PARTY.md.
+- **Rules:** Wiktionary's Taiwan-tagged reading wins; where both regions share a toned reading and
+  CC-CEDICT stored the toneless variant (護士 hù shi), the toned one is used. Listed words are also
+  swapped inside longer entries (不客氣 → bù kè qì), except directional complements (站起來 keeps
+  its neutral 起來). Single characters keep CC-CEDICT's own Taiwan notes (期 qí): Wiktionary's
+  character pages pair readings unreliably (吃 came out as the stutter reading jí).
+- **Result:** 3,290 entries changed (休息 xiū xí, 星期 xīng qí, 研究 yán jiù, 認識 rèn shì, 衣服 yī fú,
+  頭髮 tóu fǎ, 時候 shí hòu, 企 qì, 質 zhí, 菌 jùn). Entries that now share a reading (地方 "place" and
+  "local", both dì fāng) are merged when the app reads them.
+- **Curated data:** 34 starter words (e.g. 喜歡 xǐ huān, 朋友 péng yǒu, 漂亮 piào liàng, 便宜 pián yí,
+  拜拜 bài bai, 突然 tú rán, 還是 hái shì) and 12 health entries (護士, 舒服 in two phrases, 咳嗽, 模糊,
+  生理期, 細菌 jùn, 長期, 行李 twice, 休息, 跌倒) were updated; 一天三次 is written yī (base tone).
+  The remaining neutral tones (謝謝, 東西, 意思, 麻煩, 清楚…) are neutral in Taiwan too. Component
+  names needed no change. Simplified-only health entries keep mainland readings.
+- **Not changed:** words already saved in profiles keep their old reading, so adding 休息 again
+  would store a second copy. Only test profiles exist so far; decide before release whether to
+  update saved words.
+
 Phase 4b and 4c decisions (2026-11-13):
 - **Curated health data** lives in scripts/data/mandarin-word-sets.tsv (set id, topic, title) and
   mandarin-word-set-entries.tsv (set id, headword, reading, word type, meanings separated by "; ",
   languages, curator note). It was converted from the user's draft (`healthRelatedWordLists.ts`,
   no longer in src/): 240 entries in 10 sets. Word types were assigned by hand (sentences and
   symptom phrases such as 喉嚨痛 are "phrase", 飯後 is a time word, 口渴/頭暈 are adjectives).
-- **Readings follow the dictionary** where the dictionary has the word, so a word added with Add
-  Word isn't stored twice: 咳嗽 ke2 sou5 (draft: sou4) and 子宮內膜異位症 mo2 (draft: mo4).
-  `npm run update:mandarin-curated-data` warns about any other mismatch. 跌倒's meaning lost its
-  "(Taiwan reading die1)" note.
+- **Taiwan readings throughout Traditional** (decided 2026-11-13, replacing "readings follow the
+  dictionary"): see "Taiwan reading audit" below. 咳嗽 is ké sòu and 跌倒 dié dǎo again, and
+  the dictionary now agrees. 子宮內膜異位症 keeps mó (Taiwan's reading; the draft's mò was a slip).
+  跌倒's meaning lost its "(Taiwan reading die1)" note.
 - **Regional entries:** Taiwan-only terms (健保卡, 家醫科, 藥局, 普拿疼, 衛生棉, 慢性病連續處方箋, 齒顎矯正,
   維持器, 戽斗, 閃到腰) are limited to zh-Hant; Simplified-only equivalents follow each (医保卡,
   药店, 卫生巾, 保持器; marked "review: mainland term" for 全科, 对乙酰氨基酚, 长期处方, 地包天, 闪了腰).

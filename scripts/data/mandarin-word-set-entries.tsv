@@ -12,7 +12,7 @@ doctor	掛號	gua4 hao4	verb	to register (check in) at a clinic
 doctor	預約	yu4 yue1	noun	appointment; to book		
 doctor	健保卡	jian4 bao3 ka3	noun	national health insurance card	zh-Hant	
 doctor	醫保卡	yi1 bao3 ka3	noun	medical insurance card	zh-Hans	
-doctor	護士	hu4 shi5	noun	nurse		
+doctor	護士	hu4 shi4	noun	nurse		
 doctor	內科	nei4 ke1	noun	internal medicine		
 doctor	耳鼻喉科	er3 bi2 hou2 ke1	noun	ear, nose and throat (ENT)		
 doctor	婦產科	fu4 chan3 ke1	noun	obstetrics and gynecology		
@@ -23,8 +23,8 @@ doctor	牙醫	ya2 yi1	noun	dentist
 doctor	藥局	yao4 ju2	noun	pharmacy	zh-Hant	
 doctor	藥店	yao4 dian4	noun	pharmacy	zh-Hans	
 doctor	症狀	zheng4 zhuang4	noun	symptom		
-doctor	我不舒服	wo3 bu4 shu1 fu5	phrase	I don't feel well		
-doctor	哪裡不舒服	na3 li3 bu4 shu1 fu5	phrase	where does it hurt? / what is wrong?		
+doctor	我不舒服	wo3 bu4 shu1 fu2	phrase	I don't feel well		
+doctor	哪裡不舒服	na3 li3 bu4 shu1 fu2	phrase	where does it hurt? / what is wrong?		
 cold-flu	感冒	gan3 mao4	noun	cold (illness); to catch a cold		
 cold-flu	流感	liu2 gan3	noun	flu		
 cold-flu	新冠肺炎	xin1 guan1 fei4 yan2	noun	COVID-19		
@@ -32,7 +32,7 @@ cold-flu	快篩	kuai4 shai1	noun	rapid test
 cold-flu	發燒	fa1 shao1	verb	to have a fever		
 cold-flu	體溫	ti3 wen1	noun	body temperature		
 cold-flu	發冷	fa1 leng3	verb	to have chills		
-cold-flu	咳嗽	ke2 sou5	verb	cough; to cough		
+cold-flu	咳嗽	ke2 sou4	verb	cough; to cough		
 cold-flu	有痰	you3 tan2	verb	to have phlegm		
 cold-flu	流鼻水	liu2 bi2 shui3	phrase	runny nose		
 cold-flu	鼻塞	bi2 se4	noun	stuffy nose		
@@ -58,16 +58,16 @@ diabetes	疲倦	pi2 juan4	adjective	tired, fatigued
 diabetes	頭暈	tou2 yun1	adjective	dizzy		
 diabetes	發抖	fa1 dou3	verb	to shake, tremble		
 diabetes	冒冷汗	mao4 leng3 han4	verb	to break out in a cold sweat		
-diabetes	視力模糊	shi4 li4 mo2 hu5	phrase	blurred vision		
+diabetes	視力模糊	shi4 li4 mo2 hu2	phrase	blurred vision		
 diabetes	果汁	guo3 zhi1	noun	fruit juice (for low blood sugar)		
 womens-health	月經	yue4 jing1	noun	menstruation, period		
-womens-health	生理期	sheng1 li3 qi1	noun	period (everyday word)		
+womens-health	生理期	sheng1 li3 qi2	noun	period (everyday word)		
 womens-health	經痛	jing1 tong4	noun	menstrual pain, cramps		
 womens-health	衛生棉	wei4 sheng1 mian2	noun	sanitary pad	zh-Hant	
 womens-health	衛生巾	wei4 sheng1 jin1	noun	sanitary pad	zh-Hans	
 womens-health	棉條	mian2 tiao2	noun	tampon		
 womens-health	子宮內膜異位症	zi3 gong1 nei4 mo2 yi4 wei4 zheng4	noun	endometriosis		
-womens-health	細菌性陰道炎	xi4 jun1 xing4 yin1 dao4 yan2	noun	bacterial vaginosis		
+womens-health	細菌性陰道炎	xi4 jun4 xing4 yin1 dao4 yan2	noun	bacterial vaginosis		
 womens-health	黴菌感染	mei2 jun1 gan3 ran3	noun	yeast infection		
 womens-health	分泌物	fen1 mi4 wu4	noun	discharge		
 womens-health	泌尿道感染	mi4 niao4 dao4 gan3 ran3	noun	urinary tract infection (UTI)		
@@ -104,7 +104,7 @@ chronic-ailments	甲狀腺	jia3 zhuang4 xian4	noun	thyroid
 chronic-ailments	膽固醇	dan3 gu4 chun2	noun	cholesterol		
 chronic-ailments	憂鬱症	you1 yu4 zheng4	noun	depression		
 chronic-ailments	焦慮症	jiao1 lu:4 zheng4	noun	anxiety disorder		
-chronic-ailments	長期服藥	chang2 qi1 fu2 yao4	phrase	to take medication long-term		
+chronic-ailments	長期服藥	chang2 qi2 fu2 yao4	phrase	to take medication long-term		
 medicine	藥	yao4	noun	medicine		
 medicine	處方箋	chu3 fang1 jian1	noun	prescription (slip)		
 medicine	處方藥	chu3 fang1 yao4	noun	prescription medicine		
@@ -122,7 +122,7 @@ medicine	藥膏	yao4 gao1	noun	ointment
 medicine	眼藥水	yan3 yao4 shui3	noun	eye drops		
 medicine	劑量	ji4 liang4	noun	dose, dosage		
 medicine	飯後	fan4 hou4	time word	after meals		
-medicine	一天三次	yi4 tian1 san1 ci4	phrase	three times a day		
+medicine	一天三次	yi1 tian1 san1 ci4	phrase	three times a day		
 medicine	副作用	fu4 zuo4 yong4	noun	side effect		
 medicine	藥物交互作用	yao4 wu4 jiao1 hu4 zuo4 yong4	noun	drug interaction		
 medicine	對藥物過敏	dui4 yao4 wu4 guo4 min3	phrase	allergic to a medication		
@@ -143,8 +143,8 @@ medicine	急需	ji2 xu1	verb	to urgently need
 medicine	我急需這個藥	wo3 ji2 xu1 zhe4 ge5 yao4	phrase	I urgently need this medicine		
 medicine	班機延誤	ban1 ji1 yan2 wu4	noun	flight delay		
 medicine	班機取消	ban1 ji1 qu3 xiao1	phrase	flight cancelled		
-medicine	行李遺失	xing2 li5 yi2 shi1	phrase	lost luggage		
-medicine	藥在行李裡	yao4 zai4 xing2 li5 li3	phrase	my medicine is in my luggage		
+medicine	行李遺失	xing2 li3 yi2 shi1	phrase	lost luggage		
+medicine	藥在行李裡	yao4 zai4 xing2 li3 li3	phrase	my medicine is in my luggage		
 medicine	可以先開幾天的藥嗎	ke3 yi3 xian1 kai1 ji3 tian1 de5 yao4 ma5	phrase	can you prescribe a few days' supply for now?		
 medicine	藥名	yao4 ming2	noun	name of the medicine		
 medicine	學名	xue2 ming2	noun	generic name (of a medicine)		
@@ -161,7 +161,7 @@ first-aid	止血	zhi3 xue4	verb	to stop bleeding
 first-aid	冰敷	bing1 fu1	verb	to apply ice		
 first-aid	熱敷	re4 fu1	verb	to apply heat		
 first-aid	冰塊	bing1 kuai4	noun	ice cubes		
-first-aid	休息	xiu1 xi5	verb	to rest		
+first-aid	休息	xiu1 xi2	verb	to rest		
 first-aid	睡覺	shui4 jiao4	verb	to sleep		
 first-aid	多喝水	duo1 he1 shui3	phrase	drink plenty of water		
 first-aid	扭傷	niu3 shang1	noun	sprain		
@@ -209,7 +209,7 @@ dental	戽斗	hu4 dou3	noun	underbite (Taiwan, everyday word)	zh-Hant
 dental	地包天	di4 bao1 tian1	noun	underbite (everyday word)	zh-Hans	review: mainland term
 dental	牙齒不整齊	ya2 chi3 bu4 zheng3 qi2	phrase	crooked teeth		
 injuries	受傷	shou4 shang1	verb	to get hurt, injured		
-injuries	跌倒	die1 dao3	verb	to fall down		
+injuries	跌倒	die2 dao3	verb	to fall down		
 injuries	摔倒	shuai1 dao3	verb	to slip and fall		
 injuries	撞到	zhuang4 dao4	verb	to bump into; to hit		
 injuries	撞傷	zhuang4 shang1	noun	bruise or bump from a knock		

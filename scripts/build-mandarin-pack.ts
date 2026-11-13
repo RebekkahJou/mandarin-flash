@@ -25,6 +25,7 @@ import {
   MANDARIN_PACK_METADATA,
   MANDARIN_PACK_PATH,
   MANDARIN_STARTER_WORDS_PATH,
+  MANDARIN_TAIWAN_READINGS_PATH,
   MANDARIN_WORD_SETS_PATH,
   MANDARIN_WORD_SET_ENTRIES_PATH,
   writePackMetadata,
@@ -35,6 +36,7 @@ import {
   parseStarterWordsFile,
   writeStarterWords,
 } from './lib/starterWordsFile';
+import { applyTaiwanReadings, parseTaiwanReadingsFile } from './lib/taiwanReadingsFile';
 import { parseWordSetEntriesFile, parseWordSetsFile, writeWordSets } from './lib/wordSetsFile';
 
 /** Short sentences are easiest for learners and keep the bundle small. */
@@ -128,6 +130,11 @@ function main(): void {
     sentenceCount: insertSentences(database, sourceDirectory),
   }));
   const { entryCount, sentenceCount } = build();
+  // CC-CEDICT gives mainland readings for most words; Traditional Mandarin uses Taiwan's.
+  const taiwanReadings = parseTaiwanReadingsFile(
+    readFileSync(MANDARIN_TAIWAN_READINGS_PATH, 'utf8'),
+  );
+  applyTaiwanReadings(database, taiwanReadings);
   const starterWords = parseStarterWordsFile(readFileSync(MANDARIN_STARTER_WORDS_PATH, 'utf8'));
   // A dictionary update can drop a reading; report it so the word list gets fixed.
   for (const problem of findStarterWordProblems(database, starterWords)) console.error(problem);

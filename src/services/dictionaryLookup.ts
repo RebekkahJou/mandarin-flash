@@ -160,6 +160,30 @@ async function hasTable(database: SqlDatabase, table: string): Promise<boolean> 
   return row !== null;
 }
 
+/**
+ * One entry per reading, meanings in rank order. Taiwan readings can give two of a headword's
+ * entries the same reading (地方 "place" and "local" are both dì fāng in Taiwan).
+ */
+export function mergeSameReadings(entries: readonly DictionaryEntry[]): DictionaryEntry[] {
+  const byReading = new Map<string, DictionaryEntry>();
+  for (const entry of entries) {
+    const existing = byReading.get(entry.reading);
+    if (!existing) {
+      byReading.set(entry.reading, {
+        ...entry,
+        definitionCandidates: [...entry.definitionCandidates],
+      });
+      continue;
+    }
+    const knownTexts = new Set(existing.definitionCandidates.map((candidate) => candidate.text));
+    const newCandidates = entry.definitionCandidates.filter(
+      (candidate) => !knownTexts.has(candidate.text),
+    );
+    existing.definitionCandidates.push(...newCandidates);
+  }
+  return [...byReading.values()];
+}
+
 /** The entry with this normalized reading (numbered pinyin for Mandarin), if the dictionary has it. */
 export function findReading(
   entries: readonly DictionaryEntry[],
@@ -207,7 +231,7 @@ export function createDictionaryLookup(
   /** All readings of the word, most common first. */
   async function lookUp(headword: string): Promise<DictionaryEntry[]> {
     const rows = await findRows(headword);
-    return rows.map((row) => toDictionaryEntry(row, form));
+    return mergeSameReadings(rows.map((row) => toDictionaryEntry(row, form)));
   }
 
   /** Shortest example sentences containing the word, shown in the language's script. */
@@ -234,8 +258,9 @@ export function createDictionaryLookup(
   }
 
   /**
-   * A starter set in teaching order. Words are matched to their dictionary entry by headword and
-   * reading; a word the dictionary lacks, or of a type this app doesn't know, is skipped.
+   * A starter set in teaching order. Words are matched to their dictionary entries by headword
+   * and reading (several entries with that reading are merged); a word the dictionary lacks, or
+   * of a type this app doesn't know, is skipped.
    */
   async function starterWords(setNumber: number): Promise<StarterWord[]> {
     const rows = await packDatabase.getAll<StarterWordRow>(
@@ -243,21 +268,22 @@ export function createDictionaryLookup(
        FROM starter_words JOIN entries
          ON entries.headword = starter_words.headword AND entries.reading = starter_words.reading
        WHERE starter_words.set_number = ?
-       GROUP BY starter_words.position
-       ORDER BY starter_words.position`,
+       ORDER BY starter_words.position, entries.rank`,
       [setNumber],
     );
-    return rows.flatMap((row) =>
-      isStarterWordType(row.part_of_speech)
-        ? [
-            {
-              position: row.position,
-              wordType: row.part_of_speech,
-              entry: toDictionaryEntry(row, form),
-            },
-          ]
-        : [],
-    );
+    const wordsByPosition = new Map<number, StarterWord>();
+    for (const row of rows) {
+      if (!isStarterWordType(row.part_of_speech)) continue;
+      const entry = toDictionaryEntry(row, form);
+      const existing = wordsByPosition.get(row.position);
+      const merged = existing ? mergeSameReadings([existing.entry, entry])[0] : entry;
+      wordsByPosition.set(row.position, {
+        position: row.position,
+        wordType: row.part_of_speech,
+        entry: merged ?? entry,
+      });
+    }
+    return [...wordsByPosition.values()];
   }
 
   /** The pack's components in teaching order; none for packs older than schema 2. */

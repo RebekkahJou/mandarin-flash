@@ -48,6 +48,14 @@ export const MANDARIN_WORD_SET_ENTRIES_PATH = path.join(
   'mandarin-word-set-entries.tsv',
 );
 
+/** Taiwan readings from Wiktionary, applied over CC-CEDICT's mainland ones. */
+export const MANDARIN_TAIWAN_READINGS_PATH = path.join(
+  __dirname,
+  '..',
+  'data',
+  'mandarin-taiwan-readings.tsv',
+);
+
 /** One pack serves Traditional and Simplified; Simplified reads it through the variants. */
 export const MANDARIN_PACK_METADATA: PackMetadata = {
   packId: 'mandarin',
@@ -63,6 +71,12 @@ export const MANDARIN_PACK_METADATA: PackMetadata = {
       usage: 'Dictionary meanings and pinyin',
       license: 'Creative Commons Attribution-ShareAlike 4.0',
       source: 'mdbg.net/chinese/dictionary?page=cc-cedict',
+    },
+    {
+      name: 'Wiktionary',
+      usage: 'Taiwan pronunciations',
+      license: 'Creative Commons Attribution-ShareAlike 4.0',
+      source: 'en.wiktionary.org (extracted by kaikki.org)',
     },
     {
       name: 'Tatoeba',
