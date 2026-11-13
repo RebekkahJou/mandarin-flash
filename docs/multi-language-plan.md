@@ -41,6 +41,14 @@ Phase 4b and 4c decisions (2026-11-13):
   learning level. A note says how many words the options hide. A word only in hidden lists says
   "In hidden list: Zhuyin" (fixes the Phase 4 follow-up finding).
 
+Word counts and the "0 words" check (2026-11-13, Pixel 8 Pro, profiles TEMP1-2, deleted after):
+- The Lists tab's All words row and All words count only the words the view options show; All
+  words notes hidden ones ("0 words (+59 hidden words)" with Show components off). Passed.
+- A new profile's All words row shows 0 only while Components fills, then 59 by itself, so the
+  Phase 4 follow-up finding no longer needs a fix. The health section showed after deleting a
+  stale built-in pack copy (the development-only issue noted under Phase 4).
+- The health modal lists the 10 sets with counts and offers Focus Vocabulary. Passed (visual).
+
 Phase 4b and 4c phone test (temporary profiles; reload so the version 3 pack is copied):
 1. Traditional profile → Settings → "Add common health-related word sets": 10 sets with counts
    (Going to the doctor 23 words). Tick Cold/Flu and Diabetes, tick Focus Vocabulary, add: the
@@ -58,7 +66,8 @@ Phase 4b and 4c phone test (temporary profiles; reload so the version 3 pack is 
 7. Components list → "Hide list" → "Keep levels": the list leaves the Lists tab; "+" offers
    Components and brings back the same 59 cards with their levels.
 8. All words → Options: untick Show components and Show learning level; components disappear,
-   the note counts them, labels are gone; leave and come back: the options are kept.
+   the note reads "N words (+59 hidden words)", labels are gone; the Lists tab's All words row
+   shows N; leave and come back: the options are kept.
 
 Phase 4 decisions (2026-11-10):
 - **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency
@@ -131,7 +140,7 @@ Phase 4 follow-up phone test results (2026-11-13, Pixel 8 Pro, profiles TEMP1-3,
 - Found: a hidden list's words show "Not in any list" in All words (ㄈ while Zhuyin was hidden).
   (Fixed in Phase 4c: they say "In hidden list: Zhuyin".)
 - Found: right after a new profile is opened, All words shows 0 words until the tab is revisited,
-  although the Components list has already filled.
+  although the Components list has already filled. (2026-11-13: no longer happens; see below.)
 
 Phase 4 notes for later phases:
 - Starter words use the dictionary's first meanings for their list type, which can include odd
