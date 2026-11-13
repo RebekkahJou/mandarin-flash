@@ -12,7 +12,7 @@ import { PartOfSpeech } from '../../src/domain/partOfSpeech';
  * (bump BUILT_IN_PACK_COPY_VERSION in src/data/openDatabases.ts too), and an imported Mandarin pack only
  * replaces the built-in one when its version is higher.
  */
-export const MANDARIN_PACK_VERSION = 3;
+export const MANDARIN_PACK_VERSION = 4;
 
 export const MANDARIN_PACK_PATH = path.join(
   __dirname,

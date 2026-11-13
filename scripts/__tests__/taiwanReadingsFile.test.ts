@@ -17,6 +17,8 @@ const PAIRS = [
   { headword: '地方', mainlandReading: 'di4 fang5', taiwanReading: 'di4 fang1' },
   { headword: '垃圾', mainlandReading: 'la1 ji1', taiwanReading: 'le4 se4' },
   { headword: '起來', mainlandReading: 'qi3 lai5', taiwanReading: 'qi3 lai2' },
+  { headword: '值得', mainlandReading: 'zhi2 de5', taiwanReading: 'zhi2 de2' },
+  { headword: '不值得', mainlandReading: 'bu4 zhi2 de2', taiwanReading: 'bu4 zhi2 de5' },
 ];
 const INDEX = indexTaiwanReadings(PAIRS);
 
@@ -37,6 +39,11 @@ describe('withTaiwanReadings', () => {
   it('swaps a listed word, or listed words inside a longer one', () => {
     expect(withTaiwanReadings('舒服', 'shu1 fu5', INDEX)).toBe('shu1 fu2');
     expect(withTaiwanReadings('我不舒服', 'wo3 bu4 shu1 fu5', INDEX)).toBe('wo3 bu4 shu1 fu2');
+  });
+
+  it('follows a listed word over the words inside it, and keeps Taiwan readings', () => {
+    expect(withTaiwanReadings('不值得', 'bu4 zhi2 de5', INDEX)).toBe('bu4 zhi2 de5');
+    expect(withTaiwanReadings('不值得', 'bu4 zhi2 de2', INDEX)).toBe('bu4 zhi2 de5');
   });
 
   it('leaves directional complements after a verb neutral', () => {

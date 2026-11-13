@@ -20,7 +20,7 @@ keeps mainland ones:
   swapped inside longer entries (不客氣 → bù kè qì), except directional complements (站起來 keeps
   its neutral 起來). Single characters keep CC-CEDICT's own Taiwan notes (期 qí): Wiktionary's
   character pages pair readings unreliably (吃 came out as the stutter reading jí).
-- **Result:** 3,290 entries changed (休息 xiū xí, 星期 xīng qí, 研究 yán jiù, 認識 rèn shì, 衣服 yī fú,
+- **Result:** 3,266 entries changed (休息 xiū xí, 星期 xīng qí, 研究 yán jiù, 認識 rèn shì, 衣服 yī fú,
   頭髮 tóu fǎ, 時候 shí hòu, 企 qì, 質 zhí, 菌 jùn). Entries that now share a reading (地方 "place" and
   "local", both dì fāng) are merged when the app reads them.
 - **Curated data:** 34 starter words (e.g. 喜歡 xǐ huān, 朋友 péng yǒu, 漂亮 piào liàng, 便宜 pián yí,
@@ -35,6 +35,18 @@ keeps mainland ones:
   If the profile already has the Taiwan-read copy, the two merge: that copy keeps its meanings and
   learning level and gains the other's lists, practice history, character links and starter set.
   Bump `MANDARIN_PACK_VERSION` whenever readings change, or saved words won't be updated again.
+- **Whole words win:** a word Wiktionary lists itself only follows its own readings, never the
+  words inside it (亮堂堂 liàng táng tang; 不值得 keeps bù zhí de), so applying the file twice
+  changes nothing. **The Mandarin pack is now version 4** (built-in copy version 9); test packs
+  must be version 5+.
+
+Taiwan readings phone test (2026-11-13, Pixel 8 Pro, fresh debug build, profile TEMP3 deleted after):
+- The phone's pack matches the repo's version 4 pack (all 117,501 entries).
+- "Me": the update ran and changed none of its 56 words (none had a replaced mainland reading).
+- TEMP3: 休息 xiu1 xi5 and 地方 di4 fang5, imported by CSV, became xiū xí and dì fāng after the
+  update ran again (forced with a temporary key change, since reverted).
+- Adding the Cold/Flu set added 19 words; 咳嗽 shows ké sòu in General Vocabulary, Verbs and
+  Health-related words. A hidden Zhuyin card reads "In hidden list: Zhuyin".
 
 Phase 4b and 4c decisions (2026-11-13):
 - **Curated health data** lives in scripts/data/mandarin-word-sets.tsv (set id, topic, title) and

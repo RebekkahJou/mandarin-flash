@@ -88,7 +88,7 @@ export function applyTaiwanReadings(
 }
 
 /**
- * A reading with Taiwan readings swapped in: the whole word when it is listed, else each listed
+ * A reading with Taiwan readings swapped in: the whole word's when it is listed, else each listed
  * word inside it (舒服 in 我不舒服), longest first. Readings must have one syllable per
  * character, otherwise the reading is returned unchanged.
  */
@@ -97,8 +97,10 @@ export function withTaiwanReadings(
   reading: string,
   index: TaiwanReadingIndex,
 ): string {
-  const whole = index.get(headword)?.get(reading);
-  if (whole) return whole;
+  // A word with its own listed readings only follows them (亮堂堂 is liàng táng tang in Taiwan,
+  // whatever 堂堂 alone is); one already read the Taiwan way stays as it is.
+  const listedReadings = index.get(headword);
+  if (listedReadings) return listedReadings.get(reading) ?? reading;
   const characters = Array.from(headword);
   const syllables = reading.split(' ');
   if (characters.length !== syllables.length) return reading;
