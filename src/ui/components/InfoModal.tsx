@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { colors, radii, spacing } from '../theme';
 import { PrimaryButton } from './PrimaryButton';
@@ -25,7 +25,14 @@ export function InfoModal({
     <Modal visible={isVisible} transparent animationType="fade" onRequestClose={onDismiss}>
       <Pressable style={styles.overlay} onPress={onDismiss} accessibilityLabel="Close">
         <Pressable style={styles.card} onPress={() => undefined}>
-          {children}
+          {/* Long content (e.g. many lists) scrolls, so the close button stays inside the card. */}
+          <ScrollView
+            style={styles.content}
+            contentContainerStyle={styles.contentInner}
+            keyboardShouldPersistTaps="handled"
+          >
+            {children}
+          </ScrollView>
           <View style={styles.footer}>
             <PrimaryButton label={closeLabel} onPress={onClose} isOutlined />
           </View>
@@ -48,6 +55,12 @@ const styles = StyleSheet.create({
     padding: spacing.large,
     gap: spacing.medium,
     maxHeight: '85%',
+  },
+  content: {
+    flexShrink: 1,
+  },
+  contentInner: {
+    gap: spacing.medium,
   },
   footer: {
     flexDirection: 'row',

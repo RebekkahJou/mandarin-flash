@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
 
 import { defaultListIdsForNewWords } from '../../domain/defaultWordLists';
+import type { PartOfSpeech } from '../../domain/partOfSpeech';
+import type { Word } from '../../domain/word';
 import type { WordList } from '../../domain/wordList';
 import { firstMeanings } from '../../domain/wordList';
 import type { DictionaryEntry } from '../../services/dictionaryLookup';
@@ -9,9 +11,10 @@ import { planWordAddition } from '../../services/wordAdditionPlanner';
 import { useAppServices } from '../AppServicesContext';
 import { confirmPlannedAdditions, showMessage } from '../confirm';
 
-export enum SaveWordResult {
-  Saved = 'saved',
-  NotSaved = 'not_saved',
+export interface SavedWord {
+  word: Word;
+  /** Every word type of the chosen reading, from the dictionary; empty when unknown. */
+  partsOfSpeech: PartOfSpeech[];
 }
 
 /** State and save logic for the Add Word screen. */
@@ -63,28 +66,30 @@ export function useAddWord(lists: readonly WordList[]) {
     setExplicitListIds(next);
   };
 
-  const save = async (): Promise<SaveWordResult> => {
+  /** The saved word, or null when the user cancelled or details are missing. */
+  const save = async (): Promise<SavedWord | null> => {
     const reading = selectedReading?.reading ?? languageBundle.normalizeReading(manualPinyin);
     if (!languageBundle.containsLanguageScript(headword) || meanings.length === 0 || !reading) {
       showMessage('Missing details', 'Enter Chinese characters, pinyin and at least one meaning.');
-      return SaveWordResult.NotSaved;
+      return null;
     }
     const selectedLists = lists.filter((list) => selectedListIds.has(list.id));
     const listIdsAlreadyContainingWord = new Set(
       await wordListRepository.listIdsContainingHeadword([...selectedListIds], headword),
     );
+    const wordPartsOfSpeech = partsOfSpeechOf(selectedReading ? [selectedReading] : []);
     const plan = planWordAddition({
       headword,
       selectedLists,
       formMeanings: meanings,
       hasUserEditedMeanings,
       definitionCandidates: selectedReading?.definitionCandidates ?? [],
-      wordPartsOfSpeech: partsOfSpeechOf(selectedReading ? [selectedReading] : []),
+      wordPartsOfSpeech,
       reliablePartsOfSpeech: dictionaryLookup.reliablePartsOfSpeech,
       listIdsAlreadyContainingWord,
     });
     const additions = await confirmPlannedAdditions(plan);
-    if (additions.length === 0) return SaveWordResult.NotSaved;
+    if (additions.length === 0) return null;
 
     const word = await wordRepository.findOrCreateWord({
       profileId,
@@ -97,7 +102,7 @@ export function useAddWord(lists: readonly WordList[]) {
       word.id,
       additions.map(({ wordListId, definitionsOverride }) => ({ wordListId, definitionsOverride })),
     );
-    return SaveWordResult.Saved;
+    return { word, partsOfSpeech: wordPartsOfSpeech };
   };
 
   return {

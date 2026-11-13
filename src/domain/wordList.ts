@@ -12,6 +12,10 @@ export interface WordListEntry {
 export enum WordListKind {
   General = 'general',
   PartOfSpeech = 'part_of_speech',
+  /** Character components (radicals), filled from the language pack. */
+  Components = 'components',
+  /** Cards for learning a script itself, such as zhuyin symbols; turned on in Settings. */
+  ScriptStudy = 'script_study',
 }
 
 export interface WordListValidationWarning {

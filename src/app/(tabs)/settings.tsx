@@ -4,11 +4,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { PhoneticDisplay, SimplifiedDisplay } from '../../data/repositories/settingsRepository';
 import { PRACTICE_SET_SIZES } from '../../domain/practiceSetBuilder';
 import { useAppServices, useSettings } from '../../ui/AppServicesContext';
+import { Checkboxes } from '../../ui/components/Checkboxes';
 import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
 import { useProfileSwitcher } from '../../ui/hooks/useProfileSwitcher';
+import { useZhuyinStudy } from '../../ui/hooks/useZhuyinStudy';
 import { colors, fontSizes } from '../../ui/theme';
 
 const PHONETIC_CHOICES = [
@@ -23,12 +25,29 @@ const SIMPLIFIED_CHOICES = [
   { value: SimplifiedDisplay.ModalButton, label: 'Button' },
 ];
 
+const LEARN_ZHUYIN_OPTION = 'learnZhuyin';
+const LEARN_ZHUYIN_OPTIONS = [
+  {
+    value: LEARN_ZHUYIN_OPTION,
+    label: 'Learn zhuyin: adds a Zhuyin list of the 37 symbols and tone marks',
+  },
+];
+
 const SET_SIZE_CHOICES = PRACTICE_SET_SIZES.map((size) => ({ value: size, label: `${size}` }));
 
 export default function SettingsScreen() {
   const { settings, updateSetting } = useSettings();
   const { variantName } = useAppServices().languageBundle.definition;
   const profileSwitcher = useProfileSwitcher();
+  const zhuyinStudy = useZhuyinStudy();
+  const learnZhuyinSelection = new Set(zhuyinStudy.isOn ? [LEARN_ZHUYIN_OPTION] : []);
+  const learnZhuyin = zhuyinStudy.isOffered ? (
+    <Checkboxes
+      options={LEARN_ZHUYIN_OPTIONS}
+      selectedValues={learnZhuyinSelection}
+      onToggle={zhuyinStudy.toggle}
+    />
+  ) : null;
   const variantSectionTitle = `${variantName} characters`;
   const variantHint = `How to show the ${variantName.toLowerCase()} form on flashcards, when one exists.`;
   return (
@@ -56,6 +75,7 @@ export default function SettingsScreen() {
         selectedValue={settings.phoneticDisplay}
         onSelect={(value) => updateSetting('phoneticDisplay', value)}
       />
+      {learnZhuyin}
 
       <SectionTitle title={variantSectionTitle} />
       <Text style={styles.hint}>{variantHint}</Text>

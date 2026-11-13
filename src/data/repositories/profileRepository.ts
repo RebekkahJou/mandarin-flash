@@ -1,8 +1,7 @@
-import { defaultWordListsFor } from '../../domain/defaultWordLists';
+import { defaultWordListsFor, listKindFor } from '../../domain/defaultWordLists';
 import type { LanguageId } from '../../domain/language';
 import { languageDefinitionFor, toLanguageId } from '../../domain/language';
 import type { Profile } from '../../domain/profileGroups';
-import { WordListKind } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 
 /** The name first run suggests for the first profile. */
@@ -43,13 +42,7 @@ export function createProfileRepository(database: SqlDatabase) {
       for (const [sortOrder, list] of defaultWordListsFor(extraDefaultWordLists).entries()) {
         await database.run(
           'INSERT INTO word_lists (profile_id, name, kind, part_of_speech, sort_order) VALUES (?, ?, ?, ?, ?)',
-          [
-            profileId,
-            list.name,
-            list.partOfSpeech ? WordListKind.PartOfSpeech : WordListKind.General,
-            list.partOfSpeech ?? null,
-            sortOrder,
-          ],
+          [profileId, list.name, listKindFor(list), list.partOfSpeech ?? null, sortOrder],
         );
       }
     });

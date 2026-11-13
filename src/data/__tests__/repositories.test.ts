@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+import { ComponentsWordList } from '../../domain/componentsWordList';
 import { FrequencyTier } from '../../domain/frequencyTier';
 import { GeneralWordList } from '../../domain/generalWordList';
 import { LanguageId } from '../../domain/language';
@@ -57,9 +58,12 @@ describe('user database', () => {
       'Adverbs',
       'Phrases',
       'Measure words',
+      'Components',
     ]);
     const verbs = summaries.find((summary) => summary.list.name === 'Verbs')?.list;
     expect(verbs).toBeInstanceOf(PartOfSpeechWordList);
+    const components = summaries.find((summary) => summary.list.name === 'Components')?.list;
+    expect(components).toBeInstanceOf(ComponentsWordList);
   });
 
   it('stores a word once even when it is added to several lists', async () => {
@@ -229,7 +233,7 @@ describe('user database', () => {
     await wordListRepository.renameList(listIdByName('Phrases'), 'Sayings');
     const list = await wordListRepository.getListWithEntries(listIdByName('Phrases'));
     expect(list?.name).toBe('Sayings');
-    expect((await wordListRepository.listSummaries(profile.id)).length).toBe(8);
+    expect((await wordListRepository.listSummaries(profile.id)).length).toBe(9);
   });
 
   it('deletes a list and its entries but keeps the words', async () => {
@@ -390,6 +394,14 @@ describe('settings', () => {
     const settings = await settingsRepository.loadSettings(profile.id);
     expect(settings.phoneticDisplay).toBe(PhoneticDisplay.Zhuyin);
     expect(settings.defaultPracticeSetSize).toBe(40);
+  });
+
+  it('keeps Learn zhuyin off by default and remembers it', async () => {
+    const { database, profile } = await setUp();
+    const settingsRepository = createSettingsRepository(database);
+    expect((await settingsRepository.loadSettings(profile.id)).learnZhuyin).toBe(false);
+    await settingsRepository.saveSetting(profile.id, 'learnZhuyin', true);
+    expect((await settingsRepository.loadSettings(profile.id)).learnZhuyin).toBe(true);
   });
 });
 

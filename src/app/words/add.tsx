@@ -12,7 +12,9 @@ import { PhoneticText } from '../../ui/components/PhoneticText';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
-import { SaveWordResult, useAddWord } from '../../ui/hooks/useAddWord';
+import { CharacterPartsModal } from '../../ui/components/CharacterPartsModal';
+import { useAddWord } from '../../ui/hooks/useAddWord';
+import { useCharacterSplit } from '../../ui/hooks/useCharacterSplit';
 import { useWordListSummaries } from '../../ui/hooks/useWordListSummaries';
 import { colors, fontSizes, radii, spacing } from '../../ui/theme';
 
@@ -21,6 +23,8 @@ export default function AddWordScreen() {
   const { summaries } = useWordListSummaries();
   const lists = summaries.map((summary) => summary.list);
   const addWord = useAddWord(lists);
+  const characterSplit = useCharacterSplit();
+  const splitModal = characterSplit.modal;
   const [characterInput, setCharacterInput] = useState('');
   const [isListPickerVisible, setIsListPickerVisible] = useState(false);
   const hasLookedUp = addWord.headword.length > 0;
@@ -34,7 +38,9 @@ export default function AddWordScreen() {
   }));
 
   const saveWord = async () => {
-    if ((await addWord.save()) === SaveWordResult.Saved) router.back();
+    const saved = await addWord.save();
+    if (!saved) return;
+    await characterSplit.offerForWord(saved.word, saved.partsOfSpeech, () => router.back());
   };
   const lookUpInput = () => addWord.lookUpCharacters(characterInput);
 
@@ -111,6 +117,16 @@ export default function AddWordScreen() {
         selectedListIds={addWord.selectedListIds}
         onToggle={addWord.toggleList}
         onClose={() => setIsListPickerVisible(false)}
+      />
+      <CharacterPartsModal
+        isVisible={splitModal.isVisible}
+        compound={splitModal.compound}
+        options={splitModal.options}
+        selectedCharacters={splitModal.selectedCharacters}
+        alreadyAddedNote={splitModal.alreadyAddedNote}
+        onToggle={splitModal.onToggle}
+        onConfirm={splitModal.onConfirm}
+        onSkip={splitModal.onSkip}
       />
     </ScreenContainer>
   );

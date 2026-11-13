@@ -2,10 +2,12 @@ import {
   canRenameOrDeleteList,
   defaultListIdsForNewWords,
   defaultWordListsFor,
+  listKindFor,
   suggestedWordListsFor,
 } from '../defaultWordLists';
 import { GeneralWordList } from '../generalWordList';
 import { PartOfSpeech } from '../partOfSpeech';
+import { WordListKind } from '../wordList';
 
 const MEASURE_WORDS = { name: 'Measure words', partOfSpeech: PartOfSpeech.MeasureWord };
 
@@ -55,5 +57,17 @@ describe('canRenameOrDeleteList', () => {
     const focus = new GeneralWordList({ id: 2, profileId: 1, name: 'Focus Vocabulary' });
     expect(canRenameOrDeleteList(general)).toBe(false);
     expect(canRenameOrDeleteList(focus)).toBe(true);
+  });
+});
+
+describe('listKindFor', () => {
+  it('uses a special kind when given, else derives it from the part of speech', () => {
+    expect(listKindFor({ name: 'Components', kind: WordListKind.Components })).toBe(
+      WordListKind.Components,
+    );
+    expect(listKindFor({ name: 'Nouns', partOfSpeech: PartOfSpeech.Noun })).toBe(
+      WordListKind.PartOfSpeech,
+    );
+    expect(listKindFor({ name: 'Focus Vocabulary' })).toBe(WordListKind.General);
   });
 });

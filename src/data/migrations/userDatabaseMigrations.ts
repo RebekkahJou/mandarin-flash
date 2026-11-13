@@ -99,6 +99,32 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
     installed_at INTEGER NOT NULL
   );
   `,
+  // Which starter set a word came from (or counts toward), for starter set progress.
+  `
+  ALTER TABLE words ADD COLUMN starter_set INTEGER;
+  CREATE INDEX words_by_starter_set ON words(profile_id, starter_set) WHERE starter_set IS NOT NULL;
+  `,
+  // Characters studied on their own that make up a compound (雜貨店 → 雜, 貨, 店), so a card can
+  // show its breakdown. position is where the character first appears in the compound.
+  `
+  CREATE TABLE word_parts (
+    compound_word_id INTEGER NOT NULL REFERENCES words(id) ON DELETE CASCADE,
+    position INTEGER NOT NULL,
+    part_word_id INTEGER NOT NULL REFERENCES words(id) ON DELETE CASCADE,
+    PRIMARY KEY (compound_word_id, position)
+  );
+  CREATE INDEX word_parts_by_part ON word_parts(part_word_id);
+  `,
+  // When a list filled from the language pack (Components) was filled, so emptying it later
+  // doesn't fill it again.
+  `
+  ALTER TABLE word_lists ADD COLUMN filled_at INTEGER;
+  `,
+  // Hidden lists (e.g. Zhuyin study cards turned off in Settings) keep their words and progress
+  // but don't show on the Practice and Word lists tabs.
+  `
+  ALTER TABLE word_lists ADD COLUMN is_hidden INTEGER NOT NULL DEFAULT 0;
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {

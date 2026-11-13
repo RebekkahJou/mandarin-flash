@@ -7,11 +7,25 @@
  * Bump PACK_SCHEMA_VERSION whenever the layout changes, and keep reading every version the app
  * still accepts (MIN_SUPPORTED_PACK_SCHEMA_VERSION), since installed packs aren't rebuilt.
  */
-export const PACK_SCHEMA_VERSION = 1;
+export const PACK_SCHEMA_VERSION = 2;
 export const MIN_SUPPORTED_PACK_SCHEMA_VERSION = 1;
 
 /** Written to pack_metadata.format so a stray SQLite file is never mistaken for a pack. */
 export const PACK_FORMAT_NAME = 'mandarin-flash-pack';
+
+/** Character components (radicals) for a Components list, in teaching order. Schema 2 on. */
+export const COMPONENTS_TABLE_SQL = `
+  CREATE TABLE components (
+    position INTEGER PRIMARY KEY,
+    component TEXT NOT NULL,
+    -- The component's other written form (Simplified for Mandarin). Empty when identical.
+    variant TEXT NOT NULL,
+    -- Its usual name, written like headwords (三點水), and that name's reading.
+    name TEXT NOT NULL,
+    reading TEXT NOT NULL,
+    meaning TEXT NOT NULL
+  );
+`;
 
 export const PACK_SCHEMA_SQL = `
   CREATE TABLE pack_metadata (
@@ -55,6 +69,8 @@ export const PACK_SCHEMA_SQL = `
     PRIMARY KEY (set_number, position)
   ) WITHOUT ROWID;
 
+  ${COMPONENTS_TABLE_SQL}
+
   -- Fonts and other files, written to app storage when the pack is installed.
   CREATE TABLE pack_files (
     name TEXT PRIMARY KEY,
@@ -63,14 +79,33 @@ export const PACK_SCHEMA_SQL = `
   ) WITHOUT ROWID;
 `;
 
-/** Every table and column a pack must have; used to reject malformed packs. */
-export const PACK_TABLE_COLUMNS: Readonly<Record<string, readonly string[]>> = {
+const SCHEMA_1_TABLE_COLUMNS: Readonly<Record<string, readonly string[]>> = {
   pack_metadata: ['key', 'value'],
   entries: ['id', 'headword', 'variant', 'reading', 'variant_reading', 'glosses', 'rank'],
   sentences: ['id', 'text', 'english'],
   starter_words: ['set_number', 'position', 'headword', 'reading', 'part_of_speech'],
   pack_files: ['name', 'kind', 'data'],
 };
+
+/** Tables added in each schema version after the first. */
+const TABLES_ADDED_IN_SCHEMA: Readonly<
+  Record<number, Readonly<Record<string, readonly string[]>>>
+> = {
+  2: { components: ['position', 'component', 'variant', 'name', 'reading', 'meaning'] },
+};
+
+/** Every table and column a pack of this schema version must have; used to reject bad packs. */
+export function packTableColumnsFor(
+  schemaVersion: number,
+): Readonly<Record<string, readonly string[]>> {
+  const tables = { ...SCHEMA_1_TABLE_COLUMNS };
+  for (const [addedIn, addedTables] of Object.entries(TABLES_ADDED_IN_SCHEMA)) {
+    if (Number(addedIn) <= schemaVersion) Object.assign(tables, addedTables);
+  }
+  return tables;
+}
+
+export const COMPONENTS_TABLE_SCHEMA_VERSION = 2;
 
 export const PACK_INDEX_NAMES: readonly string[] = ['entries_by_headword', 'entries_by_variant'];
 
@@ -95,6 +130,14 @@ export interface PackEntryRow {
 export interface PackSentenceRow {
   text: string;
   english: string;
+}
+
+export interface PackComponentRow {
+  component: string;
+  variant: string;
+  name: string;
+  reading: string;
+  meaning: string;
 }
 
 export type SerializedGloss = [text: string, partOfSpeechFlags: number];

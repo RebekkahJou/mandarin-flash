@@ -1,10 +1,16 @@
 import type { FrequencyTier } from '../../domain/frequencyTier';
 import { NEW_WORD_TIER, downgradeTier } from '../../domain/frequencyTier';
 import type { Word } from '../../domain/word';
-import { allMeaningsOf } from '../../domain/wordList';
+import { WordListKind, allMeaningsOf } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 import type { WordRow } from './rowMappers';
-import { WORD_COLUMNS, parseDefinitions, serializeDefinitions, toWord } from './rowMappers';
+import {
+  WORD_COLUMNS,
+  parseDefinitions,
+  serializeDefinitions,
+  toFrequencyTier,
+  toWord,
+} from './rowMappers';
 
 export interface NewWord {
   profileId: number;
@@ -12,6 +18,13 @@ export interface NewWord {
   variant?: string;
   reading: string;
   definitions: readonly string[];
+}
+
+/** How many of a profile's words from one starter set sit in one tier. */
+export interface StarterSetTierCount {
+  setNumber: number;
+  frequencyTier: FrequencyTier;
+  wordCount: number;
 }
 
 export interface WordWithListIds {
@@ -135,6 +148,73 @@ export function createWordRepository(database: SqlDatabase) {
     return newTier;
   }
 
+  /**
+   * Any of the profile's words written this way, whatever its reading. Component cards (氵, 口
+   * as a radical) are left out: they study the component, not the character.
+   */
+  async function findWordByHeadword(profileId: number, headword: string): Promise<Word | null> {
+    const row = await database.getFirst<WordRow>(
+      `SELECT ${WORD_COLUMNS} FROM words
+       WHERE profile_id = ? AND headword = ? AND NOT EXISTS (
+         SELECT 1 FROM word_list_entries JOIN word_lists ON word_lists.id = word_list_entries.word_list_id
+         WHERE word_list_entries.word_id = words.id AND word_lists.kind = ?)
+       ORDER BY id LIMIT 1`,
+      [profileId, headword, WordListKind.Components],
+    );
+    return row ? toWord(row) : null;
+  }
+
+  /** Records which words make up a compound; a position already linked is replaced. */
+  async function linkWordParts(
+    compoundWordId: number,
+    parts: readonly { position: number; partWordId: number }[],
+  ): Promise<void> {
+    await database.transaction(async () => {
+      for (const { position, partWordId } of parts) {
+        await database.run(
+          'INSERT OR REPLACE INTO word_parts (compound_word_id, position, part_word_id) VALUES (?, ?, ?)',
+          [compoundWordId, position, partWordId],
+        );
+      }
+    });
+  }
+
+  /** The words a compound is made of, in the order they appear in it. */
+  async function listWordParts(compoundWordId: number): Promise<Word[]> {
+    const rows = await database.getAll<WordRow>(
+      `SELECT ${WORD_COLUMNS} FROM word_parts JOIN words ON words.id = word_parts.part_word_id
+       WHERE word_parts.compound_word_id = ? ORDER BY word_parts.position`,
+      [compoundWordId],
+    );
+    return rows.map(toWord);
+  }
+
+  /** Counts a word toward a starter set, unless it already counts toward an earlier one. */
+  async function assignStarterSet(wordId: number, setNumber: number): Promise<void> {
+    await database.run('UPDATE words SET starter_set = ? WHERE id = ? AND starter_set IS NULL', [
+      setNumber,
+      wordId,
+    ]);
+  }
+
+  async function starterSetTierCounts(profileId: number): Promise<StarterSetTierCount[]> {
+    const rows = await database.getAll<{
+      starter_set: number;
+      frequency_tier: string;
+      word_count: number;
+    }>(
+      `SELECT starter_set, frequency_tier, COUNT(*) AS word_count FROM words
+       WHERE profile_id = ? AND starter_set IS NOT NULL
+       GROUP BY starter_set, frequency_tier`,
+      [profileId],
+    );
+    return rows.map((row) => ({
+      setNumber: row.starter_set,
+      frequencyTier: toFrequencyTier(row.frequency_tier),
+      wordCount: row.word_count,
+    }));
+  }
+
   return {
     findWord,
     getWord,
@@ -143,6 +223,11 @@ export function createWordRepository(database: SqlDatabase) {
     countWords,
     setFrequencyTier,
     markWordLearned,
+    assignStarterSet,
+    starterSetTierCounts,
+    findWordByHeadword,
+    linkWordParts,
+    listWordParts,
   };
 }
 

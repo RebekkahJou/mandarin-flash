@@ -1,7 +1,9 @@
 import { FrequencyTier, isFrequencyTier } from '../../domain/frequencyTier';
+import { ComponentsWordList } from '../../domain/componentsWordList';
 import { GeneralWordList } from '../../domain/generalWordList';
 import { isPartOfSpeech } from '../../domain/partOfSpeech';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
+import { ScriptStudyWordList } from '../../domain/scriptStudyWordList';
 import type { Word } from '../../domain/word';
 import type { WordList, WordListEntry } from '../../domain/wordList';
 import { WordListKind } from '../../domain/wordList';
@@ -41,6 +43,11 @@ export function parseDefinitions(serialized: string): string[] {
   return Array.isArray(parsed) ? parsed.filter((item) => typeof item === 'string') : [];
 }
 
+/** An unexpected stored value falls back to the most frequent tier rather than hiding the word. */
+export function toFrequencyTier(storedTier: string): FrequencyTier {
+  return isFrequencyTier(storedTier) ? storedTier : FrequencyTier.HighIncidence;
+}
+
 export function toWord(row: WordRow): Word {
   return {
     id: row.id,
@@ -49,10 +56,7 @@ export function toWord(row: WordRow): Word {
     variant: row.variant ?? undefined,
     reading: row.reading,
     definitions: parseDefinitions(row.definitions),
-    // An unexpected stored value falls back to the most frequent tier rather than hiding the word.
-    frequencyTier: isFrequencyTier(row.frequency_tier)
-      ? row.frequency_tier
-      : FrequencyTier.HighIncidence,
+    frequencyTier: toFrequencyTier(row.frequency_tier),
   };
 }
 
@@ -74,5 +78,7 @@ export function toWordList(row: WordListRow, entries: WordListEntry[] = []): Wor
   ) {
     return new PartOfSpeechWordList({ ...props, partOfSpeech: row.part_of_speech });
   }
+  if (row.kind === WordListKind.Components) return new ComponentsWordList(props);
+  if (row.kind === WordListKind.ScriptStudy) return new ScriptStudyWordList(props);
   return new GeneralWordList(props);
 }

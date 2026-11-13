@@ -50,6 +50,7 @@
     "format": "prettier --write .",
     "check": "tsc --noEmit && expo lint && jest",
     "build:mandarin-pack": "tsx scripts/build-mandarin-pack.ts",
+    "update:mandarin-curated-data": "tsx scripts/update-mandarin-curated-data.ts",
     "build:font-characters": "tsx scripts/build-font-character-list.ts",
     "pack:generate-key": "tsx scripts/generate-pack-signing-key.ts",
     "pack:derive": "tsx scripts/derive-pack.ts",

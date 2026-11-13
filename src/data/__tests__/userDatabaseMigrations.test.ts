@@ -143,3 +143,13 @@ describe('review_events', () => {
     ).rejects.toThrow(/FOREIGN KEY/);
   });
 });
+
+describe('migration adding starter sets', () => {
+  it('leaves existing words outside any starter set', async () => {
+    const database = await migratedDatabase();
+    const row = await database.getFirst<{ starter_set: number | null }>(
+      'SELECT starter_set FROM words WHERE id = 1',
+    );
+    expect(row?.starter_set).toBeNull();
+  });
+});

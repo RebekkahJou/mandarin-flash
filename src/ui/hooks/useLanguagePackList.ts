@@ -21,8 +21,10 @@ export interface LanguagePackRowData {
 function toRow(pack: LoadedPack): LanguagePackRowData {
   const { metadata } = pack;
   const origin = pack.isBuiltIn ? 'Built in' : 'Installed';
+  // An installed pack can share its id and version with the built-in one (e.g. after an app
+  // update raises the built-in version), so the origin is part of the key.
   return {
-    key: `${metadata.packId}-${metadata.packVersion}`,
+    key: `${origin}-${metadata.packId}-${metadata.packVersion}`,
     title: `${metadata.title} · version ${metadata.packVersion}`,
     details: `${origin}. ${packLanguageNames(metadata)}.`,
     canRemove: !pack.isBuiltIn,

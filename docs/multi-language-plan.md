@@ -2,8 +2,89 @@
 
 Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
 tested on the phone; merged into main). **Phase 3 done** (2026-11-10, branch
-lang-compatibility-p3, phone-tested; see "Phase 3 wrap-up" below). **Phase 4 in progress**
-(branch lang-compatibility-p4). Update this file as work lands or decisions change.
+lang-compatibility-p3, phone-tested, merged into main; see "Phase 3 wrap-up" below). **Phase 4
+built and phone-tested** (2026-11-10, branch lang-compatibility-p4; see "Phase 4 decisions"
+below). **Next: Phase 4b, health-related word sets** (planned 2026-11-10; see "Health-related
+word sets" below), then Phase 4c, learning levels and All words options (requested 2026-11-13).
+Update this file as work lands or decisions change.
+
+Phase 4 decisions (2026-11-10):
+- **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency
+  data; entry rank only orders readings) in scripts/data/mandarin-starter-words.tsv, each with a
+  curated word type (a part of speech, "phrase" or "time word"). Every set mixes word types.
+  Words used in only one region (腳踏車, 計程車) were avoided so both Mandarin languages share them.
+  Every word must match a pack entry by headword and reading.
+- **The built-in Mandarin pack is version 2, schema 2** (starter words and components; the
+  dictionary is unchanged). `npm run update:mandarin-curated-data` writes both curated files
+  into it; `npm run build:mandarin-pack` includes them too. Test packs must now be version 3+.
+- **Starter sets are offered on the Lists tab** ("Starter vocabulary" card) rather than during
+  profile setup, because a new profile isn't active yet when it is created. The next set unlocks
+  when 90% of the latest set is at Memory reinforcement or Retention. Words already in the
+  profile count toward the set (`words.starter_set`) and aren't added again. Each new word goes
+  into General Vocabulary and the list for its word type (created if missing), with that
+  list's suggested meanings.
+- **Splitting compounds:** offered for multi-character nouns (by dictionary word type, or the
+  curated type for starter words). Add Word shows checkboxes; CSV import and starter sets ask
+  once. Chosen characters get their first dictionary meanings in General Vocabulary. Every
+  character the profile has is linked in `word_parts` (compound, position, part). Component
+  cards don't count as already having a character.
+- **Components:** 59 curated components in scripts/data/mandarin-components.tsv, shipped in the
+  pack's new `components` table (pack schema 2; schema 1 packs stay valid and have none). Names
+  are stored in Traditional and converted for Simplified; components with a Simplified form
+  (言/讠, 門/门) carry it as a variant. Each component is a word in a Components list (a new list
+  kind, no word-type checks): reading = the name's pinyin, meanings = [meaning, name]. The list
+  is a Mandarin default, filled once from the pack (`word_lists.filled_at`) the first time lists
+  load; older profiles add it from "+". A pack without components leaves it waiting.
+- **Zhuyin study cards:** a "Learn zhuyin" checkbox in Settings when pronunciation is Pinyin or
+  Both. It adds a Zhuyin list (list kind script_study) of the 37 symbols and 5 tone marks, kept
+  in code. Each card's reading is an example character's and its meanings are the sound and
+  "as in 八 bā". Turning it off, or choosing zhuyin-only display, hides the list
+  (`word_lists.is_hidden`) and keeps progress. Hidden lists' words still show in All words.
+- No Unihan data was needed: the Components list only uses the curated names and meanings.
+
+Phase 4 phone test (2026-11-10, Pixel 8 Pro, temporary profiles, deleted afterwards):
+- Passed (Simplified profile): adding starter set 1 adds 50 words in Simplified with mainland
+  readings, creates the missing lists, asks once to add 10 characters and shows "Set 1 of 10:
+  0 of 50 learned". The Add Word split dialog for 杂货店 works (checked by the user).
+- Passed (Traditional profile): the Components list fills with 59 cards (田: tián zì páng,
+  field, 田字旁). Learn zhuyin adds a 42-card Zhuyin list (ㄚ: ā, a, as in 啊 ā); choosing
+  zhuyin-only display hides the list and the checkbox, and Pinyin brings both back.
+- Development note: a reload that copies the built-in pack while the update script is still
+  writing it leaves an old copy (fixed by deleting files/SQLite/dictionary-v6.db with run-as).
+  Released builds can't hit this.
+
+Phase 4 follow-up phone test (checks the first test didn't cover; use temporary profiles):
+1. Traditional profile → Lists → Starter vocabulary → add set 1: 50 words in Traditional (謝謝,
+   對不起, 老師, 學生, 書, 錢) with Taiwan readings; "Set 1 of 10: 0 of 50 learned".
+2. Fresh Traditional profile: import `dist/test-packs/already-have.csv` (老師, 喜歡) first, then
+   add set 1. Only 48 new words are added; neither word is duplicated in General Vocabulary or All words,
+   and the set still shows "0 of 50 learned".
+3. Settings → turn on "Learn zhuyin", then turn it off: the Zhuyin list disappears from Lists, its
+   cards still show in All words, and turning it back on restores the list with the same cards.
+4. Import `dist/test-packs/compounds.csv` (書包, 火車站, 喜歡) with CSV import: one dialog asks about
+   splitting the two nouns' characters; the verb isn't offered.
+5. Simplified profile → Components list: 言 shows as 讠 and 門 as 门, with Simplified names
+   (門字框 → 门字框).
+6. Older profile: delete its Components list, then add Components back from "+": it fills with 59
+   cards.
+
+Phase 4 follow-up phone test results (2026-11-13, Pixel 8 Pro, profiles TEMP1-3, deleted after):
+- All six passed. Notes: (2) a word the profile already had stays only in its existing lists (老師
+  wasn't added to Nouns), and its characters aren't offered for splitting; (3) progress was checked
+  by marking ㄈ learned, which still showed Reinforcement after the list was hidden and restored;
+  (4) the split dialog left out 書, which the profile already had.
+- Fixed (2026-11-13, phone-checked): with many lists, the CSV import dialog's "Choose CSV file"
+  button sat below the dialog, half under the navigation bar, and a tap just above it closed the
+  dialog. `InfoModal` now scrolls long content so its button stays inside the card.
+- Found: a hidden list's words show "Not in any list" in All words (ㄈ while Zhuyin was hidden).
+- Found: right after a new profile is opened, All words shows 0 words until the tab is revisited,
+  although the Components list has already filled.
+
+Phase 4 notes for later phases:
+- Starter words use the dictionary's first meanings for their list type, which can include odd
+  ones (不客气: "impolite"). Curated meanings could be added to starter_words later.
+- `word_parts` isn't shown on cards yet ("a card can later show its breakdown").
+- A Simplified font pack still needs Simplified font subsets.
 
 Phase 3 decisions (2026-11-08):
 - **Pack file (.mfpack):** an 8-byte magic ("MFPACK", 0, format version 1), a 64-byte Ed25519
@@ -58,8 +139,8 @@ Phase 3 phone test results (2026-11-08, Pixel 8 Pro, Android 17):
 - Passed, real route B: Chrome downloaded the pack (served from the PC over adb reverse) and
   "Open" → Mandarin Flash showed the install screen and installed it; Done returns to the app.
 - Fixed: About listed CC-CEDICT and Tatoeba twice when an update was installed.
-- **Fixed (2026-11-10, phone retest pending):** opening a pack from Files by Google starts a second copy of the app's activity
-  inside the Files task (Android 17 ignores `singleTask` there), so the app shows Practice with a
+- **Fixed (2026-11-10, retested in the wrap-up below):** opening a pack from Files by Google starts
+  a second copy of the app's activity inside the Files task (Android 17 ignores `singleTask` there), so the app shows Practice with a
   "multiple navigation containers" warning instead of the install screen. Chrome's "Open" is
   unaffected. **Decided 2026-11-08: fix it with a small separate activity for opened files**,
   added through a config plugin (no hand edits to android/). It receives the file and hands it to
@@ -75,6 +156,8 @@ Phase 3 wrap-up (2026-11-10, phone-tested):
   practice and example sentences show Simplified. The test font is a Traditional subset, so
   Simplified-only characters (气, 书) fall back to the system font inside a card. A real Simplified
   font pack needs Simplified subsets.
+- Fixed: the Language packs list repeated a key when an installed pack and the built-in pack had
+  the same id and version.
 
 Phase 3 is done; Phase 4 started on branch lang-compatibility-p4.
 
@@ -296,6 +379,62 @@ conjunction, measure word / counter, particle, numeral, question word); bump the
     reviewed by hand; the Scottish Gaelic beta tester can check that pack.
   - The same curation guideline applies: each set mixes word types.
 
+## Health-related word sets
+
+Optional sets of health vocabulary a learner can add when they need them, such as a short-term
+traveler with diabetes adding only First aid and Diabetes, a woman with a broken leg adding Going
+to the doctor, Injuries and Women's health, or a student adding Cold/Flu because they feel ill
+today. Planned 2026-11-10 at the user's request; part of the MVP.
+
+- **Sets (Mandarin, first draft):** Going to the doctor, Cold/Flu, Diabetes, Women's health,
+  Wound infection, Chronic ailments, Medicine (including forgotten medication, refills and
+  urgent refills during travel delays), First aid, Dental issues (including orthodontics) and
+  Injuries. The user's draft lists are in `src/domain/healthRelatedWordLists.ts` (not yet
+  committed); they become a curated data file under `scripts/data/`, like the starter words.
+- **Where they live:** inside each language pack, like starter vocabulary, so "downloading" a
+  set needs no network. The app stays offline; adding a set copies its words from the pack into
+  the profile. On-screen text says "Add", not "download". A pack with no health sets hides the
+  option. Each language's pack brings its own sets, curated for that language.
+- **Curated meanings:** each entry carries its own English meaning(s), so health words don't
+  depend on the dictionary's first glosses. Phrases that aren't dictionary words ("我的藥吃完了")
+  are allowed.
+- **Pack schema 3:** `word_sets` (set id, title, position) and `word_set_entries` (set id,
+  position, headword, variant, reading, variant reading, meanings, languages). Entries are
+  written like headwords (Traditional, Taiwan readings); Simplified reads them through the
+  variants, like dictionary entries. An entry can be limited to one of the pack's languages,
+  because some health terms differ by region (健保卡 is Taiwan's insurance card; mainland terms
+  differ for some clinics and medicine brands such as 普拿疼). The tables are generic word sets,
+  so later topics (travel, food) can reuse them.
+- **In Settings:** "Add common health-related word sets" in each profile's Settings (each
+  language). It opens a modal listing the sets with checkboxes and word counts. Sets the profile
+  already added are greyed out, marked "Added" and listed at the bottom. Users can come back and
+  add more sets later from the same place.
+- **Target lists:** added words always go into **Health-related words** and General Vocabulary,
+  and into the word-type list matching each entry's curated word type (Nouns, Verbs…), created if
+  missing, as starter words do. The modal also lets the user pick other lists (Focus Vocabulary
+  or their own lists), unticked by default. (Decided 2026-11-10.)
+- **Health-related words list:** a default list that appears only when the profile adds its first
+  set; it is created again if it was deleted. Profiles that never add a set don't get an empty
+  list. (Decided 2026-11-10.)
+- **Repeats are skipped:** some words appear in more than one set (醫生, 藥局) or are already in
+  the profile (from starter sets, CSV or Add Word). A word is stored once, matched by headword
+  and reading, as with starter sets. A word the profile already has keeps its meanings but is
+  still added to the Health-related words list (if not there yet), so that list holds every word
+  of the chosen sets. The add summary says how many were new and how many the profile already
+  had. (Decided 2026-11-10.)
+- **Remembering added sets:** a user-database table records which sets each profile added
+  (profile, pack id, set id, time), so the modal can grey them out even if words are later
+  removed from lists.
+- **Compound splitting:** health words are mostly compounds, so after adding sets the app asks
+  once whether to add their characters, as for starter sets (nouns only).
+- **Word types:** every entry carries a curated word type (a part of speech, "phrase" or "time
+  word", as for starter words). The Health-related words list is a general list, so it never
+  shows word-type warnings.
+- **Simplified:** obvious mainland equivalents (医保卡, 药店) are written now as Simplified-only
+  entries; uncertain ones are marked for a mainland reviewer. (Decided 2026-11-10.)
+- **Later, not in the MVP:** when a pack update adds words to a set a profile already added,
+  offer "N new words in sets you added". (Decided 2026-11-10.)
+
 ## Splitting multi-character words
 
 When the user adds a noun made of several distinct characters, such as 雜貨店 (zá huò diàn,
@@ -340,6 +479,76 @@ cards: hiragana and katakana for Japanese, Hangul letters for Korean, the Cyrill
 Ukrainian and Russian, and Arabic letters. Zhuyin becomes the first of these, defined in the
 language definition.
 
+## Learning levels and All words options (Phase 4c)
+
+Requested 2026-11-13.
+
+**Rename the tiers.** "High incidence" reads as how common a word is in everyday life, so the
+tiers are renamed to how often they come up in practice:
+
+- High incidence → **High practice**; Memory reinforcement → **Reinforcement**; Retention stays.
+  (Only the labels change; the stored values `high_incidence` etc. stay, so no migration.)
+- On a word's screen, the "Frequency" section becomes **"Learning level"**, with an info note built
+  from `PRACTICE_SET_TIER_RATIOS`: "High practice words make up 60% of each practice set,
+  Reinforcement words 30% and Retention words 10%."
+- Use "learning level" everywhere the tier is shown or sorted (All words, the starter set text,
+  docs/spec.md).
+
+**Downgrade when a study list is hidden.** Turning off "Learn zhuyin" asks: "Move all zhuyin cards
+to Retention? They'll come up rarely in practice and can be hidden from All words." Hiding the
+Components list asks the same about components. A profile that never turned on Learn zhuyin has no
+zhuyin cards, so nothing is asked.
+
+- A word has one learning level, stored on the word, so every list it is in shows Retention too
+  (decided 2026-11-13).
+- Turning the list back on doesn't restore the old levels (they aren't stored). For the MVP the
+  user changes them by hand on each word's screen. The dialog says so.
+
+**Hide the Components list.** Components can be hidden like the Zhuyin list (`word_lists.is_hidden`,
+progress kept), from the list's screen ("Hide list") with the downgrade question above, and shown
+again from "+" (the suggested list brings the hidden one back instead of making a new one).
+Hidden lists' words say "In hidden list: Components" in All words instead of "Not in any list".
+
+**All words view options.** An options menu on All words, saved per profile in the encrypted
+database:
+
+- Filters: "Show zhuyin cards" (only offered when the profile has any), "Show components" (only
+  when it has any) and "Show Retention words".
+- "Show learning level" checkbox: shows or hides each word's level label.
+
+## All words sorting (later phase)
+
+Requested 2026-11-13; not needed in Phase 4 (decided 2026-11-13).
+
+- Sort (one choice, in a pop-up menu on All words): the language's sorts (below), plus **English,
+  A-Z** (by the first listed meaning) and **Learning level** (High practice first). Learning level
+  takes an optional sub-sort within each level: any of the language's sorts or English. With no
+  sub-sort, words keep today's order (newest first).
+
+**Sorts depend on the language.** Each language definition lists its word sorts, so later
+languages add their own without changing the screen (stroke and radical sorts never appear for
+German, for example):
+
+| Language | Sorts |
+|---|---|
+| Mandarin (Traditional) | Pinyin A-Z; Character (radical, then remaining strokes, as Taiwan dictionaries such as the MOE 國語辭典 do); Zhuyin (ㄅㄆㄇㄈ order, only when the display uses zhuyin or Learn zhuyin is on) |
+| Mandarin (Simplified) | Pinyin A-Z (mainland dictionaries such as 现代汉语词典 are ordered by pinyin, so no separate character sort); Zhuyin under the same rule |
+| Later (examples) | German: alphabetical with German collation (ä with a); Japanese: gojūon order of the reading, and kanji by radical; Korean: Hangul order |
+
+- Pinyin sorts by letters, then tone (ma1 before ma2), syllable by syllable. Multi-character words
+  sort by their first character, then the next.
+- The radical sort needs each character's Kangxi radical and remaining stroke count. Take them
+  from Unihan (`kRSUnicode`, `kTotalStrokes`; Unicode license, record in docs/THIRD_PARTY.md) and
+  ship them in the Mandarin pack as a small characters table, only for characters the pack uses
+  (a new pack schema version).
+- Size, measured 2026-11-13 (Unihan 2026-07-31 on a copy of pack version 2): the pack uses 12,987
+  distinct characters, and all but 22 have radical data (the 22 are punctuation, zhuyin and
+  symbols such as 々 and 〇). A `characters` table (WITHOUT ROWID) of radical and remaining strokes
+  adds 164 KB to the database, 47 KB compressed. Adding Simplified and Traditional total stroke
+  counts makes it 212 KB, 52 KB compressed. Either is small against the 30 MB budget.
+- Alphabetical sorts use `Intl.Collator` with the language's locale (verify Hermes on Android
+  supports the needed locales).
+
 ## Progress data (start early)
 
 Add a `review_events` table (profile, word, answer, time) in Phase 1, since history can't be
@@ -370,10 +579,19 @@ Each phase ships on its own with tests and `npm run check` passing.
 4. **Starter vocabulary and Mandarin extras.** Curated Mandarin sets, set-by-set adding, unlock
    rule, progress display; splitting compounds into characters (`word_parts`); the Components
    list; zhuyin study cards.
+4b. **Health-related word sets (MVP).** Curated Mandarin health sets in the pack (schema 3), the
+   Settings modal for adding sets, the Health-related words default list, skipped repeats,
+   remembering added sets, and the bulk character-splitting question.
+4c. **Learning levels and All words options.** Tier labels renamed (High practice) with the
+   practice-share note; the Retention downgrade question when Zhuyin or Components is hidden;
+   hiding the Components list; All words filters and the level label checkbox.
 5. **Store-hosted packs (route A):** Play Asset Delivery, then Apple-hosted packs with the iOS
    port.
 6. **Add-ons framework and games.**
 7. **OCR add-on.**
+7b. **All words sorting.** Per-language sorts from the language definition, English and learning
+   level sorts, and radical data in the Mandarin pack. Before the new languages, since each brings
+   its own sorts.
 8. **New languages,** in this order: German (simplest, proves the pipeline), Japanese (best open
    data; reuses the Chinese groundwork), Korean, Scottish Gaelic (beta tester available), Irish
    (shares the mutation handling), Ukrainian, Russian (shares the Cyrillic work), Finnish,
@@ -381,4 +599,4 @@ Each phase ships on its own with tests and `npm run check` passing.
 
 ## Open questions
 
-None at the moment. Items marked "verify" above are checks to do during the relevant phase.
+None at the moment (the health word set questions were answered 2026-11-10). Items marked "verify" above are checks to do during the relevant phase.
