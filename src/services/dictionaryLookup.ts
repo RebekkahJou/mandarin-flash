@@ -1,9 +1,17 @@
-import type { PackComponentRow, PackEntryRow, PackSentenceRow } from '../data/packSchema';
+import type {
+  PackComponentRow,
+  PackEntryRow,
+  PackSentenceRow,
+  PackWordSetEntryRow,
+} from '../data/packSchema';
 import type { SqlDatabase } from '../data/sqlDatabase';
+import type { LanguageId } from '../domain/language';
 import type { PartOfSpeech } from '../domain/partOfSpeech';
 import { PartOfSpeech as PartsOfSpeech, hasPartOfSpeech } from '../domain/partOfSpeech';
 import type { StarterWordType } from '../domain/starterVocabulary';
 import { isStarterWordType } from '../domain/starterVocabulary';
+import type { WordSetTopic } from '../domain/wordSets';
+import { isWordSetEntryForLanguage } from '../domain/wordSets';
 import type { DefinitionCandidate, Word } from '../domain/word';
 
 export interface DictionaryEntry {
@@ -47,6 +55,25 @@ export interface CharacterComponent {
   /** The name's reading, e.g. "san1 dian3 shui3". */
   reading: string;
   meaning: string;
+}
+
+/** A topic word set the profile's language has entries in. */
+export interface WordSetSummary {
+  setId: string;
+  title: string;
+  /** Entries for the profile's language. */
+  entryCount: number;
+}
+
+/** A word set entry with its curated meanings, read the way the profile's language needs. */
+export interface WordSetEntry {
+  setId: string;
+  wordType: StarterWordType;
+  headword: string;
+  /** Present only when it differs from the headword. */
+  variant?: string;
+  reading: string;
+  meanings: string[];
 }
 
 const MAX_EXAMPLE_SENTENCES = 3;
@@ -102,6 +129,35 @@ function toDictionaryEntry(row: PackEntryRow, form: DictionaryForm): DictionaryE
     reading: row.variant_reading !== '' ? row.variant_reading : row.reading,
     definitionCandidates: definitionCandidatesFrom(row.glosses),
   };
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
+/** Packs are validated on install, but malformed meanings still only lose that entry's meanings. */
+function meaningsFrom(serializedMeanings: string): string[] {
+  try {
+    const meanings: unknown = JSON.parse(serializedMeanings);
+    return isStringArray(meanings) ? meanings : [];
+  } catch {
+    return [];
+  }
+}
+
+function toWordSetEntry(row: PackWordSetEntryRow, form: DictionaryForm): WordSetEntry | null {
+  const meanings = meaningsFrom(row.meanings);
+  if (!isStarterWordType(row.part_of_speech) || meanings.length === 0) return null;
+  const { headword, variant, reading } = toDictionaryEntry({ ...row, glosses: '[]' }, form);
+  return { setId: row.set_id, wordType: row.part_of_speech, headword, variant, reading, meanings };
+}
+
+async function hasTable(database: SqlDatabase, table: string): Promise<boolean> {
+  const row = await database.getFirst(
+    "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+    [table],
+  );
+  return row !== null;
 }
 
 /** The entry with this normalized reading (numbered pinyin for Mandarin), if the dictionary has it. */
@@ -206,10 +262,7 @@ export function createDictionaryLookup(
 
   /** The pack's components in teaching order; none for packs older than schema 2. */
   async function components(): Promise<CharacterComponent[]> {
-    const table = await packDatabase.getFirst(
-      "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'components'",
-    );
-    if (!table) return [];
+    if (!(await hasTable(packDatabase, 'components'))) return [];
     const rows = await packDatabase.getAll<PackComponentRow>(
       'SELECT component, variant, name, reading, meaning FROM components ORDER BY position',
     );
@@ -227,8 +280,52 @@ export function createDictionaryLookup(
     });
   }
 
+  /** Entries of the chosen sets for this language, set by set in pack order. */
+  async function readWordSetEntries(
+    setIds: readonly string[],
+    languageId: LanguageId,
+  ): Promise<WordSetEntry[]> {
+    if (setIds.length === 0 || !(await hasTable(packDatabase, 'word_sets'))) return [];
+    const placeholders = setIds.map(() => '?').join(', ');
+    const rows = await packDatabase.getAll<PackWordSetEntryRow>(
+      `SELECT word_set_entries.set_id, word_set_entries.headword, word_set_entries.variant,
+         word_set_entries.reading, word_set_entries.variant_reading,
+         word_set_entries.part_of_speech, word_set_entries.meanings, word_set_entries.languages
+       FROM word_set_entries
+       JOIN word_sets ON word_sets.set_id = word_set_entries.set_id
+       WHERE word_set_entries.set_id IN (${placeholders})
+       ORDER BY word_sets.position, word_set_entries.position`,
+      [...setIds],
+    );
+    return rows
+      .filter((row) => isWordSetEntryForLanguage(row.languages, languageId))
+      .flatMap((row) => toWordSetEntry(row, form) ?? []);
+  }
+
+  /** The topic's sets with entries for this language, in pack order; none before schema 3. */
+  async function wordSets(topic: WordSetTopic, languageId: LanguageId): Promise<WordSetSummary[]> {
+    if (!(await hasTable(packDatabase, 'word_sets'))) return [];
+    const sets = await packDatabase.getAll<{ set_id: string; title: string }>(
+      'SELECT set_id, title FROM word_sets WHERE topic = ? ORDER BY position',
+      [topic],
+    );
+    const entries = await readWordSetEntries(
+      sets.map((set) => set.set_id),
+      languageId,
+    );
+    return sets
+      .map((set) => ({
+        setId: set.set_id,
+        title: set.title,
+        entryCount: entries.filter((entry) => entry.setId === set.set_id).length,
+      }))
+      .filter((set) => set.entryCount > 0);
+  }
+
   return {
     lookUp,
+    wordSets,
+    wordSetEntries: readWordSetEntries,
     findExampleSentences,
     components,
     starterSetSizes,

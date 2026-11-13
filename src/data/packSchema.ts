@@ -7,7 +7,7 @@
  * Bump PACK_SCHEMA_VERSION whenever the layout changes, and keep reading every version the app
  * still accepts (MIN_SUPPORTED_PACK_SCHEMA_VERSION), since installed packs aren't rebuilt.
  */
-export const PACK_SCHEMA_VERSION = 2;
+export const PACK_SCHEMA_VERSION = 3;
 export const MIN_SUPPORTED_PACK_SCHEMA_VERSION = 1;
 
 /** Written to pack_metadata.format so a stray SQLite file is never mistaken for a pack. */
@@ -25,6 +25,37 @@ export const COMPONENTS_TABLE_SQL = `
     reading TEXT NOT NULL,
     meaning TEXT NOT NULL
   );
+`;
+
+/**
+ * Optional topic word sets, such as health vocabulary, in display order. Schema 3 on. Entries
+ * carry their own meanings and curated word type, so phrases that aren't dictionary words fit.
+ */
+export const WORD_SETS_TABLES_SQL = `
+  CREATE TABLE word_sets (
+    set_id TEXT PRIMARY KEY,
+    -- Which group of sets it belongs to, e.g. "health".
+    topic TEXT NOT NULL,
+    title TEXT NOT NULL,
+    position INTEGER NOT NULL
+  ) WITHOUT ROWID;
+
+  CREATE TABLE word_set_entries (
+    set_id TEXT NOT NULL,
+    position INTEGER NOT NULL,
+    -- Written like dictionary entries: headword, variant (empty when identical), reading and
+    -- variant reading (empty when identical).
+    headword TEXT NOT NULL,
+    variant TEXT NOT NULL,
+    reading TEXT NOT NULL,
+    variant_reading TEXT NOT NULL,
+    part_of_speech TEXT NOT NULL,
+    -- JSON array of English meanings, most important first.
+    meanings TEXT NOT NULL,
+    -- Comma-separated language ids the entry is for; empty for every language of the pack.
+    languages TEXT NOT NULL,
+    PRIMARY KEY (set_id, position)
+  ) WITHOUT ROWID;
 `;
 
 export const PACK_SCHEMA_SQL = `
@@ -71,6 +102,8 @@ export const PACK_SCHEMA_SQL = `
 
   ${COMPONENTS_TABLE_SQL}
 
+  ${WORD_SETS_TABLES_SQL}
+
   -- Fonts and other files, written to app storage when the pack is installed.
   CREATE TABLE pack_files (
     name TEXT PRIMARY KEY,
@@ -92,6 +125,20 @@ const TABLES_ADDED_IN_SCHEMA: Readonly<
   Record<number, Readonly<Record<string, readonly string[]>>>
 > = {
   2: { components: ['position', 'component', 'variant', 'name', 'reading', 'meaning'] },
+  3: {
+    word_sets: ['set_id', 'topic', 'title', 'position'],
+    word_set_entries: [
+      'set_id',
+      'position',
+      'headword',
+      'variant',
+      'reading',
+      'variant_reading',
+      'part_of_speech',
+      'meanings',
+      'languages',
+    ],
+  },
 };
 
 /** Every table and column a pack of this schema version must have; used to reject bad packs. */
@@ -106,6 +153,7 @@ export function packTableColumnsFor(
 }
 
 export const COMPONENTS_TABLE_SCHEMA_VERSION = 2;
+export const WORD_SETS_TABLES_SCHEMA_VERSION = 3;
 
 export const PACK_INDEX_NAMES: readonly string[] = ['entries_by_headword', 'entries_by_variant'];
 
@@ -138,6 +186,13 @@ export interface PackComponentRow {
   name: string;
   reading: string;
   meaning: string;
+}
+
+export interface PackWordSetEntryRow extends Omit<PackEntryRow, 'glosses'> {
+  set_id: string;
+  part_of_speech: string;
+  meanings: string;
+  languages: string;
 }
 
 export type SerializedGloss = [text: string, partOfSpeechFlags: number];

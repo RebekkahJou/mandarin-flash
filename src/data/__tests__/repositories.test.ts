@@ -16,6 +16,7 @@ import { createReviewEventRepository } from '../repositories/reviewEventReposito
 import { PhoneticDisplay, createSettingsRepository } from '../repositories/settingsRepository';
 import { createWordListRepository } from '../repositories/wordListRepository';
 import { createWordRepository } from '../repositories/wordRepository';
+import { createWordSetRepository } from '../repositories/wordSetRepository';
 import type { SqlDatabase } from '../sqlDatabase';
 import { createInMemoryDatabase } from '../testing/nodeSqlDatabase';
 
@@ -403,6 +404,50 @@ describe('settings', () => {
     await settingsRepository.saveSetting(profile.id, 'learnZhuyin', true);
     expect((await settingsRepository.loadSettings(profile.id)).learnZhuyin).toBe(true);
   });
+
+  it('shows everything in All words by default and remembers each option', async () => {
+    const { database, profile } = await setUp();
+    const settingsRepository = createSettingsRepository(database);
+    const defaults = await settingsRepository.loadSettings(profile.id);
+    expect(defaults.allWordsShowsComponents).toBe(true);
+    expect(defaults.allWordsShowsLearningLevel).toBe(true);
+    await settingsRepository.saveSetting(profile.id, 'allWordsShowsRetentionWords', false);
+    await database.run('INSERT INTO settings (profile_id, key, value) VALUES (?, ?, ?)', [
+      profile.id,
+      'allWordsShowsComponents',
+      '"no"',
+    ]);
+    const settings = await settingsRepository.loadSettings(profile.id);
+    expect(settings.allWordsShowsRetentionWords).toBe(false);
+    expect(settings.allWordsShowsComponents).toBe(true);
+  });
+});
+
+describe('hidden lists and learning levels', () => {
+  it('moves every word of a list to one learning level, in every list', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const word = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    await wordListRepository.addWordToLists(word.id, [{ wordListId: listIdByName('Verbs') }]);
+    await wordRepository.setFrequencyTierForList(listIdByName('Verbs'), FrequencyTier.Retention);
+    expect((await wordRepository.getWord(word.id))?.frequencyTier).toBe(FrequencyTier.Retention);
+  });
+
+  it('lists hidden lists with their kind and finds them by name', async () => {
+    const { profile, wordListRepository, listIdByName } = await setUp();
+    const componentsId = listIdByName('Components');
+    await wordListRepository.setListHidden(componentsId, true);
+    const infos = await wordListRepository.listInfos(profile.id);
+    expect(infos.find((info) => info.id === componentsId)).toEqual({
+      id: componentsId,
+      name: 'Components',
+      kind: 'components',
+      isHidden: true,
+    });
+    expect(await wordListRepository.findHiddenListIdByName(profile.id, 'components')).toBe(
+      componentsId,
+    );
+    expect(await wordListRepository.findHiddenListIdByName(profile.id, 'Nouns')).toBeNull();
+  });
 });
 
 describe('installed packs', () => {
@@ -426,5 +471,23 @@ describe('installed packs', () => {
     ]);
     await repository.removeInstalledPack('mandarin');
     expect(await repository.listInstalledPacks()).toEqual([]);
+  });
+});
+
+describe('added word sets', () => {
+  it("remembers each profile's sets per pack, once each", async () => {
+    const { database, profile } = await setUp();
+    const repository = createWordSetRepository(database);
+    await repository.recordAddedSets(profile.id, 'mandarin', ['doctor', 'dental']);
+    await repository.recordAddedSets(profile.id, 'mandarin', ['doctor']);
+    await repository.recordAddedSets(profile.id, 'german', ['doctor']);
+    expect(await repository.addedSetIds(profile.id, 'mandarin')).toEqual(
+      new Set(['doctor', 'dental']),
+    );
+    const other = await createProfileRepository(database).createProfile(
+      'You',
+      LanguageId.MandarinTraditional,
+    );
+    expect(await repository.addedSetIds(other.id, 'mandarin')).toEqual(new Set());
   });
 });

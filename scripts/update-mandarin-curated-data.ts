@@ -1,6 +1,6 @@
 /**
- * Writes the curated Mandarin data (scripts/data/mandarin-starter-words.tsv and
- * mandarin-components.tsv) into the built-in Mandarin pack without rebuilding its dictionary, and
+ * Writes the curated Mandarin data (scripts/data/mandarin-starter-words.tsv,
+ * mandarin-components.tsv and the mandarin-word-set*.tsv files) into the built-in Mandarin pack without rebuilding its dictionary, and
  * sets its pack and schema versions to the current ones. Run on a developer machine after
  * editing either file:
  *
@@ -17,12 +17,20 @@ import {
   MANDARIN_PACK_PATH,
   MANDARIN_PACK_VERSION,
   MANDARIN_STARTER_WORDS_PATH,
+  MANDARIN_WORD_SETS_PATH,
+  MANDARIN_WORD_SET_ENTRIES_PATH,
 } from './lib/mandarinPack';
 import {
   findStarterWordProblems,
   parseStarterWordsFile,
   writeStarterWords,
 } from './lib/starterWordsFile';
+import {
+  findWordSetReadingNotes,
+  parseWordSetEntriesFile,
+  parseWordSetsFile,
+  writeWordSets,
+} from './lib/wordSetsFile';
 
 function setMetadata(database: Database.Database, key: PackMetadataKey, value: number): void {
   database.prepare('UPDATE pack_metadata SET value = ? WHERE key = ?').run(String(value), key);
@@ -31,6 +39,11 @@ function setMetadata(database: Database.Database, key: PackMetadataKey, value: n
 function main(): void {
   const words = parseStarterWordsFile(readFileSync(MANDARIN_STARTER_WORDS_PATH, 'utf8'));
   const components = parseComponentsFile(readFileSync(MANDARIN_COMPONENTS_PATH, 'utf8'));
+  const wordSets = parseWordSetsFile(readFileSync(MANDARIN_WORD_SETS_PATH, 'utf8'));
+  const wordSetEntries = parseWordSetEntriesFile(
+    readFileSync(MANDARIN_WORD_SET_ENTRIES_PATH, 'utf8'),
+    wordSets,
+  );
   const database = new Database(MANDARIN_PACK_PATH);
   const problems = findStarterWordProblems(database, words);
   if (problems.length > 0) {
@@ -39,12 +52,15 @@ function main(): void {
   }
   writeStarterWords(database, words);
   writeComponents(database, components);
+  for (const note of findWordSetReadingNotes(database, wordSetEntries)) console.warn(note);
+  writeWordSets(database, wordSets, wordSetEntries);
   setMetadata(database, PackMetadataKey.PackVersion, MANDARIN_PACK_VERSION);
   setMetadata(database, PackMetadataKey.SchemaVersion, PACK_SCHEMA_VERSION);
   database.exec('VACUUM');
   database.close();
   console.log(
-    `Wrote ${words.length} starter words and ${components.length} components ` +
+    `Wrote ${words.length} starter words, ${components.length} components and ` +
+      `${wordSetEntries.length} entries in ${wordSets.length} word sets ` +
       `(pack version ${MANDARIN_PACK_VERSION}, schema ${PACK_SCHEMA_VERSION}).`,
   );
 }

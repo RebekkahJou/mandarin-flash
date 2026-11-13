@@ -139,6 +139,15 @@ export function createWordRepository(database: SqlDatabase) {
     await database.run('UPDATE words SET frequency_tier = ? WHERE id = ?', [tier, wordId]);
   }
 
+  /** Sets the tier of every word in a list, e.g. zhuyin cards moved to Retention. */
+  async function setFrequencyTierForList(wordListId: number, tier: FrequencyTier): Promise<void> {
+    await database.run(
+      `UPDATE words SET frequency_tier = ?
+       WHERE id IN (SELECT word_id FROM word_list_entries WHERE word_list_id = ?)`,
+      [tier, wordListId],
+    );
+  }
+
   /** One UPDATE on the shared word row, so the new tier applies in every list at once. */
   async function markWordLearned(wordId: number): Promise<FrequencyTier | null> {
     const word = await getWord(wordId);
@@ -222,6 +231,7 @@ export function createWordRepository(database: SqlDatabase) {
     listWordsWithListIds,
     countWords,
     setFrequencyTier,
+    setFrequencyTierForList,
     markWordLearned,
     assignStarterSet,
     starterSetTierCounts,

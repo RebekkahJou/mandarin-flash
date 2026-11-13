@@ -12,7 +12,7 @@ import { PartOfSpeech } from '../../src/domain/partOfSpeech';
  * (bump BUILT_IN_PACK_COPY_VERSION in src/data/openDatabases.ts too), and an imported Mandarin pack only
  * replaces the built-in one when its version is higher.
  */
-export const MANDARIN_PACK_VERSION = 2;
+export const MANDARIN_PACK_VERSION = 3;
 
 export const MANDARIN_PACK_PATH = path.join(
   __dirname,
@@ -37,6 +37,15 @@ export const MANDARIN_COMPONENTS_PATH = path.join(
   '..',
   'data',
   'mandarin-components.tsv',
+);
+
+/** Curated topic word sets (health vocabulary) and their entries. */
+export const MANDARIN_WORD_SETS_PATH = path.join(__dirname, '..', 'data', 'mandarin-word-sets.tsv');
+export const MANDARIN_WORD_SET_ENTRIES_PATH = path.join(
+  __dirname,
+  '..',
+  'data',
+  'mandarin-word-set-entries.tsv',
 );
 
 /** One pack serves Traditional and Simplified; Simplified reads it through the variants. */

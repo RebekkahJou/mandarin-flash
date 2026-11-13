@@ -20,6 +20,11 @@ export interface AppSettings {
   defaultPracticeSetSize: PracticeSetSize;
   /** Show the Zhuyin study list (only while pronunciation isn't shown as zhuyin alone). */
   learnZhuyin: boolean;
+  /** All words view options. */
+  allWordsShowsScriptStudyCards: boolean;
+  allWordsShowsComponents: boolean;
+  allWordsShowsRetentionWords: boolean;
+  allWordsShowsLearningLevel: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -27,7 +32,23 @@ export const DEFAULT_SETTINGS: AppSettings = {
   simplifiedDisplay: SimplifiedDisplay.Hidden,
   defaultPracticeSetSize: DEFAULT_PRACTICE_SET_SIZE,
   learnZhuyin: false,
+  allWordsShowsScriptStudyCards: true,
+  allWordsShowsComponents: true,
+  allWordsShowsRetentionWords: true,
+  allWordsShowsLearningLevel: true,
 };
+
+type BooleanSettingKey = {
+  [Key in keyof AppSettings]: AppSettings[Key] extends boolean ? Key : never;
+}[keyof AppSettings];
+
+const BOOLEAN_SETTING_KEYS: readonly BooleanSettingKey[] = [
+  'learnZhuyin',
+  'allWordsShowsScriptStudyCards',
+  'allWordsShowsComponents',
+  'allWordsShowsRetentionWords',
+  'allWordsShowsLearningLevel',
+];
 
 function oneOf<T extends string | number | boolean>(
   allowed: readonly T[],
@@ -39,7 +60,14 @@ function oneOf<T extends string | number | boolean>(
 
 /** Ignores unknown or invalid stored values so a bad row can never break the app. */
 function parseSettings(storedValues: Record<string, unknown>): AppSettings {
+  const booleans = Object.fromEntries(
+    BOOLEAN_SETTING_KEYS.map((key) => [
+      key,
+      oneOf([true, false], storedValues[key], DEFAULT_SETTINGS[key]),
+    ]),
+  ) as Pick<AppSettings, BooleanSettingKey>;
   return {
+    ...booleans,
     phoneticDisplay: oneOf(
       Object.values(PhoneticDisplay),
       storedValues.phoneticDisplay,
@@ -55,7 +83,6 @@ function parseSettings(storedValues: Record<string, unknown>): AppSettings {
       storedValues.defaultPracticeSetSize,
       DEFAULT_SETTINGS.defaultPracticeSetSize,
     ),
-    learnZhuyin: oneOf([true, false], storedValues.learnZhuyin, DEFAULT_SETTINGS.learnZhuyin),
   };
 }
 

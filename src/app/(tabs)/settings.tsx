@@ -3,13 +3,16 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { PhoneticDisplay, SimplifiedDisplay } from '../../data/repositories/settingsRepository';
 import { PRACTICE_SET_SIZES } from '../../domain/practiceSetBuilder';
+import { WordSetTopic } from '../../domain/wordSets';
 import { useAppServices, useSettings } from '../../ui/AppServicesContext';
 import { Checkboxes } from '../../ui/components/Checkboxes';
 import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
+import { WordSetsModal } from '../../ui/components/WordSetsModal';
 import { useProfileSwitcher } from '../../ui/hooks/useProfileSwitcher';
+import { useWordSets } from '../../ui/hooks/useWordSets';
 import { useZhuyinStudy } from '../../ui/hooks/useZhuyinStudy';
 import { colors, fontSizes } from '../../ui/theme';
 
@@ -33,6 +36,10 @@ const LEARN_ZHUYIN_OPTIONS = [
   },
 ];
 
+const HEALTH_SETS_HINT =
+  'Words for doctors, symptoms, medicine and more. They go into Health-related words, ' +
+  'General Vocabulary and their word-type lists.';
+
 const SET_SIZE_CHOICES = PRACTICE_SET_SIZES.map((size) => ({ value: size, label: `${size}` }));
 
 export default function SettingsScreen() {
@@ -47,6 +54,21 @@ export default function SettingsScreen() {
       selectedValues={learnZhuyinSelection}
       onToggle={zhuyinStudy.toggle}
     />
+  ) : null;
+  const healthWordSets = useWordSets(WordSetTopic.Health);
+  const healthSection = healthWordSets.isOffered ? (
+    <>
+      <SectionTitle title="Health vocabulary" />
+      <Text style={styles.hint}>{HEALTH_SETS_HINT}</Text>
+      <View style={styles.buttonRow}>
+        <PrimaryButton
+          label="Add common health-related word sets"
+          onPress={healthWordSets.open}
+          isOutlined
+          isDisabled={healthWordSets.isAdding}
+        />
+      </View>
+    </>
   ) : null;
   const variantSectionTitle = `${variantName} characters`;
   const variantHint = `How to show the ${variantName.toLowerCase()} form on flashcards, when one exists.`;
@@ -85,6 +107,8 @@ export default function SettingsScreen() {
         onSelect={(value) => updateSetting('simplifiedDisplay', value)}
       />
 
+      {healthSection}
+
       <SectionTitle title="Default cards per set" />
       <ChoiceChips
         choices={SET_SIZE_CHOICES}
@@ -105,6 +129,12 @@ export default function SettingsScreen() {
       <View style={styles.buttonRow}>
         <PrimaryButton label="About & licenses" onPress={() => router.push('/about')} isOutlined />
       </View>
+
+      <WordSetsModal
+        {...healthWordSets.modal}
+        title="Health-related word sets"
+        hint="Choose the sets you need. You can add more later."
+      />
     </ScreenContainer>
   );
 }

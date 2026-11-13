@@ -17,7 +17,7 @@ const HEX_KEY_PATTERN = /^[0-9a-f]{64}$/;
  * Bump when the built-in Mandarin pack (assets/data/mandarin-pack.db) changes so the new file
  * replaces the old copy. Versions 1–3 were the dictionary before it became a pack.
  */
-const BUILT_IN_PACK_COPY_VERSION = 6;
+const BUILT_IN_PACK_COPY_VERSION = 7;
 const FIRST_BUILT_IN_PACK_COPY_VERSION = 1;
 
 function builtInPackDatabaseName(version: number): string {

@@ -10,13 +10,15 @@ import { ListCheckboxes } from '../../ui/components/ListCheckboxes';
 import { PhoneticText } from '../../ui/components/PhoneticText';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
-import { FREQUENCY_TIER_LABELS } from '../../ui/frequencyTierLabels';
+import { LEARNING_LEVEL_LABELS, learningLevelShareNote } from '../../services/learningLevelText';
 import { useWordEditor } from '../../ui/hooks/useWordEditor';
 import { ENGLISH_FONT_FAMILY, colors, fontSizes } from '../../ui/theme';
 
+const LEARNING_LEVEL_HINT = `How often this word comes up in practice sets, in every list. ${learningLevelShareNote()}`;
+
 const TIER_CHOICES: Choice<FrequencyTier>[] = FREQUENCY_TIERS_IN_ORDER.map((tier) => ({
   value: tier,
-  label: FREQUENCY_TIER_LABELS[tier],
+  label: LEARNING_LEVEL_LABELS[tier],
 }));
 
 export default function EditWordScreen() {
@@ -35,8 +37,8 @@ export default function EditWordScreen() {
       <PhoneticText numberedPinyin={word.reading} style={styles.phonetic} />
       <Text style={styles.meanings}>{meaningsText}</Text>
 
-      <SectionTitle title="Frequency" />
-      <Text style={styles.hint}>How often this word comes up in practice sets, in every list.</Text>
+      <SectionTitle title="Learning level" />
+      <Text style={styles.hint}>{LEARNING_LEVEL_HINT}</Text>
       <ChoiceChips
         choices={TIER_CHOICES}
         selectedValue={word.frequencyTier}

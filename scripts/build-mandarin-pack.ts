@@ -25,6 +25,8 @@ import {
   MANDARIN_PACK_METADATA,
   MANDARIN_PACK_PATH,
   MANDARIN_STARTER_WORDS_PATH,
+  MANDARIN_WORD_SETS_PATH,
+  MANDARIN_WORD_SET_ENTRIES_PATH,
   writePackMetadata,
 } from './lib/mandarinPack';
 import { tagGloss } from './lib/partOfSpeechTagger';
@@ -33,6 +35,7 @@ import {
   parseStarterWordsFile,
   writeStarterWords,
 } from './lib/starterWordsFile';
+import { parseWordSetEntriesFile, parseWordSetsFile, writeWordSets } from './lib/wordSetsFile';
 
 /** Short sentences are easiest for learners and keep the bundle small. */
 const MAX_SENTENCE_CHARACTERS = 15;
@@ -130,6 +133,9 @@ function main(): void {
   for (const problem of findStarterWordProblems(database, starterWords)) console.error(problem);
   writeStarterWords(database, starterWords);
   writeComponents(database, parseComponentsFile(readFileSync(MANDARIN_COMPONENTS_PATH, 'utf8')));
+  const wordSets = parseWordSetsFile(readFileSync(MANDARIN_WORD_SETS_PATH, 'utf8'));
+  const wordSetEntriesText = readFileSync(MANDARIN_WORD_SET_ENTRIES_PATH, 'utf8');
+  writeWordSets(database, wordSets, parseWordSetEntriesFile(wordSetEntriesText, wordSets));
   database.exec('VACUUM');
   database.close();
   const sizeInMegabytes = (statSync(MANDARIN_PACK_PATH).size / BYTES_PER_MEGABYTE).toFixed(1);

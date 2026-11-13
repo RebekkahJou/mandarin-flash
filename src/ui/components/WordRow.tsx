@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Word } from '../../domain/word';
-import { FREQUENCY_TIER_LABELS } from '../frequencyTierLabels';
+import { LEARNING_LEVEL_LABELS } from '../../services/learningLevelText';
 import { ENGLISH_FONT_FAMILY, colors, fontSizes, radii, spacing } from '../theme';
 import { ChineseText } from './ChineseText';
 import { PhoneticText } from './PhoneticText';
@@ -16,12 +16,14 @@ interface WordRowProps {
   showsEveryMeaning?: boolean;
   onPress: () => void;
   pressHint: string;
-  /** Extra line under the tier, e.g. the lists the word is in. */
+  /** Extra line under the learning level, e.g. the lists the word is in. */
   detail?: string;
   /** Shows a remove button when set. */
   onRemove?: () => void;
   /** Highlights the row and explains why, e.g. a noun in the Verbs list. */
   warning?: string;
+  /** Shows the word's learning level (High practice, Reinforcement, Retention). */
+  showsLearningLevel?: boolean;
 }
 
 export function WordRow({
@@ -33,12 +35,15 @@ export function WordRow({
   detail,
   onRemove,
   warning,
+  showsLearningLevel = true,
 }: WordRowProps) {
   const hasWarning = warning !== undefined;
   const rowStyle = [styles.row, hasWarning && styles.warningRow];
   const meaningsText = meanings.join('; ');
   const meaningLineLimit = showsEveryMeaning ? undefined : COLLAPSED_MEANING_LINES;
-  const tierLabel = FREQUENCY_TIER_LABELS[word.frequencyTier];
+  const learningLevelLine = showsLearningLevel ? (
+    <Text style={styles.secondary}>{LEARNING_LEVEL_LABELS[word.frequencyTier]}</Text>
+  ) : null;
   const warningLine = hasWarning ? <Text style={styles.warning}>⚠ {warning}</Text> : null;
   const detailLine =
     detail === undefined ? null : (
@@ -71,7 +76,7 @@ export function WordRow({
           <Text style={styles.meanings} numberOfLines={meaningLineLimit}>
             {meaningsText}
           </Text>
-          <Text style={styles.secondary}>{tierLabel}</Text>
+          {learningLevelLine}
           {warningLine}
           {detailLine}
         </View>

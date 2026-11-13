@@ -4,9 +4,61 @@ Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (20
 tested on the phone; merged into main). **Phase 3 done** (2026-11-10, branch
 lang-compatibility-p3, phone-tested, merged into main; see "Phase 3 wrap-up" below). **Phase 4
 built and phone-tested** (2026-11-10, branch lang-compatibility-p4; see "Phase 4 decisions"
-below). **Next: Phase 4b, health-related word sets** (planned 2026-11-10; see "Health-related
-word sets" below), then Phase 4c, learning levels and All words options (requested 2026-11-13).
-Update this file as work lands or decisions change.
+below). **Phases 4b and 4c built** (2026-11-13, branch lang-compatibility-p4b; automated tests
+pass, phone test pending; see "Phase 4b and 4c decisions" below). Update this file as work lands
+or decisions change.
+
+Phase 4b and 4c decisions (2026-11-13):
+- **Curated health data** lives in scripts/data/mandarin-word-sets.tsv (set id, topic, title) and
+  mandarin-word-set-entries.tsv (set id, headword, reading, word type, meanings separated by "; ",
+  languages, curator note). It was converted from the user's draft (`healthRelatedWordLists.ts`,
+  no longer in src/): 240 entries in 10 sets. Word types were assigned by hand (sentences and
+  symptom phrases such as 喉嚨痛 are "phrase", 飯後 is a time word, 口渴/頭暈 are adjectives).
+- **Readings follow the dictionary** where the dictionary has the word, so a word added with Add
+  Word isn't stored twice: 咳嗽 ke2 sou5 (draft: sou4) and 子宮內膜異位症 mo2 (draft: mo4).
+  `npm run update:mandarin-curated-data` warns about any other mismatch. 跌倒's meaning lost its
+  "(Taiwan reading die1)" note.
+- **Regional entries:** Taiwan-only terms (健保卡, 家醫科, 藥局, 普拿疼, 衛生棉, 慢性病連續處方箋, 齒顎矯正,
+  維持器, 戽斗, 閃到腰) are limited to zh-Hant; Simplified-only equivalents follow each (医保卡,
+  药店, 卫生巾, 保持器; marked "review: mainland term" for 全科, 对乙酰氨基酚, 长期处方, 地包天, 闪了腰).
+  Entries are written in Traditional; Simplified forms come from the dictionary or OpenCC.
+- **Pack schema 3, Mandarin pack version 3** (built-in copy version 7). `word_sets` has a `topic`
+  column so later topics (travel, food) reuse the tables. Test packs must now be version 4+.
+- **Settings → "Health vocabulary"** shows only when the pack has health sets. Sets still to add
+  come first; added ones are greyed out with "· Added" at the bottom. "Also add the words to"
+  offers general lists other than General Vocabulary, Phrases, Time words and Health-related
+  words (so Focus Vocabulary and the user's own lists). Added sets are remembered in
+  `added_word_sets` (profile, pack, set).
+- **Learning levels:** labels are High practice / Reinforcement / Retention; the word screen's
+  section is "Learning level", with the practice-share note built from `PRACTICE_SET_TIER_RATIOS`.
+- **Retention question:** turning off Learn zhuyin (when the Zhuyin list exists) and "Hide list"
+  on the Components list ask "Move all … to Retention?" with "Move to Retention" / "Keep levels";
+  either way the list is hidden. Choosing zhuyin-only display still hides the Zhuyin list without
+  asking (not in the request). Only Components gets "Hide list"; "+" shows a hidden list of the
+  suggested name again instead of making a new one.
+- **All words:** an "Options" button opens View options (saved per profile in `settings`): Show
+  zhuyin cards / Show components (only when the profile has them), Show Retention words, Show
+  learning level. A note says how many words the options hide. A word only in hidden lists says
+  "In hidden list: Zhuyin" (fixes the Phase 4 follow-up finding).
+
+Phase 4b and 4c phone test (temporary profiles; reload so the version 3 pack is copied):
+1. Traditional profile → Settings → "Add common health-related word sets": 10 sets with counts
+   (Going to the doctor 23 words). Tick Cold/Flu and Diabetes, tick Focus Vocabulary, add: the
+   characters question appears, then the summary. Lists tab shows Health-related words; Focus
+   Vocabulary has the words; 喉嚨痛 is in Phrases and 口渴 in Adjectives.
+2. Reopen the modal: Cold/Flu and Diabetes are greyed out at the bottom with "· Added". Delete
+   the Health-related words list, add First aid: the list comes back with First aid's words.
+3. Add 醫生 with Add Word (meaning changed to "physician"), then add Going to the doctor: the
+   summary counts it as already had, and 醫生 joins Health-related words, still "physician".
+4. Simplified profile → the same modal: Going to the doctor shows 医保卡 and 药店, not 健保卡/藥局.
+5. A word's screen says "Learning level" with High practice / Reinforcement / Retention and the
+   60% / 30% / 10% note; All words rows show the new labels.
+6. Learn zhuyin on, then off: the Retention question shows; "Move to Retention" makes ㄅ show
+   Retention in All words, with "In hidden list: Zhuyin".
+7. Components list → "Hide list" → "Keep levels": the list leaves the Lists tab; "+" offers
+   Components and brings back the same 59 cards with their levels.
+8. All words → Options: untick Show components and Show learning level; components disappear,
+   the note counts them, labels are gone; leave and come back: the options are kept.
 
 Phase 4 decisions (2026-11-10):
 - **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency
@@ -77,6 +129,7 @@ Phase 4 follow-up phone test results (2026-11-13, Pixel 8 Pro, profiles TEMP1-3,
   button sat below the dialog, half under the navigation bar, and a tap just above it closed the
   dialog. `InfoModal` now scrolls long content so its button stays inside the card.
 - Found: a hidden list's words show "Not in any list" in All words (ㄈ while Zhuyin was hidden).
+  (Fixed in Phase 4c: they say "In hidden list: Zhuyin".)
 - Found: right after a new profile is opened, All words shows 0 words until the tab is revisited,
   although the Components list has already filled.
 
@@ -390,7 +443,8 @@ today. Planned 2026-11-10 at the user's request; part of the MVP.
   Wound infection, Chronic ailments, Medicine (including forgotten medication, refills and
   urgent refills during travel delays), First aid, Dental issues (including orthodontics) and
   Injuries. The user's draft lists are in `src/domain/healthRelatedWordLists.ts` (not yet
-  committed); they become a curated data file under `scripts/data/`, like the starter words.
+  committed); they became scripts/data/mandarin-word-sets.tsv and mandarin-word-set-entries.tsv
+  (done 2026-11-13).
 - **Where they live:** inside each language pack, like starter vocabulary, so "downloading" a
   set needs no network. The app stays offline; adding a set copies its words from the pack into
   the profile. On-screen text says "Add", not "download". A pack with no health sets hides the
