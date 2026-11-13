@@ -89,6 +89,22 @@ Word counts and the "0 words" check (2026-11-13, Pixel 8 Pro, profiles TEMP1-2, 
   stale built-in pack copy (the development-only issue noted under Phase 4).
 - The health modal lists the 10 sets with counts and offers Focus Vocabulary. Passed (visual).
 
+Phase 4b and 4c phone test results (2026-11-13, Pixel 8 Pro, profiles TEMP4 Traditional and
+TEMP5 Simplified, deleted after). All eight steps passed:
+- 醫生 imported by CSV as "physician", then Going to the doctor + Cold/Flu with Focus Vocabulary:
+  "Added 41 words … 1 word you already had was added to Health-related words"; 醫生 kept
+  "physician" and joined Focus Vocabulary and Health-related words.
+- Reopened, both sets sat greyed at the bottom with "· Added". After deleting Health-related
+  words, adding First aid brought the list back with its 17 words.
+- Word screen: "Learning level" with the 60% / 30% / 10% note and the three level chips.
+- Learn zhuyin on, then off: the Retention question; "Move to Retention" hid the list, and hiding
+  Retention words in All words read "118 words (+42 hidden words)".
+- Components → Hide list (the question also says how to show it again) → Keep levels: the list
+  left; "+" offered Components and restored the same list (59 cards, original place).
+- All words: Show learning level off stayed off after leaving and returning; rows had no label.
+- TEMP5 (Simplified): Going to the doctor 23 and Dental issues 37 words (Traditional 38); after
+  adding, 医保卡 and 药店 were there, 健保卡 and 药局 weren't, and 休息 read xiū xi (mainland).
+
 Phase 4b and 4c phone test (temporary profiles; reload so the version 3 pack is copied):
 1. Traditional profile → Settings → "Add common health-related word sets": 10 sets with counts
    (Going to the doctor 23 words). Tick Cold/Flu and Diabetes, tick Focus Vocabulary, add: the
