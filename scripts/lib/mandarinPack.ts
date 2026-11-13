@@ -12,7 +12,7 @@ import { PartOfSpeech } from '../../src/domain/partOfSpeech';
  * (bump BUILT_IN_PACK_COPY_VERSION in src/data/openDatabases.ts too), and an imported Mandarin pack only
  * replaces the built-in one when its version is higher.
  */
-export const MANDARIN_PACK_VERSION = 2;
+export const MANDARIN_PACK_VERSION = 4;
 
 export const MANDARIN_PACK_PATH = path.join(
   __dirname,
@@ -39,6 +39,23 @@ export const MANDARIN_COMPONENTS_PATH = path.join(
   'mandarin-components.tsv',
 );
 
+/** Curated topic word sets (health vocabulary) and their entries. */
+export const MANDARIN_WORD_SETS_PATH = path.join(__dirname, '..', 'data', 'mandarin-word-sets.tsv');
+export const MANDARIN_WORD_SET_ENTRIES_PATH = path.join(
+  __dirname,
+  '..',
+  'data',
+  'mandarin-word-set-entries.tsv',
+);
+
+/** Taiwan readings from Wiktionary, applied over CC-CEDICT's mainland ones. */
+export const MANDARIN_TAIWAN_READINGS_PATH = path.join(
+  __dirname,
+  '..',
+  'data',
+  'mandarin-taiwan-readings.tsv',
+);
+
 /** One pack serves Traditional and Simplified; Simplified reads it through the variants. */
 export const MANDARIN_PACK_METADATA: PackMetadata = {
   packId: 'mandarin',
@@ -54,6 +71,12 @@ export const MANDARIN_PACK_METADATA: PackMetadata = {
       usage: 'Dictionary meanings and pinyin',
       license: 'Creative Commons Attribution-ShareAlike 4.0',
       source: 'mdbg.net/chinese/dictionary?page=cc-cedict',
+    },
+    {
+      name: 'Wiktionary',
+      usage: 'Taiwan pronunciations',
+      license: 'Creative Commons Attribution-ShareAlike 4.0',
+      source: 'en.wiktionary.org (extracted by kaikki.org)',
     },
     {
       name: 'Tatoeba',

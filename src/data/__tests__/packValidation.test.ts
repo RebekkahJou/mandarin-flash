@@ -52,9 +52,9 @@ describe('validatePackDatabase', () => {
     await expectRejected(database);
   });
 
-  it('accepts a schema 1 pack, which has no components table', async () => {
+  it('accepts a schema 1 pack, which has no components or word set tables', async () => {
     const database = await createValidPack();
-    await database.exec('DROP TABLE components');
+    await database.exec('DROP TABLE components; DROP TABLE word_sets; DROP TABLE word_set_entries');
     await database.run('UPDATE pack_metadata SET value = ? WHERE key = ?', [
       '1',
       PackMetadataKey.SchemaVersion,
@@ -65,6 +65,40 @@ describe('validatePackDatabase', () => {
   it('rejects a schema 2 pack without its components table', async () => {
     const database = await createValidPack();
     await database.exec('DROP TABLE components');
+    await expectRejected(database);
+  });
+
+  it('accepts a schema 2 pack, which has no word set tables', async () => {
+    const database = await createValidPack();
+    await database.exec('DROP TABLE word_sets; DROP TABLE word_set_entries');
+    await database.run('UPDATE pack_metadata SET value = ? WHERE key = ?', [
+      '2',
+      PackMetadataKey.SchemaVersion,
+    ]);
+    expect((await validatePackDatabase(database)).schemaVersion).toBe(2);
+  });
+
+  it('rejects a schema 3 pack without its word set tables', async () => {
+    const database = await createValidPack();
+    await database.exec('DROP TABLE word_set_entries');
+    await expectRejected(database);
+  });
+
+  it('rejects word set meanings longer than the limit', async () => {
+    const database = await createValidPack();
+    await database.run(
+      `INSERT INTO word_set_entries (set_id, position, headword, variant, reading,
+         variant_reading, part_of_speech, meanings, languages) VALUES (?, 1, ?, '', ?, '', ?, ?, '')`,
+      ['doctor', '醫生', 'yi1 sheng1', 'noun', 'x'.repeat(PACK_LIMITS.maxWordSetMeaningsLength + 1)],
+    );
+    await expectRejected(database);
+  });
+
+  it('rejects a word set title stored as bytes', async () => {
+    const database = await createValidPack();
+    await database.run(
+      "INSERT INTO word_sets (set_id, topic, title, position) VALUES ('doctor', 'health', x'2A', 1)",
+    );
     await expectRejected(database);
   });
 

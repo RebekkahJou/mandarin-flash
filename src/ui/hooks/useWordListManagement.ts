@@ -4,6 +4,7 @@ import type { DefaultWordListDefinition } from '../../domain/defaultWordLists';
 import { suggestedWordListsFor } from '../../domain/defaultWordLists';
 import type { WordList } from '../../domain/wordList';
 import { wordListNameProblem } from '../../domain/wordListName';
+import { showHiddenListNamed } from '../../services/studyListHiding';
 import { useAppServices } from '../AppServicesContext';
 import { showMessage } from '../confirm';
 
@@ -41,10 +42,19 @@ export function useWordListManagement(lists: readonly WordList[], onChanged: () 
     await addList({ name: newListName.trim() });
   };
 
-  /** Suggested lists keep their word type, so Pronouns works like Nouns or Verbs. */
+  /**
+   * Suggested lists keep their word type, so Pronouns works like Nouns or Verbs. A hidden list
+   * of that name (Components) is shown again, with its cards, instead of making a new one.
+   */
   const createSuggestedList = async (suggestionName: string) => {
     const suggestion = suggestedLists.find((list) => list.name === suggestionName);
-    if (suggestion) await addList(suggestion);
+    if (!suggestion) return;
+    if (await showHiddenListNamed(wordListRepository, profileId, suggestion.name)) {
+      setIsCreatorVisible(false);
+      await onChanged();
+      return;
+    }
+    await addList(suggestion);
   };
 
   const saveListOrder = async (orderedListIds: number[]) => {

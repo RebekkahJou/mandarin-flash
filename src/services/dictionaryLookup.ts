@@ -1,9 +1,18 @@
-import type { PackComponentRow, PackEntryRow, PackSentenceRow } from '../data/packSchema';
+import type {
+  PackComponentRow,
+  PackEntryRow,
+  PackSentenceRow,
+  PackWordSetEntryRow,
+} from '../data/packSchema';
 import type { SqlDatabase } from '../data/sqlDatabase';
+import type { LanguageId } from '../domain/language';
 import type { PartOfSpeech } from '../domain/partOfSpeech';
 import { PartOfSpeech as PartsOfSpeech, hasPartOfSpeech } from '../domain/partOfSpeech';
 import type { StarterWordType } from '../domain/starterVocabulary';
 import { isStarterWordType } from '../domain/starterVocabulary';
+import type { PackReading } from '../domain/savedReadingUpdates';
+import type { WordSetTopic } from '../domain/wordSets';
+import { isWordSetEntryForLanguage } from '../domain/wordSets';
 import type { DefinitionCandidate, Word } from '../domain/word';
 
 export interface DictionaryEntry {
@@ -47,6 +56,25 @@ export interface CharacterComponent {
   /** The name's reading, e.g. "san1 dian3 shui3". */
   reading: string;
   meaning: string;
+}
+
+/** A topic word set the profile's language has entries in. */
+export interface WordSetSummary {
+  setId: string;
+  title: string;
+  /** Entries for the profile's language. */
+  entryCount: number;
+}
+
+/** A word set entry with its curated meanings, read the way the profile's language needs. */
+export interface WordSetEntry {
+  setId: string;
+  wordType: StarterWordType;
+  headword: string;
+  /** Present only when it differs from the headword. */
+  variant?: string;
+  reading: string;
+  meanings: string[];
 }
 
 const MAX_EXAMPLE_SENTENCES = 3;
@@ -104,6 +132,59 @@ function toDictionaryEntry(row: PackEntryRow, form: DictionaryForm): DictionaryE
   };
 }
 
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
+/** Packs are validated on install, but malformed meanings still only lose that entry's meanings. */
+function meaningsFrom(serializedMeanings: string): string[] {
+  try {
+    const meanings: unknown = JSON.parse(serializedMeanings);
+    return isStringArray(meanings) ? meanings : [];
+  } catch {
+    return [];
+  }
+}
+
+function toWordSetEntry(row: PackWordSetEntryRow, form: DictionaryForm): WordSetEntry | null {
+  const meanings = meaningsFrom(row.meanings);
+  if (!isStarterWordType(row.part_of_speech) || meanings.length === 0) return null;
+  const { headword, variant, reading } = toDictionaryEntry({ ...row, glosses: '[]' }, form);
+  return { setId: row.set_id, wordType: row.part_of_speech, headword, variant, reading, meanings };
+}
+
+async function hasTable(database: SqlDatabase, table: string): Promise<boolean> {
+  const row = await database.getFirst(
+    "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+    [table],
+  );
+  return row !== null;
+}
+
+/**
+ * One entry per reading, meanings in rank order. Taiwan readings can give two of a headword's
+ * entries the same reading (地方 "place" and "local" are both dì fāng in Taiwan).
+ */
+export function mergeSameReadings(entries: readonly DictionaryEntry[]): DictionaryEntry[] {
+  const byReading = new Map<string, DictionaryEntry>();
+  for (const entry of entries) {
+    const existing = byReading.get(entry.reading);
+    if (!existing) {
+      byReading.set(entry.reading, {
+        ...entry,
+        definitionCandidates: [...entry.definitionCandidates],
+      });
+      continue;
+    }
+    const knownTexts = new Set(existing.definitionCandidates.map((candidate) => candidate.text));
+    const newCandidates = entry.definitionCandidates.filter(
+      (candidate) => !knownTexts.has(candidate.text),
+    );
+    existing.definitionCandidates.push(...newCandidates);
+  }
+  return [...byReading.values()];
+}
+
 /** The entry with this normalized reading (numbered pinyin for Mandarin), if the dictionary has it. */
 export function findReading(
   entries: readonly DictionaryEntry[],
@@ -151,7 +232,7 @@ export function createDictionaryLookup(
   /** All readings of the word, most common first. */
   async function lookUp(headword: string): Promise<DictionaryEntry[]> {
     const rows = await findRows(headword);
-    return rows.map((row) => toDictionaryEntry(row, form));
+    return mergeSameReadings(rows.map((row) => toDictionaryEntry(row, form)));
   }
 
   /** Shortest example sentences containing the word, shown in the language's script. */
@@ -178,8 +259,9 @@ export function createDictionaryLookup(
   }
 
   /**
-   * A starter set in teaching order. Words are matched to their dictionary entry by headword and
-   * reading; a word the dictionary lacks, or of a type this app doesn't know, is skipped.
+   * A starter set in teaching order. Words are matched to their dictionary entries by headword
+   * and reading (several entries with that reading are merged); a word the dictionary lacks, or
+   * of a type this app doesn't know, is skipped.
    */
   async function starterWords(setNumber: number): Promise<StarterWord[]> {
     const rows = await packDatabase.getAll<StarterWordRow>(
@@ -187,29 +269,27 @@ export function createDictionaryLookup(
        FROM starter_words JOIN entries
          ON entries.headword = starter_words.headword AND entries.reading = starter_words.reading
        WHERE starter_words.set_number = ?
-       GROUP BY starter_words.position
-       ORDER BY starter_words.position`,
+       ORDER BY starter_words.position, entries.rank`,
       [setNumber],
     );
-    return rows.flatMap((row) =>
-      isStarterWordType(row.part_of_speech)
-        ? [
-            {
-              position: row.position,
-              wordType: row.part_of_speech,
-              entry: toDictionaryEntry(row, form),
-            },
-          ]
-        : [],
-    );
+    const wordsByPosition = new Map<number, StarterWord>();
+    for (const row of rows) {
+      if (!isStarterWordType(row.part_of_speech)) continue;
+      const entry = toDictionaryEntry(row, form);
+      const existing = wordsByPosition.get(row.position);
+      const merged = existing ? mergeSameReadings([existing.entry, entry])[0] : entry;
+      wordsByPosition.set(row.position, {
+        position: row.position,
+        wordType: row.part_of_speech,
+        entry: merged ?? entry,
+      });
+    }
+    return [...wordsByPosition.values()];
   }
 
   /** The pack's components in teaching order; none for packs older than schema 2. */
   async function components(): Promise<CharacterComponent[]> {
-    const table = await packDatabase.getFirst(
-      "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'components'",
-    );
-    if (!table) return [];
+    if (!(await hasTable(packDatabase, 'components'))) return [];
     const rows = await packDatabase.getAll<PackComponentRow>(
       'SELECT component, variant, name, reading, meaning FROM components ORDER BY position',
     );
@@ -227,8 +307,77 @@ export function createDictionaryLookup(
     });
   }
 
+  /** Entries of the chosen sets for this language, set by set in pack order. */
+  async function readWordSetEntries(
+    setIds: readonly string[],
+    languageId: LanguageId,
+  ): Promise<WordSetEntry[]> {
+    if (setIds.length === 0 || !(await hasTable(packDatabase, 'word_sets'))) return [];
+    const placeholders = setIds.map(() => '?').join(', ');
+    const rows = await packDatabase.getAll<PackWordSetEntryRow>(
+      `SELECT word_set_entries.set_id, word_set_entries.headword, word_set_entries.variant,
+         word_set_entries.reading, word_set_entries.variant_reading,
+         word_set_entries.part_of_speech, word_set_entries.meanings, word_set_entries.languages
+       FROM word_set_entries
+       JOIN word_sets ON word_sets.set_id = word_set_entries.set_id
+       WHERE word_set_entries.set_id IN (${placeholders})
+       ORDER BY word_sets.position, word_set_entries.position`,
+      [...setIds],
+    );
+    return rows
+      .filter((row) => isWordSetEntryForLanguage(row.languages, languageId))
+      .flatMap((row) => toWordSetEntry(row, form) ?? []);
+  }
+
+  /** The topic's sets with entries for this language, in pack order; none before schema 3. */
+  async function wordSets(topic: WordSetTopic, languageId: LanguageId): Promise<WordSetSummary[]> {
+    if (!(await hasTable(packDatabase, 'word_sets'))) return [];
+    const sets = await packDatabase.getAll<{ set_id: string; title: string }>(
+      'SELECT set_id, title FROM word_sets WHERE topic = ? ORDER BY position',
+      [topic],
+    );
+    const entries = await readWordSetEntries(
+      sets.map((set) => set.set_id),
+      languageId,
+    );
+    return sets
+      .map((set) => ({
+        setId: set.set_id,
+        title: set.title,
+        entryCount: entries.filter((entry) => entry.setId === set.set_id).length,
+      }))
+      .filter((set) => set.entryCount > 0);
+  }
+
+  /**
+   * Every reading of each headword that has a replaced reading (variant_reading), for updating
+   * words saved before the pack changed. Empty for languages that read the variants, since their
+   * readings didn't change.
+   */
+  async function replacedReadings(): Promise<Map<string, PackReading[]>> {
+    if (form.readsVariants) return new Map();
+    const rows = await packDatabase.getAll<{
+      headword: string;
+      reading: string;
+      variant_reading: string;
+    }>(
+      `SELECT headword, reading, variant_reading FROM entries
+       WHERE headword IN (SELECT headword FROM entries WHERE variant_reading <> '')`,
+    );
+    const byHeadword = new Map<string, PackReading[]>();
+    for (const row of rows) {
+      const readings = byHeadword.get(row.headword) ?? [];
+      readings.push({ reading: row.reading, replacedReading: row.variant_reading });
+      byHeadword.set(row.headword, readings);
+    }
+    return byHeadword;
+  }
+
   return {
     lookUp,
+    replacedReadings,
+    wordSets,
+    wordSetEntries: readWordSetEntries,
     findExampleSentences,
     components,
     starterSetSizes,

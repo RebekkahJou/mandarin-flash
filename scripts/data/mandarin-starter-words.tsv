@@ -21,13 +21,13 @@ set	headword	reading	word_type
 1	喝	he1	verb
 1	看	kan4	verb
 1	說	shuo1	verb
-1	喜歡	xi3 huan5	verb
+1	喜歡	xi3 huan1	verb
 1	好	hao3	adjective
 1	大	da4	adjective
 1	小	xiao3	adjective
 1	熱	re4	adjective
 1	冷	leng3	adjective
-1	不客氣	bu4 ke4 qi5	phrase
+1	不客氣	bu4 ke4 qi4	phrase
 1	不	bu4	adverb
 1	很	hen3	adverb
 1	也	ye3	adverb
@@ -36,9 +36,9 @@ set	headword	reading	word_type
 1	茶	cha2	noun
 1	飯	fan4	noun
 1	家	jia1	noun
-1	朋友	peng2 you5	noun
+1	朋友	peng2 you3	noun
 1	老師	lao3 shi1	noun
-1	學生	xue2 sheng5	noun
+1	學生	xue2 sheng1	noun
 1	媽媽	ma1 ma5	noun
 1	爸爸	ba4 ba5	noun
 1	書	shu1	noun
@@ -58,7 +58,7 @@ set	headword	reading	word_type
 2	七	qi1	numeral
 2	哪裡	na3 li3	question word
 2	幾	ji3	question word
-2	沒關係	mei2 guan1 xi5	phrase
+2	沒關係	mei2 guan1 xi4	phrase
 2	早安	zao3 an1	phrase
 2	請問	qing3 wen4	phrase
 2	做	zuo4	verb
@@ -76,8 +76,8 @@ set	headword	reading	word_type
 2	高興	gao1 xing4	adjective
 2	忙	mang2	adjective
 2	貴	gui4	adjective
-2	便宜	pian2 yi5	adjective
-2	漂亮	piao4 liang5	adjective
+2	便宜	pian2 yi2	adjective
+2	漂亮	piao4 liang4	adjective
 2	都	dou1	adverb
 2	太	tai4	adverb
 2	還	hai2	adverb
@@ -105,7 +105,7 @@ set	headword	reading	word_type
 3	百	bai3	numeral
 3	怎麼	zen3 me5	question word
 3	為什麼	wei4 shen2 me5	question word
-3	多少	duo1 shao5	question word
+3	多少	duo1 shao3	question word
 3	這	zhe4	pronoun
 3	那	na4	pronoun
 3	晚安	wan3 an1	phrase
@@ -136,7 +136,7 @@ set	headword	reading	word_type
 3	房子	fang2 zi5	noun
 3	路	lu4	noun
 3	天氣	tian1 qi4	noun
-3	衣服	yi1 fu5	noun
+3	衣服	yi1 fu2	noun
 3	電腦	dian4 nao3	noun
 3	醫生	yi1 sheng1	noun
 3	商店	shang1 dian4	noun
@@ -150,7 +150,7 @@ set	headword	reading	word_type
 3	隻	zhi1	measure word
 3	了	le5	particle
 4	哪	na3	question word
-4	什麼時候	shen2 me5 shi2 hou5	question word
+4	什麼時候	shen2 me5 shi2 hou4	question word
 4	自己	zi4 ji3	pronoun
 4	大家	da4 jia1	pronoun
 4	千	qian1	numeral
@@ -168,7 +168,7 @@ set	headword	reading	word_type
 4	玩	wan2	verb
 4	跑	pao3	verb
 4	覺得	jue2 de5	verb
-4	認識	ren4 shi5	verb
+4	認識	ren4 shi4	verb
 4	開始	kai1 shi3	verb
 4	長	chang2	adjective
 4	短	duan3	adjective
@@ -180,7 +180,7 @@ set	headword	reading	word_type
 4	一起	yi1 qi3	adverb
 4	常常	chang2 chang2	adverb
 4	再	zai4	adverb
-4	眼睛	yan3 jing5	noun
+4	眼睛	yan3 jing1	noun
 4	手	shou3	noun
 4	頭	tou2	noun
 4	魚	yu2	noun
@@ -202,7 +202,7 @@ set	headword	reading	word_type
 5	怎麼樣	zen3 me5 yang4	question word
 5	哪個	na3 ge5	question word
 5	您	nin2	pronoun
-5	別人	bie2 ren5	pronoun
+5	別人	bie2 ren2	pronoun
 5	萬	wan4	numeral
 5	第一	di4 yi1	numeral
 5	好久不見	hao3 jiu3 bu5 jian4	phrase
@@ -215,15 +215,15 @@ set	headword	reading	word_type
 5	帶	dai4	verb
 5	準備	zhun3 bei4	verb
 5	需要	xu1 yao4	verb
-5	告訴	gao4 su5	verb
-5	休息	xiu1 xi5	verb
+5	告訴	gao4 su4	verb
+5	休息	xiu1 xi2	verb
 5	唱歌	chang4 ge1	verb
 5	跳舞	tiao4 wu3	verb
-5	舒服	shu1 fu5	adjective
+5	舒服	shu1 fu2	adjective
 5	乾淨	gan1 jing4	adjective
 5	重要	zhong4 yao4	adjective
 5	有名	you3 ming2	adjective
-5	聰明	cong1 ming5	adjective
+5	聰明	cong1 ming2	adjective
 5	年輕	nian2 qing1	adjective
 5	老	lao3	adjective
 5	非常	fei1 chang2	adverb
@@ -231,7 +231,7 @@ set	headword	reading	word_type
 5	馬上	ma3 shang4	adverb
 5	天	tian1	noun
 5	雨	yu3	noun
-5	太陽	tai4 yang5	noun
+5	太陽	tai4 yang2	noun
 5	花	hua1	noun
 5	樹	shu4	noun
 5	山	shan1	noun
@@ -243,7 +243,7 @@ set	headword	reading	word_type
 5	錢包	qian2 bao1	noun
 5	鞋	xie2	noun
 5	下午	xia4 wu3	time word
-5	星期	xing1 qi1	time word
+5	星期	xing1 qi2	time word
 5	向	xiang4	preposition
 5	因為	yin1 wei4	conjunction
 5	所以	suo3 yi3	conjunction
@@ -280,12 +280,12 @@ set	headword	reading	word_type
 6	一定	yi1 ding4	adverb
 6	剛	gang1	adverb
 6	身體	shen1 ti3	noun
-6	頭髮	tou2 fa5	noun
+6	頭髮	tou2 fa3	noun
 6	耳朵	er3 duo5	noun
 6	鼻子	bi2 zi5	noun
 6	房間	fang2 jian1	noun
 6	廚房	chu2 fang2	noun
-6	窗戶	chuang1 hu5	noun
+6	窗戶	chuang1 hu4	noun
 6	床	chuang2	noun
 6	報紙	bao4 zhi3	noun
 6	生日	sheng1 ri4	noun
@@ -302,10 +302,10 @@ set	headword	reading	word_type
 7	幾點	ji3 dian3	question word
 7	第二	di4 er4	numeral
 7	這裡	zhe4 li3	pronoun
-7	那裡	na4 li5	pronoun
+7	那裡	na4 li3	pronoun
 7	沒事	mei2 shi4	phrase
 7	累	lei4	adjective
-7	拜拜	bai2 bai2	phrase
+7	拜拜	bai4 bai5	phrase
 7	下雨	xia4 yu3	verb
 7	上班	shang4 ban1	verb
 7	下班	xia4 ban1	verb
@@ -319,7 +319,7 @@ set	headword	reading	word_type
 7	懂	dong3	verb
 7	教	jiao1	verb
 7	暖和	nuan3 huo5	adjective
-7	涼快	liang2 kuai5	adjective
+7	涼快	liang2 kuai4	adjective
 7	甜	tian2	adjective
 7	辣	la4	adjective
 7	鹹	xian2	adjective
@@ -391,8 +391,8 @@ set	headword	reading	word_type
 8	郵局	you2 ju2	noun
 8	圖書館	tu2 shu1 guan3	noun
 8	洗手間	xi3 shou3 jian1	noun
-8	左邊	zuo3 bian5	noun
-8	右邊	you4 bian5	noun
+8	左邊	zuo3 bian1	noun
+8	右邊	you4 bian1	noun
 8	剛才	gang1 cai2	time word
 8	最近	zui4 jin4	time word
 8	除了	chu2 le5	preposition
@@ -422,15 +422,15 @@ set	headword	reading	word_type
 9	不同	bu4 tong2	adjective
 9	特別	te4 bie2	adjective
 9	安全	an1 quan2	adjective
-9	熱鬧	re4 nao5	adjective
+9	熱鬧	re4 nao4	adjective
 9	害怕	hai4 pa4	adjective
 9	緊張	jin3 zhang1	adjective
 9	好看	hao3 kan4	adjective
-9	突然	tu1 ran2	adverb
+9	突然	tu2 ran2	adverb
 9	其實	qi2 shi2	adverb
 9	差不多	cha4 bu5 duo1	adverb
 9	天空	tian1 kong1	noun
-9	月亮	yue4 liang5	noun
+9	月亮	yue4 liang4	noun
 9	星星	xing1 xing5	noun
 9	風	feng1	noun
 9	雪	xue3	noun
@@ -458,9 +458,9 @@ set	headword	reading	word_type
 10	解釋	jie3 shi4	verb
 10	討論	tao3 lun4	verb
 10	檢查	jian3 cha2	verb
-10	照顧	zhao4 gu5	verb
+10	照顧	zhao4 gu4	verb
 10	保護	bao3 hu4	verb
-10	研究	yan2 jiu1	verb
+10	研究	yan2 jiu4	verb
 10	習慣	xi2 guan4	verb
 10	拍照	pai1 zhao4	verb
 10	上網	shang4 wang3	verb
@@ -491,11 +491,11 @@ set	headword	reading	word_type
 10	鄰居	lin2 ju1	noun
 10	客人	ke4 ren2	noun
 10	世界	shi4 jie4	noun
-10	地方	di4 fang5	noun
-10	故事	gu4 shi5	noun
+10	地方	di4 fang1	noun
+10	故事	gu4 shi4	noun
 10	過去	guo4 qu4	time word
 10	未來	wei4 lai2	time word
 10	根據	gen1 ju4	preposition
 10	不過	bu4 guo4	conjunction
-10	還是	hai2 shi5	conjunction
+10	還是	hai2 shi4	conjunction
 10	種	zhong3	measure word
