@@ -1,5 +1,10 @@
 import type { AllWordsViewOptions, ListForAllWords } from '../allWordsView';
-import { describeWordLists, hasWordsInListKind, isShownInAllWords } from '../allWordsView';
+import {
+  countAllWords,
+  describeWordLists,
+  hasWordsInListKind,
+  isShownInAllWords,
+} from '../allWordsView';
 import { FrequencyTier } from '../frequencyTier';
 import { WordListKind } from '../wordList';
 
@@ -60,5 +65,18 @@ describe('hasWordsInListKind', () => {
   it('finds whether any word is in a list of that kind', () => {
     expect(hasWordsInListKind([[1], [3]], LISTS, WordListKind.ScriptStudy)).toBe(true);
     expect(hasWordsInListKind([[1], [2]], LISTS, WordListKind.Components)).toBe(false);
+  });
+});
+
+describe('countAllWords', () => {
+  it('counts shown words and words the options hide', () => {
+    const words = [
+      { word: newWord, listIds: [1] },
+      { word: { frequencyTier: FrequencyTier.Retention }, listIds: [1] },
+      { word: newWord, listIds: [4] },
+    ];
+    expect(countAllWords(words, LISTS, SHOW_ALL)).toEqual({ shownCount: 3, hiddenCount: 0 });
+    const options = { ...SHOW_ALL, showsRetentionWords: false, showsComponents: false };
+    expect(countAllWords(words, LISTS, options)).toEqual({ shownCount: 1, hiddenCount: 2 });
   });
 });

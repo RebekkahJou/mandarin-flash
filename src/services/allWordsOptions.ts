@@ -54,9 +54,10 @@ export function selectedAllWordsOptions(settings: AppSettings): Set<AllWordsOpti
   return new Set(keys.filter((key) => settings[key]));
 }
 
-/** Null when the options hide nothing. */
-export function hiddenByOptionsNote(hiddenCount: number): string | null {
-  if (hiddenCount === 0) return null;
-  const verb = hiddenCount === 1 ? 'is' : 'are';
-  return `${formatWordCount(hiddenCount)} ${verb} hidden by your view options.`;
+/** "148 words (+60 hidden words)", or just "148 words" when the options hide none. */
+export function allWordsCountText(shownCount: number, hiddenCount: number): string {
+  const shown = formatWordCount(shownCount);
+  if (hiddenCount === 0) return shown;
+  const hiddenWords = hiddenCount === 1 ? 'hidden word' : 'hidden words';
+  return `${shown} (+${hiddenCount} ${hiddenWords})`;
 }

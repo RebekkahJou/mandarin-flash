@@ -12,9 +12,9 @@ import { WordListKind } from '../../domain/wordList';
 import { matchesWordSearch } from '../../domain/wordSearch';
 import type { AllWordsOptionKey } from '../../services/allWordsOptions';
 import {
+  allWordsCountText,
   allWordsOptionChoices,
   allWordsViewOptions,
-  hiddenByOptionsNote,
   selectedAllWordsOptions,
 } from '../../services/allWordsOptions';
 import { useAppServices, useSettings } from '../AppServicesContext';
@@ -71,7 +71,7 @@ export function useAllWords() {
     setSearchQuery,
     describeLists: (listIds: readonly number[]) => describeWordLists(listIds, lists),
     showsLearningLevel: settings.allWordsShowsLearningLevel,
-    hiddenNote: hiddenByOptionsNote(words.length - shownWords.length),
+    countText: allWordsCountText(shownWords.length, words.length - shownWords.length),
     options: {
       isVisible: isOptionsVisible,
       open: () => setIsOptionsVisible(true),

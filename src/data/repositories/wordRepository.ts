@@ -126,6 +126,23 @@ export function createWordRepository(database: SqlDatabase) {
     });
   }
 
+  /** Each word's learning level and lists, without meanings: enough to count All words. */
+  async function listWordLevelsWithListIds(
+    profileId: number,
+  ): Promise<{ word: Pick<Word, 'frequencyTier'>; listIds: number[] }[]> {
+    const rows = await database.getAll<{ frequency_tier: string; list_ids: string | null }>(
+      `SELECT words.frequency_tier, GROUP_CONCAT(DISTINCT word_list_entries.word_list_id) AS list_ids
+       FROM words LEFT JOIN word_list_entries ON word_list_entries.word_id = words.id
+       WHERE words.profile_id = ?
+       GROUP BY words.id`,
+      [profileId],
+    );
+    return rows.map((row) => ({
+      word: { frequencyTier: toFrequencyTier(row.frequency_tier) },
+      listIds: parseListIds(row.list_ids),
+    }));
+  }
+
   async function countWords(profileId: number): Promise<number> {
     const row = await database.getFirst<{ word_count: number }>(
       'SELECT COUNT(*) AS word_count FROM words WHERE profile_id = ?',
@@ -229,6 +246,7 @@ export function createWordRepository(database: SqlDatabase) {
     getWord,
     findOrCreateWord,
     listWordsWithListIds,
+    listWordLevelsWithListIds,
     countWords,
     setFrequencyTier,
     setFrequencyTierForList,

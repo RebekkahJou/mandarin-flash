@@ -21,11 +21,10 @@ export default function AllWordsScreen() {
     setSearchQuery,
     describeLists,
     showsLearningLevel,
-    hiddenNote,
+    countText,
     options,
   } = useAllWords();
-  const hiddenNoteLine = hiddenNote ? <Text style={styles.note}>{hiddenNote}</Text> : null;
-  const screenOptions = { title: `All words (${totalWordCount})` };
+  const screenOptions = { title: 'All words' };
   const emptyMessage =
     totalWordCount === 0 ? 'No words yet.' : 'No words match your search or view options.';
   const renderWord = ({ item }: ListRenderItemInfo<WordWithListIds>) => {
@@ -60,7 +59,7 @@ export default function AllWordsScreen() {
         />
         <CompactButton label="Options" onPress={options.open} isOutlined />
       </View>
-      {hiddenNoteLine}
+      <Text style={styles.note}>{countText}</Text>
       <FlatList
         data={matchingWords}
         keyExtractor={wordKey}

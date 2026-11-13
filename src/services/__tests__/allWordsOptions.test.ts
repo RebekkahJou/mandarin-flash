@@ -1,8 +1,8 @@
 import { DEFAULT_SETTINGS } from '../../data/repositories/settingsRepository';
 import {
+  allWordsCountText,
   allWordsOptionChoices,
   allWordsViewOptions,
-  hiddenByOptionsNote,
   selectedAllWordsOptions,
 } from '../allWordsOptions';
 
@@ -32,9 +32,9 @@ describe('All words options', () => {
     expect(selectedAllWordsOptions(settings).has('allWordsShowsLearningLevel')).toBe(true);
   });
 
-  it('says how many words the options hide', () => {
-    expect(hiddenByOptionsNote(0)).toBeNull();
-    expect(hiddenByOptionsNote(1)).toBe('1 word is hidden by your view options.');
-    expect(hiddenByOptionsNote(42)).toBe('42 words are hidden by your view options.');
+  it('counts shown words, noting hidden ones', () => {
+    expect(allWordsCountText(148, 0)).toBe('148 words');
+    expect(allWordsCountText(148, 60)).toBe('148 words (+60 hidden words)');
+    expect(allWordsCountText(1, 1)).toBe('1 word (+1 hidden word)');
   });
 });

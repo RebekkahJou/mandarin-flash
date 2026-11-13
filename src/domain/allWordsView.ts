@@ -46,6 +46,24 @@ export function isShownInAllWords(
   return options.showsComponents || !kinds.has(WordListKind.Components);
 }
 
+export interface AllWordsCounts {
+  shownCount: number;
+  /** Words the view options hide (not words a search leaves out). */
+  hiddenCount: number;
+}
+
+/** How many words All words shows with these options, and how many they hide. */
+export function countAllWords(
+  words: readonly { word: Pick<Word, 'frequencyTier'>; listIds: readonly number[] }[],
+  lists: readonly ListForAllWords[],
+  options: AllWordsViewOptions,
+): AllWordsCounts {
+  const shownCount = words.filter(({ word, listIds }) =>
+    isShownInAllWords(word, listIds, lists, options),
+  ).length;
+  return { shownCount, hiddenCount: words.length - shownCount };
+}
+
 /**
  * The lists a word is in, as shown under it in All words. Hidden lists are named only when the
  * word is in no shown list, so a hidden Zhuyin card doesn't read "Not in any list".

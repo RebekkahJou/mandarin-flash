@@ -163,6 +163,8 @@ describe('user database', () => {
       好: [],
     });
     expect(await wordRepository.countWords(profile.id)).toBe(2);
+    const levels = await wordRepository.listWordLevelsWithListIds(profile.id);
+    expect(levels.map(({ listIds }) => listIds.length).sort()).toEqual([0, 2]);
     expect(words.find(({ word }) => word.id === good.id)?.word.definitions).toEqual(['good']);
   });
 
