@@ -70,6 +70,7 @@ export interface AppServices {
   wordSetRepository: WordSetRepository;
   /** The language pack the profile's language reads, e.g. for remembering added word sets. */
   packId: string;
+  packVersion: number;
   dictionaryLookup: DictionaryLookup;
 }
 
@@ -149,6 +150,7 @@ function createProfileServices(
     settingsRepository: core.settingsRepository,
     wordSetRepository: core.wordSetRepository,
     packId: pack.metadata.packId,
+    packVersion: pack.metadata.packVersion,
     dictionaryLookup: createDictionaryLookup(
       pack.database,
       languageBundle.dictionaryForm,

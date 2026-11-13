@@ -7,6 +7,7 @@ import type { ListForAllWords } from '../../domain/allWordsView';
 import { countAllWords } from '../../domain/allWordsView';
 import { allWordsViewOptions } from '../../services/allWordsOptions';
 import { fillPendingComponentLists } from '../../services/componentsList';
+import { updateSavedReadings } from '../../services/savedReadings';
 import { useAppServices, useSettings } from '../AppServicesContext';
 
 interface WordsForCount {
@@ -16,16 +17,32 @@ interface WordsForCount {
 
 /**
  * Word lists with their current lengths, and how many words All words shows with the saved view
- * options, refreshed whenever the screen comes into focus. Lists filled from the language pack
- * (Components) are filled first.
+ * options, refreshed whenever the screen comes into focus. Saved words first get the pack's
+ * current readings (once per pack version), and lists filled from the pack (Components) are
+ * filled.
  */
 export function useWordListSummaries() {
-  const { profileId, wordListRepository, wordRepository, dictionaryLookup } = useAppServices();
+  const {
+    profileId,
+    packId,
+    packVersion,
+    wordListRepository,
+    wordRepository,
+    settingsRepository,
+    dictionaryLookup,
+  } = useAppServices();
   const { settings } = useSettings();
   const [summaries, setSummaries] = useState<WordListSummary[]>([]);
   const [wordsForCount, setWordsForCount] = useState<WordsForCount>({ words: [], lists: [] });
 
   const refresh = useCallback(async () => {
+    await updateSavedReadings({
+      profileId,
+      packVersionKey: `${packId}:${packVersion}`,
+      dictionaryLookup,
+      wordRepository,
+      settingsRepository,
+    });
     // A new Components list is filled before it is first shown, so its count is right.
     await fillPendingComponentLists({
       profileId,
@@ -38,7 +55,15 @@ export function useWordListSummaries() {
       words: await wordRepository.listWordLevelsWithListIds(profileId),
       lists: await wordListRepository.listInfos(profileId),
     });
-  }, [profileId, wordListRepository, wordRepository, dictionaryLookup]);
+  }, [
+    profileId,
+    packId,
+    packVersion,
+    wordListRepository,
+    wordRepository,
+    settingsRepository,
+    dictionaryLookup,
+  ]);
 
   useFocusEffect(
     useCallback(() => {

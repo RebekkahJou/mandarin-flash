@@ -28,9 +28,13 @@ keeps mainland ones:
   生理期, 細菌 jùn, 長期, 行李 twice, 休息, 跌倒) were updated; 一天三次 is written yī (base tone).
   The remaining neutral tones (謝謝, 東西, 意思, 麻煩, 清楚…) are neutral in Taiwan too. Component
   names needed no change. Simplified-only health entries keep mainland readings.
-- **Not changed:** words already saved in profiles keep their old reading, so adding 休息 again
-  would store a second copy. Only test profiles exist so far; decide before release whether to
-  update saved words.
+- **Saved words follow** (decided 2026-11-13): when a Traditional profile's lists first load
+  with a new pack version, saved words read the mainland way get the Taiwan reading
+  (`updateSavedReadings`, recorded per profile as `savedReadingsUpdatedForPack`). A reading that
+  is still valid for another meaning, or with more than one possible replacement, is left alone.
+  If the profile already has the Taiwan-read copy, the two merge: that copy keeps its meanings and
+  learning level and gains the other's lists, practice history, character links and starter set.
+  Bump `MANDARIN_PACK_VERSION` whenever readings change, or saved words won't be updated again.
 
 Phase 4b and 4c decisions (2026-11-13):
 - **Curated health data** lives in scripts/data/mandarin-word-sets.tsv (set id, topic, title) and

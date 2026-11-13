@@ -407,6 +407,15 @@ describe('settings', () => {
     expect((await settingsRepository.loadSettings(profile.id)).learnZhuyin).toBe(true);
   });
 
+  it('keeps internal values beside the settings without disturbing them', async () => {
+    const { database, profile } = await setUp();
+    const settingsRepository = createSettingsRepository(database);
+    expect(await settingsRepository.loadInternalValue(profile.id, 'marker')).toBeNull();
+    await settingsRepository.saveInternalValue(profile.id, 'marker', 'mandarin:3');
+    expect(await settingsRepository.loadInternalValue(profile.id, 'marker')).toBe('mandarin:3');
+    expect((await settingsRepository.loadSettings(profile.id)).learnZhuyin).toBe(false);
+  });
+
   it('shows everything in All words by default and remembers each option', async () => {
     const { database, profile } = await setUp();
     const settingsRepository = createSettingsRepository(database);

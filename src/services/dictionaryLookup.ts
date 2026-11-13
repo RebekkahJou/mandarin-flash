@@ -10,6 +10,7 @@ import type { PartOfSpeech } from '../domain/partOfSpeech';
 import { PartOfSpeech as PartsOfSpeech, hasPartOfSpeech } from '../domain/partOfSpeech';
 import type { StarterWordType } from '../domain/starterVocabulary';
 import { isStarterWordType } from '../domain/starterVocabulary';
+import type { PackReading } from '../domain/savedReadingUpdates';
 import type { WordSetTopic } from '../domain/wordSets';
 import { isWordSetEntryForLanguage } from '../domain/wordSets';
 import type { DefinitionCandidate, Word } from '../domain/word';
@@ -348,8 +349,33 @@ export function createDictionaryLookup(
       .filter((set) => set.entryCount > 0);
   }
 
+  /**
+   * Every reading of each headword that has a replaced reading (variant_reading), for updating
+   * words saved before the pack changed. Empty for languages that read the variants, since their
+   * readings didn't change.
+   */
+  async function replacedReadings(): Promise<Map<string, PackReading[]>> {
+    if (form.readsVariants) return new Map();
+    const rows = await packDatabase.getAll<{
+      headword: string;
+      reading: string;
+      variant_reading: string;
+    }>(
+      `SELECT headword, reading, variant_reading FROM entries
+       WHERE headword IN (SELECT headword FROM entries WHERE variant_reading <> '')`,
+    );
+    const byHeadword = new Map<string, PackReading[]>();
+    for (const row of rows) {
+      const readings = byHeadword.get(row.headword) ?? [];
+      readings.push({ reading: row.reading, replacedReading: row.variant_reading });
+      byHeadword.set(row.headword, readings);
+    }
+    return byHeadword;
+  }
+
   return {
     lookUp,
+    replacedReadings,
     wordSets,
     wordSetEntries: readWordSetEntries,
     findExampleSentences,

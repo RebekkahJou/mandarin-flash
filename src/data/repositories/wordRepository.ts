@@ -143,6 +143,65 @@ export function createWordRepository(database: SqlDatabase) {
     }));
   }
 
+  /** Each word's id, headword and reading, for updating readings after a pack change. */
+  async function listWordReadings(
+    profileId: number,
+  ): Promise<{ wordId: number; headword: string; reading: string }[]> {
+    const rows = await database.getAll<{ id: number; headword: string; reading: string }>(
+      'SELECT id, headword, reading FROM words WHERE profile_id = ?',
+      [profileId],
+    );
+    return rows.map((row) => ({ wordId: row.id, headword: row.headword, reading: row.reading }));
+  }
+
+  /** Moves everything attached to one word onto another, then deletes the first. */
+  async function mergeWordInto(fromWordId: number, intoWordId: number): Promise<void> {
+    // Lists that already hold the word it merges into keep a single entry.
+    await database.run(
+      `DELETE FROM word_list_entries WHERE word_id = ? AND word_list_id IN
+         (SELECT word_list_id FROM word_list_entries WHERE word_id = ?)`,
+      [fromWordId, intoWordId],
+    );
+    await database.run('UPDATE word_list_entries SET word_id = ? WHERE word_id = ?', [
+      intoWordId,
+      fromWordId,
+    ]);
+    await database.run('UPDATE review_events SET word_id = ? WHERE word_id = ?', [
+      intoWordId,
+      fromWordId,
+    ]);
+    // Links the merged word already has stay; the rest go with the deleted word.
+    await database.run(
+      'UPDATE OR IGNORE word_parts SET compound_word_id = ? WHERE compound_word_id = ?',
+      [intoWordId, fromWordId],
+    );
+    await database.run('UPDATE word_parts SET part_word_id = ? WHERE part_word_id = ?', [
+      intoWordId,
+      fromWordId,
+    ]);
+    await database.run(
+      `UPDATE words SET starter_set = COALESCE(starter_set,
+         (SELECT starter_set FROM words WHERE id = ?)) WHERE id = ?`,
+      [fromWordId, intoWordId],
+    );
+    await database.run('DELETE FROM words WHERE id = ?', [fromWordId]);
+  }
+
+  /**
+   * Gives a word a new reading. If the profile already has the word with that reading, the two
+   * are merged: the existing word keeps its meanings and learning level, and gains the other's
+   * lists, practice history, character links and starter set.
+   */
+  async function changeWordReading(wordId: number, newReading: string): Promise<void> {
+    const word = await getWord(wordId);
+    if (!word || word.reading === newReading) return;
+    await database.transaction(async () => {
+      const existing = await findWord(word.profileId, word.headword, newReading);
+      if (existing) await mergeWordInto(wordId, existing.id);
+      else await database.run('UPDATE words SET reading = ? WHERE id = ?', [newReading, wordId]);
+    });
+  }
+
   async function countWords(profileId: number): Promise<number> {
     const row = await database.getFirst<{ word_count: number }>(
       'SELECT COUNT(*) AS word_count FROM words WHERE profile_id = ?',
@@ -247,6 +306,8 @@ export function createWordRepository(database: SqlDatabase) {
     findOrCreateWord,
     listWordsWithListIds,
     listWordLevelsWithListIds,
+    listWordReadings,
+    changeWordReading,
     countWords,
     setFrequencyTier,
     setFrequencyTierForList,

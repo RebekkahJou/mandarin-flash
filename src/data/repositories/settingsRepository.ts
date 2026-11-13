@@ -110,7 +110,30 @@ export function createSettingsRepository(database: SqlDatabase) {
     );
   }
 
-  return { loadSettings, saveSetting };
+  /**
+   * Bookkeeping values kept per profile beside the settings but not shown as settings, such as
+   * which pack version the profile's saved readings were last updated for.
+   */
+  async function loadInternalValue(profileId: number, key: string): Promise<string | null> {
+    const row = await database.getFirst<{ value: string }>(
+      'SELECT value FROM settings WHERE profile_id = ? AND key = ?',
+      [profileId, key],
+    );
+    if (!row) return null;
+    const value: unknown = JSON.parse(row.value);
+    return typeof value === 'string' ? value : null;
+  }
+
+  async function saveInternalValue(profileId: number, key: string, value: string): Promise<void> {
+    await database.run(
+      `INSERT INTO settings (profile_id, key, value) VALUES (?, ?, ?)
+       ON CONFLICT (profile_id, key) DO UPDATE SET value = excluded.value`,
+      // Stored as JSON like every settings value, so loadSettings can read the whole table.
+      [profileId, key, JSON.stringify(value)],
+    );
+  }
+
+  return { loadSettings, saveSetting, loadInternalValue, saveInternalValue };
 }
 
 export type SettingsRepository = ReturnType<typeof createSettingsRepository>;
