@@ -5,7 +5,8 @@ tested on the phone; merged into main). **Phase 3 done** (2026-11-10, branch
 lang-compatibility-p3, phone-tested, merged into main; see "Phase 3 wrap-up" below). **Phase 4
 built and phone-tested** (2026-11-10, branch lang-compatibility-p4; see "Phase 4 decisions"
 below). **Next: Phase 4b, health-related word sets** (planned 2026-11-10; see "Health-related
-word sets" below). Update this file as work lands or decisions change.
+word sets" below), then Phase 4c, learning levels and All words options (requested 2026-11-13).
+Update this file as work lands or decisions change.
 
 Phase 4 decisions (2026-11-10):
 - **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency
@@ -51,6 +52,33 @@ Phase 4 phone test (2026-11-10, Pixel 8 Pro, temporary profiles, deleted afterwa
 - Development note: a reload that copies the built-in pack while the update script is still
   writing it leaves an old copy (fixed by deleting files/SQLite/dictionary-v6.db with run-as).
   Released builds can't hit this.
+
+Phase 4 follow-up phone test (checks the first test didn't cover; use temporary profiles):
+1. Traditional profile → Lists → Starter vocabulary → add set 1: 50 words in Traditional (謝謝,
+   對不起, 老師, 學生, 書, 錢) with Taiwan readings; "Set 1 of 10: 0 of 50 learned".
+2. Fresh Traditional profile: import `dist/test-packs/already-have.csv` (老師, 喜歡) first, then
+   add set 1. Only 48 new words are added; neither word is duplicated in General Vocabulary or All words,
+   and the set still shows "0 of 50 learned".
+3. Settings → turn on "Learn zhuyin", then turn it off: the Zhuyin list disappears from Lists, its
+   cards still show in All words, and turning it back on restores the list with the same cards.
+4. Import `dist/test-packs/compounds.csv` (書包, 火車站, 喜歡) with CSV import: one dialog asks about
+   splitting the two nouns' characters; the verb isn't offered.
+5. Simplified profile → Components list: 言 shows as 讠 and 門 as 门, with Simplified names
+   (門字框 → 门字框).
+6. Older profile: delete its Components list, then add Components back from "+": it fills with 59
+   cards.
+
+Phase 4 follow-up phone test results (2026-11-13, Pixel 8 Pro, profiles TEMP1-3, deleted after):
+- All six passed. Notes: (2) a word the profile already had stays only in its existing lists (老師
+  wasn't added to Nouns), and its characters aren't offered for splitting; (3) progress was checked
+  by marking ㄈ learned, which still showed Reinforcement after the list was hidden and restored;
+  (4) the split dialog left out 書, which the profile already had.
+- Fixed (2026-11-13, phone-checked): with many lists, the CSV import dialog's "Choose CSV file"
+  button sat below the dialog, half under the navigation bar, and a tap just above it closed the
+  dialog. `InfoModal` now scrolls long content so its button stays inside the card.
+- Found: a hidden list's words show "Not in any list" in All words (ㄈ while Zhuyin was hidden).
+- Found: right after a new profile is opened, All words shows 0 words until the tab is revisited,
+  although the Components list has already filled.
 
 Phase 4 notes for later phases:
 - Starter words use the dictionary's first meanings for their list type, which can include odd
@@ -111,8 +139,8 @@ Phase 3 phone test results (2026-11-08, Pixel 8 Pro, Android 17):
 - Passed, real route B: Chrome downloaded the pack (served from the PC over adb reverse) and
   "Open" → Mandarin Flash showed the install screen and installed it; Done returns to the app.
 - Fixed: About listed CC-CEDICT and Tatoeba twice when an update was installed.
-- **Fixed (2026-11-10, phone retest pending):** opening a pack from Files by Google starts a second copy of the app's activity
-  inside the Files task (Android 17 ignores `singleTask` there), so the app shows Practice with a
+- **Fixed (2026-11-10, retested in the wrap-up below):** opening a pack from Files by Google starts
+  a second copy of the app's activity inside the Files task (Android 17 ignores `singleTask` there), so the app shows Practice with a
   "multiple navigation containers" warning instead of the install screen. Chrome's "Open" is
   unaffected. **Decided 2026-11-08: fix it with a small separate activity for opened files**,
   added through a config plugin (no hand edits to android/). It receives the file and hands it to
@@ -451,6 +479,76 @@ cards: hiragana and katakana for Japanese, Hangul letters for Korean, the Cyrill
 Ukrainian and Russian, and Arabic letters. Zhuyin becomes the first of these, defined in the
 language definition.
 
+## Learning levels and All words options (Phase 4c)
+
+Requested 2026-11-13.
+
+**Rename the tiers.** "High incidence" reads as how common a word is in everyday life, so the
+tiers are renamed to how often they come up in practice:
+
+- High incidence → **High practice**; Memory reinforcement → **Reinforcement**; Retention stays.
+  (Only the labels change; the stored values `high_incidence` etc. stay, so no migration.)
+- On a word's screen, the "Frequency" section becomes **"Learning level"**, with an info note built
+  from `PRACTICE_SET_TIER_RATIOS`: "High practice words make up 60% of each practice set,
+  Reinforcement words 30% and Retention words 10%."
+- Use "learning level" everywhere the tier is shown or sorted (All words, the starter set text,
+  docs/spec.md).
+
+**Downgrade when a study list is hidden.** Turning off "Learn zhuyin" asks: "Move all zhuyin cards
+to Retention? They'll come up rarely in practice and can be hidden from All words." Hiding the
+Components list asks the same about components. A profile that never turned on Learn zhuyin has no
+zhuyin cards, so nothing is asked.
+
+- A word has one learning level, stored on the word, so every list it is in shows Retention too
+  (decided 2026-11-13).
+- Turning the list back on doesn't restore the old levels (they aren't stored). For the MVP the
+  user changes them by hand on each word's screen. The dialog says so.
+
+**Hide the Components list.** Components can be hidden like the Zhuyin list (`word_lists.is_hidden`,
+progress kept), from the list's screen ("Hide list") with the downgrade question above, and shown
+again from "+" (the suggested list brings the hidden one back instead of making a new one).
+Hidden lists' words say "In hidden list: Components" in All words instead of "Not in any list".
+
+**All words view options.** An options menu on All words, saved per profile in the encrypted
+database:
+
+- Filters: "Show zhuyin cards" (only offered when the profile has any), "Show components" (only
+  when it has any) and "Show Retention words".
+- "Show learning level" checkbox: shows or hides each word's level label.
+
+## All words sorting (later phase)
+
+Requested 2026-11-13; not needed in Phase 4 (decided 2026-11-13).
+
+- Sort (one choice, in a pop-up menu on All words): the language's sorts (below), plus **English,
+  A-Z** (by the first listed meaning) and **Learning level** (High practice first). Learning level
+  takes an optional sub-sort within each level: any of the language's sorts or English. With no
+  sub-sort, words keep today's order (newest first).
+
+**Sorts depend on the language.** Each language definition lists its word sorts, so later
+languages add their own without changing the screen (stroke and radical sorts never appear for
+German, for example):
+
+| Language | Sorts |
+|---|---|
+| Mandarin (Traditional) | Pinyin A-Z; Character (radical, then remaining strokes, as Taiwan dictionaries such as the MOE 國語辭典 do); Zhuyin (ㄅㄆㄇㄈ order, only when the display uses zhuyin or Learn zhuyin is on) |
+| Mandarin (Simplified) | Pinyin A-Z (mainland dictionaries such as 现代汉语词典 are ordered by pinyin, so no separate character sort); Zhuyin under the same rule |
+| Later (examples) | German: alphabetical with German collation (ä with a); Japanese: gojūon order of the reading, and kanji by radical; Korean: Hangul order |
+
+- Pinyin sorts by letters, then tone (ma1 before ma2), syllable by syllable. Multi-character words
+  sort by their first character, then the next.
+- The radical sort needs each character's Kangxi radical and remaining stroke count. Take them
+  from Unihan (`kRSUnicode`, `kTotalStrokes`; Unicode license, record in docs/THIRD_PARTY.md) and
+  ship them in the Mandarin pack as a small characters table, only for characters the pack uses
+  (a new pack schema version).
+- Size, measured 2026-11-13 (Unihan 2026-07-31 on a copy of pack version 2): the pack uses 12,987
+  distinct characters, and all but 22 have radical data (the 22 are punctuation, zhuyin and
+  symbols such as 々 and 〇). A `characters` table (WITHOUT ROWID) of radical and remaining strokes
+  adds 164 KB to the database, 47 KB compressed. Adding Simplified and Traditional total stroke
+  counts makes it 212 KB, 52 KB compressed. Either is small against the 30 MB budget.
+- Alphabetical sorts use `Intl.Collator` with the language's locale (verify Hermes on Android
+  supports the needed locales).
+
 ## Progress data (start early)
 
 Add a `review_events` table (profile, word, answer, time) in Phase 1, since history can't be
@@ -484,10 +582,16 @@ Each phase ships on its own with tests and `npm run check` passing.
 4b. **Health-related word sets (MVP).** Curated Mandarin health sets in the pack (schema 3), the
    Settings modal for adding sets, the Health-related words default list, skipped repeats,
    remembering added sets, and the bulk character-splitting question.
+4c. **Learning levels and All words options.** Tier labels renamed (High practice) with the
+   practice-share note; the Retention downgrade question when Zhuyin or Components is hidden;
+   hiding the Components list; All words filters and the level label checkbox.
 5. **Store-hosted packs (route A):** Play Asset Delivery, then Apple-hosted packs with the iOS
    port.
 6. **Add-ons framework and games.**
 7. **OCR add-on.**
+7b. **All words sorting.** Per-language sorts from the language definition, English and learning
+   level sorts, and radical data in the Mandarin pack. Before the new languages, since each brings
+   its own sorts.
 8. **New languages,** in this order: German (simplest, proves the pipeline), Japanese (best open
    data; reuses the Chinese groundwork), Korean, Scottish Gaelic (beta tester available), Irish
    (shares the mutation handling), Ukrainian, Russian (shares the Cyrillic work), Finnish,
