@@ -7,6 +7,7 @@ import {
   PACK_FORMAT_NAME,
   PACK_INDEX_NAMES,
   PACK_SCHEMA_VERSION,
+  WORD_SETS_TABLES_SCHEMA_VERSION,
   packTableColumnsFor,
 } from './packSchema';
 import type { SqlDatabase } from './sqlDatabase';
@@ -18,6 +19,12 @@ export const PACK_LIMITS = {
   maxStarterWords: 1_000,
   maxComponents: 1_000,
   maxComponentFieldLength: 200,
+  maxWordSets: 200,
+  maxWordSetEntries: 20_000,
+  maxWordSetIdLength: 60,
+  maxWordSetTitleLength: 100,
+  maxWordSetMeaningsLength: 2_000,
+  maxWordSetLanguagesLength: 100,
   maxFiles: 20,
   maxHeadwordLength: 100,
   maxReadingLength: 300,
@@ -99,6 +106,10 @@ async function checkRowCounts(database: SqlDatabase, schemaVersion: number): Pro
   if (schemaVersion >= COMPONENTS_TABLE_SCHEMA_VERSION) {
     limits.push(['components', PACK_LIMITS.maxComponents]);
   }
+  if (schemaVersion >= WORD_SETS_TABLES_SCHEMA_VERSION) {
+    limits.push(['word_sets', PACK_LIMITS.maxWordSets]);
+    limits.push(['word_set_entries', PACK_LIMITS.maxWordSetEntries]);
+  }
   for (const [table, maxRows] of limits) {
     if ((await countRows(database, table)) > maxRows) reject();
   }
@@ -117,6 +128,39 @@ const BAD_COMPONENT_QUERY = `SELECT 1 FROM components WHERE typeof(position) <> 
   OR typeof(reading) <> 'text' OR typeof(meaning) <> 'text'
   OR length(component) NOT BETWEEN 1 AND ? OR length(variant) > ? OR length(name) > ?
   OR length(reading) > ? OR length(meaning) > ? LIMIT 1`;
+
+const BAD_WORD_SET_QUERY = `SELECT 1 FROM word_sets WHERE typeof(set_id) <> 'text'
+  OR typeof(topic) <> 'text' OR typeof(title) <> 'text' OR typeof(position) <> 'integer'
+  OR length(set_id) NOT BETWEEN 1 AND ? OR length(topic) > ? OR length(title) > ? LIMIT 1`;
+
+const BAD_WORD_SET_ENTRY_QUERY = `SELECT 1 FROM word_set_entries WHERE typeof(set_id) <> 'text'
+  OR typeof(position) <> 'integer' OR typeof(headword) <> 'text' OR typeof(variant) <> 'text'
+  OR typeof(reading) <> 'text' OR typeof(variant_reading) <> 'text'
+  OR typeof(part_of_speech) <> 'text' OR typeof(meanings) <> 'text'
+  OR typeof(languages) <> 'text' OR length(set_id) > ?
+  OR length(headword) NOT BETWEEN 1 AND ? OR length(variant) > ?
+  OR length(reading) > ? OR length(variant_reading) > ? OR length(part_of_speech) > ?
+  OR length(meanings) > ? OR length(languages) > ? LIMIT 1`;
+
+function wordSetQueries(): [sql: string, params: number[]][] {
+  const idLength = PACK_LIMITS.maxWordSetIdLength;
+  return [
+    [BAD_WORD_SET_QUERY, [idLength, idLength, PACK_LIMITS.maxWordSetTitleLength]],
+    [
+      BAD_WORD_SET_ENTRY_QUERY,
+      [
+        idLength,
+        PACK_LIMITS.maxHeadwordLength,
+        PACK_LIMITS.maxHeadwordLength,
+        PACK_LIMITS.maxReadingLength,
+        PACK_LIMITS.maxReadingLength,
+        idLength,
+        PACK_LIMITS.maxWordSetMeaningsLength,
+        PACK_LIMITS.maxWordSetLanguagesLength,
+      ],
+    ],
+  ];
+}
 
 async function checkValues(database: SqlDatabase, schemaVersion: number): Promise<void> {
   const badRowQueries: [sql: string, params: number[]][] = [
@@ -165,6 +209,7 @@ async function checkValues(database: SqlDatabase, schemaVersion: number): Promis
       ],
     ]);
   }
+  if (schemaVersion >= WORD_SETS_TABLES_SCHEMA_VERSION) badRowQueries.push(...wordSetQueries());
   for (const [sql, params] of badRowQueries) {
     if (await hasAnyRow(database, sql, params)) reject();
   }

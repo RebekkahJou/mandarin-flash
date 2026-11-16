@@ -66,6 +66,9 @@ The spec lives in docs/spec.md. Read it before adding features.
 - A word's frequency tier is stored once, on the `words` row. Lists only reference words, so a tier
   change applies to every list. Never copy tier onto list entries.
 - Pinyin is always stored (numbered tones). Zhuyin is derived from it at display time, never stored.
+- Traditional Mandarin always uses Taiwan readings and meanings; Simplified uses mainland ones.
+  Taiwan readings come from scripts/data/mandarin-taiwan-readings.tsv. Curated data (starter
+  words, word sets) is written with Taiwan readings.
 - List length is computed with COUNT, never cached.
 
 ## Testing & checks

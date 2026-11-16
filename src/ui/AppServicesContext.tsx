@@ -20,6 +20,8 @@ import type { WordListRepository } from '../data/repositories/wordListRepository
 import { createWordListRepository } from '../data/repositories/wordListRepository';
 import type { WordRepository } from '../data/repositories/wordRepository';
 import { createWordRepository } from '../data/repositories/wordRepository';
+import type { WordSetRepository } from '../data/repositories/wordSetRepository';
+import { createWordSetRepository } from '../data/repositories/wordSetRepository';
 import type { LanguageId } from '../domain/language';
 import type { Profile } from '../domain/profileGroups';
 import type { DictionaryLookup } from '../services/dictionaryLookup';
@@ -45,6 +47,7 @@ export interface AppCore {
   practiceSessionRepository: PracticeSessionRepository;
   reviewEventRepository: ReviewEventRepository;
   settingsRepository: SettingsRepository;
+  wordSetRepository: WordSetRepository;
   /** Language packs open at startup: the built-in pack, then installed ones. */
   initialPacks: LoadedPack[];
   packInstaller: PackInstaller;
@@ -64,6 +67,10 @@ export interface AppServices {
   practiceSessionRepository: PracticeSessionRepository;
   reviewEventRepository: ReviewEventRepository;
   settingsRepository: SettingsRepository;
+  wordSetRepository: WordSetRepository;
+  /** The language pack the profile's language reads, e.g. for remembering added word sets. */
+  packId: string;
+  packVersion: number;
   dictionaryLookup: DictionaryLookup;
 }
 
@@ -92,6 +99,7 @@ async function createAppCore(): Promise<AppCore> {
     practiceSessionRepository: createPracticeSessionRepository(userDatabase),
     reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
+    wordSetRepository: createWordSetRepository(userDatabase),
     initialPacks: [{ ...builtInPack, isBuiltIn: true, fonts: [] }, ...installedPacks],
     packInstaller,
     initialProfiles: await profileRepository.listProfiles(),
@@ -140,6 +148,9 @@ function createProfileServices(
     practiceSessionRepository: core.practiceSessionRepository,
     reviewEventRepository: core.reviewEventRepository,
     settingsRepository: core.settingsRepository,
+    wordSetRepository: core.wordSetRepository,
+    packId: pack.metadata.packId,
+    packVersion: pack.metadata.packVersion,
     dictionaryLookup: createDictionaryLookup(
       pack.database,
       languageBundle.dictionaryForm,

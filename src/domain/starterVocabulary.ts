@@ -30,7 +30,7 @@ export interface StarterSetProgress {
   setNumber: number;
   /** Words in the set, from the pack. */
   setSize: number;
-  /** The profile's words from this set that have moved past High incidence. */
+  /** The profile's words from this set that have moved past High practice. */
   learnedCount: number;
 }
 
@@ -42,7 +42,7 @@ export function isStarterWordType(value: string): value is StarterWordType {
   return isPartOfSpeech(value) || (Object.values(StarterWordGroup) as string[]).includes(value);
 }
 
-/** "Learned" means the word moved down to Memory reinforcement or Retention. */
+/** "Learned" means the word moved down to the Reinforcement or Retention learning level. */
 export function isStarterWordLearned(tier: FrequencyTier): boolean {
   return tier !== FrequencyTier.HighIncidence;
 }

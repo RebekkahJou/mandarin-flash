@@ -17,6 +17,7 @@ import {
   ListDeletionResult,
   useWordListRenameDelete,
 } from '../../ui/hooks/useWordListRenameDelete';
+import { useListHiding } from '../../ui/hooks/useListHiding';
 import { useWordListDetail } from '../../ui/hooks/useWordListDetail';
 import { colors, fontSizes, spacing } from '../../ui/theme';
 
@@ -35,6 +36,7 @@ export default function WordListScreen() {
     reload,
   } = useWordListDetail(Number(listId));
   const renameDelete = useWordListRenameDelete(list, reload);
+  const listHiding = useListHiding(list);
   const [editingEntry, setEditingEntry] = useState<WordListEntry | null>(null);
   const [editedMeanings, setEditedMeanings] = useState<string[]>([]);
 
@@ -55,6 +57,15 @@ export default function WordListScreen() {
     <View style={styles.buttonRow}>
       <PrimaryButton label="Rename" onPress={renameDelete.openRename} isOutlined />
       <PrimaryButton label="Delete list" onPress={() => void deleteList()} isOutlined />
+    </View>
+  ) : null;
+
+  const hideList = async () => {
+    if (await listHiding.hideList()) router.back();
+  };
+  const hideButtonRow = listHiding.canHide ? (
+    <View style={styles.buttonRow}>
+      <PrimaryButton label="Hide list" onPress={() => void hideList()} isOutlined />
     </View>
   ) : null;
 
@@ -106,6 +117,7 @@ export default function WordListScreen() {
         />
       </View>
       {renameDeleteButtons}
+      {hideButtonRow}
       {mismatchSummary}
       <FlatList
         data={entries}

@@ -125,6 +125,17 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
   `
   ALTER TABLE word_lists ADD COLUMN is_hidden INTEGER NOT NULL DEFAULT 0;
   `,
+  // Topic word sets (health vocabulary) each profile added from a language pack, so they show
+  // as added even after their words are removed from lists.
+  `
+  CREATE TABLE added_word_sets (
+    profile_id INTEGER NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    pack_id TEXT NOT NULL,
+    set_id TEXT NOT NULL,
+    added_at INTEGER NOT NULL,
+    PRIMARY KEY (profile_id, pack_id, set_id)
+  ) WITHOUT ROWID;
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {
