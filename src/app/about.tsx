@@ -43,6 +43,12 @@ const APP_THIRD_PARTY_NOTICES: readonly PackLicense[] = [
     license: 'MIT License',
     source: 'github.com/paulmillr/noble-ed25519',
   },
+  {
+    name: 'Play Asset Delivery (Android)',
+    usage: 'Asking Google Play to download language packs',
+    license: 'Play Core Software Development Kit Terms of Service',
+    source: 'developer.android.com/guide/playcore',
+  },
 ];
 
 export default function AboutScreen() {

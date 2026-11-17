@@ -1,12 +1,35 @@
 # Multi-language and add-ons plan
 
-Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
-tested on the phone; merged into main). **Phase 3 done** (2026-11-10, branch
-lang-compatibility-p3, phone-tested, merged into main; see "Phase 3 wrap-up" below). **Phase 4
-built and phone-tested** (2026-11-10, branch lang-compatibility-p4; see "Phase 4 decisions"
-below). **Next: Phase 4b, health-related word sets** (planned 2026-11-10; see "Health-related
-word sets" below), then Phase 4c, learning levels and All words options (requested 2026-11-13).
-Update this file as work lands or decisions change.
+Status: approved 2026-11-05. **Phases 1–3 done** and merged. **Phase 4, 4b and 4c done** and
+merged into main. **Phase 5 (store-hosted packs, Android) in progress** on branch
+lang-compatibility-p5 (started 2026-11-16; see "Phase 5 decisions" below). Update this file as
+work lands or decisions change.
+
+Phase 5 decisions (2026-11-16):
+- **Play Asset Delivery is built now**, before any non-Mandarin pack exists, with a test pack only
+  (Mandarin version 3 made from the built-in pack, `dist/store-packs/mandarin-v3.mfpack`, development
+  builds only). Real packs join the catalog as each language is built.
+- **Permissions accepted:** Google's `asset-delivery` 2.3.0 library adds FOREGROUND_SERVICE,
+  FOREGROUND_SERVICE_DATA_SYNC, WAKE_LOCK, ACCESS_NETWORK_STATE and RECEIVE_BOOT_COMPLETED (none is a
+  runtime prompt). INTERNET stays blocked: the Play Store app downloads the pack. CLAUDE.md's
+  privacy section now allows store-managed pack downloads. Its dataSync foreground service needs a
+  Play Console declaration with a video (docs/RELEASE.md).
+- **No Play Console account yet** (decided to get one at beta time). Phase 5 is tested with
+  bundletool's local-testing mode; the real Play download and the declaration wait for the
+  account and are listed in docs/RELEASE.md.
+- **How it fits together:** `src/domain/storePackCatalog.json` lists store packs (asset pack name,
+  signed file, pack id and version, languages, test flag). `plugins/withPlayAssetPacks.ts` makes
+  one on-demand asset pack per entry at prebuild (bundles only; APKs ignore them).
+  `modules/play-asset-delivery` is a small local Expo module (Kotlin) around AssetPackManager.
+  `src/services/packs/storePackDelivery.ts` asks Play for a pack, follows its progress, asks for
+  the user's OK when Play holds the download, and hands the finished file to the existing pack
+  installer (same signature check), then deletes Play's copy.
+- **Language packs screen:** an "Available from Google Play" section lists store packs that aren't
+  installed (same or newer version), with Get, progress ("Downloading… 40%") and Install. It is
+  hidden when Play can't deliver (APK installs, phones without Play), where route B still works.
+- Play Asset Delivery is not open source (Play Core SDK Terms of Service); it is code, not bundled
+  data or fonts, and is credited in docs/THIRD_PARTY.md and on the About screen.
+- iOS (Apple-hosted asset packs) waits for the iOS port.
 
 Phase 4 decisions (2026-11-10):
 - **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency
