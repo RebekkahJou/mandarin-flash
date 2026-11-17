@@ -60,6 +60,8 @@ cd android && ./gradlew assembleRelease # sideloading (.apk)
 4. The database is encrypted: run `adb exec-out run-as com.mandarinflash.app cat databases/user.db`
    on a test device. The output must not start with `SQLite format 3`.
 5. docs/THIRD_PARTY.md and the About screen list every bundled data file and font.
+6. The release build starts on a phone. R8 shrinks release code, and a library that looks up
+   classes by name can crash only there (WorkManager's Room database did, 2026-11-17).
 
 ## Language packs
 

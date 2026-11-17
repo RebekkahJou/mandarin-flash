@@ -41,6 +41,14 @@ Phase 5 phone test (2026-11-17, Pixel 8 Pro, bundletool local testing, debug bun
   test pack and hides the Google Play section, showing the route B hint instead.
 - The user's words and lists were kept through the bundle install (signed with the project's
   debug key). The test pack was removed afterwards; the phone uses the built-in pack again.
+- Release check (2026-11-17, `RELEASE_BUILD=1`, arm64 bundle): INTERNET and ACCESS_LOCAL_NETWORK are
+  stripped; the only new permissions are the five accepted ones; the test pack is left out. The
+  download is 30.7–30.8 MB (29.3 MiB), at the 30 MB budget; Phase 5 adds about 0.15 MB, so the
+  size was already there (mostly the built-in pack and fonts). SYSTEM_ALERT_WINDOW and VIBRATE come
+  from Expo's app template, not Phase 5.
+- **Found and fixed:** the release build crashed on launch because R8 renamed WorkManager's Room
+  database (WorkManager comes with Play Asset Delivery). `modules/play-asset-delivery` now ships
+  keep rules (`proguard-rules.pro`). The fixed release build still needs a launch test.
 - Not testable without Play: real downloads, progress over a slow network, the Wi-Fi/mobile data
   confirmation and network errors (unit tests cover their handling).
 
