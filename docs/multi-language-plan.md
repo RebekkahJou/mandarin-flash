@@ -48,7 +48,8 @@ Phase 5 phone test (2026-11-17, Pixel 8 Pro, bundletool local testing, debug bun
   from Expo's app template, not Phase 5.
 - **Found and fixed:** the release build crashed on launch because R8 renamed WorkManager's Room
   database (WorkManager comes with Play Asset Delivery). `modules/play-asset-delivery` now ships
-  keep rules (`proguard-rules.pro`). The fixed release build still needs a launch test.
+  keep rules (`proguard-rules.pro`). The fixed release build opens on the phone and Settings →
+  Language packs works (no Google Play section, since release builds have no test pack).
 - Not testable without Play: real downloads, progress over a slow network, the Wi-Fi/mobile data
   confirmation and network errors (unit tests cover their handling).
 
