@@ -6,7 +6,7 @@ import { INSERT_PACK_ENTRY_SQL, writeTestPack } from '../../data/testing/testPac
 import type { SqlDatabase } from '../../data/sqlDatabase';
 import { PartOfSpeech } from '../../domain/partOfSpeech';
 import type { DictionaryForm } from '../dictionaryLookup';
-import { createDictionaryLookup, partsOfSpeechOf } from '../dictionaryLookup';
+import { createDictionaryLookup, mergeSameReadings, partsOfSpeechOf } from '../dictionaryLookup';
 
 const TRADITIONAL_TAIWAN: DictionaryForm = {
   readsVariants: false,
@@ -62,6 +62,55 @@ describe('dictionaryLookup in Traditional with Taiwan readings', () => {
     const lookup = await createLookup(TRADITIONAL_TAIWAN);
     const sentences = await lookup.findExampleSentences({ headword: '走' });
     expect(sentences.map((sentence) => sentence.english)).toEqual(['Go!', 'We want to walk.']);
+  });
+});
+
+describe('entries that share a Taiwan reading', () => {
+  async function lookupWithSharedReading(form: DictionaryForm) {
+    const database = createInMemoryDatabase();
+    await writeTestPack(database);
+    // 地方 "place" is dì fang on the mainland; in Taiwan both entries are dì fāng.
+    await database.run(INSERT_PACK_ENTRY_SQL, [
+      '地方',
+      '',
+      'di4 fang1',
+      'di4 fang5',
+      '[["place",1]]',
+      -2,
+    ]);
+    await database.run(INSERT_PACK_ENTRY_SQL, ['地方', '', 'di4 fang1', '', '[["local",4]]', -1]);
+    await database.run(
+      'INSERT INTO starter_words (set_number, position, headword, reading, part_of_speech) VALUES (1, 1, ?, ?, ?)',
+      ['地方', 'di4 fang1', 'noun'],
+    );
+    return createDictionaryLookup(database, form, RELIABLE);
+  }
+
+  it('are merged into one reading, meanings in rank order', async () => {
+    const lookup = await lookupWithSharedReading(TRADITIONAL_TAIWAN);
+    const entries = await lookup.lookUp('地方');
+    expect(entries.map((entry) => entry.reading)).toEqual(['di4 fang1']);
+    expect(entries[0].definitionCandidates.map((candidate) => candidate.text)).toEqual([
+      'place',
+      'local',
+    ]);
+    const [starterWord] = await lookup.starterWords(1);
+    expect(starterWord.entry.definitionCandidates).toHaveLength(2);
+  });
+
+  it('stay apart in Simplified, which reads the mainland readings', async () => {
+    const lookup = await lookupWithSharedReading(SIMPLIFIED_MAINLAND);
+    const readings = (await lookup.lookUp('地方')).map((entry) => entry.reading);
+    expect(readings).toEqual(['di4 fang5', 'di4 fang1']);
+  });
+
+  it('keep each meaning once', () => {
+    const entry = {
+      headword: '好',
+      reading: 'hao3',
+      definitionCandidates: [{ text: 'good', partsOfSpeech: [] }],
+    };
+    expect(mergeSameReadings([entry, entry])[0].definitionCandidates).toHaveLength(1);
   });
 });
 

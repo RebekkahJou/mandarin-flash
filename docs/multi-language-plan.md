@@ -122,8 +122,9 @@ Phase 4 follow-up phone test results (2026-11-13, Pixel 8 Pro, profiles TEMP1-3,
   button sat below the dialog, half under the navigation bar, and a tap just above it closed the
   dialog. `InfoModal` now scrolls long content so its button stays inside the card.
 - Found: a hidden list's words show "Not in any list" in All words (ㄈ while Zhuyin was hidden).
+  (Fixed in Phase 4c: they say "In hidden list: Zhuyin".)
 - Found: right after a new profile is opened, All words shows 0 words until the tab is revisited,
-  although the Components list has already filled.
+  although the Components list has already filled. (2026-11-13: no longer happens; see below.)
 
 Phase 4 notes for later phases:
 - Starter words use the dictionary's first meanings for their list type, which can include odd
@@ -435,7 +436,8 @@ today. Planned 2026-11-10 at the user's request; part of the MVP.
   Wound infection, Chronic ailments, Medicine (including forgotten medication, refills and
   urgent refills during travel delays), First aid, Dental issues (including orthodontics) and
   Injuries. The user's draft lists are in `src/domain/healthRelatedWordLists.ts` (not yet
-  committed); they become a curated data file under `scripts/data/`, like the starter words.
+  committed); they became scripts/data/mandarin-word-sets.tsv and mandarin-word-set-entries.tsv
+  (done 2026-11-13).
 - **Where they live:** inside each language pack, like starter vocabulary, so "downloading" a
   set needs no network. The app stays offline; adding a set copies its words from the pack into
   the profile. On-screen text says "Add", not "download". A pack with no health sets hides the

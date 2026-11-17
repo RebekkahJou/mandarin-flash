@@ -22,7 +22,7 @@ function openList(wordListId: number) {
 }
 
 export default function WordListsScreen() {
-  const { summaries, totalWordCount, refresh } = useWordListSummaries();
+  const { summaries, shownWordCount, refresh } = useWordListSummaries();
   const lists = summaries.map((summary) => summary.list);
   const csvImport = useListsTabImport(lists, () => void refresh());
   const management = useWordListManagement(lists, refresh);
@@ -63,7 +63,7 @@ export default function WordListsScreen() {
       </View>
       <WordListRow
         name="All words"
-        wordCount={totalWordCount}
+        wordCount={shownWordCount}
         isFeatured
         onPress={() => router.push('/words')}
       />

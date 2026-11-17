@@ -13,6 +13,8 @@ export const GENERAL_VOCABULARY_LIST_NAME = 'General Vocabulary';
 export const PHRASES_LIST_NAME = 'Phrases';
 export const TIME_WORDS_LIST_NAME = 'Time words';
 export const COMPONENTS_LIST_NAME = 'Components';
+/** Made when a profile adds its first health-related word set, and again if it was deleted. */
+export const HEALTH_WORDS_LIST_NAME = 'Health-related words';
 
 /** Created for every new profile, in display order, before the language's own extra lists. */
 export const DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [

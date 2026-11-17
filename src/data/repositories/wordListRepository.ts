@@ -1,6 +1,7 @@
 import type { DefaultWordListDefinition } from '../../domain/defaultWordLists';
 import { listKindFor } from '../../domain/defaultWordLists';
-import type { WordList, WordListKind } from '../../domain/wordList';
+import type { WordList } from '../../domain/wordList';
+import { WordListKind } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 import type { WordListEntryRow, WordListRow } from './rowMappers';
 import { WORD_COLUMNS, serializeDefinitions, toWordList, toWordListEntry } from './rowMappers';
@@ -9,6 +10,14 @@ export interface WordListSummary {
   list: WordList;
   /** Computed with COUNT on every read so it can never be stale. */
   length: number;
+}
+
+/** A list's name and kind, shown or hidden, without loading its words. */
+export interface WordListInfo {
+  id: number;
+  name: string;
+  kind: WordListKind;
+  isHidden: boolean;
 }
 
 export interface WordListTarget {
@@ -81,6 +90,36 @@ export function createWordListRepository(database: SqlDatabase) {
     const row = await database.getFirst<{ id: number }>(
       'SELECT id FROM word_lists WHERE profile_id = ? AND kind = ? ORDER BY id LIMIT 1',
       [profileId, kind],
+    );
+    return row?.id ?? null;
+  }
+
+  /** Every list of the profile, hidden ones included, in display order. */
+  async function listInfos(profileId: number): Promise<WordListInfo[]> {
+    const rows = await database.getAll<{
+      id: number;
+      name: string;
+      kind: string;
+      is_hidden: number;
+    }>(
+      'SELECT id, name, kind, is_hidden FROM word_lists WHERE profile_id = ? ORDER BY sort_order, id',
+      [profileId],
+    );
+    const kinds = Object.values(WordListKind) as string[];
+    return rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      kind: kinds.includes(row.kind) ? (row.kind as WordListKind) : WordListKind.General,
+      isHidden: row.is_hidden === 1,
+    }));
+  }
+
+  /** A hidden list with this name (ignoring case), so it can be shown again; null if none. */
+  async function findHiddenListIdByName(profileId: number, name: string): Promise<number | null> {
+    const row = await database.getFirst<{ id: number }>(
+      `SELECT id FROM word_lists WHERE profile_id = ? AND is_hidden = 1 AND lower(name) = lower(?)
+       ORDER BY id LIMIT 1`,
+      [profileId, name],
     );
     return row?.id ?? null;
   }
@@ -203,6 +242,8 @@ export function createWordListRepository(database: SqlDatabase) {
     listIdsAwaitingFill,
     markListFilled,
     findListIdByKind,
+    listInfos,
+    findHiddenListIdByName,
     setListHidden,
     renameList,
     deleteList,

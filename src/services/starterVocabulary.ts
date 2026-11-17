@@ -3,7 +3,6 @@ import type { WordRepository } from '../data/repositories/wordRepository';
 import type { DefaultWordListDefinition } from '../domain/defaultWordLists';
 import { GENERAL_VOCABULARY_LIST_NAME } from '../domain/defaultWordLists';
 import { PartOfSpeech } from '../domain/partOfSpeech';
-import { PartOfSpeechWordList } from '../domain/partOfSpeechWordList';
 import type { NextStarterSet, StarterSetProgress } from '../domain/starterVocabulary';
 import {
   isStarterWordLearned,
@@ -13,6 +12,7 @@ import {
 import type { Word } from '../domain/word';
 import type { WordList } from '../domain/wordList';
 import type { DictionaryLookup, StarterWord } from './dictionaryLookup';
+import { createProfileListFinder } from './profileListFinder';
 
 export interface StarterVocabularyServices {
   profileId: number;
@@ -68,35 +68,13 @@ export async function loadStarterVocabularyStatus(
   };
 }
 
-/** A part-of-speech list of that type, else a list with that name (ignoring case). */
-function findList(lists: readonly WordList[], definition: DefaultWordListDefinition) {
-  const byPartOfSpeech = lists.find(
-    (list) =>
-      definition.partOfSpeech !== undefined &&
-      list instanceof PartOfSpeechWordList &&
-      list.partOfSpeech === definition.partOfSpeech,
-  );
-  const lowerCaseName = definition.name.toLowerCase();
-  return byPartOfSpeech ?? lists.find((list) => list.name.toLowerCase() === lowerCaseName);
-}
-
 /** Finds or creates General Vocabulary and the list for each word type in the set. */
 async function listsForStarterWords(
   services: StarterVocabularyServices,
   starterWords: readonly StarterWord[],
 ): Promise<{ generalList: WordList; listForWord: (word: StarterWord) => WordList }> {
   const { profileId, languageExtraLists, wordListRepository } = services;
-  const lists = (await wordListRepository.listSummaries(profileId)).map(({ list }) => list);
-  const ensureList = async (definition: DefaultWordListDefinition): Promise<WordList> => {
-    const existing = findList(lists, definition);
-    if (existing) return existing;
-    const newListId = await wordListRepository.createList(profileId, definition);
-    const refreshed = (await wordListRepository.listSummaries(profileId)).map(({ list }) => list);
-    lists.splice(0, lists.length, ...refreshed);
-    const created = lists.find((list) => list.id === newListId);
-    if (!created) throw new Error(`The ${definition.name} list could not be created.`);
-    return created;
-  };
+  const ensureList = await createProfileListFinder(profileId, wordListRepository);
   const generalList = await ensureList({ name: GENERAL_VOCABULARY_LIST_NAME });
   const listByType = new Map<string, WordList>();
   for (const { wordType } of starterWords) {
