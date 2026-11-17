@@ -39,7 +39,8 @@ Settings → Debug server host). Release builds block this permission.
 ## Release build
 
 Release builds **must** set `RELEASE_BUILD=1`. This strips the INTERNET permission
-(see `app.config.ts`), so the shipped app has no network access at all.
+(see `app.config.ts`), so the shipped app has no network access at all, and the
+development-only permissions ACCESS_LOCAL_NETWORK and SYSTEM_ALERT_WINDOW.
 
 ```sh
 RELEASE_BUILD=1 npx expo prebuild --clean --platform android
@@ -52,7 +53,8 @@ cd android && ./gradlew assembleRelease # sideloading (.apk)
 1. `npm run check` passes.
 2. The release build has no network permission:
    `aapt dump permissions android/app/build/outputs/apk/release/app-release.apk` must not list
-   `android.permission.INTERNET` or `android.permission.ACCESS_LOCAL_NETWORK`. Play Asset
+   `android.permission.INTERNET`, `android.permission.ACCESS_LOCAL_NETWORK` or
+   `android.permission.SYSTEM_ALERT_WINDOW`. Play Asset
    Delivery adds FOREGROUND_SERVICE, FOREGROUND_SERVICE_DATA_SYNC, WAKE_LOCK, ACCESS_NETWORK_STATE
    and RECEIVE_BOOT_COMPLETED; compare the rest with the previous release and justify anything new.
 3. The download is 30 MB or less:
