@@ -1,0 +1,12 @@
+[
+  {
+    "assetPackName": "pack_mandarin_test",
+    "sourcePath": "dist/store-packs/mandarin-v3.mfpack",
+    "fileName": "mandarin-v3.mfpack",
+    "packId": "mandarin",
+    "packVersion": 3,
+    "title": "Mandarin (test update)",
+    "languageIds": ["zh-Hant", "zh-Hans"],
+    "isTestPack": true
+  }
+]

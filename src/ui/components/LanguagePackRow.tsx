@@ -6,14 +6,21 @@ import { CompactButton } from './CompactButton';
 interface LanguagePackRowProps {
   title: string;
   details: string;
-  /** Shows a Remove button when given; built-in packs can't be removed. */
-  onRemove?: () => void;
+  /** The row's button, e.g. Remove for an installed pack or Get for a store pack; none if null. */
+  action?: LanguagePackRowAction | null;
+}
+
+export interface LanguagePackRowAction {
+  label: string;
+  onPress: () => void;
+  /** Outlined for actions that take something away, such as Remove. */
+  isOutlined: boolean;
 }
 
 /** One language pack in the Language packs list. */
-export function LanguagePackRow({ title, details, onRemove }: LanguagePackRowProps) {
-  const removeButton = onRemove ? (
-    <CompactButton label="Remove" onPress={onRemove} isOutlined />
+export function LanguagePackRow({ title, details, action = null }: LanguagePackRowProps) {
+  const actionButton = action ? (
+    <CompactButton label={action.label} onPress={action.onPress} isOutlined={action.isOutlined} />
   ) : null;
   return (
     <View style={styles.row}>
@@ -21,7 +28,7 @@ export function LanguagePackRow({ title, details, onRemove }: LanguagePackRowPro
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.details}>{details}</Text>
       </View>
-      {removeButton}
+      {actionButton}
     </View>
   );
 }

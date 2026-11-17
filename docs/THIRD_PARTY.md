@@ -14,6 +14,10 @@ Mandarin pack that is `scripts/lib/mandarinPack.ts`.
 | jf open-huninn | Flashcard font, subset (`assets/fonts/OpenHuninn-subset.ttf`) | SIL OFL 1.1 | https://github.com/justfont/open-huninn-font |
 | opencc-js | Conversion between Simplified and Traditional characters | MIT + Apache 2.0 (dictionaries) | https://github.com/nk2028/opencc-js |
 | @noble/ed25519 | Verifying language pack signatures (pure JavaScript, no network use) | MIT | https://github.com/paulmillr/noble-ed25519 |
+| Play Asset Delivery (`com.google.android.play:asset-delivery` 2.3.0, Android only) | Asking the Play Store app to download language packs (`modules/play-asset-delivery`). Brings in androidx.work (Apache 2.0) and Google Play services basement and tasks (Android SDK terms) | Play Core Software Development Kit Terms of Service | https://developer.android.com/guide/playcore |
+
+Play Asset Delivery is free to use but not open source. It is code, not bundled data or fonts, and
+it was accepted on 2026-11-16 for store-hosted packs (route A, docs/multi-language-plan.md).
 
 The Mandarin pack is a derived work of CC-CEDICT and Wiktionary, so it is shared under CC BY-SA
 4.0.

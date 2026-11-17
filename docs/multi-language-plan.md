@@ -1,129 +1,57 @@
 # Multi-language and add-ons plan
 
-Status: approved 2026-11-05. **Phase 1 done** (2026-11-05). **Phase 2 done** (2026-11-06,
-tested on the phone; merged into main). **Phase 3 done** (2026-11-10, branch
-lang-compatibility-p3, phone-tested, merged into main; see "Phase 3 wrap-up" below). **Phase 4
-built and phone-tested** (2026-11-10, branch lang-compatibility-p4; see "Phase 4 decisions"
-below). **Phases 4b and 4c built** (2026-11-13, branch lang-compatibility-p4b; automated tests
-pass, phone test pending; see "Phase 4b and 4c decisions" below). Update this file as work lands
-or decisions change.
+Status: approved 2026-11-05. **Phases 1–3 done** and merged. **Phase 4, 4b and 4c done** and
+merged into main. **Phase 5 (store-hosted packs, Android) in progress** on branch
+lang-compatibility-p5 (started 2026-11-16; see "Phase 5 decisions" below). Update this file as
+work lands or decisions change.
 
-Taiwan reading audit (2026-11-13). Traditional Mandarin always uses Taiwan readings; Simplified
-keeps mainland ones:
-- **Source:** CC-CEDICT gave a Taiwan reading for only 444 of 117,501 entries. Taiwan readings now
-  come from Wiktionary (CC BY-SA 4.0, via kaikki.org): `npm run extract:taiwan-readings` writes
-  scripts/data/mandarin-taiwan-readings.tsv (3,448 words whose Taiwan reading differs), and both
-  pack scripts apply it. The Taiwan reading becomes `reading`; the mainland one `variant_reading`.
-  Wiktionary is credited in the pack's licenses (About screen) and docs/THIRD_PARTY.md.
-- **Rules:** Wiktionary's Taiwan-tagged reading wins; where both regions share a toned reading and
-  CC-CEDICT stored the toneless variant (護士 hù shi), the toned one is used. Listed words are also
-  swapped inside longer entries (不客氣 → bù kè qì), except directional complements (站起來 keeps
-  its neutral 起來). Single characters keep CC-CEDICT's own Taiwan notes (期 qí): Wiktionary's
-  character pages pair readings unreliably (吃 came out as the stutter reading jí).
-- **Result:** 3,266 entries changed (休息 xiū xí, 星期 xīng qí, 研究 yán jiù, 認識 rèn shì, 衣服 yī fú,
-  頭髮 tóu fǎ, 時候 shí hòu, 企 qì, 質 zhí, 菌 jùn). Entries that now share a reading (地方 "place" and
-  "local", both dì fāng) are merged when the app reads them.
-- **Curated data:** 34 starter words (e.g. 喜歡 xǐ huān, 朋友 péng yǒu, 漂亮 piào liàng, 便宜 pián yí,
-  拜拜 bài bai, 突然 tú rán, 還是 hái shì) and 12 health entries (護士, 舒服 in two phrases, 咳嗽, 模糊,
-  生理期, 細菌 jùn, 長期, 行李 twice, 休息, 跌倒) were updated; 一天三次 is written yī (base tone).
-  The remaining neutral tones (謝謝, 東西, 意思, 麻煩, 清楚…) are neutral in Taiwan too. Component
-  names needed no change. Simplified-only health entries keep mainland readings.
-- **Saved words follow** (decided 2026-11-13): when a Traditional profile's lists first load
-  with a new pack version, saved words read the mainland way get the Taiwan reading
-  (`updateSavedReadings`, recorded per profile as `savedReadingsUpdatedForPack`). A reading that
-  is still valid for another meaning, or with more than one possible replacement, is left alone.
-  If the profile already has the Taiwan-read copy, the two merge: that copy keeps its meanings and
-  learning level and gains the other's lists, practice history, character links and starter set.
-  Bump `MANDARIN_PACK_VERSION` whenever readings change, or saved words won't be updated again.
-- **Whole words win:** a word Wiktionary lists itself only follows its own readings, never the
-  words inside it (亮堂堂 liàng táng tang; 不值得 keeps bù zhí de), so applying the file twice
-  changes nothing. **The Mandarin pack is now version 4** (built-in copy version 9); test packs
-  must be version 5+.
+Phase 5 decisions (2026-11-16):
+- **Play Asset Delivery is built now**, before any non-Mandarin pack exists, with a test pack only
+  (Mandarin version 3 made from the built-in pack, `dist/store-packs/mandarin-v3.mfpack`, development
+  builds only). Real packs join the catalog as each language is built.
+- **Permissions accepted:** Google's `asset-delivery` 2.3.0 library adds FOREGROUND_SERVICE,
+  FOREGROUND_SERVICE_DATA_SYNC, WAKE_LOCK, ACCESS_NETWORK_STATE and RECEIVE_BOOT_COMPLETED (none is a
+  runtime prompt). INTERNET stays blocked: the Play Store app downloads the pack. CLAUDE.md's
+  privacy section now allows store-managed pack downloads. Its dataSync foreground service needs a
+  Play Console declaration with a video (docs/RELEASE.md).
+- **No Play Console account yet** (decided to get one at beta time). Phase 5 is tested with
+  bundletool's local-testing mode; the real Play download and the declaration wait for the
+  account and are listed in docs/RELEASE.md.
+- **How it fits together:** `src/domain/storePackCatalog.json` lists store packs (asset pack name,
+  signed file, pack id and version, languages, test flag). `plugins/withPlayAssetPacks.ts` makes
+  one on-demand asset pack per entry at prebuild (bundles only; APKs ignore them).
+  `modules/play-asset-delivery` is a small local Expo module (Kotlin) around AssetPackManager.
+  `src/services/packs/storePackDelivery.ts` asks Play for a pack, follows its progress, asks for
+  the user's OK when Play holds the download, and hands the finished file to the existing pack
+  installer (same signature check), then deletes Play's copy.
+- **Language packs screen:** an "Available from Google Play" section lists store packs that aren't
+  installed (same or newer version), with Get, progress ("Downloading… 40%") and Install. It is
+  hidden when Play can't deliver (APK installs, phones without Play), where route B still works.
+- Play Asset Delivery is not open source (Play Core SDK Terms of Service); it is code, not bundled
+  data or fonts, and is credited in docs/THIRD_PARTY.md and on the About screen.
+- iOS (Apple-hosted asset packs) waits for the iOS port.
 
-Taiwan readings phone test (2026-11-13, Pixel 8 Pro, fresh debug build, profile TEMP3 deleted after):
-- The phone's pack matches the repo's version 4 pack (all 117,501 entries).
-- "Me": the update ran and changed none of its 56 words (none had a replaced mainland reading).
-- TEMP3: 休息 xiu1 xi5 and 地方 di4 fang5, imported by CSV, became xiū xí and dì fāng after the
-  update ran again (forced with a temporary key change, since reverted).
-- Adding the Cold/Flu set added 19 words; 咳嗽 shows ké sòu in General Vocabulary, Verbs and
-  Health-related words. A hidden Zhuyin card reads "In hidden list: Zhuyin".
-
-Phase 4b and 4c decisions (2026-11-13):
-- **Curated health data** lives in scripts/data/mandarin-word-sets.tsv (set id, topic, title) and
-  mandarin-word-set-entries.tsv (set id, headword, reading, word type, meanings separated by "; ",
-  languages, curator note). It was converted from the user's draft (`healthRelatedWordLists.ts`,
-  no longer in src/): 240 entries in 10 sets. Word types were assigned by hand (sentences and
-  symptom phrases such as 喉嚨痛 are "phrase", 飯後 is a time word, 口渴/頭暈 are adjectives).
-- **Taiwan readings throughout Traditional** (decided 2026-11-13, replacing "readings follow the
-  dictionary"): see "Taiwan reading audit" below. 咳嗽 is ké sòu and 跌倒 dié dǎo again, and
-  the dictionary now agrees. 子宮內膜異位症 keeps mó (Taiwan's reading; the draft's mò was a slip).
-  跌倒's meaning lost its "(Taiwan reading die1)" note.
-- **Regional entries:** Taiwan-only terms (健保卡, 家醫科, 藥局, 普拿疼, 衛生棉, 慢性病連續處方箋, 齒顎矯正,
-  維持器, 戽斗, 閃到腰) are limited to zh-Hant; Simplified-only equivalents follow each (医保卡,
-  药店, 卫生巾, 保持器; marked "review: mainland term" for 全科, 对乙酰氨基酚, 长期处方, 地包天, 闪了腰).
-  Entries are written in Traditional; Simplified forms come from the dictionary or OpenCC.
-- **Pack schema 3, Mandarin pack version 3** (built-in copy version 7). `word_sets` has a `topic`
-  column so later topics (travel, food) reuse the tables. Test packs must now be version 4+.
-- **Settings → "Health vocabulary"** shows only when the pack has health sets. Sets still to add
-  come first; added ones are greyed out with "· Added" at the bottom. "Also add the words to"
-  offers general lists other than General Vocabulary, Phrases, Time words and Health-related
-  words (so Focus Vocabulary and the user's own lists). Added sets are remembered in
-  `added_word_sets` (profile, pack, set).
-- **Learning levels:** labels are High practice / Reinforcement / Retention; the word screen's
-  section is "Learning level", with the practice-share note built from `PRACTICE_SET_TIER_RATIOS`.
-- **Retention question:** turning off Learn zhuyin (when the Zhuyin list exists) and "Hide list"
-  on the Components list ask "Move all … to Retention?" with "Move to Retention" / "Keep levels";
-  either way the list is hidden. Choosing zhuyin-only display still hides the Zhuyin list without
-  asking (not in the request). Only Components gets "Hide list"; "+" shows a hidden list of the
-  suggested name again instead of making a new one.
-- **All words:** an "Options" button opens View options (saved per profile in `settings`): Show
-  zhuyin cards / Show components (only when the profile has them), Show Retention words, Show
-  learning level. A note says how many words the options hide. A word only in hidden lists says
-  "In hidden list: Zhuyin" (fixes the Phase 4 follow-up finding).
-
-Word counts and the "0 words" check (2026-11-13, Pixel 8 Pro, profiles TEMP1-2, deleted after):
-- The Lists tab's All words row and All words count only the words the view options show; All
-  words notes hidden ones ("0 words (+59 hidden words)" with Show components off). Passed.
-- A new profile's All words row shows 0 only while Components fills, then 59 by itself, so the
-  Phase 4 follow-up finding no longer needs a fix. The health section showed after deleting a
-  stale built-in pack copy (the development-only issue noted under Phase 4).
-- The health modal lists the 10 sets with counts and offers Focus Vocabulary. Passed (visual).
-
-Phase 4b and 4c phone test results (2026-11-13, Pixel 8 Pro, profiles TEMP4 Traditional and
-TEMP5 Simplified, deleted after). All eight steps passed:
-- 醫生 imported by CSV as "physician", then Going to the doctor + Cold/Flu with Focus Vocabulary:
-  "Added 41 words … 1 word you already had was added to Health-related words"; 醫生 kept
-  "physician" and joined Focus Vocabulary and Health-related words.
-- Reopened, both sets sat greyed at the bottom with "· Added". After deleting Health-related
-  words, adding First aid brought the list back with its 17 words.
-- Word screen: "Learning level" with the 60% / 30% / 10% note and the three level chips.
-- Learn zhuyin on, then off: the Retention question; "Move to Retention" hid the list, and hiding
-  Retention words in All words read "118 words (+42 hidden words)".
-- Components → Hide list (the question also says how to show it again) → Keep levels: the list
-  left; "+" offered Components and restored the same list (59 cards, original place).
-- All words: Show learning level off stayed off after leaving and returning; rows had no label.
-- TEMP5 (Simplified): Going to the doctor 23 and Dental issues 37 words (Traditional 38); after
-  adding, 医保卡 and 药店 were there, 健保卡 and 药局 weren't, and 休息 read xiū xi (mainland).
-
-Phase 4b and 4c phone test (temporary profiles; reload so the version 3 pack is copied):
-1. Traditional profile → Settings → "Add common health-related word sets": 10 sets with counts
-   (Going to the doctor 23 words). Tick Cold/Flu and Diabetes, tick Focus Vocabulary, add: the
-   characters question appears, then the summary. Lists tab shows Health-related words; Focus
-   Vocabulary has the words; 喉嚨痛 is in Phrases and 口渴 in Adjectives.
-2. Reopen the modal: Cold/Flu and Diabetes are greyed out at the bottom with "· Added". Delete
-   the Health-related words list, add First aid: the list comes back with First aid's words.
-3. Add 醫生 with Add Word (meaning changed to "physician"), then add Going to the doctor: the
-   summary counts it as already had, and 醫生 joins Health-related words, still "physician".
-4. Simplified profile → the same modal: Going to the doctor shows 医保卡 and 药店, not 健保卡/藥局.
-5. A word's screen says "Learning level" with High practice / Reinforcement / Retention and the
-   60% / 30% / 10% note; All words rows show the new labels.
-6. Learn zhuyin on, then off: the Retention question shows; "Move to Retention" makes ㄅ show
-   Retention in All words, with "In hidden list: Zhuyin".
-7. Components list → "Hide list" → "Keep levels": the list leaves the Lists tab; "+" offers
-   Components and brings back the same 59 cards with their levels.
-8. All words → Options: untick Show components and Show learning level; components disappear,
-   the note reads "N words (+59 hidden words)", labels are gone; the Lists tab's All words row
-   shows N; leave and come back: the options are kept.
+Phase 5 phone test (2026-11-17, Pixel 8 Pro, bundletool local testing, debug bundle):
+- Passed: Language packs shows "Available from Google Play" with "Mandarin (test update), 16 MB
+  from Google Play" (the size comes from Play). Get → Installing… → "The Mandarin pack (version 3)
+  is installed"; the section disappears; Play's unpacked copy is deleted (`files/assetpacks` is
+  empty) and the pack lives at `files/SQLite/pack-mandarin-v3.db`. Version 3 survives a restart.
+  Remove brings the store pack back, and Get works again after Play's copy was deleted.
+- Passed: an APK install (`assembleDebug`, as `expo run:android` and sideloading use) contains no
+  test pack and hides the Google Play section, showing the route B hint instead.
+- The user's words and lists were kept through the bundle install (signed with the project's
+  debug key). The test pack was removed afterwards; the phone uses the built-in pack again.
+- Release check (2026-11-17, `RELEASE_BUILD=1`, arm64 bundle): INTERNET and ACCESS_LOCAL_NETWORK are
+  stripped; the only new permissions are the five accepted ones; the test pack is left out. The
+  download is 30.7–30.8 MB (29.3 MiB), at the 30 MB budget; Phase 5 adds about 0.15 MB, so the
+  size was already there (mostly the built-in pack and fonts). SYSTEM_ALERT_WINDOW and VIBRATE come
+  from Expo's app template, not Phase 5.
+- **Found and fixed:** the release build crashed on launch because R8 renamed WorkManager's Room
+  database (WorkManager comes with Play Asset Delivery). `modules/play-asset-delivery` now ships
+  keep rules (`proguard-rules.pro`). The fixed release build opens on the phone and Settings →
+  Language packs works (no Google Play section, since release builds have no test pack).
+- Not testable without Play: real downloads, progress over a slow network, the Wi-Fi/mobile data
+  confirmation and network errors (unit tests cover their handling).
 
 Phase 4 decisions (2026-11-10):
 - **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency

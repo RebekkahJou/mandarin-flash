@@ -31,7 +31,8 @@
       "expo-sharing",
       "expo-font",
       "expo-asset",
-      "./plugins/withOpenedFileActivity.ts"
+      "./plugins/withOpenedFileActivity.ts",
+      "./plugins/withPlayAssetPacks.ts"
     ]
   }
 }

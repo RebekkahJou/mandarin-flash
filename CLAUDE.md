@@ -18,6 +18,11 @@ The spec lives in docs/spec.md. Read it before adding features.
 ## Privacy first (non-negotiable)
 - No network calls, analytics, telemetry, ads or crash-reporting SDKs. Release builds strip the
   INTERNET permission (app.config.ts). Do not add it back.
+- One exception: store-managed pack downloads. The app may ask the Play Store app (Play Asset
+  Delivery) to download a language pack the user chose; the store downloads it and the app never
+  connects. Its library's permissions (FOREGROUND_SERVICE, FOREGROUND_SERVICE_DATA_SYNC,
+  WAKE_LOCK, ACCESS_NETWORK_STATE, RECEIVE_BOOT_COMPLETED) were accepted on 2026-11-16. Downloaded
+  packs pass the same signature check as pack files.
 - All user data lives in the encrypted SQLite DB (SQLCipher). Never write user data to plain files,
   AsyncStorage or logs. The DB key lives only in expo-secure-store.
 - Data leaves the device only through an explicit user action (CSV export through the share sheet).
@@ -32,7 +37,12 @@ The spec lives in docs/spec.md. Read it before adding features.
 - Small functions (aim for under 30 lines), early returns, no dead code, no commented-out code.
 - No magic numbers or strings. Use named constants (e.g. PRACTICE_SET_TIER_RATIOS).
 - TypeScript strict. No `any`, and no non-null `!` without a comment explaining why.
-- Comments explain *why*, not *what*.
+- Comment sparingly: comments go stale when code changes. Write a comment only:
+  - at the top of a file, to say what the file does (for scripts, summarize their main features);
+  - on interfaces and their keys, to describe what each field holds;
+  - where confusion is likely and a clear name would be too long (e.g. why an odd rule exists).
+- Don't add comments to functions whose name and signature already say what they do. Prefer a
+  clearer name over a comment. When a comment is needed, explain *why*, not *what*.
 
 ## Naming
 - Use full descriptive names: `practiceSetSize`, not `n` or `sz`. Booleans read as questions
