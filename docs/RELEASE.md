@@ -52,10 +52,9 @@ cd android && ./gradlew assembleRelease # sideloading (.apk)
 1. `npm run check` passes.
 2. The release build has no network permission:
    `aapt dump permissions android/app/build/outputs/apk/release/app-release.apk` must not list
-   `android.permission.INTERNET` or `android.permission.ACCESS_LOCAL_NETWORK`. The only other
-   permissions should be the ones Play Asset Delivery brings (FOREGROUND_SERVICE,
-   FOREGROUND_SERVICE_DATA_SYNC, WAKE_LOCK, ACCESS_NETWORK_STATE, RECEIVE_BOOT_COMPLETED) and
-   Android's own DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION.
+   `android.permission.INTERNET` or `android.permission.ACCESS_LOCAL_NETWORK`. Play Asset
+   Delivery adds FOREGROUND_SERVICE, FOREGROUND_SERVICE_DATA_SYNC, WAKE_LOCK, ACCESS_NETWORK_STATE
+   and RECEIVE_BOOT_COMPLETED; compare the rest with the previous release and justify anything new.
 3. The download is 30 MB or less:
    `bundletool get-size total --apks=<apks built from the .aab>`.
 4. The database is encrypted: run `adb exec-out run-as com.mandarinflash.app cat databases/user.db`
@@ -95,10 +94,12 @@ the signed file exactly like a pack file the user opened, and deletes Play's cop
   ```sh
   npx expo prebuild --platform android   # then recreate android/local.properties if needed
   cd android && ./gradlew bundleDebug
-  java -jar bundletool.jar build-apks --bundle=app/build/outputs/bundle/debug/app-debug.aab     --output=app-debug.apks --local-testing --overwrite
+  java -jar bundletool.jar build-apks --bundle=app/build/outputs/bundle/debug/app-debug.aab     --output=app-debug.apks --local-testing --overwrite --ks=app/debug.keystore     --ks-pass=pass:android --ks-key-alias=androiddebugkey --key-pass=pass:android
   java -jar bundletool.jar install-apks --apks=app-debug.apks
   ```
 
+  Signing with the project's debug key installs over an existing debug build and keeps its data.
+  Add `-PreactNativeArchitectures=arm64-v8a` to the Gradle command to build faster for one phone.
   Packs are then fetched from the phone's storage instead of Play. Local testing can't show
   network errors or the Wi-Fi/mobile data confirmation, and Google says updates aren't supported
   there (uninstall first if a pack doesn't show up; that deletes the app's data).

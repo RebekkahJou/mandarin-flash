@@ -31,6 +31,19 @@ Phase 5 decisions (2026-11-16):
   data or fonts, and is credited in docs/THIRD_PARTY.md and on the About screen.
 - iOS (Apple-hosted asset packs) waits for the iOS port.
 
+Phase 5 phone test (2026-11-17, Pixel 8 Pro, bundletool local testing, debug bundle):
+- Passed: Language packs shows "Available from Google Play" with "Mandarin (test update), 16 MB
+  from Google Play" (the size comes from Play). Get → Installing… → "The Mandarin pack (version 3)
+  is installed"; the section disappears; Play's unpacked copy is deleted (`files/assetpacks` is
+  empty) and the pack lives at `files/SQLite/pack-mandarin-v3.db`. Version 3 survives a restart.
+  Remove brings the store pack back, and Get works again after Play's copy was deleted.
+- Passed: an APK install (`assembleDebug`, as `expo run:android` and sideloading use) contains no
+  test pack and hides the Google Play section, showing the route B hint instead.
+- The user's words and lists were kept through the bundle install (signed with the project's
+  debug key). The test pack was removed afterwards; the phone uses the built-in pack again.
+- Not testable without Play: real downloads, progress over a slow network, the Wi-Fi/mobile data
+  confirmation and network errors (unit tests cover their handling).
+
 Phase 4 decisions (2026-11-10):
 - **Starter vocabulary:** 500 words in 10 sets of 50, hand-picked (the pack has no frequency
   data; entry rank only orders readings) in scripts/data/mandarin-starter-words.tsv, each with a
