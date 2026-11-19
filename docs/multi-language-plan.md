@@ -581,6 +581,27 @@ teachers) (51 words)", so it was renamed. Lesson: when the pack and its copy ver
 together, Fast Refresh can copy the old pack under the new version on the dev phone; delete
 `files/SQLite/dictionary-v<N>.db` with `run-as` and restart.
 
+**Travel, Food and Errands data (step 4, done 2026-11-19, reviewed by the user):**
+19 sets and 582 entries in the word set TSVs, about 30 per set, matching the draft table above.
+All characters are already in the font subset. Taiwan readings kept where the dictionary differs:
+航廈 háng xià and 微波 wéi bō (微糖 and 微冰 follow). 炸 is zhà, as Taiwan reads it for frying too.
+Proper nouns the dictionary capitalizes (悠遊卡, 台幣, 關東煮) are written lowercase, like 健保.
+
+**ARC and ID numbers (requested 2026-11-19, same batch):** services in Taiwan ask for an ID
+number, so Going to the doctor, Bank & ATM, MRT & trains (booking) and Hotel get Taiwan-only
+entries for the ARC (居留證, 居留證號碼, 統一證號), the national ID number (身分證字號) and phrases
+such as 可以用居留證號碼嗎 and 我沒有身分證, plus 證件號碼, 請出示證件 and 護照號碼 for every
+language and 身份證號碼 for Simplified (39 entries). Going to the doctor was already built, so profiles
+that added it before won't get these until the planned "new words in sets you added" feature.
+
+Built 2026-11-19: pack version 7, copy version 12, 51 sets and 1,633 entries; the pack database
+grew by 48 KB (16.55 MB). **Phone test (Pixel 8 Pro, temporary profile TEMP6, deleted
+afterwards):** Passed. All eight topics are listed (Travel 6, Food 6, Errands 7 sets). MRT & trains
+and Hotel added 65 words (35 + 35 with 5 shared ID words); Bank & ATM then added 28 and put the 8
+words the profile already had in Errand words. General Vocabulary held 93, the word-type lists
+63 + 18 + 12, Travel words 65 and Errand words 36. Adding 2 sets took a few seconds before the
+characters question appeared.
+
 **Size:** the health batch added 32 KB to the pack database (349 entries), so all topics
 (roughly 1,500–2,000 entries) should add about 150 KB, less after compression. The Phase 5 release
 check measured the download at 30.7–30.8 MB, already at the 30 MB budget. Measure the release
@@ -590,7 +611,7 @@ doesn't use).
 **Order:** (1) generalize the Settings entry and modal and add the topic ids and list names; (2)
 Health additions; (3) Parenting and Caregiving (the first audience); (4) Travel, Food and Errands;
 (5) School and Work. The user reviews each batch's TSV before it is built. Each merged batch
-raises `MANDARIN_PACK_VERSION` (the built-in pack is version 6 now) and the built-in pack copy
+raises `MANDARIN_PACK_VERSION` (the built-in pack is version 7 now) and the built-in pack copy
 version. The test store pack (`storePackCatalog.json`, version 3) is older than the built-in pack
 and must be rebuilt with a higher version before Play Asset Delivery is tested again.
 

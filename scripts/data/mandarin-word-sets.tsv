@@ -31,3 +31,22 @@ care-staff	caregiving	Talking with care staff
 comfort-feelings	caregiving	Comfort & feelings	
 teaching	work	For teachers	
 school-teaching	school	For teachers	teaching
+airport	travel	Airport	
+trains	travel	MRT & trains	
+bus-taxi-scooter	travel	Bus, taxi & scooter	
+hotel	travel	Hotel	
+directions	travel	Directions	
+travel-problems	travel	Travel problems	
+ordering	food	Ordering	
+night-market	food	Night markets & street food	
+drinks	food	Drinks	
+dietary-needs	food	Dietary needs & allergies	
+tastes-cooking	food	Tastes & cooking	
+paying-bill	food	Paying & splitting the bill	
+convenience-store	errands	Convenience store	
+bank	errands	Bank & ATM	
+post-deliveries	errands	Post office & deliveries	
+phone-sim	errands	Phone & SIM	
+renting-repairs	errands	Renting & home repairs	
+bills-utilities	errands	Bills & utilities	
+government-offices	errands	Government offices	
