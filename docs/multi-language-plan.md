@@ -556,6 +556,31 @@ liú bí xiě). Open reading question: 度數 is written dù shù (Taiwan), but 
 neutral tone and the Taiwan readings file comes from Wiktionary, so hand fixes need an overrides
 file.
 
+**Parenting and Caregiving data (step 3, done 2026-11-19, reviewed by the user):**
+12 sets and 369 entries in the word set TSVs. Parenting: Babies, Toddlers, Kindergarten, Grade
+school for parents, Playground & activities, Everyday phrases with kids (plus the shared
+Children's health). Caregiving: Daily care, Mobility & safety, Memory & aging, Care services &
+paperwork, Talking with care staff, Comfort & feelings. All characters are already in the font
+subset. Two Taiwan readings differ from the dictionary's neutral tones (好不好 hǎo bù hǎo, 站起來
+zhàn qǐ lái) and are kept. Built into the pack with the Teaching set: version 6, copy version
+11, 32 sets and 1,012 entries; the pack database grew by 36 KB.
+
+**Teaching set (requested 2026-11-19, same review batch):** one set, "For teachers", for
+foreign language teachers and foreign teachers of other subjects: co-teaching and bilingual
+programs (外師, 中師, 雙語課程), school staff and offices, lesson preparation, language-skill words,
+classroom phrases and job paperwork (53 entries). It belongs to Work and is shared into School
+(`school-teaching` → `teaching`), so Work and School each show one set before their own batches.
+
+**Phone test (2026-11-19, Pixel 8 Pro, temporary profile TEMP5, deleted afterwards):** Passed. The
+topics read Health (17), Parenting (7), Caregiving (6), School (1) and Work (1). Set counts leave
+out Simplified-only entries (Babies 32). Babies and Everyday phrases with kids added 62 words;
+Comfort & feelings added 28 and put the 2 shared phrases (慢慢來, 沒關係) in Caregiving words;
+For teachers added 51 to Work words. General Vocabulary held 141 and the word-type lists 56 + 29
++ 8 + 48. The set was first titled "Teaching (for teachers)", which showed as "Teaching (for
+teachers) (51 words)", so it was renamed. Lesson: when the pack and its copy version change
+together, Fast Refresh can copy the old pack under the new version on the dev phone; delete
+`files/SQLite/dictionary-v<N>.db` with `run-as` and restart.
+
 **Size:** the health batch added 32 KB to the pack database (349 entries), so all topics
 (roughly 1,500–2,000 entries) should add about 150 KB, less after compression. The Phase 5 release
 check measured the download at 30.7–30.8 MB, already at the 30 MB budget. Measure the release
@@ -565,7 +590,7 @@ doesn't use).
 **Order:** (1) generalize the Settings entry and modal and add the topic ids and list names; (2)
 Health additions; (3) Parenting and Caregiving (the first audience); (4) Travel, Food and Errands;
 (5) School and Work. The user reviews each batch's TSV before it is built. Each merged batch
-raises `MANDARIN_PACK_VERSION` (the built-in pack is version 5 now) and the built-in pack copy
+raises `MANDARIN_PACK_VERSION` (the built-in pack is version 6 now) and the built-in pack copy
 version. The test store pack (`storePackCatalog.json`, version 3) is older than the built-in pack
 and must be rebuilt with a higher version before Play Asset Delivery is tested again.
 

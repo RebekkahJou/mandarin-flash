@@ -589,3 +589,425 @@ hospital	快叫救護車	kuai4 jiao4 jiu4 hu4 che1	phrase	call an ambulance, qui
 hospital	胸痛	xiong1 tong4	noun	chest pain		
 hospital	過敏反應	guo4 min3 fan3 ying4	noun	allergic reaction		
 hospital	中毒	zhong4 du2	verb	poisoned; poisoning		
+babies	新生兒	xin1 sheng1 er2	noun	newborn		
+babies	寶寶	bao3 bao5	noun	baby (affectionate)		
+babies	餵奶	wei4 nai3	verb	to feed (milk)		
+babies	餵母乳	wei4 mu3 ru3	verb	to breastfeed		
+babies	母乳	mu3 ru3	noun	breast milk		
+babies	奶瓶	nai3 ping2	noun	baby bottle		
+babies	配方奶	pei4 fang1 nai3	noun	formula (milk)		
+babies	奶粉	nai3 fen3	noun	powdered formula; milk powder		
+babies	泡奶	pao4 nai3	verb	to make up a bottle (of formula)		
+babies	拍嗝	pai1 ge2	verb	to burp (a baby)		
+babies	吐奶	tu4 nai3	verb	to spit up milk		
+babies	夜奶	ye4 nai3	noun	night feeding		
+babies	奶嘴	nai3 zui3	noun	pacifier		
+babies	副食品	fu4 shi2 pin3	noun	baby food (first solids)	zh-Hant	
+babies	輔食	fu3 shi2	noun	baby food (first solids)	zh-Hans	review: mainland term
+babies	尿布	niao4 bu4	noun	diaper		
+babies	換尿布	huan4 niao4 bu4	verb	to change a diaper		
+babies	濕紙巾	shi1 zhi3 jin1	noun	baby wipes; wet wipes		
+babies	包巾	bao1 jin1	noun	swaddle blanket	zh-Hant	
+babies	嬰兒床	ying1 er2 chuang2	noun	crib		
+babies	嬰兒車	ying1 er2 che1	noun	stroller		
+babies	背巾	bei1 jin1	noun	baby carrier; baby sling	zh-Hant	
+babies	背帶	bei1 dai4	noun	baby carrier	zh-Hans	review: mainland term
+babies	汽車安全座椅	qi4 che1 an1 quan2 zuo4 yi3	noun	car seat		
+babies	哄睡	hong3 shui4	verb	to get a baby to sleep		
+babies	翻身	fan1 shen1	verb	to roll over		
+babies	爬	pa2	verb	to crawl; to climb		
+babies	坐月子	zuo4 yue4 zi5	verb	to rest for the first month after giving birth		
+babies	月子中心	yue4 zi5 zhong1 xin1	noun	postpartum care center		
+babies	保母	bao3 mu3	noun	nanny; babysitter	zh-Hant	
+babies	保姆	bao3 mu3	noun	nanny; babysitter	zh-Hans	
+babies	托嬰中心	tuo1 ying1 zhong1 xin1	noun	daycare (for babies)	zh-Hant	
+babies	托育中心	tuo1 yu4 zhong1 xin1	noun	daycare (for babies)	zh-Hans	review: mainland term
+babies	寶寶餓了	bao3 bao5 e4 le5	phrase	the baby is hungry		
+babies	寶寶睡著了	bao3 bao5 shui4 zhao2 le5	phrase	the baby fell asleep		
+babies	滿月	man3 yue4	noun	one month old (and its celebration)		
+toddlers	幼兒	you4 er2	noun	toddler; young child		
+toddlers	學走路	xue2 zou3 lu4	verb	to learn to walk		
+toddlers	學說話	xue2 shuo1 hua4	verb	to learn to talk		
+toddlers	戒尿布	jie4 niao4 bu4	verb	to potty train (stop using diapers)		
+toddlers	小馬桶	xiao3 ma3 tong3	noun	potty		
+toddlers	尿尿	niao4 niao4	verb	to pee (child's word)		
+toddlers	便便	bian4 bian4	noun	poop (child's word)		
+toddlers	我要尿尿	wo3 yao4 niao4 niao4	phrase	I need to pee		
+toddlers	上廁所	shang4 ce4 suo3	verb	to go to the toilet		
+toddlers	洗手	xi3 shou3	verb	to wash your hands		
+toddlers	刷牙	shua1 ya2	verb	to brush your teeth		
+toddlers	穿鞋子	chuan1 xie2 zi5	verb	to put on shoes		
+toddlers	脫衣服	tuo1 yi1 fu2	verb	to take off clothes		
+toddlers	自己吃	zi4 ji3 chi1	phrase	eat by yourself		
+toddlers	圍兜	wei2 dou1	noun	bib		
+toddlers	兒童餐椅	er2 tong2 can1 yi3	noun	high chair		
+toddlers	玩具	wan2 ju4	noun	toy		
+toddlers	積木	ji1 mu4	noun	building blocks		
+toddlers	繪本	hui4 ben3	noun	picture book		
+toddlers	講故事	jiang3 gu4 shi4	verb	to tell a story		
+toddlers	唱歌	chang4 ge1	verb	to sing		
+toddlers	鬧脾氣	nao4 pi2 qi4	verb	to throw a tantrum		
+toddlers	哭鬧	ku1 nao4	verb	to cry and fuss		
+toddlers	生氣	sheng1 qi4	adjective	angry		
+toddlers	分享	fen1 xiang3	verb	to share		
+toddlers	輪流	lun2 liu2	verb	to take turns		
+toddlers	收玩具	shou1 wan2 ju4	verb	to put toys away		
+toddlers	午睡	wu3 shui4	noun	nap		
+toddlers	親子館	qin1 zi3 guan3	noun	indoor play center for parents and young children	zh-Hant	
+toddlers	早療	zao3 liao2	noun	early intervention (therapy for young children)	zh-Hant	
+kindergarten	幼兒園	you4 er2 yuan2	noun	kindergarten; preschool		
+kindergarten	幼幼班	you4 you4 ban1	noun	class for two-year-olds	zh-Hant	
+kindergarten	小班	xiao3 ban1	noun	youngest kindergarten class (ages 3–4)		
+kindergarten	中班	zhong1 ban1	noun	middle kindergarten class (ages 4–5)		
+kindergarten	大班	da4 ban1	noun	oldest kindergarten class (ages 5–6)		
+kindergarten	公立	gong1 li4	adjective	public (school)		
+kindergarten	私立	si1 li4	adjective	private (school)		
+kindergarten	老師	lao3 shi1	noun	teacher		
+kindergarten	園長	yuan2 zhang3	noun	kindergarten principal		
+kindergarten	同學	tong2 xue2	noun	classmate		
+kindergarten	上學	shang4 xue2	verb	to go to school		
+kindergarten	放學	fang4 xue2	verb	to finish school for the day		
+kindergarten	接送	jie1 song4	verb	to drop off and pick up		
+kindergarten	接小孩	jie1 xiao3 hai2	verb	to pick up the kids		
+kindergarten	娃娃車	wa2 wa5 che1	noun	kindergarten bus	zh-Hant	
+kindergarten	校車	xiao4 che1	noun	school bus		
+kindergarten	書包	shu1 bao1	noun	schoolbag		
+kindergarten	餐袋	can1 dai4	noun	lunch bag (for a cup and utensils)	zh-Hant	
+kindergarten	水壺	shui3 hu2	noun	water bottle		
+kindergarten	室內鞋	shi4 nei4 xie2	noun	indoor shoes		
+kindergarten	點心	dian3 xin1	noun	snack		
+kindergarten	午餐	wu3 can1	noun	lunch		
+kindergarten	棉被	mian2 bei4	noun	blanket (for nap time)		
+kindergarten	制服	zhi4 fu2	noun	uniform		
+kindergarten	學費	xue2 fei4	noun	tuition; school fees		
+kindergarten	報名	bao4 ming2	verb	to sign up; to enroll		
+kindergarten	抽籤	chou1 qian1	verb	to draw lots (for a school place)		
+kindergarten	適應	shi4 ying4	verb	to adjust; to get used to		
+kindergarten	分離焦慮	fen1 li2 jiao1 lu:4	noun	separation anxiety		
+kindergarten	請假	qing3 jia4	verb	to ask for time off; to call in absent		
+kindergarten	今天請假	jin1 tian1 qing3 jia4	phrase	(my child) will be absent today		
+kindergarten	畢業典禮	bi4 ye4 dian3 li3	noun	graduation ceremony		
+grade-school-parents	國小	guo2 xiao3	noun	elementary school	zh-Hant	
+grade-school-parents	小學	xiao3 xue2	noun	elementary school		
+grade-school-parents	一年級	yi1 nian2 ji2	noun	first grade		
+grade-school-parents	導師	dao3 shi1	noun	homeroom teacher	zh-Hant	
+grade-school-parents	班主任	ban1 zhu3 ren4	noun	homeroom teacher	zh-Hans	
+grade-school-parents	家長	jia1 zhang3	noun	parent (of a student)		
+grade-school-parents	聯絡簿	lian2 luo4 bu4	noun	communication book (between parents and teacher)	zh-Hant	
+grade-school-parents	簽聯絡簿	qian1 lian2 luo4 bu4	verb	to sign the communication book	zh-Hant	
+grade-school-parents	功課	gong1 ke4	noun	homework		
+grade-school-parents	寫功課	xie3 gong1 ke4	verb	to do homework		
+grade-school-parents	作業	zuo4 ye4	noun	assignment; homework		
+grade-school-parents	考試	kao3 shi4	noun	exam; test		
+grade-school-parents	考卷	kao3 juan4	noun	test paper		
+grade-school-parents	成績	cheng2 ji1	noun	grades; results		
+grade-school-parents	家長會	jia1 zhang3 hui4	noun	parent-teacher meeting		
+grade-school-parents	親師座談會	qin1 shi1 zuo4 tan2 hui4	noun	parent-teacher night	zh-Hant	
+grade-school-parents	同意書	tong2 yi4 shu1	noun	consent form		
+grade-school-parents	繳費	jiao3 fei4	verb	to pay (a fee)		
+grade-school-parents	營養午餐	ying2 yang3 wu3 can1	noun	school lunch	zh-Hant	
+grade-school-parents	文具	wen2 ju4	noun	stationery; school supplies		
+grade-school-parents	安親班	an1 qin1 ban1	noun	after-school care (private)	zh-Hant	
+grade-school-parents	托管班	tuo1 guan3 ban1	noun	after-school care	zh-Hans	review: mainland term
+grade-school-parents	課後照顧	ke4 hou4 zhao4 gu4	noun	after-school care (at school)	zh-Hant	
+grade-school-parents	補習班	bu3 xi2 ban1	noun	cram school; tutoring center		
+grade-school-parents	才藝班	cai2 yi4 ban1	noun	extracurricular class (music, art)	zh-Hant	
+grade-school-parents	興趣班	xing4 qu4 ban1	noun	extracurricular class (music, art)	zh-Hans	review: mainland term
+grade-school-parents	校外教學	xiao4 wai4 jiao4 xue2	noun	field trip	zh-Hant	
+grade-school-parents	運動會	yun4 dong4 hui4	noun	sports day		
+grade-school-parents	開學	kai1 xue2	verb	school starts (for the term)		
+grade-school-parents	寒假	han2 jia4	noun	winter break		
+grade-school-parents	暑假	shu3 jia4	noun	summer break		
+grade-school-parents	被同學欺負	bei4 tong2 xue2 qi1 fu4	phrase	bullied by classmates		
+playground	公園	gong1 yuan2	noun	park		
+playground	遊樂場	you2 le4 chang3	noun	playground		
+playground	溜滑梯	liu1 hua2 ti1	noun	slide		
+playground	鞦韆	qiu1 qian1	noun	swing		
+playground	盪鞦韆	dang4 qiu1 qian1	verb	to swing (on a swing)		
+playground	蹺蹺板	qiao1 qiao1 ban3	noun	seesaw		
+playground	沙坑	sha1 keng1	noun	sandbox		
+playground	攀爬架	pan1 pa2 jia4	noun	climbing frame		
+playground	跑步	pao3 bu4	verb	to run		
+playground	跳	tiao4	verb	to jump		
+playground	捉迷藏	zhuo1 mi2 cang2	noun	hide-and-seek		
+playground	鬼抓人	gui3 zhua1 ren2	noun	tag (the game)	zh-Hant	
+playground	球	qiu2	noun	ball		
+playground	踢球	ti1 qiu2	verb	to kick a ball; to play soccer		
+playground	騎腳踏車	qi2 jiao3 ta4 che1	verb	to ride a bike	zh-Hant	
+playground	騎自行車	qi2 zi4 xing2 che1	verb	to ride a bike	zh-Hans	
+playground	滑板車	hua2 ban3 che1	noun	kick scooter		
+playground	游泳課	you2 yong3 ke4	noun	swimming lesson		
+playground	畫畫	hua4 hua4	verb	to draw; to paint		
+playground	蠟筆	la4 bi3	noun	crayon		
+playground	黏土	nian2 tu3	noun	clay; play dough		
+playground	圖書館	tu2 shu1 guan3	noun	library		
+playground	說故事時間	shuo1 gu4 shi4 shi2 jian1	noun	story time		
+playground	動物園	dong4 wu4 yuan2	noun	zoo		
+playground	博物館	bo2 wu4 guan3	noun	museum		
+playground	排隊	pai2 dui4	verb	to wait in line		
+playground	帽子	mao4 zi5	noun	hat		
+playground	防曬乳	fang2 shai4 ru3	noun	sunscreen	zh-Hant	
+playground	防曬霜	fang2 shai4 shuang1	noun	sunscreen	zh-Hans	review: mainland term
+playground	防蚊液	fang2 wen2 ye4	noun	insect repellent	zh-Hant	
+playground	驅蚊液	qu1 wen2 ye4	noun	insect repellent	zh-Hans	review: mainland term
+playground	好玩	hao3 wan2	adjective	fun		
+phrases-with-kids	小心	xiao3 xin1	phrase	careful!		
+phrases-with-kids	不可以	bu4 ke3 yi3	phrase	no, you can't do that		
+phrases-with-kids	好棒	hao3 bang4	phrase	great job!		
+phrases-with-kids	乖	guai1	adjective	well-behaved; good		
+phrases-with-kids	過來	guo4 lai2	phrase	come here		
+phrases-with-kids	等一下	deng3 yi1 xia4	phrase	wait a moment		
+phrases-with-kids	快一點	kuai4 yi1 dian3	phrase	hurry up		
+phrases-with-kids	慢慢走	man4 man4 zou3	phrase	walk slowly		
+phrases-with-kids	不要跑	bu4 yao4 pao3	phrase	don't run		
+phrases-with-kids	牽手	qian1 shou3	verb	to hold hands		
+phrases-with-kids	手給我	shou3 gei3 wo3	phrase	give me your hand		
+phrases-with-kids	該睡覺了	gai1 shui4 jiao4 le5	phrase	time for bed		
+phrases-with-kids	起床了	qi3 chuang2 le5	phrase	time to get up		
+phrases-with-kids	吃飽了嗎	chi1 bao3 le5 ma5	phrase	are you full?		
+phrases-with-kids	多喝水	duo1 he1 shui3	phrase	drink more water		
+phrases-with-kids	說謝謝	shuo1 xie4 xie5	phrase	say thank you		
+phrases-with-kids	說對不起	shuo1 dui4 bu4 qi3	phrase	say sorry		
+phrases-with-kids	沒關係	mei2 guan1 xi4	phrase	it's okay		
+phrases-with-kids	加油	jia1 you2	phrase	you can do it!		
+phrases-with-kids	你好厲害	ni3 hao3 li4 hai4	phrase	you're amazing!		
+phrases-with-kids	不哭不哭	bu4 ku1 bu4 ku1	phrase	there, there, don't cry		
+phrases-with-kids	抱抱	bao4 bao4	verb	to hug (child's word)		
+phrases-with-kids	我愛你	wo3 ai4 ni3	phrase	I love you		
+phrases-with-kids	好不好	hao3 bu4 hao3	phrase	okay? (asking someone to agree)		
+phrases-with-kids	怎麼了	zen3 me5 le5	phrase	what's wrong?		
+phrases-with-kids	哪裡痛	na3 li3 tong4	phrase	where does it hurt?		
+phrases-with-kids	收好	shou1 hao3	phrase	put it away		
+phrases-with-kids	輪到你了	lun2 dao4 ni3 le5	phrase	it's your turn		
+phrases-with-kids	慢慢來	man4 man4 lai2	phrase	take your time		
+phrases-with-kids	你做到了	ni3 zuo4 dao4 le5	phrase	you did it!		
+daily-care	照顧	zhao4 gu4	verb	to take care of		
+daily-care	照顧者	zhao4 gu4 zhe3	noun	caregiver		
+daily-care	洗澡	xi3 zao3	verb	to bathe; to shower		
+daily-care	擦澡	ca1 zao3	verb	to give a sponge bath		
+daily-care	洗頭	xi3 tou2	verb	to wash someone's hair		
+daily-care	刷牙	shua1 ya2	verb	to brush your teeth		
+daily-care	假牙	jia3 ya2	noun	dentures		
+daily-care	刮鬍子	gua1 hu2 zi5	verb	to shave		
+daily-care	剪指甲	jian3 zhi3 jia3	verb	to trim nails		
+daily-care	穿衣服	chuan1 yi1 fu2	verb	to get dressed		
+daily-care	換衣服	huan4 yi1 fu2	verb	to change clothes		
+daily-care	上廁所	shang4 ce4 suo3	verb	to go to the toilet		
+daily-care	成人紙尿褲	cheng2 ren2 zhi3 niao4 ku4	noun	adult diaper		
+daily-care	看護墊	kan1 hu4 dian4	noun	bed pad (disposable)	zh-Hant	
+daily-care	護理墊	hu4 li3 dian4	noun	bed pad (disposable)	zh-Hans	review: mainland term
+daily-care	便盆椅	bian4 pen2 yi3	noun	commode chair		
+daily-care	尿壺	niao4 hu2	noun	urinal (bottle)		
+daily-care	餵飯	wei4 fan4	verb	to feed (someone a meal)		
+daily-care	軟食	ruan3 shi2	noun	soft food		
+daily-care	切碎	qie1 sui4	verb	to chop finely		
+daily-care	吞嚥困難	tun1 yan4 kun4 nan2	noun	difficulty swallowing		
+daily-care	增稠劑	zeng1 chou2 ji4	noun	food thickener (for easier swallowing)		
+daily-care	吃藥	chi1 yao4	verb	to take medicine		
+daily-care	藥盒	yao4 he2	noun	pill organizer		
+daily-care	量血壓	liang2 xue4 ya1	verb	to take someone's blood pressure		
+daily-care	翻身	fan1 shen1	verb	to turn over (in bed)		
+daily-care	褥瘡	ru4 chuang1	noun	bedsore		
+daily-care	擦乳液	ca1 ru3 ye4	verb	to put on lotion		
+daily-care	起床	qi3 chuang2	verb	to get up		
+daily-care	睡不著	shui4 bu4 zhao2	phrase	can't sleep		
+mobility-safety	輪椅	lun2 yi3	noun	wheelchair		
+mobility-safety	推輪椅	tui1 lun2 yi3	verb	to push a wheelchair		
+mobility-safety	拐杖	guai3 zhang4	noun	cane; crutch		
+mobility-safety	四腳拐	si4 jiao3 guai3	noun	quad cane	zh-Hant	
+mobility-safety	助行器	zhu4 xing2 qi4	noun	walker (walking frame)		
+mobility-safety	扶	fu2	verb	to support (someone) by the arm		
+mobility-safety	扶手	fu2 shou3	noun	handrail; grab bar		
+mobility-safety	防滑墊	fang2 hua2 dian4	noun	non-slip mat		
+mobility-safety	洗澡椅	xi3 zao3 yi3	noun	shower chair		
+mobility-safety	跌倒	die2 dao3	verb	to fall down		
+mobility-safety	小心跌倒	xiao3 xin1 die2 dao3	phrase	careful not to fall		
+mobility-safety	站起來	zhan4 qi3 lai2	phrase	stand up		
+mobility-safety	坐下	zuo4 xia4	verb	to sit down		
+mobility-safety	慢慢走	man4 man4 zou3	phrase	walk slowly		
+mobility-safety	走不動	zou3 bu4 dong4	phrase	can't walk any farther		
+mobility-safety	頭暈	tou2 yun1	adjective	dizzy		
+mobility-safety	病床	bing4 chuang2	noun	hospital bed		
+mobility-safety	電動床	dian4 dong4 chuang2	noun	electric adjustable bed		
+mobility-safety	床欄	chuang2 lan2	noun	bed rail		
+mobility-safety	無障礙	wu2 zhang4 ai4	adjective	accessible (barrier-free)		
+mobility-safety	斜坡	xie2 po1	noun	ramp; slope		
+mobility-safety	電梯	dian4 ti1	noun	elevator		
+mobility-safety	樓梯	lou2 ti1	noun	stairs		
+mobility-safety	博愛座	bo2 ai4 zuo4	noun	priority seat	zh-Hant	
+mobility-safety	愛心座	ai4 xin1 zuo4	noun	priority seat	zh-Hans	review: mainland term
+mobility-safety	復康巴士	fu4 kang1 ba1 shi4	noun	accessible transport van	zh-Hant	
+mobility-safety	復健	fu4 jian4	noun	rehabilitation; physical therapy	zh-Hant	
+mobility-safety	康復	kang1 fu4	noun	rehabilitation	zh-Hans	review: mainland term
+mobility-safety	物理治療	wu4 li3 zhi4 liao2	noun	physical therapy		
+mobility-safety	緊急呼叫鈴	jin3 ji2 hu1 jiao4 ling2	noun	emergency call button		
+memory-aging	老人	lao3 ren2	noun	elderly person		
+memory-aging	長輩	zhang3 bei4	noun	elder (polite)		
+memory-aging	年紀大了	nian2 ji4 da4 le5	phrase	getting older		
+memory-aging	失智症	shi1 zhi4 zheng4	noun	dementia	zh-Hant	
+memory-aging	認知障礙症	ren4 zhi1 zhang4 ai4 zheng4	noun	dementia	zh-Hans	review: mainland term
+memory-aging	阿茲海默症	a1 zi1 hai3 mo4 zheng4	noun	Alzheimer's disease	zh-Hant	
+memory-aging	阿爾茨海默病	a1 er3 ci2 hai3 mo4 bing4	noun	Alzheimer's disease	zh-Hans	review: mainland term
+memory-aging	記憶力	ji4 yi4 li4	noun	memory (the ability to remember)		
+memory-aging	健忘	jian4 wang4	adjective	forgetful		
+memory-aging	忘記	wang4 ji4	verb	to forget		
+memory-aging	記不得	ji4 bu4 de2	phrase	can't remember		
+memory-aging	一直重複問	yi1 zhi2 chong2 fu4 wen4	phrase	keeps asking the same thing		
+memory-aging	迷路	mi2 lu4	verb	to get lost		
+memory-aging	走失	zou3 shi1	verb	to wander off and go missing		
+memory-aging	認不得人	ren4 bu4 de2 ren2	phrase	doesn't recognize people		
+memory-aging	混亂	hun4 luan4	adjective	confused		
+memory-aging	日夜顛倒	ri4 ye4 dian1 dao3	phrase	sleeps by day and is awake at night		
+memory-aging	黃昏症候群	huang2 hun1 zheng4 hou4 qun2	noun	sundowning (late-day confusion)	zh-Hant	
+memory-aging	情緒	qing2 xu4	noun	mood; emotions		
+memory-aging	脾氣	pi2 qi4	noun	temper		
+memory-aging	重聽	zhong4 ting1	adjective	hard of hearing		
+memory-aging	助聽器	zhu4 ting1 qi4	noun	hearing aid		
+memory-aging	老花眼	lao3 hua1 yan3	noun	age-related farsightedness		
+memory-aging	骨質疏鬆	gu3 zhi2 shu1 song1	noun	osteoporosis		
+memory-aging	退化	tui4 hua4	verb	to decline (with age)		
+memory-aging	回憶	hui2 yi4	noun	memories; recollections		
+memory-aging	老照片	lao3 zhao4 pian4	noun	old photos		
+memory-aging	陪伴	pei2 ban4	verb	to keep someone company		
+memory-aging	聊天	liao2 tian1	verb	to chat		
+memory-aging	散步	san4 bu4	verb	to take a walk		
+care-services	長照	chang2 zhao4	noun	long-term care	zh-Hant	
+care-services	長照專線	chang2 zhao4 zhuan1 xian4	noun	long-term care hotline (1966)	zh-Hant	
+care-services	養老服務	yang3 lao3 fu2 wu4	noun	elder care services	zh-Hans	review: mainland term
+care-services	居家服務	ju1 jia1 fu2 wu4	noun	home care services	zh-Hant	
+care-services	居服員	ju1 fu2 yuan2	noun	home care worker	zh-Hant	
+care-services	看護	kan1 hu4	noun	care aide (hired caregiver)	zh-Hant	
+care-services	外籍看護	wai4 ji2 kan1 hu4	noun	foreign care aide	zh-Hant	
+care-services	護工	hu4 gong1	noun	care aide (hired caregiver)	zh-Hans	review: mainland term
+care-services	日照中心	ri4 zhao4 zhong1 xin1	noun	adult day care center	zh-Hant	
+care-services	養老院	yang3 lao3 yuan4	noun	nursing home; retirement home		
+care-services	護理之家	hu4 li3 zhi1 jia1	noun	nursing home (with nursing care)	zh-Hant	
+care-services	喘息服務	chuan3 xi2 fu2 wu4	noun	respite care	zh-Hant	
+care-services	交通接送	jiao1 tong1 jie1 song4	noun	transport service (to appointments)		
+care-services	送餐服務	song4 can1 fu2 wu4	noun	meal delivery service		
+care-services	申請	shen1 qing3	verb	to apply		
+care-services	評估	ping2 gu1	noun	assessment		
+care-services	照管專員	zhao4 guan3 zhuan1 yuan2	noun	care assessor	zh-Hant	
+care-services	個案管理師	ge4 an4 guan3 li3 shi1	noun	case manager		
+care-services	補助	bu3 zhu4	noun	subsidy		
+care-services	身心障礙證明	shen1 xin1 zhang4 ai4 zheng4 ming2	noun	disability certificate	zh-Hant	
+care-services	殘疾人證	can2 ji2 ren2 zheng4	noun	disability certificate	zh-Hans	review: mainland term
+care-services	診斷證明	zhen3 duan4 zheng4 ming2	noun	doctor's certificate	zh-Hant	
+care-services	輔具	fu3 ju4	noun	assistive devices	zh-Hant	
+care-services	租借	zu1 jie4	verb	to rent; to borrow		
+care-services	表格	biao3 ge2	noun	form		
+care-services	填表	tian2 biao3	verb	to fill out a form		
+care-services	簽名	qian1 ming2	verb	to sign (your name)		
+care-services	委託書	wei3 tuo1 shu1	noun	letter of authorization		
+care-staff	護理師	hu4 li3 shi1	noun	nurse	zh-Hant	
+care-staff	護士	hu4 shi4	noun	nurse		
+care-staff	社工	she4 gong1	noun	social worker		
+care-staff	家屬	jia1 shu3	noun	family members (of a patient)		
+care-staff	緊急聯絡人	jin3 ji2 lian2 luo4 ren2	noun	emergency contact		
+care-staff	探病時間	tan4 bing4 shi2 jian1	noun	visiting hours		
+care-staff	交班	jiao1 ban1	verb	to hand over a shift		
+care-staff	排班	pai2 ban1	noun	shift schedule		
+care-staff	注意事項	zhu4 yi4 shi4 xiang4	noun	things to watch for; instructions		
+care-staff	狀況	zhuang4 kuang4	noun	condition; situation		
+care-staff	好轉	hao3 zhuan3	verb	to get better		
+care-staff	變差	bian4 cha4	verb	to get worse		
+care-staff	發燒	fa1 shao1	verb	to have a fever		
+care-staff	喘	chuan3	verb	to be short of breath		
+care-staff	飲食	yin3 shi2	noun	diet; eating		
+care-staff	水分	shui3 fen4	noun	fluid intake		
+care-staff	紀錄	ji4 lu4	noun	record; log		
+care-staff	按鈴	an4 ling2	verb	to press the call bell		
+care-staff	他今天好嗎	ta1 jin1 tian1 hao3 ma5	phrase	how is he (or she) today?		
+care-staff	吃得下嗎	chi1 de5 xia4 ma5	phrase	is (he or she) eating?		
+care-staff	睡得好嗎	shui4 de5 hao3 ma5	phrase	did (he or she) sleep well?		
+care-staff	有沒有大便	you3 mei2 you3 da4 bian4	phrase	has (he or she) had a bowel movement?		
+care-staff	他會痛	ta1 hui4 tong4	phrase	he (or she) is in pain		
+care-staff	請幫忙	qing3 bang1 mang2	phrase	please help		
+care-staff	請幫他翻身	qing3 bang1 ta1 fan1 shen1	phrase	please help turn him (or her) over		
+care-staff	什麼時候	shen2 me5 shi2 hou4	phrase	when?		
+care-staff	有問題請打給我	you3 wen4 ti2 qing3 da3 gei3 wo3	phrase	if there's a problem, please call me		
+care-staff	謝謝你的照顧	xie4 xie5 ni3 de5 zhao4 gu4	phrase	thank you for taking care of (him or her)		
+care-staff	辛苦了	xin1 ku3 le5	phrase	thank you for your hard work		
+comfort-feelings	舒服	shu1 fu2	adjective	comfortable		
+comfort-feelings	不舒服	bu4 shu1 fu2	adjective	unwell; uncomfortable		
+comfort-feelings	哪裡不舒服	na3 li3 bu4 shu1 fu2	phrase	where do you feel unwell?		
+comfort-feelings	會冷嗎	hui4 leng3 ma5	phrase	are you cold?		
+comfort-feelings	會熱嗎	hui4 re4 ma5	phrase	are you hot?		
+comfort-feelings	要不要喝水	yao4 bu4 yao4 he1 shui3	phrase	do you want some water?		
+comfort-feelings	別擔心	bie2 dan1 xin1	phrase	don't worry		
+comfort-feelings	我在這裡	wo3 zai4 zhe4 li3	phrase	I'm here		
+comfort-feelings	我陪你	wo3 pei2 ni3	phrase	I'll stay with you		
+comfort-feelings	握著你的手	wo4 zhe5 ni3 de5 shou3	phrase	holding your hand		
+comfort-feelings	慢慢來	man4 man4 lai2	phrase	take your time		
+comfort-feelings	沒關係	mei2 guan1 xi4	phrase	it's okay		
+comfort-feelings	你做得很好	ni3 zuo4 de5 hen3 hao3	phrase	you're doing well		
+comfort-feelings	害怕	hai4 pa4	adjective	afraid		
+comfort-feelings	寂寞	ji2 mo4	adjective	lonely		
+comfort-feelings	難過	nan2 guo4	adjective	sad		
+comfort-feelings	擔心	dan1 xin1	verb	to worry		
+comfort-feelings	放心	fang4 xin1	verb	to stop worrying; to be at ease		
+comfort-feelings	開心	kai1 xin1	adjective	happy		
+comfort-feelings	累	lei4	adjective	tired		
+comfort-feelings	休息	xiu1 xi2	verb	to rest		
+comfort-feelings	心情	xin1 qing2	noun	mood		
+comfort-feelings	想家	xiang3 jia1	verb	to be homesick		
+comfort-feelings	家人	jia1 ren2	noun	family		
+comfort-feelings	蓋被子	gai4 bei4 zi5	verb	to cover (someone) with a blanket		
+comfort-feelings	毯子	tan3 zi5	noun	blanket		
+comfort-feelings	枕頭	zhen3 tou5	noun	pillow		
+comfort-feelings	按摩	an4 mo2	verb	to massage		
+comfort-feelings	聽音樂	ting1 yin1 yue4	verb	to listen to music		
+comfort-feelings	照顧者也要休息	zhao4 gu4 zhe3 ye3 yao4 xiu1 xi2	phrase	caregivers need rest too		
+teaching	外籍老師	wai4 ji2 lao3 shi1	noun	foreign teacher		
+teaching	外師	wai4 shi1	noun	foreign teacher (short form)	zh-Hant	
+teaching	中師	zhong1 shi1	noun	local co-teacher (works with a foreign teacher)	zh-Hant	
+teaching	協同教學	xie2 tong2 jiao4 xue2	noun	co-teaching		
+teaching	雙語教育	shuang1 yu3 jiao4 yu4	noun	bilingual education		
+teaching	雙語課程	shuang1 yu3 ke4 cheng2	noun	bilingual classes		
+teaching	全英語授課	quan2 ying1 yu3 shou4 ke4	noun	teaching only in English	zh-Hant	
+teaching	英文老師	ying1 wen2 lao3 shi1	noun	English teacher		
+teaching	補習班	bu3 xi2 ban1	noun	cram school; tutoring center		
+teaching	校長	xiao4 zhang3	noun	principal		
+teaching	主任	zhu3 ren4	noun	director (head of a school office)		
+teaching	教務處	jiao4 wu4 chu4	noun	academic affairs office		
+teaching	辦公室	ban4 gong1 shi4	noun	office		
+teaching	課表	ke4 biao3	noun	class timetable		
+teaching	教案	jiao4 an4	noun	lesson plan		
+teaching	備課	bei4 ke4	verb	to prepare lessons		
+teaching	課本	ke4 ben3	noun	textbook		
+teaching	教材	jiao4 cai2	noun	teaching materials		
+teaching	學習單	xue2 xi2 dan1	noun	worksheet	zh-Hant	
+teaching	學期	xue2 qi2	noun	semester; term		
+teaching	上課	shang4 ke4	verb	to start class; to attend class		
+teaching	下課	xia4 ke4	verb	to finish class; class break		
+teaching	點名	dian3 ming2	verb	to take attendance		
+teaching	代課	dai4 ke4	verb	to substitute teach		
+teaching	代課老師	dai4 ke4 lao3 shi1	noun	substitute teacher		
+teaching	段考	duan4 kao3	noun	term exam	zh-Hant	
+teaching	改考卷	gai3 kao3 juan4	verb	to grade tests		
+teaching	打分數	da3 fen1 shu4	verb	to give a grade		
+teaching	發音	fa1 yin1	noun	pronunciation		
+teaching	單字	dan1 zi4	noun	vocabulary word	zh-Hant	
+teaching	單詞	dan1 ci2	noun	vocabulary word	zh-Hans	
+teaching	文法	wen2 fa3	noun	grammar	zh-Hant	
+teaching	語法	yu3 fa3	noun	grammar	zh-Hans	
+teaching	拼字	pin1 zi4	noun	spelling	zh-Hant	
+teaching	口說	kou3 shuo1	noun	speaking (as a skill)	zh-Hant	
+teaching	聽力	ting1 li4	noun	listening (as a skill)		
+teaching	閱讀	yue4 du2	noun	reading		
+teaching	安靜	an1 jing4	phrase	quiet, please		
+teaching	請坐好	qing3 zuo4 hao3	phrase	please sit properly		
+teaching	舉手	ju3 shou3	verb	to raise your hand		
+teaching	跟我念	gen1 wo3 nian4	phrase	repeat after me		
+teaching	再說一次	zai4 shuo1 yi1 ci4	phrase	say it again		
+teaching	大聲一點	da4 sheng1 yi1 dian3	phrase	a little louder		
+teaching	翻到第十頁	fan1 dao4 di4 shi2 ye4	phrase	turn to page 10		
+teaching	拿出課本	na2 chu1 ke4 ben3	phrase	take out your textbooks		
+teaching	分組	fen1 zu3	verb	to split into groups		
+teaching	交作業	jiao1 zuo4 ye4	verb	to hand in homework		
+teaching	聽懂了嗎	ting1 dong3 le5 ma5	phrase	do you understand?		
+teaching	有沒有問題	you3 mei2 you3 wen4 ti2	phrase	any questions?		
+teaching	合約	he2 yue1	noun	contract		
+teaching	鐘點費	zhong1 dian3 fei4	noun	hourly pay (for teaching)	zh-Hant	
+teaching	教師證	jiao4 shi1 zheng4	noun	teaching license		
+teaching	工作證	gong1 zuo4 zheng4	noun	work permit		

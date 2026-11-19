@@ -17,3 +17,17 @@ injuries	health	Injuries
 wound-infection	health	Wound infection	
 hospital	health	Hospital & emergency	
 parenting-children-health	parenting	Children's health	children-health
+babies	parenting	Babies	
+toddlers	parenting	Toddlers	
+kindergarten	parenting	Kindergarten	
+grade-school-parents	parenting	Grade school for parents	
+playground	parenting	Playground & activities	
+phrases-with-kids	parenting	Everyday phrases with kids	
+daily-care	caregiving	Daily care	
+mobility-safety	caregiving	Mobility & safety	
+memory-aging	caregiving	Memory & aging	
+care-services	caregiving	Care services & paperwork	
+care-staff	caregiving	Talking with care staff	
+comfort-feelings	caregiving	Comfort & feelings	
+teaching	work	For teachers	
+school-teaching	school	For teachers	teaching
