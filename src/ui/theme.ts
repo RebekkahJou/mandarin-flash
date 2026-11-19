@@ -31,6 +31,8 @@ export const colors = {
   textPrimary: palette.nearBlack,
   textSecondary: palette.softBlack,
   border: palette.deepCream,
+  /** Outline of text fields and unticked checkboxes. Meets the 3:1 non-text contrast minimum. */
+  controlBorder: palette.softBlack,
   primary: palette.cerulean,
   onPrimary: palette.white,
   accent: palette.orange,
