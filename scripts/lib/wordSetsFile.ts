@@ -12,6 +12,11 @@ export interface WordSetLine {
   setId: string;
   topic: WordSetTopic;
   title: string;
+  /**
+   * An earlier set whose entries this one shares, so a set can show under a second topic
+   * (Children's health under Parenting). Null for a set with its own entries.
+   */
+  entriesFrom: string | null;
 }
 
 /** One entry, as listed in scripts/data/<language>-word-set-entries.tsv. */
@@ -26,7 +31,7 @@ export interface WordSetEntryLine {
   languages: string[];
 }
 
-const SETS_HEADER = ['set_id', 'topic', 'title'];
+const SETS_HEADER = ['set_id', 'topic', 'title', 'entries_from'];
 const ENTRIES_HEADER = [
   'set_id',
   'headword',
@@ -53,20 +58,44 @@ function isWordSetTopic(value: string): value is WordSetTopic {
   return (Object.values(WordSetTopic) as string[]).includes(value);
 }
 
-/** Parses the sets file: a header row, then set id, topic and title. */
+/** Only an earlier set with its own entries can share them, so sharing never chains. */
+function parseEntriesFrom(
+  text: string,
+  lineNumber: number,
+  earlierSets: readonly WordSetLine[],
+): string | null {
+  if (text === '') return null;
+  const source = earlierSets.find((set) => set.setId === text);
+  if (!source || source.entriesFrom !== null) {
+    throw new Error(`Line ${lineNumber} shares entries with "${text}", not an earlier set.`);
+  }
+  return text;
+}
+
+/**
+ * Parses the sets file: a header row, then set id, topic, title and, for a set that shares
+ * another set's entries, that set's id.
+ */
 export function parseWordSetsFile(text: string): WordSetLine[] {
-  const seen = new Set<string>();
-  return dataLines(text, SETS_HEADER).map((line, index) => {
-    const [setId = '', topic = '', title] = line.split('\t');
+  const sets: WordSetLine[] = [];
+  dataLines(text, SETS_HEADER).forEach((line, index) => {
+    const [setId = '', topic = '', title, entriesFrom = ''] = line.split('\t');
     const lineNumber = index + 2;
     if (!SET_ID_PATTERN.test(setId) || !title) {
       throw new Error(`Line ${lineNumber} needs a set id (a-z, 0-9, -) and a title.`);
     }
     if (!isWordSetTopic(topic)) throw new Error(`Line ${lineNumber} has an unknown topic.`);
-    if (seen.has(setId)) throw new Error(`Line ${lineNumber} repeats the set ${setId}.`);
-    seen.add(setId);
-    return { setId, topic, title };
+    if (sets.some((set) => set.setId === setId)) {
+      throw new Error(`Line ${lineNumber} repeats the set ${setId}.`);
+    }
+    sets.push({
+      setId,
+      topic,
+      title,
+      entriesFrom: parseEntriesFrom(entriesFrom, lineNumber, sets),
+    });
   });
+  return sets;
 }
 
 function parseLanguages(text: string, lineNumber: number): string[] {
@@ -78,10 +107,19 @@ function parseLanguages(text: string, lineNumber: number): string[] {
   return languages;
 }
 
-function parseEntryLine(line: string, lineNumber: number, setIds: ReadonlySet<string>) {
+/** Entries belong to a set with entries of its own, never to one that shares another's. */
+function checkEntrySet(setId: string, lineNumber: number, sets: readonly WordSetLine[]): void {
+  const set = sets.find((candidate) => candidate.setId === setId);
+  if (!set) throw new Error(`Line ${lineNumber} names an unknown set "${setId}".`);
+  if (set.entriesFrom !== null) {
+    throw new Error(`Line ${lineNumber} names ${setId}, a sharing set with no entries of its own.`);
+  }
+}
+
+function parseEntryLine(line: string, lineNumber: number, sets: readonly WordSetLine[]) {
   const [setId = '', headword, reading = '', wordType = '', meanings = '', languages = ''] =
     line.split('\t');
-  if (!setIds.has(setId)) throw new Error(`Line ${lineNumber} names an unknown set "${setId}".`);
+  checkEntrySet(setId, lineNumber, sets);
   if (!headword || !NUMBERED_READING_PATTERN.test(reading) || meanings.trim() === '') {
     throw new Error(`Line ${lineNumber} needs a headword, numbered reading and meanings.`);
   }
@@ -108,12 +146,11 @@ export function parseWordSetEntriesFile(
   text: string,
   sets: readonly WordSetLine[],
 ): WordSetEntryLine[] {
-  const setIds = new Set(sets.map((set) => set.setId));
   const nextPositionBySet = new Map<string, number>();
   const seen = new Set<string>();
   return dataLines(text, ENTRIES_HEADER).map((line, index) => {
     const lineNumber = index + 2;
-    const entry = parseEntryLine(line, lineNumber, setIds);
+    const entry = parseEntryLine(line, lineNumber, sets);
     const key = `${entry.setId} ${entry.headword} ${entry.reading}`;
     if (seen.has(key)) throw new Error(`Line ${lineNumber} repeats ${key}.`);
     seen.add(key);
@@ -161,7 +198,23 @@ function storedForms(database: Database.Database, entry: WordSetEntryLine): Stor
   return { variant: converted === entry.headword ? '' : converted, variantReading: '' };
 }
 
-/** Replaces the pack's word sets, creating the tables in a pack built before schema 3. */
+/** The entries plus a copy, under its own set id, for each set that shares another's entries. */
+function withSharedEntries(
+  sets: readonly WordSetLine[],
+  entries: readonly WordSetEntryLine[],
+): WordSetEntryLine[] {
+  const copies = sets.flatMap((set) =>
+    entries
+      .filter((entry) => entry.setId === set.entriesFrom)
+      .map((entry) => ({ ...entry, setId: set.setId })),
+  );
+  return [...entries, ...copies];
+}
+
+/**
+ * Replaces the pack's word sets, creating the tables in a pack built before schema 3. A set
+ * that shares another set's entries gets its own copy, since each entry row names one set.
+ */
 export function writeWordSets(
   database: Database.Database,
   sets: readonly WordSetLine[],
@@ -182,7 +235,7 @@ export function writeWordSets(
       `INSERT INTO word_set_entries (set_id, position, headword, variant, reading,
          variant_reading, part_of_speech, meanings, languages) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     );
-    for (const entry of entries) {
+    for (const entry of withSharedEntries(sets, entries)) {
       const { variant, variantReading } = storedForms(database, entry);
       insertEntry.run(
         entry.setId,

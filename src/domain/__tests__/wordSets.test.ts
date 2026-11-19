@@ -4,6 +4,9 @@ import { LanguageId } from '../language';
 import { PartOfSpeech } from '../partOfSpeech';
 import { PartOfSpeechWordList } from '../partOfSpeechWordList';
 import {
+  WORD_SET_TOPIC_LIST_NAMES,
+  WORD_SET_TOPIC_TITLES,
+  WORD_SET_TOPICS,
   extraListChoicesForWordSets,
   isWordSetEntryForLanguage,
   withoutRepeatedWords,
@@ -18,6 +21,22 @@ describe('isWordSetEntryForLanguage', () => {
     expect(isWordSetEntryForLanguage('zh-Hant', LanguageId.MandarinTraditional)).toBe(true);
     expect(isWordSetEntryForLanguage('zh-Hant', LanguageId.MandarinSimplified)).toBe(false);
     expect(isWordSetEntryForLanguage('zh-Hans,zh-Hant', LanguageId.MandarinTraditional)).toBe(true);
+  });
+});
+
+describe('word set topics', () => {
+  it('gives every topic a title and a list name of its own', () => {
+    const listNames = WORD_SET_TOPICS.map((topic) => WORD_SET_TOPIC_LIST_NAMES[topic]);
+    expect(new Set(listNames).size).toBe(WORD_SET_TOPICS.length);
+    expect(WORD_SET_TOPICS.every((topic) => WORD_SET_TOPIC_TITLES[topic] !== '')).toBe(true);
+  });
+
+  it('never offers a topic list as an extra list', () => {
+    const lists = WORD_SET_TOPICS.map(
+      (topic, index) =>
+        new GeneralWordList({ id: index, profileId: 1, name: WORD_SET_TOPIC_LIST_NAMES[topic] }),
+    );
+    expect(extraListChoicesForWordSets(lists)).toEqual([]);
   });
 });
 

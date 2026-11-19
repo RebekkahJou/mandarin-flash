@@ -1,10 +1,12 @@
 import { FrequencyTier } from '../../domain/frequencyTier';
 import type { Word } from '../../domain/word';
+import { WordSetTopic } from '../../domain/wordSets';
 import {
   addWordSetsButtonLabel,
   describeWordSetAddition,
   wordSetChoiceLabel,
   wordSetOptions,
+  wordSetTopicLabel,
 } from '../wordSetText';
 import type { WordSetAddition } from '../wordSets';
 
@@ -28,6 +30,16 @@ function additionOf(addedCount: number, alreadyHadCount: number): WordSetAdditio
 }
 
 describe('word set text', () => {
+  it('labels a topic with its number of sets and how many were added', () => {
+    expect(wordSetTopicLabel({ topic: WordSetTopic.Health, choices: [choice] })).toBe(
+      'Health (1 set)',
+    );
+    const choices = [choice, { ...choice, isAdded: true }, choice];
+    expect(wordSetTopicLabel({ topic: WordSetTopic.Travel, choices })).toBe(
+      'Travel & transport (3 sets, 1 added)',
+    );
+  });
+
   it('labels a set with its size, and marks added sets', () => {
     expect(wordSetChoiceLabel(choice)).toBe('Cold/Flu (19 words)');
     expect(wordSetChoiceLabel({ ...choice, entryCount: 1, isAdded: true })).toBe(
@@ -59,6 +71,15 @@ describe('word set text', () => {
     expect(describeWordSetAddition(additionOf(2, 1))).toBe(
       'Added 2 words to Health-related words, General Vocabulary and their word-type lists. ' +
         '1 word you already had was added to Health-related words.',
+    );
+  });
+
+  it('only mentions the words the profile had when none were new', () => {
+    expect(describeWordSetAddition(additionOf(0, 36))).toBe(
+      'You already had all 36 words. They were added to Health-related words.',
+    );
+    expect(describeWordSetAddition(additionOf(0, 1))).toBe(
+      'You already had this word. It was added to Health-related words.',
     );
   });
 });

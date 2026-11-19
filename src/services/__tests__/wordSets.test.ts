@@ -16,7 +16,7 @@ import { toMainlandSimplified } from '../chineseConverter';
 import type { DictionaryForm } from '../dictionaryLookup';
 import { createDictionaryLookup } from '../dictionaryLookup';
 import type { WordSetServices } from '../wordSets';
-import { addWordSets, loadWordSetChoices } from '../wordSets';
+import { addWordSets, loadWordSetChoices, loadWordSetTopics } from '../wordSets';
 
 const INSERT_SET_SQL = 'INSERT INTO word_sets (set_id, topic, title, position) VALUES (?, ?, ?, ?)';
 const INSERT_ENTRY_SQL = `INSERT INTO word_set_entries (set_id, position, headword, variant,
@@ -33,6 +33,8 @@ async function createWordSetPack(): Promise<SqlDatabase> {
   await writeTestPack(pack);
   await pack.run(INSERT_SET_SQL, ['doctor', 'health', 'Going to the doctor', 1]);
   await pack.run(INSERT_SET_SQL, ['dental', 'health', 'Dental issues', 2]);
+  await pack.run(INSERT_SET_SQL, ['school-forms', 'school', 'School forms', 3]);
+  await pack.run(INSERT_SET_SQL, ['babies', 'parenting', 'Babies', 4]);
   const entries: (string | number)[][] = [
     ['doctor', 1, '醫生', '医生', 'yi1 sheng1', '', 'noun', '["doctor"]', ''],
     ['doctor', 2, '看病', '', 'kan4 bing4', '', 'verb', '["to see a doctor"]', ''],
@@ -41,6 +43,18 @@ async function createWordSetPack(): Promise<SqlDatabase> {
     ['doctor', 5, '我不舒服', '', 'wo3 bu4 shu1 fu5', '', 'phrase', '["I feel ill"]', ''],
     ['dental', 1, '牙醫', '牙医', 'ya2 yi1', '', 'noun', '["dentist"]', ''],
     ['dental', 2, '醫生', '医生', 'yi1 sheng1', '', 'noun', '["doctor"]', ''],
+    [
+      'school-forms',
+      1,
+      '聯絡簿',
+      '联络簿',
+      'lian2 luo4 bu4',
+      '',
+      'noun',
+      '["contact book"]',
+      'zh-Hant',
+    ],
+    ['babies', 1, '嬰兒', '婴儿', 'ying1 er2', '', 'noun', '["baby"]', ''],
   ];
   for (const entry of entries) await pack.run(INSERT_ENTRY_SQL, entry);
   return pack;
@@ -167,6 +181,24 @@ describe('word sets', () => {
       ['看病', undefined],
       ['医保卡', '醫保卡'],
       ['我不舒服', undefined],
+    ]);
+  });
+
+  it('lists topics in display order, leaving out those with no sets for the language', async () => {
+    const traditional = await setUp();
+    const traditionalTopics = await loadWordSetTopics(traditional);
+    expect(traditionalTopics.map(({ topic }) => topic)).toEqual([
+      WordSetTopic.Health,
+      WordSetTopic.Parenting,
+      WordSetTopic.School,
+    ]);
+    expect(traditionalTopics[1].choices).toEqual([
+      { setId: 'babies', title: 'Babies', entryCount: 1, isAdded: false },
+    ]);
+    const simplified = await setUp(LanguageId.MandarinSimplified, SIMPLIFIED_FORM);
+    expect((await loadWordSetTopics(simplified)).map(({ topic }) => topic)).toEqual([
+      WordSetTopic.Health,
+      WordSetTopic.Parenting,
     ]);
   });
 

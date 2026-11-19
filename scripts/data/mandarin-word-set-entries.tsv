@@ -25,6 +25,61 @@ doctor	藥店	yao4 dian4	noun	pharmacy	zh-Hans
 doctor	症狀	zheng4 zhuang4	noun	symptom		
 doctor	我不舒服	wo3 bu4 shu1 fu2	phrase	I don't feel well		
 doctor	哪裡不舒服	na3 li3 bu4 shu1 fu2	phrase	where does it hurt? / what is wrong?		
+doctor	掛號費	gua4 hao4 fei4	noun	registration fee		
+doctor	健保	jian4 bao3	noun	National Health Insurance (Taiwan)	zh-Hant	
+doctor	部分負擔	bu4 fen4 fu4 dan1	noun	copayment	zh-Hant	
+doctor	自費	zi4 fei4	noun	paying out of pocket (not covered by insurance)		
+doctor	醫療保險	yi1 liao2 bao3 xian3	noun	medical insurance		
+doctor	旅遊保險	lu:3 you2 bao3 xian3	noun	travel insurance		
+doctor	收據	shou1 ju4	noun	receipt		
+doctor	診斷證明書	zhen3 duan4 zheng4 ming2 shu1	noun	medical certificate (for insurance, school or work)		
+doctor	病歷	bing4 li4	noun	medical record		
+doctor	初診	chu1 zhen3	noun	first visit (new patient)		
+doctor	複診	fu4 zhen3	noun	follow-up visit		
+doctor	候診	hou4 zhen3	verb	to wait to see the doctor		
+doctor	叫號	jiao4 hao4	verb	to call the next number (in a queue)		
+doctor	有會說英文的醫生嗎	you3 hui4 shuo1 ying1 wen2 de5 yi1 sheng1 ma5	phrase	is there a doctor who speaks English?		
+body-symptoms	頭	tou2	noun	head		
+body-symptoms	臉	lian3	noun	face		
+body-symptoms	眼睛	yan3 jing1	noun	eye		
+body-symptoms	耳朵	er3 duo5	noun	ear		
+body-symptoms	鼻子	bi2 zi5	noun	nose		
+body-symptoms	嘴巴	zui3 ba1	noun	mouth		
+body-symptoms	喉嚨	hou2 long2	noun	throat		
+body-symptoms	脖子	bo2 zi5	noun	neck		
+body-symptoms	肩膀	jian1 bang3	noun	shoulder		
+body-symptoms	手臂	shou3 bi4	noun	arm		
+body-symptoms	手	shou3	noun	hand		
+body-symptoms	手指	shou3 zhi3	noun	finger		
+body-symptoms	胸口	xiong1 kou3	noun	chest		
+body-symptoms	背	bei4	noun	back		
+body-symptoms	腰	yao1	noun	lower back; waist		
+body-symptoms	肚子	du4 zi5	noun	belly, tummy		
+body-symptoms	胃	wei4	noun	stomach		
+body-symptoms	屁股	pi4 gu3	noun	bottom, buttocks		
+body-symptoms	腿	tui3	noun	leg		
+body-symptoms	膝蓋	xi1 gai4	noun	knee		
+body-symptoms	腳	jiao3	noun	foot		
+body-symptoms	皮膚	pi2 fu1	noun	skin		
+body-symptoms	心臟	xin1 zang4	noun	heart		
+body-symptoms	肺	fei4	noun	lungs		
+body-symptoms	骨頭	gu2 tou5	noun	bone		
+body-symptoms	痛	tong4	adjective	painful; to hurt		
+body-symptoms	痠	suan1	adjective	sore, aching		
+body-symptoms	癢	yang3	adjective	itchy		
+body-symptoms	麻	ma2	adjective	numb, tingling		
+body-symptoms	腫	zhong3	adjective	swollen		
+body-symptoms	我這裡很痛	wo3 zhe4 li3 hen3 tong4	phrase	it hurts here		
+body-symptoms	肚子痛	du4 zi5 tong4	phrase	stomachache		
+body-symptoms	胸悶	xiong1 men1	noun	chest tightness		
+body-symptoms	喘不過氣	chuan3 bu4 guo4 qi4	phrase	can't catch my breath		
+body-symptoms	噁心	e3 xin1	adjective	nauseous		
+body-symptoms	沒有胃口	mei2 you3 wei4 kou3	phrase	no appetite		
+body-symptoms	從昨天開始	cong2 zuo2 tian1 kai1 shi3	phrase	since yesterday		
+body-symptoms	痛了三天	tong4 le5 san1 tian1	phrase	it has hurt for three days		
+body-symptoms	越來越痛	yue4 lai2 yue4 tong4	phrase	it hurts more and more		
+body-symptoms	有時候	you3 shi2 hou4	adverb	sometimes		
+body-symptoms	一直	yi1 zhi2	adverb	all the time, continuously		
 cold-flu	感冒	gan3 mao4	noun	cold (illness); to catch a cold		
 cold-flu	流感	liu2 gan3	noun	flu		
 cold-flu	新冠肺炎	xin1 guan1 fei4 yan2	noun	COVID-19		
@@ -44,22 +99,92 @@ cold-flu	全身痠痛	quan2 shen1 suan1 tong4	phrase	body aches
 cold-flu	拉肚子	la1 du4 zi5	noun	diarrhea (everyday word)		
 cold-flu	腹瀉	fu4 xie4	noun	diarrhea (formal)		
 cold-flu	想吐	xiang3 tu4	verb	to feel like vomiting		
-diabetes	糖尿病	tang2 niao4 bing4	noun	diabetes		
-diabetes	血糖	xue4 tang2	noun	blood sugar		
-diabetes	低血糖	di1 xue4 tang2	noun	low blood sugar		
-diabetes	高血糖	gao1 xue4 tang2	noun	high blood sugar		
-diabetes	胰島素	yi2 dao3 su4	noun	insulin		
-diabetes	血糖機	xue4 tang2 ji1	noun	glucose meter		
-diabetes	試紙	shi4 zhi3	noun	test strips		
-diabetes	針頭	zhen1 tou2	noun	needle (for injection)		
-diabetes	口渴	kou3 ke3	adjective	thirsty		
-diabetes	頻尿	pin2 niao4	noun	frequent urination		
-diabetes	疲倦	pi2 juan4	adjective	tired, fatigued		
-diabetes	頭暈	tou2 yun1	adjective	dizzy		
-diabetes	發抖	fa1 dou3	verb	to shake, tremble		
-diabetes	冒冷汗	mao4 leng3 han4	verb	to break out in a cold sweat		
-diabetes	視力模糊	shi4 li4 mo2 hu2	phrase	blurred vision		
-diabetes	果汁	guo3 zhi1	noun	fruit juice (for low blood sugar)		
+cold-flu	喉嚨癢	hou2 long2 yang3	phrase	itchy throat		
+cold-flu	聲音沙啞	sheng1 yin1 sha1 ya3	phrase	hoarse voice		
+cold-flu	鼻涕	bi2 ti4	noun	nasal mucus		
+cold-flu	沒有力氣	mei2 you3 li4 qi5	phrase	no energy, weak		
+cold-flu	口罩	kou3 zhao4	noun	face mask		
+cold-flu	戴口罩	dai4 kou3 zhao4	verb	to wear a mask		
+cold-flu	傳染	chuan2 ran3	verb	to spread (an illness); contagious		
+cold-flu	隔離	ge2 li2	verb	to isolate, quarantine		
+cold-flu	陽性	yang2 xing4	adjective	positive (test result)		
+cold-flu	陰性	yin1 xing4	adjective	negative (test result)		
+cold-flu	流感疫苗	liu2 gan3 yi4 miao2	noun	flu vaccine		
+cold-flu	喉糖	hou2 tang2	noun	throat lozenge		
+cold-flu	請病假	qing3 bing4 jia4	verb	to take sick leave		
+children-health	小兒科	xiao3 er2 ke1	noun	pediatrics; pediatric clinic		
+children-health	兒科醫生	er2 ke1 yi1 sheng1	noun	pediatrician		
+children-health	嬰兒	ying1 er2	noun	baby		
+children-health	孩子發燒了	hai2 zi5 fa1 shao1 le5	phrase	my child has a fever		
+children-health	量體溫	liang2 ti3 wen1	verb	to take someone's temperature		
+children-health	耳溫槍	er3 wen1 qiang1	noun	ear thermometer		
+children-health	退燒貼	tui4 shao1 tie1	noun	cooling gel patch (for fever)		
+children-health	退燒藥水	tui4 shao1 yao4 shui3	noun	liquid fever reducer		
+children-health	塞劑	sai1 ji4	noun	suppository	zh-Hant	
+children-health	栓劑	shuan1 ji4	noun	suppository	zh-Hans	review: mainland term
+children-health	餵藥	wei4 yao4	verb	to give medicine (to a child)		
+children-health	熱痙攣	re4 jing4 luan2	noun	febrile seizure		
+children-health	腸病毒	chang2 bing4 du2	noun	enterovirus		
+children-health	手足口病	shou3 zu2 kou3 bing4	noun	hand, foot and mouth disease		
+children-health	停課	ting2 ke4	verb	class suspended (e.g. during an outbreak)		
+children-health	腸胃炎	chang2 wei4 yan2	noun	stomach flu, gastroenteritis		
+children-health	嘔吐	ou3 tu4	verb	to vomit		
+children-health	脫水	tuo1 shui3	noun	dehydration		
+children-health	中耳炎	zhong1 er3 yan2	noun	ear infection		
+children-health	水痘	shui3 dou4	noun	chickenpox		
+children-health	疹子	zhen3 zi5	noun	rash		
+children-health	尿布疹	niao4 bu4 zhen3	noun	diaper rash		
+children-health	濕疹	shi1 zhen3	noun	eczema		
+children-health	異位性皮膚炎	yi4 wei4 xing4 pi2 fu1 yan2	noun	atopic dermatitis (eczema)	zh-Hant	
+children-health	便秘	bian4 bi4	noun	constipation		
+children-health	長牙	zhang3 ya2	verb	to teethe		
+children-health	黃疸	huang2 dan3	noun	jaundice (in newborns)		
+children-health	頭蝨	tou2 shi1	noun	head lice		
+children-health	疫苗	yi4 miao2	noun	vaccine		
+children-health	打預防針	da3 yu4 fang2 zhen1	verb	to get a vaccination (everyday)		
+children-health	兒童健康手冊	er2 tong2 jian4 kang1 shou3 ce4	noun	child health booklet (records checkups and vaccines)	zh-Hant	
+children-health	兒童預防保健	er2 tong2 yu4 fang2 bao3 jian4	noun	free well-child checkup	zh-Hant	
+children-health	體重	ti3 zhong4	noun	weight		
+children-health	身高	shen1 gao1	noun	height		
+children-health	孩子吃不下	hai2 zi5 chi1 bu4 xia4	phrase	my child won't eat		
+children-health	一直哭	yi1 zhi2 ku1	phrase	keeps crying		
+children-health	精神不好	jing1 shen2 bu4 hao3	phrase	listless, low energy		
+pregnancy	懷孕	huai2 yun4	verb	pregnant; pregnancy		
+pregnancy	我懷孕了	wo3 huai2 yun4 le5	phrase	I'm pregnant		
+pregnancy	驗孕棒	yan4 yun4 bang4	noun	pregnancy test (stick)		
+pregnancy	懷孕幾週	huai2 yun4 ji3 zhou1	phrase	how many weeks pregnant?		
+pregnancy	預產期	yu4 chan3 qi2	noun	due date		
+pregnancy	產檢	chan3 jian3	noun	prenatal checkup		
+pregnancy	孕婦	yun4 fu4	noun	pregnant woman		
+pregnancy	孕婦健康手冊	yun4 fu4 jian4 kang1 shou3 ce4	noun	maternal health booklet	zh-Hant	
+pregnancy	超音波	chao1 yin1 bo1	noun	ultrasound	zh-Hant	
+pregnancy	B超	B chao1	noun	ultrasound scan	zh-Hans	review: mainland term
+pregnancy	葉酸	ye4 suan1	noun	folic acid		
+pregnancy	孕吐	yun4 tu4	noun	morning sickness		
+pregnancy	害喜	hai4 xi3	verb	to have morning sickness (everyday)	zh-Hant	
+pregnancy	胎兒	tai1 er2	noun	fetus, unborn baby		
+pregnancy	胎動	tai1 dong4	noun	the baby's movements		
+pregnancy	寶寶	bao3 bao5	noun	baby		
+pregnancy	妊娠糖尿病	ren4 shen1 tang2 niao4 bing4	noun	gestational diabetes		
+pregnancy	子癲前症	zi3 dian1 qian2 zheng4	noun	preeclampsia	zh-Hant	
+pregnancy	出血	chu1 xue4	verb	to bleed; bleeding		
+pregnancy	流產	liu2 chan3	noun	miscarriage		
+pregnancy	陣痛	zhen4 tong4	noun	contractions, labor pains		
+pregnancy	破水	po4 shui3	verb	my water broke		
+pregnancy	要生了	yao4 sheng1 le5	phrase	the baby is coming		
+pregnancy	生產	sheng1 chan3	verb	to give birth		
+pregnancy	自然產	zi4 ran2 chan3	noun	vaginal birth	zh-Hant	
+pregnancy	順產	shun4 chan3	noun	vaginal birth	zh-Hans	review: mainland term
+pregnancy	剖腹產	pou3 fu4 chan3	noun	C-section		
+pregnancy	無痛分娩	wu2 tong4 fen1 mian3	noun	epidural (pain-free labor)		
+pregnancy	坐月子	zuo4 yue4 zi5	verb	to observe the postpartum month of rest		
+pregnancy	月子中心	yue4 zi5 zhong1 xin1	noun	postpartum care center		
+pregnancy	母乳	mu3 ru3	noun	breast milk		
+pregnancy	哺乳	bu3 ru3	verb	to breastfeed		
+pregnancy	擠奶	ji3 nai3	verb	to pump breast milk		
+pregnancy	產假	chan3 jia4	noun	maternity leave		
+pregnancy	陪產假	pei2 chan3 jia4	noun	paternity leave	zh-Hant	
+pregnancy	圓韌帶疼痛	yuan2 ren4 dai4 teng2 tong4	noun	round ligament pain		
 womens-health	月經	yue4 jing1	noun	menstruation, period		
 womens-health	生理期	sheng1 li3 qi2	noun	period (everyday word)		
 womens-health	經痛	jing1 tong4	noun	menstrual pain, cramps		
@@ -77,21 +202,50 @@ womens-health	懷孕	huai2 yun4	verb	pregnant; pregnancy
 womens-health	驗孕	yan4 yun4	noun	pregnancy test		
 womens-health	避孕藥	bi4 yun4 yao4	noun	birth control pill		
 womens-health	事後避孕藥	shi4 hou4 bi4 yun4 yao4	noun	emergency contraception		
-wound-infection	傷口	shang1 kou3	noun	wound		
-wound-infection	割傷	ge1 shang1	noun	cut		
-wound-infection	擦傷	ca1 shang1	noun	scrape, abrasion		
-wound-infection	咬傷	yao3 shang1	noun	bite wound		
-wound-infection	流血	liu2 xue4	verb	to bleed		
-wound-infection	感染	gan3 ran3	noun	infection; to become infected		
-wound-infection	發炎	fa1 yan2	verb	inflamed; inflammation		
-wound-infection	紅腫	hong2 zhong3	adjective	red and swollen		
-wound-infection	化膿	hua4 nong2	verb	to fester, have pus		
-wound-infection	發燙	fa1 tang4	verb	to feel hot (to the touch)		
-wound-infection	疼痛	teng2 tong4	noun	pain		
-wound-infection	結痂	jie2 jia1	verb	to scab over		
-wound-infection	縫針	feng2 zhen1	noun	stitches; to get stitches		
-wound-infection	破傷風	po4 shang1 feng1	noun	tetanus		
-wound-infection	抗生素	kang4 sheng1 su4	noun	antibiotic		
+womens-health	經期	jing1 qi2	noun	period (the days of menstruation)		
+womens-health	月經不規則	yue4 jing1 bu4 gui1 ze2	phrase	irregular periods		
+womens-health	月經沒來	yue4 jing1 mei2 lai2	phrase	my period hasn't come		
+womens-health	子宮	zi3 gong1	noun	uterus		
+womens-health	卵巢	luan3 chao2	noun	ovary		
+womens-health	乳房	ru3 fang2	noun	breast		
+womens-health	乳房攝影	ru3 fang2 she4 ying3	noun	mammogram	zh-Hant	
+womens-health	子宮頸抹片	zi3 gong1 jing3 mo3 pian4	noun	Pap smear	zh-Hant	
+womens-health	子宮頸癌疫苗	zi3 gong1 jing3 ai2 yi4 miao2	noun	HPV vaccine (cervical cancer vaccine)		
+womens-health	骨盆腔發炎	gu3 pen2 qiang1 fa1 yan2	noun	pelvic inflammatory disease	zh-Hant	
+womens-health	更年期	geng1 nian2 qi2	noun	menopause		
+womens-health	熱潮紅	re4 chao2 hong2	noun	hot flashes	zh-Hant	
+diabetes	糖尿病	tang2 niao4 bing4	noun	diabetes		
+diabetes	血糖	xue4 tang2	noun	blood sugar		
+diabetes	低血糖	di1 xue4 tang2	noun	low blood sugar		
+diabetes	高血糖	gao1 xue4 tang2	noun	high blood sugar		
+diabetes	胰島素	yi2 dao3 su4	noun	insulin		
+diabetes	血糖機	xue4 tang2 ji1	noun	glucose meter		
+diabetes	試紙	shi4 zhi3	noun	test strips		
+diabetes	針頭	zhen1 tou2	noun	needle (for injection)		
+diabetes	口渴	kou3 ke3	adjective	thirsty		
+diabetes	頻尿	pin2 niao4	noun	frequent urination		
+diabetes	疲倦	pi2 juan4	adjective	tired, fatigued		
+diabetes	頭暈	tou2 yun1	adjective	dizzy		
+diabetes	發抖	fa1 dou3	verb	to shake, tremble		
+diabetes	冒冷汗	mao4 leng3 han4	verb	to break out in a cold sweat		
+diabetes	視力模糊	shi4 li4 mo2 hu2	phrase	blurred vision		
+diabetes	果汁	guo3 zhi1	noun	fruit juice (for low blood sugar)		
+diabetes	我有糖尿病	wo3 you3 tang2 niao4 bing4	phrase	I have diabetes		
+diabetes	第一型糖尿病	di4 yi1 xing2 tang2 niao4 bing4	noun	type 1 diabetes		
+diabetes	第二型糖尿病	di4 er4 xing2 tang2 niao4 bing4	noun	type 2 diabetes		
+diabetes	測血糖	ce4 xue4 tang2	verb	to check blood sugar		
+diabetes	打胰島素	da3 yi2 dao3 su4	verb	to inject insulin		
+diabetes	胰島素筆	yi2 dao3 su4 bi3	noun	insulin pen		
+diabetes	胰島素幫浦	yi2 dao3 su4 bang1 pu3	noun	insulin pump	zh-Hant	
+diabetes	胰島素泵	yi2 dao3 su4 beng4	noun	insulin pump	zh-Hans	review: mainland term
+diabetes	胰島素要冷藏	yi2 dao3 su4 yao4 leng3 cang2	phrase	insulin must be kept refrigerated		
+diabetes	連續血糖監測	lian2 xu4 xue4 tang2 jian1 ce4	noun	continuous glucose monitoring (CGM)		
+diabetes	糖化血色素	tang2 hua4 xue4 se4 su4	noun	HbA1c (average blood sugar test)	zh-Hant	
+diabetes	糖化血紅蛋白	tang2 hua4 xue4 hong2 dan4 bai2	noun	HbA1c (average blood sugar test)	zh-Hans	review: mainland term
+diabetes	空腹	kong1 fu4	adjective	fasting, on an empty stomach		
+diabetes	飯前	fan4 qian2	time word	before meals		
+diabetes	我需要吃點糖	wo3 xu1 yao4 chi1 dian3 tang2	phrase	I need to eat some sugar		
+diabetes	酮酸中毒	tong2 suan1 zhong4 du2	noun	ketoacidosis		
 chronic-ailments	慢性病	man4 xing4 bing4	noun	chronic illness		
 chronic-ailments	高血壓	gao1 xue4 ya1	noun	high blood pressure		
 chronic-ailments	心臟病	xin1 zang4 bing4	noun	heart disease		
@@ -105,6 +259,161 @@ chronic-ailments	膽固醇	dan3 gu4 chun2	noun	cholesterol
 chronic-ailments	憂鬱症	you1 yu4 zheng4	noun	depression		
 chronic-ailments	焦慮症	jiao1 lu:4 zheng4	noun	anxiety disorder		
 chronic-ailments	長期服藥	chang2 qi2 fu2 yao4	phrase	to take medication long-term		
+chronic-ailments	糖尿病	tang2 niao4 bing4	noun	diabetes		
+chronic-ailments	我有高血壓	wo3 you3 gao1 xue4 ya1	phrase	I have high blood pressure		
+chronic-ailments	血壓計	xue4 ya1 ji4	noun	blood pressure monitor		
+chronic-ailments	量血壓	liang2 xue4 ya1	verb	to take blood pressure		
+chronic-ailments	心律不整	xin1 lu:4 bu4 zheng3	noun	irregular heartbeat	zh-Hant	
+chronic-ailments	心律不齊	xin1 lu:4 bu4 qi2	noun	irregular heartbeat	zh-Hans	
+chronic-ailments	中風	zhong4 feng1	noun	stroke		
+chronic-ailments	腎臟病	shen4 zang4 bing4	noun	kidney disease		
+chronic-ailments	洗腎	xi3 shen4	verb	to have dialysis (everyday)	zh-Hant	
+chronic-ailments	透析	tou4 xi1	noun	dialysis		
+chronic-ailments	肝炎	gan1 yan2	noun	hepatitis		
+chronic-ailments	癌症	ai2 zheng4	noun	cancer		
+chronic-ailments	痛風	tong4 feng1	noun	gout		
+chronic-ailments	骨質疏鬆	gu3 zhi2 shu1 song1	noun	osteoporosis		
+chronic-ailments	失智症	shi1 zhi4 zheng4	noun	dementia	zh-Hant	
+chronic-ailments	帕金森氏症	pa4 jin1 sen1 shi4 zheng4	noun	Parkinson's disease	zh-Hant	
+chronic-ailments	癲癇	dian1 xian2	noun	epilepsy		
+chronic-ailments	定期回診	ding4 qi2 hui2 zhen3	phrase	regular follow-up visits		
+chronic-ailments	飲食控制	yin3 shi2 kong4 zhi4	noun	controlling your diet		
+chronic-ailments	髖關節	kuan1 guan1 jie2	noun	hip joint		
+chronic-ailments	髖關節痛	kuan1 guan1 jie2 tong4	noun	hip pain		
+chronic-ailments	人工關節	ren2 gong1 guan1 jie2	noun	artificial joint (joint replacement)		
+chronic-ailments	人工關節置換	ren2 gong1 guan1 jie2 zhi4 huan4	noun	joint replacement surgery (hip, knee, shoulder)		
+chronic-ailments	物理治療	wu4 li3 zhi4 liao2	noun	physical therapy		
+chronic-ailments	復健	fu4 jian4	noun	physical therapy, rehabilitation (Taiwan)		
+mental-health	心理健康	xin1 li3 jian4 kang1	noun	mental health		
+mental-health	心理師	xin1 li3 shi1	noun	psychologist, therapist	zh-Hant	
+mental-health	心理諮詢師	xin1 li3 zi1 xun2 shi1	noun	counselor, therapist	zh-Hans	review: mainland term
+mental-health	心理諮商	xin1 li3 zi1 shang1	noun	counseling, therapy	zh-Hant	
+mental-health	精神科	jing1 shen2 ke1	noun	psychiatry		
+mental-health	身心科	shen1 xin1 ke1	noun	psychiatric clinic (gentler name)	zh-Hant	
+mental-health	壓力	ya1 li4	noun	stress, pressure		
+mental-health	壓力很大	ya1 li4 hen3 da4	phrase	under a lot of stress		
+mental-health	情緒	qing2 xu4	noun	mood, emotions		
+mental-health	心情不好	xin1 qing2 bu4 hao3	phrase	feeling down		
+mental-health	焦慮	jiao1 lu:4	adjective	anxious		
+mental-health	憂鬱	you1 yu4	adjective	depressed, low		
+mental-health	憂鬱症	you1 yu4 zheng4	noun	depression		
+mental-health	焦慮症	jiao1 lu:4 zheng4	noun	anxiety disorder		
+mental-health	恐慌症	kong3 huang1 zheng4	noun	panic disorder		
+mental-health	恐慌發作	kong3 huang1 fa1 zuo4	noun	panic attack		
+mental-health	失眠	shi1 mian2	noun	insomnia		
+mental-health	睡不著	shui4 bu4 zhao2	phrase	can't sleep		
+mental-health	沒有動力	mei2 you3 dong4 li4	phrase	no motivation		
+mental-health	想哭	xiang3 ku1	phrase	feel like crying		
+mental-health	孤單	gu1 dan1	adjective	lonely		
+mental-health	害怕	hai4 pa4	adjective	afraid, scared		
+mental-health	創傷	chuang1 shang1	noun	trauma		
+mental-health	創傷後壓力症候群	chuang1 shang1 hou4 ya1 li4 zheng4 hou4 qun2	noun	PTSD	zh-Hant	
+mental-health	注意力不足過動症	zhu4 yi4 li4 bu4 zu2 guo4 dong4 zheng4	noun	ADHD	zh-Hant	
+mental-health	自閉症	zi4 bi4 zheng4	noun	autism		
+mental-health	產後憂鬱	chan3 hou4 you1 yu4	noun	postpartum depression	zh-Hant	
+mental-health	產後抑鬱	chan3 hou4 yi4 yu4	noun	postpartum depression	zh-Hans	review: mainland term
+mental-health	抗憂鬱藥	kang4 you1 yu4 yao4	noun	antidepressant	zh-Hant	
+mental-health	抗抑鬱藥	kang4 yi4 yu4 yao4	noun	antidepressant	zh-Hans	
+mental-health	安眠藥	an1 mian2 yao4	noun	sleeping pill		
+mental-health	我想找人談談	wo3 xiang3 zhao3 ren2 tan2 tan2	phrase	I'd like to talk to someone		
+mental-health	安心專線	an1 xin1 zhuan1 xian4	noun	free 24-hour mental health helpline (call 1925)	zh-Hant	
+mental-health	心理援助熱線	xin1 li3 yuan2 zhu4 re4 xian4	noun	mental health helpline	zh-Hans	review: mainland term
+allergies	過敏	guo4 min3	adjective	allergy; allergic		
+allergies	過敏原	guo4 min3 yuan2	noun	allergen		
+allergies	我對花生過敏	wo3 dui4 hua1 sheng1 guo4 min3	phrase	I'm allergic to peanuts		
+allergies	這裡面有花生嗎	zhe4 li3 mian4 you3 hua1 sheng1 ma5	phrase	does this contain peanuts?		
+allergies	花生	hua1 sheng1	noun	peanut		
+allergies	堅果	jian1 guo3	noun	tree nuts		
+allergies	海鮮	hai3 xian1	noun	seafood		
+allergies	蝦子	xia1 zi5	noun	shrimp		
+allergies	帶殼海鮮	dai4 ke2 hai3 xian1	noun	shellfish		
+allergies	蛋	dan4	noun	egg		
+allergies	牛奶	niu2 nai3	noun	milk		
+allergies	小麥	xiao3 mai4	noun	wheat		
+allergies	麩質	fu1 zhi2	noun	gluten		
+allergies	花粉	hua1 fen3	noun	pollen		
+allergies	塵蟎	chen2 man3	noun	dust mites		
+allergies	貓毛	mao1 mao2	noun	cat hair		
+allergies	蜜蜂	mi4 feng1	noun	bee		
+allergies	被蜜蜂叮	bei4 mi4 feng1 ding1	phrase	stung by a bee		
+allergies	蕁麻疹	xun2 ma2 zhen3	noun	hives		
+allergies	起疹子	qi3 zhen3 zi5	verb	to break out in a rash		
+allergies	嘴唇腫起來	zui3 chun2 zhong3 qi3 lai2	phrase	my lips are swelling		
+allergies	呼吸困難	hu1 xi1 kun4 nan2	noun	difficulty breathing		
+allergies	過敏性休克	guo4 min3 xing4 xiu1 ke4	noun	anaphylactic shock		
+allergies	腎上腺素筆	shen4 shang4 xian4 su4 bi3	noun	epinephrine pen (EpiPen)		
+allergies	抗組織胺	kang4 zu3 zhi1 an1	noun	antihistamine	zh-Hant	
+allergies	抗組胺藥	kang4 zu3 an1 yao4	noun	antihistamine	zh-Hans	
+allergies	過敏性鼻炎	guo4 min3 xing4 bi2 yan2	noun	allergic rhinitis (hay fever)		
+allergies	季節性過敏	ji4 jie2 xing4 guo4 min3	noun	seasonal allergies; hay fever		
+allergies	食物不耐症	shi2 wu4 bu4 nai4 zheng4	noun	food intolerance		
+allergies	只是食物不耐症	zhi3 shi4 shi2 wu4 bu4 nai4 zheng4	phrase	it's just a food intolerance (not an allergy)		
+eyes	眼睛	yan3 jing1	noun	eye		
+eyes	視力	shi4 li4	noun	eyesight		
+eyes	看不清楚	kan4 bu4 qing1 chu3	phrase	I can't see clearly		
+eyes	近視	jin4 shi4	adjective	nearsighted		
+eyes	遠視	yuan3 shi4	adjective	farsighted		
+eyes	散光	san3 guang1	noun	astigmatism		
+eyes	老花眼	lao3 hua1 yan3	noun	age-related farsightedness (needing reading glasses)		
+eyes	眼科	yan3 ke1	noun	ophthalmology (eye doctor)		
+eyes	驗光	yan4 guang1	verb	to have an eye test (for glasses)		
+eyes	度數	du4 shu4	noun	prescription strength (of glasses)		
+eyes	眼鏡	yan3 jing4	noun	glasses		
+eyes	眼鏡行	yan3 jing4 hang2	noun	optician's shop	zh-Hant	
+eyes	隱形眼鏡	yin3 xing2 yan3 jing4	noun	contact lenses		
+eyes	保養液	bao3 yang3 ye4	noun	contact lens solution	zh-Hant	
+eyes	墨鏡	mo4 jing4	noun	sunglasses		
+eyes	眼睛痛	yan3 jing1 tong4	phrase	my eye hurts		
+eyes	眼睛癢	yan3 jing1 yang3	phrase	my eyes are itchy		
+eyes	眼睛紅	yan3 jing1 hong2	phrase	my eyes are red		
+eyes	有東西跑進眼睛	you3 dong1 xi1 pao3 jin4 yan3 jing1	phrase	something got in my eye		
+eyes	乾眼症	gan1 yan3 zheng4	noun	dry eye		
+eyes	結膜炎	jie2 mo2 yan2	noun	conjunctivitis (pink eye)		
+eyes	針眼	zhen1 yan3	noun	stye		
+eyes	飛蚊症	fei1 wen2 zheng4	noun	eye floaters		
+eyes	白內障	bai2 nei4 zhang4	noun	cataract		
+eyes	青光眼	qing1 guang1 yan3	noun	glaucoma		
+eyes	散瞳	san4 tong2	verb	to dilate the pupils (for an eye exam)		
+dental	牙科	ya2 ke1	noun	dentistry; dental clinic		
+dental	牙齒	ya2 chi3	noun	tooth, teeth		
+dental	牙痛	ya2 tong4	noun	toothache		
+dental	我牙齒很痛	wo3 ya2 chi3 hen3 tong4	phrase	my tooth hurts a lot		
+dental	咬東西會痛	yao3 dong1 xi5 hui4 tong4	phrase	it hurts when I bite		
+dental	牙齒敏感	ya2 chi3 min3 gan3	phrase	sensitive teeth		
+dental	冷熱會痠	leng3 re4 hui4 suan1	phrase	it aches with hot or cold		
+dental	蛀牙	zhu4 ya2	noun	cavity, tooth decay		
+dental	補牙	bu3 ya2	verb	to fill a tooth; a filling		
+dental	拔牙	ba2 ya2	verb	to pull a tooth		
+dental	智齒	zhi4 chi3	noun	wisdom tooth		
+dental	洗牙	xi3 ya2	noun	dental cleaning		
+dental	牙齦	ya2 yin2	noun	gums		
+dental	牙齦出血	ya2 yin2 chu1 xue4	phrase	bleeding gums		
+dental	牙周病	ya2 zhou1 bing4	noun	gum disease		
+dental	根管治療	gen1 guan3 zhi4 liao2	noun	root canal		
+dental	牙齒裂開	ya2 chi3 lie4 kai1	phrase	cracked tooth		
+dental	牙套	ya2 tao4	noun	crown (cap); also used for braces		
+dental	假牙	jia3 ya2	noun	dentures, false tooth		
+dental	植牙	zhi2 ya2	noun	dental implant		
+dental	麻醉	ma2 zui4	noun	anesthesia; to numb		
+dental	漱口	shu4 kou3	verb	to rinse your mouth		
+dental	牙刷	ya2 shua1	noun	toothbrush		
+dental	牙膏	ya2 gao1	noun	toothpaste		
+dental	牙線	ya2 xian4	noun	dental floss		
+dental	齒顎矯正	chi3 e4 jiao3 zheng4	noun	orthodontics (Taiwan term)	zh-Hant	
+dental	牙齒矯正	ya2 chi3 jiao3 zheng4	noun	orthodontic treatment, braces		
+dental	矯正器	jiao3 zheng4 qi4	noun	braces (orthodontic appliance)		
+dental	隱形矯正	yin3 xing2 jiao3 zheng4	noun	clear aligners		
+dental	維持器	wei2 chi2 qi4	noun	retainer (Taiwan term)	zh-Hant	
+dental	保持器	bao3 chi2 qi4	noun	retainer	zh-Hans	
+dental	鋼絲	gang1 si1	noun	wire (of braces)		
+dental	橡皮筋	xiang4 pi2 jin1	noun	rubber bands (elastics)		
+dental	矯正器脫落	jiao3 zheng4 qi4 tuo1 luo4	phrase	a bracket came off		
+dental	鋼絲刺到	gang1 si1 ci4 dao4	phrase	the wire is poking me		
+dental	咬合	yao3 he2	noun	bite (how the teeth meet)		
+dental	暴牙	bao4 ya2	noun	buck teeth		
+dental	戽斗	hu4 dou3	noun	underbite (Taiwan, everyday word)	zh-Hant	
+dental	地包天	di4 bao1 tian1	noun	underbite (everyday word)	zh-Hans	review: mainland term
+dental	牙齒不整齊	ya2 chi3 bu4 zheng3 qi2	phrase	crooked teeth		
 medicine	藥	yao4	noun	medicine		
 medicine	處方箋	chu3 fang1 jian1	noun	prescription (slip)		
 medicine	處方藥	chu3 fang1 yao4	noun	prescription medicine		
@@ -151,6 +460,16 @@ medicine	學名	xue2 ming2	noun	generic name (of a medicine)
 medicine	同樣的藥	tong2 yang4 de5 yao4	phrase	the same medicine		
 medicine	替代藥	ti4 dai4 yao4	noun	substitute medicine		
 medicine	藥袋	yao4 dai4	noun	medicine bag (with dosing instructions printed on it)		
+medicine	藥師	yao4 shi1	noun	pharmacist (everyday)		
+medicine	健保藥局	jian4 bao3 yao4 ju2	noun	pharmacy that fills health insurance prescriptions	zh-Hant	
+medicine	藥丸	yao4 wan2	noun	pill		
+medicine	膠囊	jiao1 nang2	noun	capsule		
+medicine	藥粉	yao4 fen3	noun	powdered medicine		
+medicine	一天兩次	yi1 tian1 liang3 ci4	phrase	twice a day		
+medicine	睡前	shui4 qian2	time word	before bed		
+medicine	空腹吃	kong1 fu4 chi1	phrase	take on an empty stomach		
+medicine	每四到六小時	mei3 si4 dao4 liu4 xiao3 shi2	phrase	every 4 to 6 hours		
+medicine	需要時服用	xu1 yao4 shi2 fu2 yong4	phrase	take as needed		
 first-aid	急救	ji2 jiu4	noun	first aid		
 first-aid	急救箱	ji2 jiu4 xiang1	noun	first aid kit		
 first-aid	繃帶	beng1 dai4	noun	bandage		
@@ -168,46 +487,23 @@ first-aid	扭傷	niu3 shang1	noun	sprain
 first-aid	燙傷	tang4 shang1	noun	burn (from heat)		
 first-aid	骨折	gu3 zhe2	noun	broken bone, fracture		
 first-aid	中暑	zhong4 shu3	noun	heatstroke		
-dental	牙科	ya2 ke1	noun	dentistry; dental clinic		
-dental	牙齒	ya2 chi3	noun	tooth, teeth		
-dental	牙痛	ya2 tong4	noun	toothache		
-dental	我牙齒很痛	wo3 ya2 chi3 hen3 tong4	phrase	my tooth hurts a lot		
-dental	咬東西會痛	yao3 dong1 xi5 hui4 tong4	phrase	it hurts when I bite		
-dental	牙齒敏感	ya2 chi3 min3 gan3	phrase	sensitive teeth		
-dental	冷熱會痠	leng3 re4 hui4 suan1	phrase	it aches with hot or cold		
-dental	蛀牙	zhu4 ya2	noun	cavity, tooth decay		
-dental	補牙	bu3 ya2	verb	to fill a tooth; a filling		
-dental	拔牙	ba2 ya2	verb	to pull a tooth		
-dental	智齒	zhi4 chi3	noun	wisdom tooth		
-dental	洗牙	xi3 ya2	noun	dental cleaning		
-dental	牙齦	ya2 yin2	noun	gums		
-dental	牙齦出血	ya2 yin2 chu1 xue4	phrase	bleeding gums		
-dental	牙周病	ya2 zhou1 bing4	noun	gum disease		
-dental	根管治療	gen1 guan3 zhi4 liao2	noun	root canal		
-dental	牙齒裂開	ya2 chi3 lie4 kai1	phrase	cracked tooth		
-dental	牙套	ya2 tao4	noun	crown (cap); also used for braces		
-dental	假牙	jia3 ya2	noun	dentures, false tooth		
-dental	植牙	zhi2 ya2	noun	dental implant		
-dental	麻醉	ma2 zui4	noun	anesthesia; to numb		
-dental	漱口	shu4 kou3	verb	to rinse your mouth		
-dental	牙刷	ya2 shua1	noun	toothbrush		
-dental	牙膏	ya2 gao1	noun	toothpaste		
-dental	牙線	ya2 xian4	noun	dental floss		
-dental	齒顎矯正	chi3 e4 jiao3 zheng4	noun	orthodontics (Taiwan term)	zh-Hant	
-dental	牙齒矯正	ya2 chi3 jiao3 zheng4	noun	orthodontic treatment, braces		
-dental	矯正器	jiao3 zheng4 qi4	noun	braces (orthodontic appliance)		
-dental	隱形矯正	yin3 xing2 jiao3 zheng4	noun	clear aligners		
-dental	維持器	wei2 chi2 qi4	noun	retainer (Taiwan term)	zh-Hant	
-dental	保持器	bao3 chi2 qi4	noun	retainer	zh-Hans	
-dental	鋼絲	gang1 si1	noun	wire (of braces)		
-dental	橡皮筋	xiang4 pi2 jin1	noun	rubber bands (elastics)		
-dental	矯正器脫落	jiao3 zheng4 qi4 tuo1 luo4	phrase	a bracket came off		
-dental	鋼絲刺到	gang1 si1 ci4 dao4	phrase	the wire is poking me		
-dental	咬合	yao3 he2	noun	bite (how the teeth meet)		
-dental	暴牙	bao4 ya2	noun	buck teeth		
-dental	戽斗	hu4 dou3	noun	underbite (Taiwan, everyday word)	zh-Hant	
-dental	地包天	di4 bao1 tian1	noun	underbite (everyday word)	zh-Hans	review: mainland term
-dental	牙齒不整齊	ya2 chi3 bu4 zheng3 qi2	phrase	crooked teeth		
+first-aid	OK繃	O K beng1	noun	adhesive bandage (Band-Aid)	zh-Hant	
+first-aid	創可貼	chuang1 ke3 tie1	noun	adhesive bandage (Band-Aid)	zh-Hans	
+first-aid	棉花棒	mian2 hua1 bang4	noun	cotton swab		
+first-aid	酒精	jiu3 jing1	noun	rubbing alcohol		
+first-aid	生理食鹽水	sheng1 li3 shi2 yan2 shui3	noun	saline solution	zh-Hant	
+first-aid	體溫計	ti3 wen1 ji4	noun	thermometer		
+first-aid	你還好嗎	ni3 hai2 hao3 ma5	phrase	are you okay?		
+first-aid	不要動	bu4 yao4 dong4	phrase	don't move		
+first-aid	叫救護車	jiao4 jiu4 hu4 che1	verb	to call an ambulance (119 in Taiwan, 120 in mainland China)		
+first-aid	心肺復甦術	xin1 fei4 fu4 su1 shu4	noun	CPR		
+first-aid	AED	A E D	noun	AED (defibrillator)		
+first-aid	昏倒	hun1 dao3	verb	to faint		
+first-aid	噎到	ye1 dao4	verb	to choke (on food)		
+first-aid	流鼻血	liu2 bi2 xie3	verb	to have a nosebleed		
+first-aid	蚊子	wen2 zi5	noun	mosquito		
+first-aid	被蟲咬	bei4 chong2 yao3	phrase	bitten by an insect		
+first-aid	防蚊液	fang2 wen2 ye4	noun	insect repellent	zh-Hant	
 injuries	受傷	shou4 shang1	verb	to get hurt, injured		
 injuries	跌倒	die2 dao3	verb	to fall down		
 injuries	摔倒	shuai1 dao3	verb	to slip and fall		
@@ -239,3 +535,57 @@ injuries	石膏	shi2 gao1	noun	plaster cast
 injuries	打石膏	da3 shi2 gao1	verb	to put on a cast		
 injuries	拐杖	guai3 zhang4	noun	crutches; walking stick		
 injuries	復健	fu4 jian4	noun	physical therapy, rehabilitation (Taiwan)		
+injuries	物理治療	wu4 li3 zhi4 liao2	noun	physical therapy		
+wound-infection	傷口	shang1 kou3	noun	wound		
+wound-infection	割傷	ge1 shang1	noun	cut		
+wound-infection	擦傷	ca1 shang1	noun	scrape, abrasion		
+wound-infection	咬傷	yao3 shang1	noun	bite wound		
+wound-infection	流血	liu2 xue4	verb	to bleed		
+wound-infection	感染	gan3 ran3	noun	infection; to become infected		
+wound-infection	發炎	fa1 yan2	verb	inflamed; inflammation		
+wound-infection	紅腫	hong2 zhong3	adjective	red and swollen		
+wound-infection	化膿	hua4 nong2	verb	to fester, have pus		
+wound-infection	發燙	fa1 tang4	verb	to feel hot (to the touch)		
+wound-infection	疼痛	teng2 tong4	noun	pain		
+wound-infection	結痂	jie2 jia1	verb	to scab over		
+wound-infection	縫針	feng2 zhen1	noun	stitches; to get stitches		
+wound-infection	破傷風	po4 shang1 feng1	noun	tetanus		
+wound-infection	抗生素	kang4 sheng1 su4	noun	antibiotic		
+wound-infection	換藥	huan4 yao4	verb	to change a dressing		
+wound-infection	優碘	you1 dian3	noun	povidone-iodine (Betadine)	zh-Hant	
+wound-infection	人工皮	ren2 gong1 pi2	noun	hydrocolloid bandage	zh-Hant	
+wound-infection	碰水	peng4 shui3	verb	to get wet		
+wound-infection	傷口不能碰水	shang1 kou3 bu4 neng2 peng4 shui3	phrase	keep the wound dry		
+wound-infection	拆線	chai1 xian4	verb	to have stitches removed		
+wound-infection	膿	nong2	noun	pus		
+wound-infection	有臭味	you3 chou4 wei4	phrase	it smells bad		
+wound-infection	越來越紅	yue4 lai2 yue4 hong2	phrase	it's getting redder		
+wound-infection	蜂窩性組織炎	feng1 wo1 xing4 zu3 zhi1 yan2	noun	cellulitis	zh-Hant	
+wound-infection	癒合	yu4 he2	verb	to heal (of a wound)		
+wound-infection	疤	ba1	noun	scar		
+wound-infection	留疤	liu2 ba1	verb	to leave a scar		
+wound-infection	被狗咬	bei4 gou3 yao3	phrase	bitten by a dog		
+wound-infection	狂犬病	kuang2 quan3 bing4	noun	rabies		
+hospital	住院	zhu4 yuan4	verb	to be admitted to hospital		
+hospital	出院	chu1 yuan4	verb	to be discharged from hospital		
+hospital	病房	bing4 fang2	noun	hospital ward, room		
+hospital	病床	bing4 chuang2	noun	hospital bed		
+hospital	探病	tan4 bing4	verb	to visit a patient		
+hospital	探病時間	tan4 bing4 shi2 jian1	noun	visiting hours		
+hospital	家屬	jia1 shu3	noun	family members (of a patient)		
+hospital	陪病	pei2 bing4	verb	to stay with a patient in hospital	zh-Hant	
+hospital	看護	kan1 hu4	noun	hired caregiver (in hospital or at home)	zh-Hant	
+hospital	手術	shou3 shu4	noun	surgery, operation		
+hospital	開刀	kai1 dao1	verb	to have surgery (everyday)		
+hospital	同意書	tong2 yi4 shu1	noun	consent form		
+hospital	簽名	qian1 ming2	verb	to sign; signature		
+hospital	抽血	chou1 xue4	verb	to draw blood		
+hospital	打點滴	da3 dian3 di1	verb	to get an IV drip		
+hospital	加護病房	jia1 hu4 bing4 fang2	noun	intensive care unit (ICU)	zh-Hant	
+hospital	重症監護室	zhong4 zheng4 jian1 hu4 shi4	noun	intensive care unit (ICU)	zh-Hans	review: mainland term
+hospital	急診室	ji2 zhen3 shi4	noun	emergency room		
+hospital	檢傷	jian3 shang1	noun	triage (in an emergency room)	zh-Hant	
+hospital	快叫救護車	kuai4 jiao4 jiu4 hu4 che1	phrase	call an ambulance, quickly!		
+hospital	胸痛	xiong1 tong4	noun	chest pain		
+hospital	過敏反應	guo4 min3 fan3 ying4	noun	allergic reaction		
+hospital	中毒	zhong4 du2	verb	poisoned; poisoning		

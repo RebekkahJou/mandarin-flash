@@ -9,7 +9,11 @@ import { listForStarterWordType } from '../domain/starterVocabulary';
 import type { Word } from '../domain/word';
 import type { WordList } from '../domain/wordList';
 import type { WordSetTopic } from '../domain/wordSets';
-import { WORD_SET_TOPIC_LIST_NAMES, withoutRepeatedWords } from '../domain/wordSets';
+import {
+  WORD_SET_TOPIC_LIST_NAMES,
+  WORD_SET_TOPICS,
+  withoutRepeatedWords,
+} from '../domain/wordSets';
 import type { DictionaryLookup, WordSetEntry, WordSetSummary } from './dictionaryLookup';
 import { createProfileListFinder } from './profileListFinder';
 
@@ -49,6 +53,21 @@ export async function loadWordSetChoices(
   const sets = await services.dictionaryLookup.wordSets(topic, services.languageId);
   const added = await services.wordSetRepository.addedSetIds(services.profileId, services.packId);
   return sets.map((set) => ({ ...set, isAdded: added.has(set.setId) }));
+}
+
+export interface WordSetTopicChoices {
+  topic: WordSetTopic;
+  choices: WordSetChoice[];
+}
+
+/** Every topic with sets for the profile's language, in display order, with its sets. */
+export async function loadWordSetTopics(services: WordSetServices): Promise<WordSetTopicChoices[]> {
+  const topics: WordSetTopicChoices[] = [];
+  for (const topic of WORD_SET_TOPICS) {
+    const choices = await loadWordSetChoices(services, topic);
+    if (choices.length > 0) topics.push({ topic, choices });
+  }
+  return topics;
 }
 
 /** Adds an existing word to the given lists it isn't in yet. */

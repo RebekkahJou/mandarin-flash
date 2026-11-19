@@ -1,6 +1,5 @@
 import {
   GENERAL_VOCABULARY_LIST_NAME,
-  HEALTH_WORDS_LIST_NAME,
   PHRASES_LIST_NAME,
   TIME_WORDS_LIST_NAME,
 } from './defaultWordLists';
@@ -13,14 +12,44 @@ import { WordListKind } from './wordList';
  * the sets it needs; each set's words are copied into the profile's lists.
  */
 
-/** Stored in the pack's word_sets.topic column. */
+/** Stored in the pack's word_sets.topic column. Declared in display order. */
 export enum WordSetTopic {
   Health = 'health',
+  Parenting = 'parenting',
+  Caregiving = 'caregiving',
+  Travel = 'travel',
+  Food = 'food',
+  Errands = 'errands',
+  School = 'school',
+  Work = 'work',
 }
 
-/** The list that collects every word of a topic's sets, made when the first set is added. */
+export const WORD_SET_TOPICS: readonly WordSetTopic[] = Object.values(WordSetTopic);
+
+export const WORD_SET_TOPIC_TITLES: Readonly<Record<WordSetTopic, string>> = {
+  [WordSetTopic.Health]: 'Health',
+  [WordSetTopic.Parenting]: 'Parenting',
+  [WordSetTopic.Caregiving]: 'Caregiving',
+  [WordSetTopic.Travel]: 'Travel & transport',
+  [WordSetTopic.Food]: 'Food & dining',
+  [WordSetTopic.Errands]: 'Daily errands',
+  [WordSetTopic.School]: 'School',
+  [WordSetTopic.Work]: 'Work',
+};
+
+/**
+ * The list that collects every word of a topic's sets. It is made when the profile adds the
+ * topic's first set, and made again if it was deleted.
+ */
 export const WORD_SET_TOPIC_LIST_NAMES: Readonly<Record<WordSetTopic, string>> = {
-  [WordSetTopic.Health]: HEALTH_WORDS_LIST_NAME,
+  [WordSetTopic.Health]: 'Health-related words',
+  [WordSetTopic.Parenting]: 'Parenting words',
+  [WordSetTopic.Caregiving]: 'Caregiving words',
+  [WordSetTopic.Travel]: 'Travel words',
+  [WordSetTopic.Food]: 'Food and dining words',
+  [WordSetTopic.Errands]: 'Errand words',
+  [WordSetTopic.School]: 'School words',
+  [WordSetTopic.Work]: 'Work words',
 };
 
 /** Separates language ids in the pack's word_set_entries.languages column. */

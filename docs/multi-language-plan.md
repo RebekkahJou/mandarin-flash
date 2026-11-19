@@ -1,9 +1,11 @@
 # Multi-language and add-ons plan
 
 Status: approved 2026-11-05. **Phases 1–3 done** and merged. **Phase 4, 4b and 4c done** and
-merged into main. **Phase 5 (store-hosted packs, Android) in progress** on branch
-lang-compatibility-p5 (started 2026-11-16; see "Phase 5 decisions" below). Update this file as
-work lands or decisions change.
+merged into main. **Phase 5 (store-hosted packs) done for Android** and merged into main
+(2026-11-17; see "Phase 5 decisions" below). Its iOS half waits for the iOS port; the real Play
+download and the Play Console declaration wait for the account (docs/RELEASE.md). **Next: more
+topic word sets (Phase 4d: health additions and new topics), then Phase 6 (add-ons framework and games).**
+Update this file as work lands or decisions change.
 
 Phase 5 decisions (2026-11-16):
 - **Play Asset Delivery is built now**, before any non-Mandarin pack exists, with a test pack only
@@ -482,6 +484,91 @@ today. Planned 2026-11-10 at the user's request; part of the MVP.
 - **Later, not in the MVP:** when a pack update adds words to a set a profile already added,
   offer "N new words in sets you added". (Decided 2026-11-10.)
 
+## More topic word sets (Phase 4d)
+
+Requested 2026-11-17. More health sets and new targeted-use topics that users can add if they
+want them. They use the same `word_sets` tables, with one topic per group. **Audience:** at
+first, mostly adults with children, and their children. The sets should still help any age and
+life stage, so no set assumes the learner is a parent.
+
+**Decided 2026-11-17:**
+- **New topics:** Travel & transport, Food & dining, Daily errands, Work, School (separate from
+  Work), Caregiving (for adults) and Parenting (babies through grade school). Health gets new sets
+  (below).
+- **Settings:** one entry, "Add topic word sets", replaces the Health vocabulary section. It opens a
+  modal grouped by topic. With about 70 sets, the modal shows the topics first and opens one
+  topic's sets with checkboxes (assumption; a single long list would be hard to scan). Everything
+  else works as for health today: sets already added are greyed out, repeated words are skipped,
+  extra lists can be chosen, and splitting is asked once.
+- **Each topic has its own list**, made when the profile adds its first set from that topic,
+  like Health-related words: Travel words, Food and dining words, Errand words, Work words,
+  School words, Caregiving words, Parenting words (names to review).
+- **Claude drafts the entries; the user reviews each topic before it is built.** Entries follow the
+  existing rules: Taiwan readings, curated meanings, a curated word type, phrases allowed, and
+  Simplified-only entries where mainland terms differ. Uncertain mainland terms are marked for a
+  reviewer.
+
+**Draft sets (titles and scope to review):**
+
+| Topic | Sets |
+|---|---|
+| Health (existing, filled out) | Bring Chronic ailments, Wound infection, Diabetes, Women's health, First aid and Cold/Flu up to about 30 words each |
+| Health (new) | Body parts & symptoms (the base the other sets build on: "my ___ hurts"), Pregnancy, Hospital & emergency (hospital stays and visits first; trimmed of clinical tests), Mental health, Allergies, Eyes & vision. Pharmacy and insurance words are added to Medicine and Going to the doctor instead of a new set |
+| Parenting | Babies (feeding, diapers, sleep), Toddlers (potty, play, tantrums), Children's health (fever, vaccines, pediatrician), Kindergarten (幼兒園), Grade school for parents (聯絡簿, homework, teacher meetings), Playground & activities, Everyday phrases with kids (小心, 不可以, 好棒) |
+| Caregiving | Daily care (bathing, dressing, meals), Mobility & safety (wheelchair, falls), Memory & aging (dementia), Care services & paperwork (長照, home care workers), Talking with care staff, Comfort & feelings |
+| School | Classroom, Subjects, Homework & exams, School life (lunch, clubs, after-school classes 補習班) |
+| Work | Office, Meetings, Email & phone phrases, Job hunting & interviews, Leave & pay |
+| Travel & transport | Airport, MRT & trains (HSR, 悠遊卡), Bus, taxi & scooter, Hotel, Directions, Travel problems (lost items, delays) |
+| Food & dining | Ordering, Night markets & street food, Drinks (sugar and ice levels), Dietary needs & allergies (include food intolerance, 食物不耐症, and "just an intolerance, not an allergy"), Tastes & cooking, Paying & splitting the bill |
+| Daily errands | Convenience store, Bank & ATM, Post office & deliveries, Phone & SIM, Renting & home repairs, Bills & utilities, Government offices (ARC, 戶政事務所) |
+
+**A set can belong to several topics** (decided 2026-11-17): Children's health shows under both
+Health and Parenting. `word_sets` stays one topic per row. In the sets TSV, the `entries_from`
+column names an earlier set whose entries a set shares (`parenting-children-health` →
+`children-health`), and the build script writes a copy of the entries under the sharing set's id.
+No schema change is needed. Adding one copy puts its words in that topic's list, and the other copy
+stays available, so its list can get the words too (repeats are skipped as usual).
+
+**Phone test (2026-11-17, Pixel 8 Pro, temporary profile TEMP4, deleted afterwards):** Passed. The
+topics step lists Health (17 sets) and Parenting (1 set). Back to topics works. Adding Going to
+the doctor and Children's health added 72 words (37 + 36, with 小兒科 in both), asked once about
+104 characters, and filled Health-related words (72), General Vocabulary (72) and Nouns, Verbs
+and Phrases (55 + 10 + 7). Then adding Children's health under Parenting added no new words and
+put the 36 existing ones in Parenting words. Afterwards the topics read "Health (17 sets, 2
+added)" and "Parenting (1 set, 1 added)". Fixed after the test: reopening the modal kept the last
+selection (the topics step said "Add 2 sets"), and adding only words the profile already had now
+says "You already had all 36 words. They were added to Parenting words."
+
+**Steps 1 and 2 done (2026-11-17):** Settings has one "Add topic word sets"
+entry. Its modal lists the topics that have sets for the profile's language ("Health (17 sets, 2
+added)"), and choosing one shows its sets, with "Back to topics". `WordSetTopic` has all eight
+topics with titles and list names. The health data is in the built-in pack, version 5 (copy
+version 10). It has 18 sets: 17 health sets plus the Parenting copy of Children's health. The pack
+database grew by 32 KB (uncompressed).
+
+**Health data (2026-11-17, reviewed by the user):** 17 sets and 590 entries (was 10 and 241) in
+scripts/data/mandarin-word-sets.tsv and mandarin-word-set-entries.tsv.
+Curated content must suit children, since kids are expected to use the app. Users add their own
+words for sensitive topics (decided 2026-11-17; a self-harm phrase and the condom entries were
+dropped for this reason; plain medical terms such as birth control stay).
+Readings follow the dictionary's Taiwan readings (剖腹產 pǒu, 便秘 biàn bì, 骨頭 gú tou, 流鼻血
+liú bí xiě). Open reading question: 度數 is written dù shù (Taiwan), but the dictionary has a
+neutral tone and the Taiwan readings file comes from Wiktionary, so hand fixes need an overrides
+file.
+
+**Size:** the health batch added 32 KB to the pack database (349 entries), so all topics
+(roughly 1,500–2,000 entries) should add about 150 KB, less after compression. The Phase 5 release
+check measured the download at 30.7–30.8 MB, already at the 30 MB budget. Measure the release
+bundle with the next release check, and decide whether to trim elsewhere (e.g. pack data the app
+doesn't use).
+
+**Order:** (1) generalize the Settings entry and modal and add the topic ids and list names; (2)
+Health additions; (3) Parenting and Caregiving (the first audience); (4) Travel, Food and Errands;
+(5) School and Work. The user reviews each batch's TSV before it is built. Each merged batch
+raises `MANDARIN_PACK_VERSION` (the built-in pack is version 5 now) and the built-in pack copy
+version. The test store pack (`storePackCatalog.json`, version 3) is older than the built-in pack
+and must be rebuilt with a higher version before Play Asset Delivery is tested again.
+
 ## Splitting multi-character words
 
 When the user adds a noun made of several distinct characters, such as 雜貨店 (zá huò diàn,
@@ -632,6 +719,9 @@ Each phase ships on its own with tests and `npm run check` passing.
 4c. **Learning levels and All words options.** Tier labels renamed (High practice) with the
    practice-share note; the Retention downgrade question when Zhuyin or Components is hidden;
    hiding the Components list; All words filters and the level label checkbox.
+4d. **More topic word sets.** Health additions and new topics (Parenting, Caregiving, Travel, Food,
+   Errands, School, Work) behind one "Add topic word sets" entry in Settings. See "More topic word
+   sets (Phase 4d)".
 5. **Store-hosted packs (route A):** Play Asset Delivery, then Apple-hosted packs with the iOS
    port.
 6. **Add-ons framework and games.**
