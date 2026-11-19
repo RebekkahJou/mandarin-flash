@@ -3,17 +3,22 @@ import { useCallback, useMemo, useState } from 'react';
 
 import type { WordList } from '../../domain/wordList';
 import type { WordSetTopic } from '../../domain/wordSets';
-import { extraListChoicesForWordSets } from '../../domain/wordSets';
-import type { WordSetChoice, WordSetServices } from '../../services/wordSets';
-import { addWordSets, loadWordSetChoices } from '../../services/wordSets';
+import { WORD_SET_TOPIC_TITLES, extraListChoicesForWordSets } from '../../domain/wordSets';
+import type { WordSetServices, WordSetTopicChoices } from '../../services/wordSets';
+import { addWordSets, loadWordSetTopics } from '../../services/wordSets';
 import {
   addWordSetsButtonLabel,
   describeWordSetAddition,
   wordSetOptions,
+  wordSetTopicLabel,
 } from '../../services/wordSetText';
 import { useAppServices } from '../AppServicesContext';
 import { showMessage } from '../confirm';
 import { useCharacterSplit } from './useCharacterSplit';
+
+const TOPICS_TITLE = 'Topic word sets';
+const TOPICS_HINT = 'Choose a topic to see its word sets.';
+const SETS_HINT = 'Choose the sets you need. You can add more later.';
 
 function toggled<Value>(values: ReadonlySet<Value>, value: Value): Set<Value> {
   const next = new Set(values);
@@ -22,19 +27,11 @@ function toggled<Value>(values: ReadonlySet<Value>, value: Value): Set<Value> {
   return next;
 }
 
-/** A topic's word sets (e.g. health vocabulary): which the pack offers, and adding chosen ones. */
-export function useWordSets(topic: WordSetTopic) {
+function useWordSetServices(): WordSetServices {
   const appServices = useAppServices();
   const { profileId, languageBundle, packId, dictionaryLookup } = appServices;
   const { wordRepository, wordListRepository, wordSetRepository } = appServices;
-  const [choices, setChoices] = useState<WordSetChoice[]>([]);
-  const [extraLists, setExtraLists] = useState<WordList[]>([]);
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedSetIds, setSelectedSetIds] = useState<Set<string>>(new Set());
-  const [selectedListIds, setSelectedListIds] = useState<Set<number>>(new Set());
-  const [isAdding, setIsAdding] = useState(false);
-  const characterSplit = useCharacterSplit();
-  const services = useMemo<WordSetServices>(
+  return useMemo<WordSetServices>(
     () => ({
       profileId,
       languageId: languageBundle.definition.id,
@@ -55,10 +52,26 @@ export function useWordSets(topic: WordSetTopic) {
       wordSetRepository,
     ],
   );
+}
+
+/**
+ * Topic word sets (health, parenting…): which the pack offers, and adding chosen ones. The modal
+ * lists the topics first; choosing one shows its sets.
+ */
+export function useWordSets() {
+  const services = useWordSetServices();
+  const [topics, setTopics] = useState<WordSetTopicChoices[]>([]);
+  const [chosenTopic, setChosenTopic] = useState<WordSetTopic | null>(null);
+  const [extraLists, setExtraLists] = useState<WordList[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedSetIds, setSelectedSetIds] = useState<Set<string>>(new Set());
+  const [selectedListIds, setSelectedListIds] = useState<Set<number>>(new Set());
+  const [isAdding, setIsAdding] = useState(false);
+  const characterSplit = useCharacterSplit();
 
   const refresh = useCallback(async () => {
-    setChoices(await loadWordSetChoices(services, topic));
-  }, [services, topic]);
+    setTopics(await loadWordSetTopics(services));
+  }, [services]);
 
   useFocusEffect(
     useCallback(() => {
@@ -66,16 +79,21 @@ export function useWordSets(topic: WordSetTopic) {
     }, [refresh]),
   );
 
-  const open = async () => {
-    const summaries = await wordListRepository.listSummaries(profileId);
-    setExtraLists(extraListChoicesForWordSets(summaries.map(({ list }) => list)));
+  const chooseTopic = (topic: WordSetTopic | null) => {
     setSelectedSetIds(new Set());
     setSelectedListIds(new Set());
+    setChosenTopic(topic);
+  };
+
+  const open = async () => {
+    const summaries = await services.wordListRepository.listSummaries(services.profileId);
+    setExtraLists(extraListChoicesForWordSets(summaries.map(({ list }) => list)));
+    chooseTopic(null);
     await refresh();
     setIsVisible(true);
   };
 
-  const addSelected = async () => {
+  const addSelected = async (topic: WordSetTopic) => {
     if (isAdding) return;
     setIsVisible(false);
     if (selectedSetIds.size === 0) return;
@@ -98,20 +116,33 @@ export function useWordSets(topic: WordSetTopic) {
     }
   };
 
+  const chosen = topics.find(({ topic }) => topic === chosenTopic);
   return {
-    isOffered: choices.length > 0,
+    isOffered: topics.length > 0,
     isAdding,
     open: () => void open(),
     modal: {
       isVisible,
-      setOptions: wordSetOptions(choices),
+      isChoosingTopic: !chosen,
+      title: chosen ? `${WORD_SET_TOPIC_TITLES[chosen.topic]} word sets` : TOPICS_TITLE,
+      hint: chosen ? SETS_HINT : TOPICS_HINT,
+      topicOptions: topics.map((topicChoices) => ({
+        value: topicChoices.topic,
+        label: wordSetTopicLabel(topicChoices),
+      })),
+      onChooseTopic: chooseTopic,
+      onBack: () => chooseTopic(null),
+      setOptions: wordSetOptions(chosen?.choices ?? []),
       selectedSetIds,
       onToggleSet: (setId: string) => setSelectedSetIds(toggled(selectedSetIds, setId)),
       extraLists,
       selectedExtraListIds: selectedListIds,
       onToggleExtraList: (listId: number) => setSelectedListIds(toggled(selectedListIds, listId)),
       confirmLabel: addWordSetsButtonLabel(selectedSetIds.size),
-      onConfirm: () => void addSelected(),
+      onConfirm: () => {
+        if (chosen) void addSelected(chosen.topic);
+        else setIsVisible(false);
+      },
       onDismiss: () => setIsVisible(false),
     },
   };

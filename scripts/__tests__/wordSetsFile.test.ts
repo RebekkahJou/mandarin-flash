@@ -11,9 +11,16 @@ import {
   writeWordSets,
 } from '../lib/wordSetsFile';
 
-const SETS_HEADER = 'set_id\ttopic\ttitle';
+const SETS_HEADER = 'set_id\ttopic\ttitle\tentries_from';
 const ENTRIES_HEADER = 'set_id\theadword\treading\tword_type\tmeanings\tlanguages\tnote';
-const SETS = parseWordSetsFile(`${SETS_HEADER}\ndoctor\thealth\tGoing to the doctor\n`);
+const SETS = parseWordSetsFile(`${SETS_HEADER}\ndoctor\thealth\tGoing to the doctor\t\n`);
+const SETS_WITH_SHARING = parseWordSetsFile(
+  [
+    SETS_HEADER,
+    "children\thealth\tChildren's health\t",
+    "parenting-children\tparenting\tChildren's health\tchildren",
+  ].join('\n'),
+);
 
 function entriesFile(...lines: string[]): string {
   return [ENTRIES_HEADER, ...lines].join('\n');
@@ -21,12 +28,30 @@ function entriesFile(...lines: string[]): string {
 
 describe('parseWordSetsFile', () => {
   it('reads set ids, topics and titles', () => {
-    expect(SETS).toEqual([{ setId: 'doctor', topic: 'health', title: 'Going to the doctor' }]);
+    expect(SETS).toEqual([
+      { setId: 'doctor', topic: 'health', title: 'Going to the doctor', entriesFrom: null },
+    ]);
+  });
+
+  it('reads a set that shares an earlier set’s entries under another topic', () => {
+    expect(SETS_WITH_SHARING[1]).toEqual({
+      setId: 'parenting-children',
+      topic: 'parenting',
+      title: "Children's health",
+      entriesFrom: 'children',
+    });
+  });
+
+  it('only shares entries of an earlier set that has its own', () => {
+    const sharingLater = [SETS_HEADER, 'b\tparenting\tB\ta', 'a\thealth\tA\t'].join('\n');
+    expect(() => parseWordSetsFile(sharingLater)).toThrow('Line 2');
+    const chained = [SETS_HEADER, 'a\thealth\tA\t', 'b\tparenting\tB\ta', 'c\twork\tC\tb'];
+    expect(() => parseWordSetsFile(chained.join('\n'))).toThrow('Line 4');
   });
 
   it('rejects a bad id, an unknown topic and a repeated set', () => {
     expect(() => parseWordSetsFile(`${SETS_HEADER}\nDoctor!\thealth\tX`)).toThrow('Line 2');
-    expect(() => parseWordSetsFile(`${SETS_HEADER}\ndoctor\tfood\tX`)).toThrow('topic');
+    expect(() => parseWordSetsFile(`${SETS_HEADER}\ndoctor\tgardening\tX`)).toThrow('topic');
     expect(() => parseWordSetsFile(`${SETS_HEADER}\ndoctor\thealth\tX\ndoctor\thealth\tY`)).toThrow(
       'repeats',
     );
@@ -75,6 +100,15 @@ describe('parseWordSetEntriesFile', () => {
     expect(() =>
       parseWordSetEntriesFile(entriesFile('doctor\t牙\tyá\tnoun\ttooth\t\t'), SETS),
     ).toThrow('numbered reading');
+  });
+
+  it('rejects entries listed under a set that shares another set’s entries', () => {
+    expect(() =>
+      parseWordSetEntriesFile(
+        entriesFile('parenting-children\t牙\tya2\tnoun\ttooth\t\t'),
+        SETS_WITH_SHARING,
+      ),
+    ).toThrow('sharing set');
   });
 
   it('rejects a word listed twice in one set', () => {
@@ -130,6 +164,23 @@ describe('writing word sets into a pack', () => {
     ]);
     expect(database.prepare('SELECT set_id, position FROM word_sets').all()).toEqual([
       { set_id: 'doctor', position: 1 },
+    ]);
+  });
+
+  it('writes a copy of the shared entries under the sharing set', () => {
+    const database = createPack();
+    const entries = parseWordSetEntriesFile(
+      entriesFile('children\t發燒\tfa1 shao1\tverb\tto have a fever\t\t'),
+      SETS_WITH_SHARING,
+    );
+    writeWordSets(database, SETS_WITH_SHARING, entries);
+    expect(
+      database
+        .prepare('SELECT set_id, position, headword FROM word_set_entries ORDER BY set_id')
+        .all(),
+    ).toEqual([
+      { set_id: 'children', position: 1, headword: '發燒' },
+      { set_id: 'parenting-children', position: 1, headword: '發燒' },
     ]);
   });
 

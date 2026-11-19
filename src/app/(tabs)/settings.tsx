@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { PhoneticDisplay, SimplifiedDisplay } from '../../data/repositories/settingsRepository';
 import { PRACTICE_SET_SIZES } from '../../domain/practiceSetBuilder';
-import { WordSetTopic } from '../../domain/wordSets';
 import { useAppServices, useSettings } from '../../ui/AppServicesContext';
 import { Checkboxes } from '../../ui/components/Checkboxes';
 import { ChoiceChips } from '../../ui/components/ChoiceChips';
@@ -36,9 +35,9 @@ const LEARN_ZHUYIN_OPTIONS = [
   },
 ];
 
-const HEALTH_SETS_HINT =
-  'Words for doctors, symptoms, medicine and more. They go into Health-related words, ' +
-  'General Vocabulary and their word-type lists.';
+const WORD_SETS_HINT =
+  'Ready-made sets of words for topics such as health. Each topic’s words go into a list of ' +
+  'their own, General Vocabulary and their word-type lists.';
 
 const SET_SIZE_CHOICES = PRACTICE_SET_SIZES.map((size) => ({ value: size, label: `${size}` }));
 
@@ -55,17 +54,17 @@ export default function SettingsScreen() {
       onToggle={zhuyinStudy.toggle}
     />
   ) : null;
-  const healthWordSets = useWordSets(WordSetTopic.Health);
-  const healthSection = healthWordSets.isOffered ? (
+  const wordSets = useWordSets();
+  const wordSetsSection = wordSets.isOffered ? (
     <>
-      <SectionTitle title="Health vocabulary" />
-      <Text style={styles.hint}>{HEALTH_SETS_HINT}</Text>
+      <SectionTitle title="Topic word sets" />
+      <Text style={styles.hint}>{WORD_SETS_HINT}</Text>
       <View style={styles.buttonRow}>
         <PrimaryButton
-          label="Add common health-related word sets"
-          onPress={healthWordSets.open}
+          label="Add topic word sets"
+          onPress={wordSets.open}
           isOutlined
-          isDisabled={healthWordSets.isAdding}
+          isDisabled={wordSets.isAdding}
         />
       </View>
     </>
@@ -107,7 +106,7 @@ export default function SettingsScreen() {
         onSelect={(value) => updateSetting('simplifiedDisplay', value)}
       />
 
-      {healthSection}
+      {wordSetsSection}
 
       <SectionTitle title="Default cards per set" />
       <ChoiceChips
@@ -130,11 +129,7 @@ export default function SettingsScreen() {
         <PrimaryButton label="About & licenses" onPress={() => router.push('/about')} isOutlined />
       </View>
 
-      <WordSetsModal
-        {...healthWordSets.modal}
-        title="Health-related word sets"
-        hint="Choose the sets you need. You can add more later."
-      />
+      <WordSetsModal {...wordSets.modal} />
     </ScreenContainer>
   );
 }

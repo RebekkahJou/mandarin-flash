@@ -1,11 +1,19 @@
-set_id	topic	title
-doctor	health	Going to the doctor
-cold-flu	health	Cold/Flu
-diabetes	health	Diabetes
-womens-health	health	Women's health
-wound-infection	health	Wound infection
-chronic-ailments	health	Chronic ailments
-medicine	health	Medicine
-first-aid	health	First aid
-dental	health	Dental issues
-injuries	health	Injuries
+set_id	topic	title	entries_from
+doctor	health	Going to the doctor	
+body-symptoms	health	Body parts & symptoms	
+cold-flu	health	Cold/Flu	
+children-health	health	Children's health	
+pregnancy	health	Pregnancy	
+womens-health	health	Women's health	
+diabetes	health	Diabetes	
+chronic-ailments	health	Chronic ailments	
+mental-health	health	Mental health	
+allergies	health	Allergies	
+eyes	health	Eyes & vision	
+dental	health	Dental issues	
+medicine	health	Medicine	
+first-aid	health	First aid	
+injuries	health	Injuries	
+wound-infection	health	Wound infection	
+hospital	health	Hospital & emergency	
+parenting-children-health	parenting	Children's health	children-health

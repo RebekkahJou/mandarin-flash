@@ -1,18 +1,33 @@
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import type { WordList } from '../../domain/wordList';
-import { colors, fontSizes } from '../theme';
+import type { WordSetTopic } from '../../domain/wordSets';
+import { colors, fontSizes, spacing } from '../theme';
 import type { CheckboxOption } from './Checkboxes';
 import { Checkboxes } from './Checkboxes';
+import { CompactButton } from './CompactButton';
 import { InfoModal } from './InfoModal';
 import { ListCheckboxes } from './ListCheckboxes';
+import { PrimaryButton } from './PrimaryButton';
+
+interface WordSetTopicOption {
+  value: WordSetTopic;
+  /** The topic's title and number of sets, e.g. "Health (17 sets)". */
+  label: string;
+}
 
 interface WordSetsModalProps {
   isVisible: boolean;
+  /** True while the topics are listed; false once one is chosen and its sets show. */
+  isChoosingTopic: boolean;
   title: string;
-  /** Explains where the words go. */
+  /** Explains what to choose. */
   hint: string;
-  /** Sets to choose from, with already added ones disabled. */
+  topicOptions: readonly WordSetTopicOption[];
+  onChooseTopic: (topic: WordSetTopic) => void;
+  /** Returns from a topic's sets to the topics. */
+  onBack: () => void;
+  /** The chosen topic's sets, with already added ones disabled. */
   setOptions: readonly CheckboxOption<string>[];
   selectedSetIds: ReadonlySet<string>;
   onToggleSet: (setId: string) => void;
@@ -25,21 +40,46 @@ interface WordSetsModalProps {
   onDismiss: () => void;
 }
 
-/** Picks topic word sets (e.g. health vocabulary) to add, and other lists for their words. */
-export function WordSetsModal({
-  isVisible,
-  title,
-  hint,
+type TopicListProps = Pick<WordSetsModalProps, 'topicOptions' | 'onChooseTopic'>;
+
+function TopicList({ topicOptions, onChooseTopic }: TopicListProps) {
+  return (
+    <View style={styles.topics}>
+      {topicOptions.map((option) => (
+        <View key={option.value} style={styles.topicRow}>
+          <PrimaryButton
+            label={option.label}
+            onPress={() => onChooseTopic(option.value)}
+            isOutlined
+          />
+        </View>
+      ))}
+    </View>
+  );
+}
+
+type SetChoicesProps = Omit<
+  WordSetsModalProps,
+  | 'isVisible'
+  | 'isChoosingTopic'
+  | 'title'
+  | 'hint'
+  | 'topicOptions'
+  | 'onChooseTopic'
+  | 'confirmLabel'
+  | 'onConfirm'
+  | 'onDismiss'
+>;
+
+function SetChoices({
+  onBack,
   setOptions,
   selectedSetIds,
   onToggleSet,
   extraLists,
   selectedExtraListIds,
   onToggleExtraList,
-  confirmLabel,
-  onConfirm,
-  onDismiss,
-}: WordSetsModalProps) {
+}: SetChoicesProps) {
   const hasExtraLists = extraLists.length > 0;
   const extraListsTitle = hasExtraLists ? (
     <Text style={styles.subtitle}>Also add the words to</Text>
@@ -52,6 +92,22 @@ export function WordSetsModal({
     />
   ) : null;
   return (
+    <>
+      <View style={styles.backRow}>
+        <CompactButton label="Back to topics" onPress={onBack} isOutlined />
+      </View>
+      <Checkboxes options={setOptions} selectedValues={selectedSetIds} onToggle={onToggleSet} />
+      {extraListsTitle}
+      {extraListCheckboxes}
+    </>
+  );
+}
+
+/** Picks a topic (health, parenting…), then word sets to add and other lists for their words. */
+export function WordSetsModal(props: WordSetsModalProps) {
+  const { isVisible, isChoosingTopic, title, hint, confirmLabel, onConfirm, onDismiss } = props;
+  const content = isChoosingTopic ? <TopicList {...props} /> : <SetChoices {...props} />;
+  return (
     <InfoModal
       isVisible={isVisible}
       onClose={onConfirm}
@@ -60,9 +116,7 @@ export function WordSetsModal({
     >
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.hint}>{hint}</Text>
-      <Checkboxes options={setOptions} selectedValues={selectedSetIds} onToggle={onToggleSet} />
-      {extraListsTitle}
-      {extraListCheckboxes}
+      {content}
     </InfoModal>
   );
 }
@@ -81,5 +135,14 @@ const styles = StyleSheet.create({
   hint: {
     fontSize: fontSizes.small,
     color: colors.textSecondary,
+  },
+  topics: {
+    gap: spacing.small,
+  },
+  topicRow: {
+    flexDirection: 'row',
+  },
+  backRow: {
+    flexDirection: 'row',
   },
 });
