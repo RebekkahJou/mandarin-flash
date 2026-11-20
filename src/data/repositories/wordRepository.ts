@@ -1,5 +1,6 @@
 import type { FrequencyTier } from '../../domain/frequencyTier';
 import { NEW_WORD_TIER, downgradeTier } from '../../domain/frequencyTier';
+import type { SavedMeanings } from '../../domain/savedMeaningUpdates';
 import type { Word } from '../../domain/word';
 import { WordListKind, allMeaningsOf } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
@@ -152,6 +153,22 @@ export function createWordRepository(database: SqlDatabase) {
       [profileId],
     );
     return rows.map((row) => ({ wordId: row.id, headword: row.headword, reading: row.reading }));
+  }
+
+  /** Each word's own meanings, for updating saved copies when the pack's meanings change. */
+  async function listWordMeanings(profileId: number): Promise<SavedMeanings[]> {
+    const rows = await database.getAll<{ id: number; definitions: string }>(
+      'SELECT id, definitions FROM words WHERE profile_id = ?',
+      [profileId],
+    );
+    return rows.map((row) => ({ id: row.id, meanings: parseDefinitions(row.definitions) }));
+  }
+
+  async function setWordMeanings(wordId: number, meanings: readonly string[]): Promise<void> {
+    await database.run('UPDATE words SET definitions = ? WHERE id = ?', [
+      serializeDefinitions(meanings),
+      wordId,
+    ]);
   }
 
   /** Deletes words from the profile; their list entries, practice history and character links go too. */
@@ -318,6 +335,8 @@ export function createWordRepository(database: SqlDatabase) {
     listWordReadings,
     changeWordReading,
     deleteWords,
+    listWordMeanings,
+    setWordMeanings,
     countWords,
     setFrequencyTier,
     setFrequencyTierForList,

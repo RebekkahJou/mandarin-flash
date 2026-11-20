@@ -1,10 +1,17 @@
 import type { DefaultWordListDefinition } from '../../domain/defaultWordLists';
 import { listKindFor } from '../../domain/defaultWordLists';
+import type { SavedMeanings } from '../../domain/savedMeaningUpdates';
 import type { WordList } from '../../domain/wordList';
 import { WordListKind } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
 import type { WordListEntryRow, WordListRow } from './rowMappers';
-import { WORD_COLUMNS, serializeDefinitions, toWordList, toWordListEntry } from './rowMappers';
+import {
+  WORD_COLUMNS,
+  parseDefinitions,
+  serializeDefinitions,
+  toWordList,
+  toWordListEntry,
+} from './rowMappers';
 
 export interface WordListSummary {
   list: WordList;
@@ -226,6 +233,20 @@ export function createWordListRepository(database: SqlDatabase) {
     ]);
   }
 
+  /** List entries with meanings of their own, for updating saved copies. */
+  async function listEntryMeanings(profileId: number): Promise<SavedMeanings[]> {
+    const rows = await database.getAll<{ id: number; definitions_override: string }>(
+      `SELECT word_list_entries.id, word_list_entries.definitions_override
+       FROM word_list_entries JOIN word_lists ON word_lists.id = word_list_entries.word_list_id
+       WHERE word_lists.profile_id = ? AND word_list_entries.definitions_override IS NOT NULL`,
+      [profileId],
+    );
+    return rows.map((row) => ({
+      id: row.id,
+      meanings: parseDefinitions(row.definitions_override),
+    }));
+  }
+
   async function setEntryDefinitions(
     entryId: number,
     definitions: readonly string[] | null,
@@ -256,6 +277,7 @@ export function createWordListRepository(database: SqlDatabase) {
     listIdsContainingWord,
     removeWordFromList,
     setEntryDefinitions,
+    listEntryMeanings,
   };
 }
 

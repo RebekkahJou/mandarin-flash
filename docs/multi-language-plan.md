@@ -747,6 +747,17 @@ unchecked read "31 of 32 words"; reopening Children's health still showed 34 che
 added 65 words, as expected. Not done yet: previewing an already added set to add its skipped
 words later (added sets have no Preview button for now).
 
+**Follow-ups (2026-11-20, pack version 9, schema 4, copy version 14):**
+- A set shown under two topics now counts as added under both. Pack schema 4 adds
+  `word_sets.entries_from`; the app treats sets with the same source as one set (older packs
+  still load, each set its own source).
+- CC-CEDICT cross-references are made readable: 兩|两[liang3] shows as 兩 (liǎng) on Traditional
+  profiles and 两 (liǎng) on Simplified ones, and "also pr. [pou1]" as "also pr. pōu". Applied
+  when meanings are read from the pack and, once per pack version, to saved words and list
+  meanings. 3 unusual pack meanings (with γ or ∼) stay as they are.
+- **Phone check still to do:** after adding Computers & phones under School, Daily errands shows it
+  as Added; the 錢 card on the user's profile reads "one tenth of a tael 兩 (liǎng)".
+
 **Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
 deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)
 saved sets, which reuses the paused-set storage.

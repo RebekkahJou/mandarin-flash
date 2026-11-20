@@ -25,7 +25,7 @@ export interface WordSetServices {
   packId: string;
   /** The language's extra default lists, so words find e.g. Measure words. */
   languageExtraLists: readonly DefaultWordListDefinition[];
-  dictionaryLookup: Pick<DictionaryLookup, 'wordSets' | 'wordSetEntries'>;
+  dictionaryLookup: Pick<DictionaryLookup, 'wordSets' | 'wordSetSources' | 'wordSetEntries'>;
   wordRepository: WordRepository;
   wordListRepository: WordListRepository;
   wordSetRepository: WordSetRepository;
@@ -46,14 +46,20 @@ export interface WordSetAddition {
   topicListName: string;
 }
 
-/** The topic's sets in pack order, each marked when the profile already added it. */
+/**
+ * The topic's sets in pack order, each marked when the profile already added it. A set shown
+ * under two topics counts as added under both.
+ */
 export async function loadWordSetChoices(
   services: WordSetServices,
   topic: WordSetTopic,
 ): Promise<WordSetChoice[]> {
   const sets = await services.dictionaryLookup.wordSets(topic, services.languageId);
+  const sources = await services.dictionaryLookup.wordSetSources();
+  const sourceOf = (setId: string) => sources.get(setId) ?? setId;
   const added = await services.wordSetRepository.addedSetIds(services.profileId, services.packId);
-  return sets.map((set) => ({ ...set, isAdded: added.has(set.setId) }));
+  const addedSources = new Set([...added].map(sourceOf));
+  return sets.map((set) => ({ ...set, isAdded: addedSources.has(sourceOf(set.setId)) }));
 }
 
 export interface WordSetTopicChoices {

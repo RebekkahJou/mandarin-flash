@@ -218,6 +218,36 @@ describe('word sets', () => {
     ]);
   });
 
+  it('marks a set shown under two topics as added under both', async () => {
+    const services = await setUp();
+    const pack = await createWordSetPack();
+    await pack.run(
+      'INSERT INTO word_sets (set_id, topic, title, position, entries_from) VALUES (?, ?, ?, ?, ?)',
+      ['school-dental', 'school', 'Dental issues', 5, 'dental'],
+    );
+    await pack.run(INSERT_ENTRY_SQL, [
+      'school-dental',
+      1,
+      '牙醫',
+      '牙医',
+      'ya2 yi1',
+      '',
+      'noun',
+      '["dentist"]',
+      '',
+    ]);
+    const withCopy = {
+      ...services,
+      dictionaryLookup: createDictionaryLookup(pack, TRADITIONAL_FORM, []),
+    };
+    await addWordSets(withCopy, WordSetTopic.School, ['school-dental'], []);
+    const health = await loadWordSetChoices(withCopy, WordSetTopic.Health);
+    expect(health.find((choice) => choice.setId === 'dental')?.isAdded).toBe(true);
+    expect(health.find((choice) => choice.setId === 'doctor')?.isAdded).toBe(false);
+    const school = await loadWordSetChoices(withCopy, WordSetTopic.School);
+    expect(school.find((choice) => choice.setId === 'school-dental')?.isAdded).toBe(true);
+  });
+
   it('offers no sets from a pack without word set tables', async () => {
     const services = await setUp();
     const pack = createInMemoryDatabase();

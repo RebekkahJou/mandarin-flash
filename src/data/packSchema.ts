@@ -7,7 +7,7 @@
  * Bump PACK_SCHEMA_VERSION whenever the layout changes, and keep reading every version the app
  * still accepts (MIN_SUPPORTED_PACK_SCHEMA_VERSION), since installed packs aren't rebuilt.
  */
-export const PACK_SCHEMA_VERSION = 3;
+export const PACK_SCHEMA_VERSION = 4;
 export const MIN_SUPPORTED_PACK_SCHEMA_VERSION = 1;
 
 /** Written to pack_metadata.format so a stray SQLite file is never mistaken for a pack. */
@@ -37,7 +37,11 @@ export const WORD_SETS_TABLES_SQL = `
     -- Which group of sets it belongs to, e.g. "health".
     topic TEXT NOT NULL,
     title TEXT NOT NULL,
-    position INTEGER NOT NULL
+    position INTEGER NOT NULL,
+    -- The set whose entries this one copies, so the two show as added together (Computers &
+    -- phones under School and under Daily errands). Empty for a set with its own entries.
+    -- Schema 4 on.
+    entries_from TEXT NOT NULL DEFAULT ''
   ) WITHOUT ROWID;
 
   CREATE TABLE word_set_entries (
@@ -141,13 +145,26 @@ const TABLES_ADDED_IN_SCHEMA: Readonly<
   },
 };
 
+/** Columns added to existing tables in each schema version. */
+const COLUMNS_ADDED_IN_SCHEMA: Readonly<
+  Record<number, Readonly<Record<string, readonly string[]>>>
+> = {
+  4: { word_sets: ['entries_from'] },
+};
+
 /** Every table and column a pack of this schema version must have; used to reject bad packs. */
 export function packTableColumnsFor(
   schemaVersion: number,
 ): Readonly<Record<string, readonly string[]>> {
-  const tables = { ...SCHEMA_1_TABLE_COLUMNS };
+  const tables: Record<string, readonly string[]> = { ...SCHEMA_1_TABLE_COLUMNS };
   for (const [addedIn, addedTables] of Object.entries(TABLES_ADDED_IN_SCHEMA)) {
     if (Number(addedIn) <= schemaVersion) Object.assign(tables, addedTables);
+  }
+  for (const [addedIn, addedColumns] of Object.entries(COLUMNS_ADDED_IN_SCHEMA)) {
+    if (Number(addedIn) > schemaVersion) continue;
+    for (const [table, columns] of Object.entries(addedColumns)) {
+      tables[table] = [...(tables[table] ?? []), ...columns];
+    }
   }
   return tables;
 }
