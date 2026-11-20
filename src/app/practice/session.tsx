@@ -15,6 +15,7 @@ import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SwipeableCard } from '../../ui/components/SwipeableCard';
 import { TimerDisplay } from '../../ui/components/TimerDisplay';
+import { RESUME_PARAM_VALUE } from '../../ui/hooks/usePausedPracticeSets';
 import { usePracticeSession } from '../../ui/hooks/usePracticeSession';
 import { colors, fontSizes, spacing } from '../../ui/theme';
 
@@ -30,10 +31,11 @@ const ANSWER_BUTTON_LABELS = {
 } as const;
 
 export default function PracticeSessionScreen() {
-  const params = useLocalSearchParams<{ listId: string; setSize: string }>();
+  const params = useLocalSearchParams<{ listId: string; setSize: string; resume?: string }>();
   const wordListId = Number(params.listId);
   const setSize = Number(params.setSize) || DEFAULT_PRACTICE_SET_SIZE;
-  const practice = usePracticeSession(wordListId, setSize);
+  const isResuming = params.resume === RESUME_PARAM_VALUE;
+  const practice = usePracticeSession(wordListId, setSize, isResuming);
   const { dictionaryLookup, languageBundle } = useAppServices();
   const { variantName, variantSymbol } = languageBundle.definition;
   const variantLabels = { name: variantName, symbol: variantSymbol };
@@ -42,6 +44,11 @@ export default function PracticeSessionScreen() {
   const showSentences = async () => {
     if (!practice.currentCard) return;
     setSentences(await dictionaryLookup.findExampleSentences(practice.currentCard.word));
+  };
+
+  const pause = async () => {
+    await practice.pauseSession();
+    router.back();
   };
 
   const answerBySwipe = (answer: SwipeAnswer) => {
@@ -92,6 +99,7 @@ export default function PracticeSessionScreen() {
 
       <View style={styles.accessoryRow}>
         <CompactButton label="In a sentence" onPress={showSentences} isOutlined />
+        <CompactButton label="Pause" onPress={() => void pause()} isOutlined />
         <CompactButton label="End" onPress={practice.endSession} isOutlined />
       </View>
       <View style={styles.buttonRow}>

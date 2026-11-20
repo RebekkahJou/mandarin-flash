@@ -11,6 +11,7 @@ import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { ReviewAnswer } from '../../domain/reviewEvent';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
 import { createInstalledPackRepository } from '../repositories/installedPackRepository';
+import { createPracticeSessionRepository } from '../repositories/practiceSessionRepository';
 import { createProfileRepository } from '../repositories/profileRepository';
 import { createReviewEventRepository } from '../repositories/reviewEventRepository';
 import { PhoneticDisplay, createSettingsRepository } from '../repositories/settingsRepository';
@@ -310,6 +311,37 @@ describe('user database', () => {
     ]);
     const newWords = await wordListRepository.getListWithEntries(listIdByName('New Words'));
     expect(newWords?.length).toBe(0);
+  });
+
+  it('keeps one paused practice set per list, replaced by the next pause', async () => {
+    const { database, profile, listIdByName } = await setUp();
+    const repository = createPracticeSessionRepository(database);
+    const state = (queue: number[]) => ({
+      session: {
+        wordIds: [1, 2],
+        queue,
+        completedWordIds: [],
+        learnedWordIds: [],
+        missedCounts: [],
+      },
+      timer: { startedAtMs: 0, elapsedMs: 1000 },
+    });
+    const verbsId = listIdByName('Verbs');
+    await repository.savePausedSet(profile.id, {
+      wordListId: verbsId,
+      setSize: 20,
+      state: state([1, 2]),
+    });
+    await repository.savePausedSet(profile.id, {
+      wordListId: verbsId,
+      setSize: 20,
+      state: state([2]),
+    });
+
+    expect((await repository.loadPausedSet(verbsId))?.state.session.queue).toEqual([2]);
+    expect(await repository.listPausedSets(profile.id)).toHaveLength(1);
+    await repository.deletePausedSet(verbsId);
+    expect(await repository.loadPausedSet(verbsId)).toBeNull();
   });
 
   it('adds a new general list after the existing ones', async () => {

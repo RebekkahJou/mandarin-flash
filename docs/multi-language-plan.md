@@ -764,10 +764,17 @@ words later (added sets have no Preview button for now).
   first with a hashed word-id tie-break, up to the "New Words list size" setting (10/20/30/40,
   default 10). It can't be renamed, deleted, imported into or picked when adding words; its rows
   open the word's screen.
+- Item 7 done (2026-11-20): Pause (next to End) saves the session and timer snapshots to
+  `paused_practice_sets` (one row per list, JSON state) and returns to the Practice tab, which
+  shows "Resume paused set (12 of 20 cards left)" for the chosen list. Starting a new set there
+  asks "Discard the paused set?". The timer stops while paused. Resuming drops deleted words and
+  still practices words that left the list since (New Words) with their own meanings. Ending
+  the set deletes the paused row; leaving with Back keeps the last paused point.
 - **Phone check still to do:** after adding Computers & phones under School, Daily errands shows it
   as Added; the 錢 card on the user's profile reads "one tenth of a tael 兩 (liǎng)"; New Words
   shows first on both tabs with up to 10 words, marking one Learned swaps in the next, and the
-  size setting changes it.
+  size setting changes it; Pause returns to the Practice tab, Resume carries on with the same
+  card, progress and time, and the time doesn't count the pause.
 
 **Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
 deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)

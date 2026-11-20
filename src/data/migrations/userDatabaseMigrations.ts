@@ -146,6 +146,17 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
       SELECT 1 FROM word_lists WHERE word_lists.profile_id = profiles.id AND kind = 'new_words'
     );
   `,
+  // One paused practice set per list, so the user can resume it later. state is JSON: the card
+  // order, progress and timer.
+  `
+  CREATE TABLE paused_practice_sets (
+    word_list_id INTEGER PRIMARY KEY REFERENCES word_lists(id) ON DELETE CASCADE,
+    profile_id INTEGER NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    set_size INTEGER NOT NULL,
+    state TEXT NOT NULL,
+    paused_at INTEGER NOT NULL
+  );
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {
