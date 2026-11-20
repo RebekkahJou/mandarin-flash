@@ -5,13 +5,16 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { PracticeSetSize } from '../../domain/practiceSetBuilder';
 import { PRACTICE_SET_SIZES } from '../../domain/practiceSetBuilder';
 import { resumePausedSetLabel } from '../../services/pausedPracticeText';
+import { PracticeStart } from '../../services/practiceSetLoading';
+import { practiceSavedSetLabel, savedSetTimesText } from '../../services/savedPracticeText';
 import { useSettings } from '../../ui/AppServicesContext';
 import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
 import { WordListRow } from '../../ui/components/WordListRow';
-import { RESUME_PARAM_VALUE, usePausedPracticeSets } from '../../ui/hooks/usePausedPracticeSets';
+import { usePausedPracticeSets } from '../../ui/hooks/usePausedPracticeSets';
+import { useSavedPracticeSets } from '../../ui/hooks/useSavedPracticeSets';
 import { useWordListSummaries } from '../../ui/hooks/useWordListSummaries';
 import { colors, fontSizes, spacing } from '../../ui/theme';
 
@@ -21,6 +24,7 @@ export default function PracticeSetupScreen() {
   const { summaries } = useWordListSummaries();
   const { settings } = useSettings();
   const pausedSets = usePausedPracticeSets();
+  const savedSets = useSavedPracticeSets();
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
   // Follows the default from Settings until the user picks a size here.
   const [chosenSetSize, setChosenSetSize] = useState<PracticeSetSize | null>(null);
@@ -34,26 +38,39 @@ export default function PracticeSetupScreen() {
     ) : null;
   const isStartDisabled = !canStart;
 
+  const openSession = (wordListId: number, sessionSetSize: number, start: PracticeStart) =>
+    router.push({
+      pathname: '/practice/session',
+      params: { listId: String(wordListId), setSize: String(sessionSetSize), start },
+    });
+
   const startPractice = async () => {
     if (!selectedSummary) return;
     if (!(await pausedSets.confirmDiscard(selectedSummary.list.id))) return;
-    router.push({
-      pathname: '/practice/session',
-      params: { listId: String(selectedSummary.list.id), setSize: String(setSize) },
-    });
+    openSession(selectedSummary.list.id, setSize, PracticeStart.New);
   };
+
+  const savedSet = savedSets.savedSetFor(selectedListId);
+  const practiceSavedSet = async () => {
+    if (!savedSet) return;
+    if (!(await pausedSets.confirmDiscard(savedSet.wordListId))) return;
+    openSession(savedSet.wordListId, savedSet.wordIds.length, PracticeStart.Saved);
+  };
+  const savedSetLabel = savedSet ? practiceSavedSetLabel(savedSet.wordIds.length) : '';
+  const savedTimes = savedSet ? savedSetTimesText(savedSet.timesMs) : '';
+  const savedSetSection = savedSet ? (
+    <>
+      <View style={styles.startRow}>
+        <PrimaryButton label={savedSetLabel} onPress={() => void practiceSavedSet()} isOutlined />
+      </View>
+      <Text style={styles.hint}>{savedTimes}</Text>
+    </>
+  ) : null;
 
   const pausedSet = pausedSets.pausedSetFor(selectedListId);
   const resumePractice = () => {
     if (!pausedSet) return;
-    router.push({
-      pathname: '/practice/session',
-      params: {
-        listId: String(pausedSet.wordListId),
-        setSize: String(pausedSet.setSize),
-        resume: RESUME_PARAM_VALUE,
-      },
-    });
+    openSession(pausedSet.wordListId, pausedSet.setSize, PracticeStart.Resume);
   };
   const resumeLabel = pausedSet ? resumePausedSetLabel(pausedSet.state.session) : '';
   const resumeButton = pausedSet ? (
@@ -92,6 +109,7 @@ export default function PracticeSetupScreen() {
           isDisabled={isStartDisabled}
         />
       </View>
+      {savedSetSection}
     </ScreenContainer>
   );
 }

@@ -10,9 +10,6 @@ import {
 import { useAppServices } from '../AppServicesContext';
 import { confirm } from '../confirm';
 
-/** The practice session route's resume param value that picks up the list's paused set. */
-export const RESUME_PARAM_VALUE = '1';
-
 /** The profile's paused practice sets by list, reloaded whenever the Practice tab shows. */
 export function usePausedPracticeSets() {
   const { profileId, practiceSessionRepository } = useAppServices();

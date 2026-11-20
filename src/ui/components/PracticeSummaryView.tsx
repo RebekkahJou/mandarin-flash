@@ -3,14 +3,19 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { PracticeSummary } from '../hooks/usePracticeSession';
 import { colors, fontSizes, spacing } from '../theme';
 import { PrimaryButton } from './PrimaryButton';
-import { formatDuration } from './TimerDisplay';
+import { formatDuration } from '../../services/savedPracticeText';
 
 interface PracticeSummaryViewProps {
   summary: PracticeSummary;
   onDone: () => void;
+  /** Saves the set to practice again; the button is left out when undefined (already saved). */
+  onSave?: () => void;
 }
 
-export function PracticeSummaryView({ summary, onDone }: PracticeSummaryViewProps) {
+export function PracticeSummaryView({ summary, onDone, onSave }: PracticeSummaryViewProps) {
+  const saveButton = onSave ? (
+    <PrimaryButton label="Save this set" onPress={onSave} isOutlined />
+  ) : null;
   const hasSeparateDeckTime =
     summary.deckCompletedMs !== undefined && summary.deckCompletedMs !== summary.totalElapsedMs;
   const deckTime = formatDuration(summary.deckCompletedMs ?? 0);
@@ -29,6 +34,7 @@ export function PracticeSummaryView({ summary, onDone }: PracticeSummaryViewProp
       <SummaryLine label="Marked learned" value={learnedCount} />
       <View style={styles.buttonRow}>
         <PrimaryButton label="Done" onPress={onDone} />
+        {saveButton}
       </View>
     </View>
   );

@@ -344,6 +344,29 @@ describe('user database', () => {
     expect(await repository.loadPausedSet(verbsId)).toBeNull();
   });
 
+  it('keeps one saved set per list with its times, cleared when the set is replaced', async () => {
+    const { database, profile, listIdByName } = await setUp();
+    const repository = createPracticeSessionRepository(database);
+    const verbsId = listIdByName('Verbs');
+    await repository.saveSavedSet(profile.id, verbsId, [3, 1, 2]);
+    await repository.recordSavedSetTime(verbsId, 90_000);
+    await repository.recordSavedSetTime(verbsId, 80_000);
+
+    expect(await repository.loadSavedSet(verbsId)).toEqual({
+      wordListId: verbsId,
+      wordIds: [3, 1, 2],
+      timesMs: [80_000, 90_000],
+    });
+
+    await repository.saveSavedSet(profile.id, verbsId, [4, 5]);
+    expect(await repository.loadSavedSet(verbsId)).toEqual({
+      wordListId: verbsId,
+      wordIds: [4, 5],
+      timesMs: [],
+    });
+    expect(await repository.listSavedSets(profile.id)).toHaveLength(1);
+  });
+
   it('adds a new general list after the existing ones', async () => {
     const { profile, wordListRepository } = await setUp();
     const newListId = await wordListRepository.createList(profile.id, { name: 'Food' });

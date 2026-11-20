@@ -1,5 +1,9 @@
 import type { PausedPracticeState } from '../../domain/pausedPracticeSet';
-import { parsePausedState, serializePausedState } from '../../domain/pausedPracticeSet';
+import {
+  parsePausedState,
+  parseWordIds,
+  serializePausedState,
+} from '../../domain/pausedPracticeSet';
 import type { SessionTimes } from '../../domain/sessionTimer';
 import type { SqlDatabase } from '../sqlDatabase';
 
@@ -14,6 +18,13 @@ export interface PausedPracticeSet {
   /** The cards per set chosen when the set started. */
   setSize: number;
   state: PausedPracticeState;
+}
+
+export interface SavedPracticeSet {
+  wordListId: number;
+  wordIds: number[];
+  /** Times to get every word in the set, newest first. */
+  timesMs: number[];
 }
 
 export function createPracticeSessionRepository(database: SqlDatabase) {
@@ -75,7 +86,69 @@ export function createPracticeSessionRepository(database: SqlDatabase) {
     await database.run('DELETE FROM paused_practice_sets WHERE word_list_id = ?', [wordListId]);
   }
 
-  return { saveCompletedSession, savePausedSet, listPausedSets, loadPausedSet, deletePausedSet };
+  /** Replaces the list's saved set, clearing the old set's times. */
+  async function saveSavedSet(
+    profileId: number,
+    wordListId: number,
+    wordIds: readonly number[],
+  ): Promise<void> {
+    await database.transaction(async () => {
+      await database.run('DELETE FROM saved_practice_sets WHERE word_list_id = ?', [wordListId]);
+      await database.run(
+        `INSERT INTO saved_practice_sets (word_list_id, profile_id, word_ids, saved_at)
+         VALUES (?, ?, ?, ?)`,
+        [wordListId, profileId, JSON.stringify(wordIds), Date.now()],
+      );
+    });
+  }
+
+  async function savedSetTimes(wordListId: number): Promise<number[]> {
+    const rows = await database.getAll<{ deck_completed_ms: number }>(
+      `SELECT deck_completed_ms FROM saved_set_times WHERE word_list_id = ?
+       ORDER BY completed_at DESC, id DESC`,
+      [wordListId],
+    );
+    return rows.map((row) => row.deck_completed_ms);
+  }
+
+  async function loadSavedSet(wordListId: number): Promise<SavedPracticeSet | null> {
+    const row = await database.getFirst<{ word_ids: string }>(
+      'SELECT word_ids FROM saved_practice_sets WHERE word_list_id = ?',
+      [wordListId],
+    );
+    const wordIds = row ? parseWordIds(row.word_ids) : null;
+    if (!wordIds) return null;
+    return { wordListId, wordIds, timesMs: await savedSetTimes(wordListId) };
+  }
+
+  async function listSavedSets(profileId: number): Promise<SavedPracticeSet[]> {
+    const rows = await database.getAll<{ word_list_id: number }>(
+      'SELECT word_list_id FROM saved_practice_sets WHERE profile_id = ?',
+      [profileId],
+    );
+    const savedSets = await Promise.all(rows.map((row) => loadSavedSet(row.word_list_id)));
+    return savedSets.filter((savedSet): savedSet is SavedPracticeSet => savedSet !== null);
+  }
+
+  async function recordSavedSetTime(wordListId: number, deckCompletedMs: number): Promise<void> {
+    await database.run(
+      `INSERT INTO saved_set_times (word_list_id, deck_completed_ms, completed_at)
+       SELECT word_list_id, ?, ? FROM saved_practice_sets WHERE word_list_id = ?`,
+      [deckCompletedMs, Date.now(), wordListId],
+    );
+  }
+
+  return {
+    saveCompletedSession,
+    savePausedSet,
+    listPausedSets,
+    loadPausedSet,
+    deletePausedSet,
+    saveSavedSet,
+    loadSavedSet,
+    listSavedSets,
+    recordSavedSetTime,
+  };
 }
 
 export type PracticeSessionRepository = ReturnType<typeof createPracticeSessionRepository>;

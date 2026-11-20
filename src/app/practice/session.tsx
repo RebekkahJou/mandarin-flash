@@ -4,6 +4,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 import { DEFAULT_PRACTICE_SET_SIZE } from '../../domain/practiceSetBuilder';
 import type { ExampleSentence } from '../../services/dictionaryLookup';
+import { PracticeStart, isPracticeStart } from '../../services/practiceSetLoading';
 import { useAppServices } from '../../ui/AppServicesContext';
 import { SwipeAnswer } from '../../domain/practiceSwipe';
 import { CompactButton } from '../../ui/components/CompactButton';
@@ -15,7 +16,6 @@ import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SwipeableCard } from '../../ui/components/SwipeableCard';
 import { TimerDisplay } from '../../ui/components/TimerDisplay';
-import { RESUME_PARAM_VALUE } from '../../ui/hooks/usePausedPracticeSets';
 import { usePracticeSession } from '../../ui/hooks/usePracticeSession';
 import { colors, fontSizes, spacing } from '../../ui/theme';
 
@@ -31,11 +31,11 @@ const ANSWER_BUTTON_LABELS = {
 } as const;
 
 export default function PracticeSessionScreen() {
-  const params = useLocalSearchParams<{ listId: string; setSize: string; resume?: string }>();
+  const params = useLocalSearchParams<{ listId: string; setSize: string; start?: string }>();
   const wordListId = Number(params.listId);
   const setSize = Number(params.setSize) || DEFAULT_PRACTICE_SET_SIZE;
-  const isResuming = params.resume === RESUME_PARAM_VALUE;
-  const practice = usePracticeSession(wordListId, setSize, isResuming);
+  const start = isPracticeStart(params.start) ? params.start : PracticeStart.New;
+  const practice = usePracticeSession(wordListId, setSize, start);
   const { dictionaryLookup, languageBundle } = useAppServices();
   const { variantName, variantSymbol } = languageBundle.definition;
   const variantLabels = { name: variantName, symbol: variantSymbol };
@@ -60,10 +60,19 @@ export default function PracticeSessionScreen() {
     answerActions[answer]();
   };
 
+  const saveFromSummary = practice.isSavedSet ? undefined : () => void practice.saveSet();
+  const saveButton = practice.isSavedSet ? null : (
+    <CompactButton label="Save set" onPress={() => void practice.saveSet()} isOutlined />
+  );
+
   if (practice.summary) {
     return (
       <ScreenContainer>
-        <PracticeSummaryView summary={practice.summary} onDone={() => router.back()} />
+        <PracticeSummaryView
+          summary={practice.summary}
+          onDone={() => router.back()}
+          onSave={saveFromSummary}
+        />
       </ScreenContainer>
     );
   }
@@ -99,6 +108,7 @@ export default function PracticeSessionScreen() {
 
       <View style={styles.accessoryRow}>
         <CompactButton label="In a sentence" onPress={showSentences} isOutlined />
+        {saveButton}
         <CompactButton label="Pause" onPress={() => void pause()} isOutlined />
         <CompactButton label="End" onPress={practice.endSession} isOutlined />
       </View>
@@ -161,6 +171,7 @@ const styles = StyleSheet.create({
   },
   accessoryRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'center',
     gap: spacing.medium,
   },

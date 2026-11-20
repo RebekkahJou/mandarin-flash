@@ -3,8 +3,9 @@
 Status: approved 2026-11-05. **Phases 1–3 done** and merged. **Phase 4, 4b and 4c done** and
 merged into main. **Phase 5 (store-hosted packs) done for Android** and merged into main
 (2026-11-17; see "Phase 5 decisions" below). Its iOS half waits for the iOS port; the real Play
-download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Next: practice and word list
-improvements (Phase 4e), then Phase 6 (add-ons framework and games).**
+download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Phase 4e built** (2026-11-20, phone
+check pending; see "Practice and word list improvements"). **Next: Phase 6 (add-ons framework and
+games).**
 Update this file as work lands or decisions change.
 
 Phase 5 decisions (2026-11-16):
@@ -770,11 +771,19 @@ words later (added sets have no Preview button for now).
   asks "Discard the paused set?". The timer stops while paused. Resuming drops deleted words and
   still practices words that left the list since (New Words) with their own meanings. Ending
   the set deletes the paused row; leaving with Back keeps the last paused point.
+- Item 8 done (2026-11-20): Save set (practice screen) and "Save this set" (summary) keep the
+  set's word ids in `saved_practice_sets`, asking before replacing another set; replacing clears
+  its `saved_set_times`. The Practice tab shows "Practice saved set (20 words)" and "Times to get
+  every word, newest first: 3:12, 2:58" for the chosen list. A run of the saved set records its
+  deck-completed time (paused time left out) only when every word was gotten; saving from the
+  summary counts the run just finished. Saved sets play in a fresh order each time; pausing
+  remembers it's the saved set. Loading lives in `services/practiceSetLoading.ts`.
 - **Phone check still to do:** after adding Computers & phones under School, Daily errands shows it
   as Added; the 錢 card on the user's profile reads "one tenth of a tael 兩 (liǎng)"; New Words
   shows first on both tabs with up to 10 words, marking one Learned swaps in the next, and the
   size setting changes it; Pause returns to the Practice tab, Resume carries on with the same
-  card, progress and time, and the time doesn't count the pause.
+  card, progress and time, and the time doesn't count the pause; Save set, finish it, then the
+  Practice tab lists its time, and "Practice saved set" plays the same words.
 
 **Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
 deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)
