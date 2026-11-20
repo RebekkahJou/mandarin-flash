@@ -1,5 +1,5 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import type { FrequencyTier } from '../../domain/frequencyTier';
 import { FREQUENCY_TIERS_IN_ORDER } from '../../domain/frequencyTier';
@@ -8,6 +8,7 @@ import type { Choice } from '../../ui/components/ChoiceChips';
 import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { ListCheckboxes } from '../../ui/components/ListCheckboxes';
 import { PhoneticText } from '../../ui/components/PhoneticText';
+import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
 import { LEARNING_LEVEL_LABELS, learningLevelShareNote } from '../../services/learningLevelText';
@@ -23,7 +24,7 @@ const TIER_CHOICES: Choice<FrequencyTier>[] = FREQUENCY_TIERS_IN_ORDER.map((tier
 
 export default function EditWordScreen() {
   const { wordId } = useLocalSearchParams<{ wordId: string }>();
-  const { word, lists, memberListIds, setFrequencyTier, toggleList } = useWordEditor(
+  const { word, lists, memberListIds, setFrequencyTier, toggleList, deleteWord } = useWordEditor(
     Number(wordId),
   );
   if (!word) return <ScreenContainer>{null}</ScreenContainer>;
@@ -47,6 +48,10 @@ export default function EditWordScreen() {
 
       <SectionTitle title="Lists" />
       <ListCheckboxes lists={lists} selectedListIds={memberListIds} onToggle={toggleList} />
+
+      <View style={styles.buttonRow}>
+        <PrimaryButton label="Delete word" onPress={() => void deleteWord()} isOutlined />
+      </View>
     </ScreenContainer>
   );
 }
@@ -71,5 +76,8 @@ const styles = StyleSheet.create({
   hint: {
     fontSize: fontSizes.body,
     color: colors.textSecondary,
+  },
+  buttonRow: {
+    flexDirection: 'row',
   },
 });

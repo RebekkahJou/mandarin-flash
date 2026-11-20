@@ -154,6 +154,15 @@ export function createWordRepository(database: SqlDatabase) {
     return rows.map((row) => ({ wordId: row.id, headword: row.headword, reading: row.reading }));
   }
 
+  /** Deletes words from the profile; their list entries, practice history and character links go too. */
+  async function deleteWords(wordIds: readonly number[]): Promise<void> {
+    await database.transaction(async () => {
+      for (const wordId of wordIds) {
+        await database.run('DELETE FROM words WHERE id = ?', [wordId]);
+      }
+    });
+  }
+
   /** Moves everything attached to one word onto another, then deletes the first. */
   async function mergeWordInto(fromWordId: number, intoWordId: number): Promise<void> {
     // Lists that already hold the word it merges into keep a single entry.
@@ -308,6 +317,7 @@ export function createWordRepository(database: SqlDatabase) {
     listWordLevelsWithListIds,
     listWordReadings,
     changeWordReading,
+    deleteWords,
     countWords,
     setFrequencyTier,
     setFrequencyTierForList,

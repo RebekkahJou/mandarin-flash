@@ -737,6 +737,9 @@ occasional action, and the tab slot is better kept for Phase 6 games.
 "Add topic word sets" button sits under Add a word and Import CSV on Word lists and is gone from
 Settings (the topic modal's hint now says where words go); the sets page shows the one-or-two tip;
 with Both selected, the revealed card shows qián above ㄑㄧㄢˊ.
+Item 1 done 2026-11-20 and checked on the phone: Delete word on 個's screen asked "Delete 個?"
+and All words went from 109 to 108; Select mode ticked 的 and 嗎, showed "Delete 2 words", and
+deleting left 106 and ended Select mode.
 
 **Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
 deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)

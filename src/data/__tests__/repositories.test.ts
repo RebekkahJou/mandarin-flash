@@ -211,6 +211,42 @@ describe('user database', () => {
     expect(await wordRepository.getWord(word.id)).not.toBeNull();
   });
 
+  it('deletes words with their list entries and practice history, keeping other words', async () => {
+    const { database, profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const walk = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    const eat = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: '吃',
+      reading: 'chi1',
+      definitions: ['to eat'],
+    });
+    const run = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: '跑',
+      reading: 'pao3',
+      definitions: ['to run'],
+    });
+    for (const word of [walk, eat, run]) {
+      await wordListRepository.addWordToLists(word.id, [{ wordListId: listIdByName('Verbs') }]);
+    }
+    await createReviewEventRepository(database).recordReviewEvent({
+      profileId: profile.id,
+      wordId: walk.id,
+      answer: ReviewAnswer.Gotten,
+      answeredAtMs: 1,
+    });
+
+    await wordRepository.deleteWords([walk.id, eat.id]);
+
+    expect(await wordRepository.getWord(walk.id)).toBeNull();
+    expect(await wordRepository.getWord(eat.id)).toBeNull();
+    expect(await wordRepository.getWord(run.id)).not.toBeNull();
+    const verbs = await wordListRepository.getListWithEntries(listIdByName('Verbs'));
+    expect(verbs?.words.map((entry) => entry.word.id)).toEqual([run.id]);
+    const events = await database.getAll('SELECT id FROM review_events');
+    expect(events).toEqual([]);
+  });
+
   it('adds a new general list after the existing ones', async () => {
     const { profile, wordListRepository } = await setUp();
     const newListId = await wordListRepository.createList(profile.id, { name: 'Food' });

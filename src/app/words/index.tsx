@@ -6,12 +6,16 @@ import type { WordWithListIds } from '../../data/repositories/wordRepository';
 import { Checkboxes } from '../../ui/components/Checkboxes';
 import { CompactButton } from '../../ui/components/CompactButton';
 import { InfoModal } from '../../ui/components/InfoModal';
+import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { WordRow } from '../../ui/components/WordRow';
 import { useAllWords } from '../../ui/hooks/useAllWords';
 import { colors, fontSizes, radii, spacing } from '../../ui/theme';
 
 const wordKey = ({ word }: WordWithListIds) => String(word.id);
+
+const OPEN_WORD_HINT = "Change this word's lists and learning level";
+const SELECT_WORD_HINT = 'Selects this word to delete';
 
 export default function AllWordsScreen() {
   const {
@@ -22,15 +26,25 @@ export default function AllWordsScreen() {
     describeLists,
     showsLearningLevel,
     countText,
+    selection,
     options,
   } = useAllWords();
   const screenOptions = { title: 'All words' };
   const emptyMessage =
     totalWordCount === 0 ? 'No words yet.' : 'No words match your search or view options.';
+  const selectLabel = selection.isSelecting ? 'Cancel' : 'Select';
+  const deleteButton = selection.hasSelection ? (
+    <View style={styles.deleteRow}>
+      <PrimaryButton label={selection.deleteLabel} onPress={selection.deleteSelected} />
+    </View>
+  ) : null;
   const renderWord = ({ item }: ListRenderItemInfo<WordWithListIds>) => {
     const openWord = () =>
       router.push({ pathname: '/words/[wordId]', params: { wordId: String(item.word.id) } });
     const listNames = describeLists(item.listIds);
+    const onPress = selection.isSelecting ? () => selection.toggleWord(item.word.id) : openWord;
+    const pressHint = selection.isSelecting ? SELECT_WORD_HINT : OPEN_WORD_HINT;
+    const isSelected = selection.selectedWordIds?.has(item.word.id);
     return (
       <WordRow
         word={item.word}
@@ -38,8 +52,9 @@ export default function AllWordsScreen() {
         showsEveryMeaning
         detail={listNames}
         showsLearningLevel={showsLearningLevel}
-        onPress={openWord}
-        pressHint="Change this word's lists and learning level"
+        onPress={onPress}
+        pressHint={pressHint}
+        isSelected={isSelected}
       />
     );
   };
@@ -57,11 +72,14 @@ export default function AllWordsScreen() {
           autoCorrect={false}
           returnKeyType="search"
         />
+        <CompactButton label={selectLabel} onPress={selection.toggleSelecting} isOutlined />
         <CompactButton label="Options" onPress={options.open} isOutlined />
       </View>
       <Text style={styles.note}>{countText}</Text>
+      {deleteButton}
       <FlatList
         data={matchingWords}
+        extraData={selection.selectedWordIds}
         keyExtractor={wordKey}
         contentContainerStyle={styles.words}
         keyboardShouldPersistTaps="handled"
@@ -101,6 +119,9 @@ const styles = StyleSheet.create({
   words: {
     gap: spacing.small,
     paddingBottom: spacing.large,
+  },
+  deleteRow: {
+    flexDirection: 'row',
   },
   note: {
     fontSize: fontSizes.small,
