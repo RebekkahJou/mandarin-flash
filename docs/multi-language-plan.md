@@ -755,6 +755,9 @@ words later (added sets have no Preview button for now).
   profiles and 两 (liǎng) on Simplified ones, and "also pr. [pou1]" as "also pr. pōu". Applied
   when meanings are read from the pack and, once per pack version, to saved words and list
   meanings. 3 unusual pack meanings (with γ or ∼) stay as they are.
+- Item 5 done (2026-11-20): `Word.addedAtMs` comes from `words.created_at`; CSV export adds an
+  "added" column (ISO date and time, UTC); import reads it (any date JavaScript parses) and gives
+  rows without one 2000-01-01 (`UNKNOWN_ADDED_AT_MS`). Old 3-column files still import.
 - **Phone check still to do:** after adding Computers & phones under School, Daily errands shows it
   as Added; the 錢 card on the user's profile reads "one tenth of a tael 兩 (liǎng)".
 

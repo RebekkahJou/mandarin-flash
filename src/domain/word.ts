@@ -15,7 +15,12 @@ export interface Word {
   reading: string;
   definitions: string[];
   frequencyTier: FrequencyTier;
+  /** When the word was first added to the profile, in epoch milliseconds. */
+  addedAtMs: number;
 }
+
+/** The time given to imported words whose file has no time added, so they count as old. */
+export const UNKNOWN_ADDED_AT_MS = Date.UTC(2000, 0, 1);
 
 /** A meaning candidate from the dictionary, with the parts of speech it was tagged with. */
 export interface DefinitionCandidate {

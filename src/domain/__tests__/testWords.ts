@@ -9,6 +9,7 @@ export function makeWord(id: number, overrides: Partial<Word> = {}): Word {
     reading: 'zi4',
     definitions: [`meaning ${id}`],
     frequencyTier: FrequencyTier.HighIncidence,
+    addedAtMs: 0,
     ...overrides,
   };
 }

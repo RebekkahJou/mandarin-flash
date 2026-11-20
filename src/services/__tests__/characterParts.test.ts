@@ -141,7 +141,14 @@ describe('character part text', () => {
   });
 
   it('lists characters already in the profile', () => {
-    const shop = { id: 1, profileId: 1, headword: '店', reading: 'dian4', definitions: [] };
+    const shop = {
+      id: 1,
+      profileId: 1,
+      headword: '店',
+      reading: 'dian4',
+      definitions: [],
+      addedAtMs: 0,
+    };
     const existing = {
       character: '店',
       position: 2,

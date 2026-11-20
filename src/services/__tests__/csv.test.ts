@@ -11,6 +11,7 @@ import {
   planCsvImport,
 } from '../csvImport';
 import type { DictionaryEntry } from '../dictionaryLookup';
+import { UNKNOWN_ADDED_AT_MS } from '../../domain/word';
 import { mandarinTraditionalBundle as mandarin } from '../languages/mandarinTraditionalBundle';
 
 const RELIABLE = [PartOfSpeech.Noun, PartOfSpeech.Verb, PartOfSpeech.Adjective];
@@ -72,6 +73,25 @@ describe('parseWordCsv', () => {
   });
 });
 
+describe('time added', () => {
+  it('reads dates and dates with times, and ignores empty or unreadable cells', () => {
+    const csv = 'character,added\n我,2026-11-20\n你,2026-11-20T08:15:00Z\n他,\n她,soon';
+    const times = parseWordCsv(csv, mandarin).rows.map((row) => row.addedAtMs);
+    expect(times).toEqual([
+      Date.UTC(2026, 10, 20),
+      Date.UTC(2026, 10, 20, 8, 15),
+      undefined,
+      undefined,
+    ]);
+  });
+
+  it('gives imported words without a time added an old time', async () => {
+    const parsed = parseWordCsv('character,meaning,added\n軟體,software,\n', mandarin);
+    const plan = await planCsvImport(parsed, generalList, new Set(), lookUp, RELIABLE);
+    expect(plan.wordsToAdd[0].addedAtMs).toBe(UNKNOWN_ADDED_AT_MS);
+  });
+});
+
 describe('planCsvImport', () => {
   it('converts to Traditional, fills missing meanings and skips duplicates', async () => {
     const parsed = parseWordCsv('character\n软件\n學生\n軟體', mandarin);
@@ -82,6 +102,7 @@ describe('planCsvImport', () => {
         variant: '软体',
         reading: 'ruan3 ti3',
         definitions: ['(Tw) software'],
+        addedAtMs: UNKNOWN_ADDED_AT_MS,
       },
     ]);
     expect(plan.skippedDuplicates).toEqual(['學生', '軟體']);
@@ -161,13 +182,22 @@ describe('buildWordListCsv', () => {
       [{ entryId: 1, word, definitionsOverride: ['hello', 'hi'] }],
       mandarin,
     );
-    expect(csv.split('\r\n')).toEqual(['character,meaning,pinyin', '你好,hello / hi,nǐ hǎo']);
+    expect(csv.split('\r\n')).toEqual([
+      'character,meaning,pinyin,added',
+      '你好,hello / hi,nǐ hǎo,1970-01-01T00:00:00.000Z',
+    ]);
   });
 
-  it('round-trips through import, including escaped formula cells', () => {
-    const word = makeWord(1, { headword: '加', reading: 'jia1', definitions: ['+1'] });
+  it('round-trips through import, including escaped formula cells and the time added', () => {
+    const addedAtMs = Date.UTC(2026, 10, 20, 8, 15);
+    const word = makeWord(1, { headword: '加', reading: 'jia1', definitions: ['+1'], addedAtMs });
     const parsed = parseWordCsv(buildWordListCsv([{ entryId: 1, word }], mandarin), mandarin);
-    expect(parsed.rows[0]).toMatchObject({ headword: '加', meanings: ['+1'], reading: 'jia1' });
+    expect(parsed.rows[0]).toMatchObject({
+      headword: '加',
+      meanings: ['+1'],
+      reading: 'jia1',
+      addedAtMs,
+    });
   });
 });
 

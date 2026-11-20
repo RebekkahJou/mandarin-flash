@@ -19,6 +19,8 @@ export interface NewWord {
   variant?: string;
   reading: string;
   definitions: readonly string[];
+  /** When the word was added; now unless given, e.g. by a CSV file's time added. */
+  addedAtMs?: number;
 }
 
 /** How many of a profile's words from one starter set sit in one tier. */
@@ -64,6 +66,7 @@ export function createWordRepository(database: SqlDatabase) {
   async function findOrCreateWord(newWord: NewWord): Promise<Word> {
     const existing = await findWord(newWord.profileId, newWord.headword, newWord.reading);
     if (existing) return existing;
+    const addedAtMs = newWord.addedAtMs ?? Date.now();
     const result = await database.run(
       `INSERT INTO words (profile_id, headword, variant, reading, definitions, frequency_tier, created_at)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -74,7 +77,7 @@ export function createWordRepository(database: SqlDatabase) {
         newWord.reading,
         serializeDefinitions(newWord.definitions),
         NEW_WORD_TIER,
-        Date.now(),
+        addedAtMs,
       ],
     );
     return {
@@ -85,6 +88,7 @@ export function createWordRepository(database: SqlDatabase) {
       reading: newWord.reading,
       definitions: [...newWord.definitions],
       frequencyTier: NEW_WORD_TIER,
+      addedAtMs,
     };
   }
 

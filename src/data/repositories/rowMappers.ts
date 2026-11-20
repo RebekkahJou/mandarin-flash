@@ -16,6 +16,7 @@ export interface WordRow {
   reading: string;
   definitions: string;
   frequency_tier: string;
+  created_at: number;
 }
 
 export interface WordListRow {
@@ -32,7 +33,8 @@ export type WordListEntryRow = WordRow & {
 };
 
 export const WORD_COLUMNS =
-  'words.id, words.profile_id, words.headword, words.variant, words.reading, words.definitions, words.frequency_tier';
+  'words.id, words.profile_id, words.headword, words.variant, words.reading, words.definitions, ' +
+  'words.frequency_tier, words.created_at';
 
 export function serializeDefinitions(definitions: readonly string[]): string {
   return JSON.stringify(definitions);
@@ -57,6 +59,7 @@ export function toWord(row: WordRow): Word {
     reading: row.reading,
     definitions: parseDefinitions(row.definitions),
     frequencyTier: toFrequencyTier(row.frequency_tier),
+    addedAtMs: row.created_at,
   };
 }
 

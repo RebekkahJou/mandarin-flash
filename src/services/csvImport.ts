@@ -1,9 +1,10 @@
 import Papa from 'papaparse';
 
 import type { PartOfSpeech } from '../domain/partOfSpeech';
+import { UNKNOWN_ADDED_AT_MS } from '../domain/word';
 import type { WordList } from '../domain/wordList';
 import type { CsvColumn, CsvHeaderNames } from './csvFormat';
-import { CSV_COLUMNS, acceptedHeaderNames, splitMeanings } from './csvFormat';
+import { CSV_COLUMNS, acceptedHeaderNames, parseAddedTime, splitMeanings } from './csvFormat';
 import type { DictionaryEntry } from './dictionaryLookup';
 import { findReading, partsOfSpeechOf } from './dictionaryLookup';
 import type { LanguageAdapter } from './languages/languageAdapter';
@@ -20,6 +21,8 @@ export interface CsvWordRow {
   headword: string;
   meanings: string[];
   reading?: string;
+  /** From the file's time added column, when it has a readable one. */
+  addedAtMs?: number;
 }
 
 export interface ParsedCsv {
@@ -88,6 +91,7 @@ export function parseWordCsv(
       headword: languageBundle.normalizeHeadword(headwordCell),
       meanings: splitMeanings(cellAt(row, positions.meaning)),
       reading: readingCell ? languageBundle.normalizeReading(readingCell) : undefined,
+      addedAtMs: parseAddedTime(cellAt(row, positions.added)),
     });
   });
   return { rows, invalidRowNumbers };
@@ -98,6 +102,8 @@ export interface ImportWordDraft {
   variant?: string;
   reading: string;
   definitions: string[];
+  /** The file's time added, or an old time so imported words don't count as new. */
+  addedAtMs: number;
 }
 
 export interface CsvImportPlan {
@@ -144,6 +150,7 @@ async function draftWord(
       variant: entry?.variant,
       reading: row.reading ?? entry?.reading ?? '',
       definitions,
+      addedAtMs: row.addedAtMs ?? UNKNOWN_ADDED_AT_MS,
     },
     fitsList:
       targetList.validateWord(partsOfSpeechOf(entry ? [entry] : []), reliablePartsOfSpeech) ===

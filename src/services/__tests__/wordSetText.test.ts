@@ -21,6 +21,7 @@ function additionOf(addedCount: number, alreadyHadCount: number): WordSetAdditio
     reading: 'yao4',
     definitions: ['medicine'],
     frequencyTier: FrequencyTier.HighIncidence,
+    addedAtMs: 0,
   };
   return {
     addedWords: Array.from({ length: addedCount }, () => word),

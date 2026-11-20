@@ -68,6 +68,7 @@ describe('describeStarterSetAddition', () => {
       reading: 'wo3',
       definitions: ['I'],
       frequencyTier: FrequencyTier.HighIncidence,
+      addedAtMs: 0,
     };
     expect(
       describeStarterSetAddition({ addedWords: [word], addedNouns: [], alreadyHadCount: 0 }),
