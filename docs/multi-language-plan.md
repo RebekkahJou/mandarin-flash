@@ -3,8 +3,8 @@
 Status: approved 2026-11-05. **Phases 1–3 done** and merged. **Phase 4, 4b and 4c done** and
 merged into main. **Phase 5 (store-hosted packs) done for Android** and merged into main
 (2026-11-17; see "Phase 5 decisions" below). Its iOS half waits for the iOS port; the real Play
-download and the Play Console declaration wait for the account (docs/RELEASE.md). **Next: more
-topic word sets (Phase 4d: health additions and new topics), then Phase 6 (add-ons framework and games).**
+download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Next: practice and word list
+improvements (Phase 4e), then Phase 6 (add-ons framework and games).**
 Update this file as work lands or decisions change.
 
 Phase 5 decisions (2026-11-16):
@@ -602,6 +602,37 @@ words the profile already had in Errand words. General Vocabulary held 93, the w
 63 + 18 + 12, Travel words 65 and Errand words 36. Adding 2 sets took a few seconds before the
 characters question appeared.
 
+**School and Work data (step 5, drafted 2026-11-19, approved 2026-11-20):** 9 sets and
+280 entries. School (from the student's side): Classroom, Subjects, Homework & exams, School life.
+Work: Office, Meetings, Email & phone phrases, Job hunting & interviews, Leave & pay. For teachers
+moved to the end of both topics so each opens with its general sets. All characters are in the
+font subset. 應聘 (Simplified only) keeps the mainland pìn; proper nouns stay lowercase. Not built
+into the pack yet.
+
+**Tech sets (requested 2026-11-19, same batch):** tech workers are a large group of learners.
+Software engineering (Work, 57 entries: 前端, 後端, 程式碼, 伺服器, 部署, 上線, 除錯) and Computers
+& phones (Daily errands, shared into School, 62 entries: apps, browser, social media, online games,
+logging in, 當機). Taiwan and mainland tech words differ a lot (軟體/软件, 程式/程序, 伺服器/服务器), so
+most nouns come in pairs. 下載 keeps the Taiwan xià zài (the dictionary has zǎi).
+
+**Remote work and Gold Card sets (requested 2026-11-19, same batch):** Remote work (Work, 34
+entries: 在家工作, 混合辦公, 數位遊牧, 接案, 時差, 分享螢幕, 斷線了) and Gold Card & work visas (Work,
+shared into Daily errands next to Government offices, 29 entries: 就業金卡, 金卡持有人, 攬才專法, 國發會,
+效期, 依親, 不需要雇主, 可以自由換工作). Gold Card entries are Taiwan-only except general visa words.
+
+**Step 5 approved and built (2026-11-20):** the user approved all 13 sets. Pack version 8,
+built-in pack copy version 13; `npm run check` passes (512 tests).
+
+Step 5 phone test (2026-11-20, Pixel 8 Pro, temporary profile, deleted afterwards): passed. The
+topics read School (6 sets), Work (9 sets) and Daily errands (9 sets); For teachers is last in
+School and Work; Computers & phones shows in School and Daily errands (44 words on a Traditional
+profile, since Simplified-only entries aren't counted); Gold Card & work visas shows in Work and
+in Daily errands after Government offices. Classroom plus School's Computers & phones added 74
+words; Software engineering added 39 with no repeats (the two share no words); Office added 26
+and put 電腦, already added from Computers & phones, into Work words. Added sets showed as
+"2 added" and "1 added" on the topic rows. A shared set added from one topic isn't marked added
+under the other (separate set ids); adding it again only adds repeats to that topic's list.
+
 **Size:** the health batch added 32 KB to the pack database (349 entries), so all topics
 (roughly 1,500–2,000 entries) should add about 150 KB, less after compression. The Phase 5 release
 check measured the download at 30.7–30.8 MB, already at the 30 MB budget. Measure the release
@@ -614,6 +645,97 @@ Health additions; (3) Parenting and Caregiving (the first audience); (4) Travel,
 raises `MANDARIN_PACK_VERSION` (the built-in pack is version 7 now) and the built-in pack copy
 version. The test store pack (`storePackCatalog.json`, version 3) is older than the built-in pack
 and must be rebuilt with a higher version before Play Asset Delivery is tested again.
+
+## Practice and word list improvements (Phase 4e)
+
+Requested 2026-11-20 after the user tested the app in general. Comes after Phase 4d and before
+Phase 6 (games), since games will use the time added, the New Words list and saved sets.
+
+**1. Delete words from All words.** Today a word can only be taken out of one list at a time
+(✕ on the list screen); it stays in All words.
+- A word's screen gets **Delete word**: "Delete 黃疸? It's removed from every list and its practice
+  history is deleted." Deleting cascades to list entries, `review_events` and `word_parts`
+  (the schema already does this).
+- All words gets a **Select** mode (checkbox per row, "Delete 5 words") for clearing several at
+  once, e.g. after adding a set.
+- A deleted word that belongs to an added topic set doesn't come back by itself. Adding the set's
+  skipped words later (item 2) can bring it back if the user wants.
+
+**2. Preview a topic set and choose its words.** In "Add topic word sets", each set row gets a
+**Preview** button that opens a second modal listing the set's words (headword, reading, meaning),
+all checked. The user unchecks words they don't want (newborn jaundice in Children's health) and
+taps Done.
+- The first modal keeps its state while the preview is open: which sets are checked, and the
+  words unchecked in each set. The user can preview several sets before adding.
+- A set row shows "18 of 20 words" once words are unchecked. Unchecking every word unchecks the
+  set; checking a set's box from the first modal after a preview keeps the preview's choices.
+- Only the checked words are added. The set still counts as added (`added_word_sets`).
+- Assumption: an added set can still be previewed, with its words already in the profile shown as
+  added and the skipped ones unchecked, so the user can add skipped words later.
+- The preview reads the set's entries from the pack, so it doesn't need a schema change.
+
+**3. Suggest at most 2 sets at a time.** A short note at the top of "Add topic word sets" (and the
+starter set card): "Tip: add one or two sets at a time. Smaller batches are easier to learn." The
+user can still check more; nothing blocks it.
+
+**4. Pinyin over zhuyin on practice cards.** With the display set to Pinyin + Zhuyin, the flashcard
+shows pinyin on one line and zhuyin on the line below. `PhoneticText` gets a stacked layout used by
+the flashcard; word rows elsewhere keep the single line (assumption, to keep lists compact).
+
+**5. Time added on every word.** Already stored: `words.created_at` is set when a word is added
+(by hand, CSV import, starter set or topic set), and every existing word has one. What's new:
+- CSV export gains an optional **added** column (ISO date and time); import reads it when present.
+- An imported word without a time gets an old fixed time (`UNKNOWN_ADDED_AT`, 2000-01-01), so it
+  never pushes newer words out of New Words.
+- Words added together (one set, one import) share the same time, which item 6 relies on.
+
+**6. New Words default list.** A new default list for every profile holding the most recently
+added **High practice** words that have never been marked Learned. It gives a small focus set
+instead of a whole 50-word batch.
+- Size: a setting "New Words list size", chips 10 / 20 / 30 / 40 (default 10), saved per profile.
+- A computed list (new list kind `NewWords`): its words are worked out each time it opens or a
+  practice set starts, never stored, so there's nothing to keep in sync.
+- Rule: High practice words with no `Learned` review event, newest `created_at` first. Marking a
+  word Learned for the first time moves it out (Learned already moves it to Reinforcement) and the
+  next newest High practice word moves in. Newly added words push the oldest ones out.
+- Ties (words added at the same time): ordered by a hash of the word id, so the pick looks random
+  but stays the same each time the list opens.
+- Fewer qualifying words than the size: the list is just smaller (9 words if only 9 qualify).
+- Words can't be added to or removed from it by hand (no ✕, not offered in list pickers);
+  deleting a word or changing its learning level changes it.
+- Existing profiles get it in a migration, placed first in their lists.
+
+**7. Pause a practice set.** A **Pause** button next to End saves the set and returns to the
+Practice tab.
+- One paused set per list. Choosing that list on the Practice tab shows "Resume paused set (12 of
+  20 left)" above Start practice.
+- Saved in the encrypted database (new `paused_practice_sets` table: profile, list, the card
+  queue, completed, learned and missed counts, elapsed time), so it survives the app closing.
+- The timer stops while paused and continues on resume. `SessionTimer` gains pause and resume, and
+  the deck-completed time excludes paused time.
+- Starting a new set on a list that has a paused one asks: "Discard the paused set?"
+- Words deleted while a set is paused are dropped from it on resume.
+
+**8. Save one practice set per list.** **Save set** (on the practice screen and the summary) keeps
+the set's words so the user can practice the same set again.
+- One saved set per list (new `saved_practice_sets` table: profile, list, word ids, saved time).
+  Choosing that list on the Practice tab offers "Practice saved set" next to Start practice.
+- Each run of the saved set that reaches every card gotten records its **time to all words
+  gotten** (the existing deck-completed time, not the time until End) in `saved_set_times`. The
+  Practice tab shows the list of times, newest first, for self-monitoring.
+- Ending a run before every word is gotten records no time.
+- Saving a new set replaces the old one and clears its times (with a confirmation).
+- A saved set keeps its words even after they're marked Learned; deleted words are dropped.
+- Pause works for saved sets too; the paused time isn't counted.
+
+**9. Where topic word sets live.** Recommended: a **Word sets** button at the top of the Word
+lists tab (next to the starter set card), opening the "Add topic word sets" modal, and remove the
+section from Settings. A fourth tab would fit on Android (3–5 is normal), but adding sets is an
+occasional action, and the tab slot is better kept for Phase 6 games.
+
+**Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
+deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)
+saved sets, which reuses the paused-set storage.
 
 ## Splitting multi-character words
 
@@ -768,6 +890,10 @@ Each phase ships on its own with tests and `npm run check` passing.
 4d. **More topic word sets.** Health additions and new topics (Parenting, Caregiving, Travel, Food,
    Errands, School, Work) behind one "Add topic word sets" entry in Settings. See "More topic word
    sets (Phase 4d)".
+4e. **Practice and word list improvements.** Deleting words, previewing topic sets and choosing
+   their words, the 2-set tip, pinyin over zhuyin, time added in CSV, the New Words list, pausing
+   and saving practice sets, and a Word sets button on Word lists. See "Practice and word list
+   improvements (Phase 4e)".
 5. **Store-hosted packs (route A):** Play Asset Delivery, then Apple-hosted packs with the iOS
    port.
 6. **Add-ons framework and games.**

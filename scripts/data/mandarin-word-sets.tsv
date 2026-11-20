@@ -29,8 +29,6 @@ memory-aging	caregiving	Memory & aging
 care-services	caregiving	Care services & paperwork	
 care-staff	caregiving	Talking with care staff	
 comfort-feelings	caregiving	Comfort & feelings	
-teaching	work	For teachers	
-school-teaching	school	For teachers	teaching
 airport	travel	Airport	
 trains	travel	MRT & trains	
 bus-taxi-scooter	travel	Bus, taxi & scooter	
@@ -47,6 +45,23 @@ convenience-store	errands	Convenience store
 bank	errands	Bank & ATM	
 post-deliveries	errands	Post office & deliveries	
 phone-sim	errands	Phone & SIM	
+computers-phones	errands	Computers & phones	
 renting-repairs	errands	Renting & home repairs	
 bills-utilities	errands	Bills & utilities	
 government-offices	errands	Government offices	
+classroom	school	Classroom	
+subjects	school	Subjects	
+homework-exams	school	Homework & exams	
+school-life	school	School life	
+school-computers	school	Computers & phones	computers-phones
+office	work	Office	
+meetings	work	Meetings	
+email-phone	work	Email & phone phrases	
+job-hunting	work	Job hunting & interviews	
+leave-pay	work	Leave & pay	
+software-engineering	work	Software engineering	
+remote-work	work	Remote work	
+gold-card	work	Gold Card & work visas	
+errands-gold-card	errands	Gold Card & work visas	gold-card
+teaching	work	For teachers	
+school-teaching	school	For teachers	teaching

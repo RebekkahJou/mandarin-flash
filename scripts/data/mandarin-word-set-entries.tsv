@@ -1632,3 +1632,465 @@ government-offices	窗口	chuang1 kou3	noun	service window
 government-offices	承辦人	cheng2 ban4 ren2	noun	official handling the case		
 government-offices	需要帶什麼	xu1 yao4 dai4 shen2 me5	phrase	what do I need to bring?		
 government-offices	資料不齊	zi1 liao4 bu4 qi2	phrase	the documents are incomplete		
+classroom	教室	jiao4 shi4	noun	classroom		
+classroom	黑板	hei1 ban3	noun	blackboard		
+classroom	白板	bai2 ban3	noun	whiteboard		
+classroom	課桌	ke4 zhuo1	noun	school desk		
+classroom	椅子	yi3 zi5	noun	chair		
+classroom	座位	zuo4 wei4	noun	seat		
+classroom	鉛筆	qian1 bi3	noun	pencil		
+classroom	原子筆	yuan2 zi3 bi3	noun	ballpoint pen	zh-Hant	
+classroom	圓珠筆	yuan2 zhu1 bi3	noun	ballpoint pen	zh-Hans	
+classroom	橡皮擦	xiang4 pi2 ca1	noun	eraser	zh-Hant	
+classroom	橡皮	xiang4 pi2	noun	eraser	zh-Hans	
+classroom	尺	chi3	noun	ruler		
+classroom	剪刀	jian3 dao1	noun	scissors		
+classroom	膠水	jiao1 shui3	noun	glue		
+classroom	筆記本	bi3 ji4 ben3	noun	notebook		
+classroom	鉛筆盒	qian1 bi3 he2	noun	pencil case	zh-Hant	
+classroom	文具盒	wen2 ju4 he2	noun	pencil case	zh-Hans	review: mainland term
+classroom	課本	ke4 ben3	noun	textbook		
+classroom	班長	ban1 zhang3	noun	class leader		
+classroom	值日生	zhi2 ri4 sheng1	noun	student on duty (for the day)		
+classroom	上課	shang4 ke4	verb	to start class; to attend class		
+classroom	下課	xia4 ke4	verb	to finish class; class break		
+classroom	遲到	chi2 dao4	verb	to be late		
+classroom	舉手	ju3 shou3	verb	to raise your hand		
+classroom	回答	hui2 da2	verb	to answer		
+classroom	問問題	wen4 wen4 ti2	verb	to ask a question		
+classroom	起立	qi3 li4	phrase	stand up (start of the class greeting)		
+classroom	敬禮	jing4 li3	phrase	bow (class greeting)		
+classroom	老師好	lao3 shi1 hao3	phrase	hello, teacher (class greeting)		
+classroom	我不懂	wo3 bu4 dong3	phrase	I don't understand		
+classroom	可以再說一次嗎	ke3 yi3 zai4 shuo1 yi1 ci4 ma5	phrase	could you say that again?		
+classroom	我可以去廁所嗎	wo3 ke3 yi3 qu4 ce4 suo3 ma5	phrase	may I go to the restroom?		
+classroom	借我	jie4 wo3	phrase	lend me		
+subjects	科目	ke1 mu4	noun	school subject		
+subjects	國語	guo2 yu3	noun	Mandarin (the school subject)	zh-Hant	
+subjects	語文	yu3 wen2	noun	Chinese (the school subject)	zh-Hans	
+subjects	英文	ying1 wen2	noun	English		
+subjects	數學	shu4 xue2	noun	math		
+subjects	自然	zi4 ran2	noun	science (elementary school)	zh-Hant	
+subjects	科學	ke1 xue2	noun	science		
+subjects	社會	she4 hui4	noun	social studies	zh-Hant	
+subjects	歷史	li4 shi3	noun	history		
+subjects	地理	di4 li3	noun	geography		
+subjects	物理	wu4 li3	noun	physics		
+subjects	化學	hua4 xue2	noun	chemistry		
+subjects	生物	sheng1 wu4	noun	biology		
+subjects	體育	ti3 yu4	noun	PE (physical education)		
+subjects	音樂	yin1 yue4	noun	music		
+subjects	美術	mei3 shu4	noun	art		
+subjects	健康教育	jian4 kang1 jiao4 yu4	noun	health education	zh-Hant	
+subjects	電腦課	dian4 nao3 ke4	noun	computer class		
+subjects	本土語	ben3 tu3 yu3	noun	local language class (Taiwanese, Hakka or Indigenous)	zh-Hant	
+subjects	台語	tai2 yu3	noun	Taiwanese (Hokkien)	zh-Hant	
+subjects	客語	ke4 yu3	noun	Hakka	zh-Hant	
+subjects	加法	jia1 fa3	noun	addition		
+subjects	減法	jian3 fa3	noun	subtraction		
+subjects	乘法	cheng2 fa3	noun	multiplication		
+subjects	除法	chu2 fa3	noun	division		
+subjects	九九乘法表	jiu3 jiu3 cheng2 fa3 biao3	noun	times tables		
+subjects	注音符號	zhu4 yin1 fu2 hao4	noun	Zhuyin symbols	zh-Hant	
+subjects	拼音	pin1 yin1	noun	pinyin		
+subjects	作文	zuo4 wen2	noun	essay; composition		
+subjects	書法	shu1 fa3	noun	calligraphy		
+subjects	實驗	shi2 yan4	noun	experiment		
+subjects	我最喜歡的科目	wo3 zui4 xi3 huan1 de5 ke1 mu4	phrase	my favorite subject		
+homework-exams	功課	gong1 ke4	noun	homework		
+homework-exams	作業	zuo4 ye4	noun	assignment; homework		
+homework-exams	寫作業	xie3 zuo4 ye4	verb	to do homework		
+homework-exams	交作業	jiao1 zuo4 ye4	verb	to hand in homework		
+homework-exams	忘記帶	wang4 ji4 dai4	phrase	forgot to bring (it)		
+homework-exams	我還沒寫完	wo3 hai2 mei2 xie3 wan2	phrase	I haven't finished yet		
+homework-exams	複習	fu4 xi2	verb	to review (lessons)		
+homework-exams	預習	yu4 xi2	verb	to prepare for a lesson		
+homework-exams	背	bei4	verb	to memorize		
+homework-exams	考試	kao3 shi4	noun	exam; test		
+homework-exams	小考	xiao3 kao3	noun	quiz		
+homework-exams	期中考	qi2 zhong1 kao3	noun	midterm exam		
+homework-exams	期末考	qi2 mo4 kao3	noun	final exam		
+homework-exams	考卷	kao3 juan4	noun	test paper		
+homework-exams	題目	ti2 mu4	noun	question (on a test)		
+homework-exams	答案	da2 an4	noun	answer		
+homework-exams	選擇題	xuan3 ze2 ti2	noun	multiple-choice question		
+homework-exams	填空	tian2 kong4	noun	fill in the blank		
+homework-exams	分數	fen1 shu4	noun	score; grade		
+homework-exams	一百分	yi1 bai3 fen1	phrase	full marks (100)		
+homework-exams	及格	ji2 ge2	verb	to pass		
+homework-exams	不及格	bu4 ji2 ge2	verb	to fail		
+homework-exams	成績單	cheng2 ji1 dan1	noun	report card		
+homework-exams	訂正	ding4 zheng4	verb	to correct (mistakes)		
+homework-exams	錯字	cuo4 zi4	noun	wrongly written character		
+homework-exams	考得怎麼樣	kao3 de5 zen3 me5 yang4	phrase	how did the test go?		
+homework-exams	考得很好	kao3 de5 hen3 hao3	phrase	did well on the test		
+homework-exams	會考	hui4 kao3	noun	junior high exit exam	zh-Hant	
+homework-exams	學測	xue2 ce4	noun	college entrance exam	zh-Hant	
+homework-exams	高考	gao1 kao3	noun	college entrance exam	zh-Hans	
+school-life	學校	xue2 xiao4	noun	school		
+school-life	國中	guo2 zhong1	noun	junior high school	zh-Hant	
+school-life	初中	chu1 zhong1	noun	junior high school	zh-Hans	
+school-life	高中	gao1 zhong1	noun	high school		
+school-life	大學	da4 xue2	noun	university		
+school-life	同學	tong2 xue2	noun	classmate		
+school-life	好朋友	hao3 peng2 you3	noun	good friend		
+school-life	新同學	xin1 tong2 xue2	noun	new classmate		
+school-life	下課時間	xia4 ke4 shi2 jian1	noun	recess		
+school-life	午休	wu3 xiu1	noun	lunchtime rest		
+school-life	營養午餐	ying2 yang3 wu3 can1	noun	school lunch	zh-Hant	
+school-life	福利社	fu2 li4 she4	noun	school store	zh-Hant	
+school-life	小賣部	xiao3 mai4 bu4	noun	school store	zh-Hans	
+school-life	操場	cao1 chang3	noun	sports field		
+school-life	體育館	ti3 yu4 guan3	noun	gym		
+school-life	圖書館	tu2 shu1 guan3	noun	library		
+school-life	保健室	bao3 jian4 shi4	noun	school nurse's office	zh-Hant	
+school-life	醫務室	yi1 wu4 shi4	noun	school nurse's office	zh-Hans	
+school-life	社團	she4 tuan2	noun	club		
+school-life	參加社團	can1 jia1 she4 tuan2	verb	to join a club		
+school-life	補習班	bu3 xi2 ban1	noun	cram school; tutoring center		
+school-life	補習	bu3 xi2	verb	to go to cram school		
+school-life	打掃時間	da3 sao3 shi2 jian1	noun	cleaning time	zh-Hant	
+school-life	朝會	zhao1 hui4	noun	morning assembly	zh-Hant	
+school-life	升旗	sheng1 qi2	verb	to raise the flag (morning assembly)	zh-Hant	
+school-life	放學	fang4 xue2	verb	to finish school for the day		
+school-life	畢業旅行	bi4 ye4 lu:3 xing2	noun	graduation trip	zh-Hant	
+school-life	畢業	bi4 ye4	verb	to graduate		
+school-life	轉學	zhuan3 xue2	verb	to change schools		
+school-life	一起玩	yi1 qi3 wan2	phrase	let's play together		
+school-life	你叫什麼名字	ni3 jiao4 shen2 me5 ming2 zi4	phrase	what's your name?		
+school-life	我是新來的	wo3 shi4 xin1 lai2 de5	phrase	I'm new here		
+office	公司	gong1 si1	noun	company		
+office	辦公室	ban4 gong1 shi4	noun	office		
+office	上班	shang4 ban1	verb	to go to work		
+office	下班	xia4 ban1	verb	to finish work		
+office	加班	jia1 ban1	verb	to work overtime		
+office	打卡	da3 ka3	verb	to clock in or out		
+office	同事	tong2 shi4	noun	coworker		
+office	主管	zhu3 guan3	noun	supervisor		
+office	老闆	lao3 ban3	noun	boss		
+office	經理	jing1 li3	noun	manager		
+office	部門	bu4 men2	noun	department		
+office	新人	xin1 ren2	noun	new employee		
+office	名片	ming2 pian4	noun	business card		
+office	電腦	dian4 nao3	noun	computer		
+office	印表機	yin4 biao3 ji1	noun	printer	zh-Hant	
+office	打印機	da3 yin4 ji1	noun	printer	zh-Hans	
+office	影印機	ying3 yin4 ji1	noun	photocopier	zh-Hant	
+office	複印機	fu4 yin4 ji1	noun	photocopier	zh-Hans	
+office	文件	wen2 jian4	noun	document		
+office	檔案	dang4 an4	noun	file	zh-Hant	
+office	資料夾	zi1 liao4 jia1	noun	folder	zh-Hant	
+office	文件夾	wen2 jian4 jia1	noun	folder	zh-Hans	
+office	報告	bao4 gao4	noun	report		
+office	專案	zhuan1 an4	noun	project	zh-Hant	
+office	項目	xiang4 mu4	noun	project	zh-Hans	
+office	截止日期	jie2 zhi3 ri4 qi2	noun	deadline		
+office	茶水間	cha2 shui3 jian1	noun	office pantry		
+office	忙	mang2	adjective	busy		
+office	請幫我看一下	qing3 bang1 wo3 kan4 yi1 xia4	phrase	could you take a look for me?		
+office	我先走了	wo3 xian1 zou3 le5	phrase	I'm heading out now		
+office	辛苦了	xin1 ku3 le5	phrase	thanks for your hard work		
+meetings	開會	kai1 hui4	verb	to have a meeting		
+meetings	會議	hui4 yi4	noun	meeting		
+meetings	會議室	hui4 yi4 shi4	noun	meeting room		
+meetings	視訊會議	shi4 xun4 hui4 yi4	noun	video meeting	zh-Hant	
+meetings	視頻會議	shi4 pin2 hui4 yi4	noun	video meeting	zh-Hans	
+meetings	議程	yi4 cheng2	noun	agenda		
+meetings	會議紀錄	hui4 yi4 ji4 lu4	noun	meeting minutes	zh-Hant	
+meetings	會議記錄	hui4 yi4 ji4 lu4	noun	meeting minutes	zh-Hans	
+meetings	簡報	jian3 bao4	noun	presentation (slides)	zh-Hant	
+meetings	討論	tao3 lun4	verb	to discuss		
+meetings	決定	jue2 ding4	verb	to decide		
+meetings	同意	tong2 yi4	verb	to agree		
+meetings	不同意	bu4 tong2 yi4	verb	to disagree		
+meetings	意見	yi4 jian4	noun	opinion		
+meetings	建議	jian4 yi4	noun	suggestion		
+meetings	問題	wen4 ti2	noun	question; problem		
+meetings	進度	jin4 du4	noun	progress		
+meetings	目標	mu4 biao1	noun	goal		
+meetings	預算	yu4 suan4	noun	budget		
+meetings	客戶	ke4 hu4	noun	client		
+meetings	延後	yan2 hou4	verb	to postpone	zh-Hant	
+meetings	提前	ti2 qian2	verb	to move earlier		
+meetings	準時	zhun3 shi2	adjective	on time		
+meetings	我有一個問題	wo3 you3 yi1 ge4 wen4 ti2	phrase	I have a question		
+meetings	我同意	wo3 tong2 yi4	phrase	I agree		
+meetings	我補充一下	wo3 bu3 chong1 yi1 xia4	phrase	let me add something		
+meetings	聽得到嗎	ting1 de5 dao4 ma5	phrase	can you hear me?		
+meetings	你靜音了	ni3 jing4 yin1 le5	phrase	you're on mute		
+meetings	今天就到這裡	jin1 tian1 jiu4 dao4 zhe4 li3	phrase	let's stop here for today		
+meetings	下次再討論	xia4 ci4 zai4 tao3 lun4	phrase	let's discuss it next time		
+email-phone	電子郵件	dian4 zi3 you2 jian4	noun	email		
+email-phone	信箱	xin4 xiang1	noun	inbox; mailbox		
+email-phone	回信	hui2 xin4	verb	to reply (to an email or letter)		
+email-phone	轉寄	zhuan3 ji4	verb	to forward (an email)	zh-Hant	
+email-phone	轉發	zhuan3 fa1	verb	to forward (an email)	zh-Hans	
+email-phone	附件	fu4 jian4	noun	attachment		
+email-phone	主旨	zhu3 zhi3	noun	subject line	zh-Hant	
+email-phone	主題	zhu3 ti2	noun	subject line	zh-Hans	
+email-phone	副本	fu4 ben3	noun	cc (copy)		
+email-phone	收到	shou1 dao4	verb	to receive		
+email-phone	已收到	yi3 shou1 dao4	phrase	received, thanks		
+email-phone	您好	nin2 hao3	phrase	hello (polite)		
+email-phone	謝謝您	xie4 xie5 nin2	phrase	thank you (polite)		
+email-phone	麻煩你了	ma2 fan2 ni3 le5	phrase	sorry to trouble you; thanks		
+email-phone	請見附件	qing3 jian4 fu4 jian4	phrase	please see the attachment		
+email-phone	請盡快回覆	qing3 jin4 kuai4 hui2 fu4	phrase	please reply as soon as possible		
+email-phone	喂	wei2	phrase	hello (on the phone)		
+email-phone	請問是哪位	qing3 wen4 shi4 na3 wei4	phrase	may I ask who's calling?		
+email-phone	請稍等	qing3 shao1 deng3	phrase	please hold on		
+email-phone	他不在	ta1 bu4 zai4	phrase	he (or she) isn't in		
+email-phone	要留言嗎	yao4 liu2 yan2 ma5	phrase	would you like to leave a message?		
+email-phone	請他回電	qing3 ta1 hui2 dian4	phrase	please ask him (or her) to call back		
+email-phone	打錯了	da3 cuo4 le5	phrase	wrong number		
+email-phone	分機	fen1 ji1	noun	extension (phone)		
+email-phone	轉接	zhuan3 jie1	verb	to transfer (a call)		
+email-phone	語音信箱	yu3 yin1 xin4 xiang1	noun	voicemail		
+email-phone	聽不清楚	ting1 bu4 qing1 chu3	phrase	I can't hear you clearly		
+email-phone	晚點再打給你	wan3 dian3 zai4 da3 gei3 ni3	phrase	I'll call you back later		
+job-hunting	找工作	zhao3 gong1 zuo4	verb	to look for a job		
+job-hunting	應徵	ying4 zheng1	verb	to apply for a job	zh-Hant	
+job-hunting	應聘	ying4 pin4	verb	to apply for a job	zh-Hans	
+job-hunting	履歷	lu:3 li4	noun	résumé	zh-Hant	
+job-hunting	簡歷	jian3 li4	noun	résumé	zh-Hans	
+job-hunting	自傳	zi4 zhuan4	noun	personal statement (sent with a résumé)	zh-Hant	
+job-hunting	面試	mian4 shi4	noun	interview		
+job-hunting	人力銀行	ren2 li4 yin2 hang2	noun	job website	zh-Hant	
+job-hunting	職缺	zhi2 que1	noun	job opening	zh-Hant	
+job-hunting	全職	quan2 zhi2	noun	full-time (job)		
+job-hunting	兼職	jian1 zhi2	noun	part-time (job)		
+job-hunting	打工	da3 gong1	verb	to work part-time		
+job-hunting	經驗	jing1 yan4	noun	experience		
+job-hunting	學歷	xue2 li4	noun	education (background)		
+job-hunting	專長	zhuan1 chang2	noun	specialty; skills		
+job-hunting	優點	you1 dian3	noun	strength		
+job-hunting	缺點	que1 dian3	noun	weakness		
+job-hunting	自我介紹	zi4 wo3 jie4 shao4	noun	self-introduction		
+job-hunting	薪水	xin1 shui3	noun	salary		
+job-hunting	期望薪資	qi2 wang4 xin1 zi1	noun	expected salary	zh-Hant	
+job-hunting	福利	fu2 li4	noun	benefits		
+job-hunting	試用期	shi4 yong4 qi2	noun	probation period		
+job-hunting	錄取	lu4 qu3	verb	to hire; to accept (an applicant)		
+job-hunting	通知	tong1 zhi1	verb	to notify		
+job-hunting	工作許可	gong1 zuo4 xu3 ke3	noun	work permit		
+job-hunting	離職	li2 zhi2	verb	to leave a job		
+job-hunting	為什麼想來這裡工作	wei4 shen2 me5 xiang3 lai2 zhe4 li3 gong1 zuo4	phrase	why do you want to work here?		
+job-hunting	什麼時候可以上班	shen2 me5 shi2 hou4 ke3 yi3 shang4 ban1	phrase	when can you start?		
+job-hunting	我可以馬上開始	wo3 ke3 yi3 ma3 shang4 kai1 shi3	phrase	I can start right away		
+job-hunting	有什麼問題嗎	you3 shen2 me5 wen4 ti2 ma5	phrase	do you have any questions?		
+job-hunting	謝謝您的時間	xie4 xie5 nin2 de5 shi2 jian1	phrase	thank you for your time		
+leave-pay	請假	qing3 jia4	verb	to take time off		
+leave-pay	請假單	qing3 jia4 dan1	noun	leave request form		
+leave-pay	病假	bing4 jia4	noun	sick leave		
+leave-pay	事假	shi4 jia4	noun	personal leave		
+leave-pay	年假	nian2 jia4	noun	annual leave		
+leave-pay	特休	te4 xiu1	noun	annual paid leave	zh-Hant	
+leave-pay	產假	chan3 jia4	noun	maternity leave		
+leave-pay	陪產假	pei2 chan3 jia4	noun	paternity leave		
+leave-pay	育嬰假	yu4 ying1 jia4	noun	parental leave	zh-Hant	
+leave-pay	育兒假	yu4 er2 jia4	noun	parental leave	zh-Hans	review: mainland term
+leave-pay	喪假	sang1 jia4	noun	bereavement leave		
+leave-pay	颱風假	tai2 feng1 jia4	noun	typhoon day off	zh-Hant	
+leave-pay	國定假日	guo2 ding4 jia4 ri4	noun	national holiday	zh-Hant	
+leave-pay	法定節假日	fa3 ding4 jie2 jia4 ri4	noun	national holiday	zh-Hans	review: mainland term
+leave-pay	連假	lian2 jia4	noun	long weekend; holiday run	zh-Hant	
+leave-pay	補班	bu3 ban1	verb	to work a make-up workday	zh-Hant	
+leave-pay	調休	tiao2 xiu1	verb	to swap workdays (around a holiday)	zh-Hans	review: mainland term
+leave-pay	我明天要請假	wo3 ming2 tian1 yao4 qing3 jia4	phrase	I need to take tomorrow off		
+leave-pay	我生病了	wo3 sheng1 bing4 le5	phrase	I'm sick		
+leave-pay	月薪	yue4 xin1	noun	monthly salary		
+leave-pay	時薪	shi2 xin1	noun	hourly wage		
+leave-pay	底薪	di3 xin1	noun	base salary		
+leave-pay	最低工資	zui4 di1 gong1 zi1	noun	minimum wage		
+leave-pay	發薪日	fa1 xin1 ri4	noun	payday		
+leave-pay	薪資單	xin1 zi1 dan1	noun	pay slip	zh-Hant	
+leave-pay	工資條	gong1 zi1 tiao2	noun	pay slip	zh-Hans	review: mainland term
+leave-pay	加班費	jia1 ban1 fei4	noun	overtime pay		
+leave-pay	獎金	jiang3 jin1	noun	bonus		
+leave-pay	年終獎金	nian2 zhong1 jiang3 jin1	noun	year-end bonus		
+leave-pay	加薪	jia1 xin1	verb	to get a raise		
+leave-pay	扣稅	kou4 shui4	verb	to withhold tax		
+leave-pay	勞保	lao2 bao3	noun	labor insurance	zh-Hant	
+leave-pay	勞健保	lao2 jian4 bao3	noun	labor and health insurance	zh-Hant	
+computers-phones	電腦	dian4 nao3	noun	computer		
+computers-phones	筆電	bi3 dian4	noun	laptop	zh-Hant	
+computers-phones	筆記本電腦	bi3 ji4 ben3 dian4 nao3	noun	laptop	zh-Hans	
+computers-phones	平板	ping2 ban3	noun	tablet		
+computers-phones	智慧型手機	zhi4 hui4 xing2 shou3 ji1	noun	smartphone	zh-Hant	
+computers-phones	智能手機	zhi4 neng2 shou3 ji1	noun	smartphone	zh-Hans	
+computers-phones	鍵盤	jian4 pan2	noun	keyboard		
+computers-phones	滑鼠	hua2 shu3	noun	mouse (computer)	zh-Hant	
+computers-phones	鼠標	shu3 biao1	noun	mouse (computer)	zh-Hans	
+computers-phones	螢幕	ying2 mu4	noun	screen	zh-Hant	
+computers-phones	屏幕	ping2 mu4	noun	screen	zh-Hans	
+computers-phones	軟體	ruan3 ti3	noun	software	zh-Hant	
+computers-phones	軟件	ruan3 jian4	noun	software	zh-Hans	
+computers-phones	應用程式	ying4 yong4 cheng2 shi4	noun	app (application)	zh-Hant	
+computers-phones	應用程序	ying4 yong4 cheng2 xu4	noun	app (application)	zh-Hans	
+computers-phones	下載	xia4 zai4	verb	to download		
+computers-phones	安裝	an1 zhuang1	verb	to install		
+computers-phones	更新	geng1 xin1	verb	to update		
+computers-phones	上網	shang4 wang3	verb	to go online		
+computers-phones	線上	xian4 shang4	adjective	online	zh-Hant	
+computers-phones	在線	zai4 xian4	adjective	online	zh-Hans	
+computers-phones	網站	wang3 zhan4	noun	website		
+computers-phones	網址	wang3 zhi3	noun	web address		
+computers-phones	瀏覽器	liu2 lan3 qi4	noun	web browser		
+computers-phones	搜尋	sou1 xun2	verb	to search (online)	zh-Hant	
+computers-phones	搜索	sou1 suo3	verb	to search (online)	zh-Hans	
+computers-phones	電子郵件	dian4 zi3 you2 jian4	noun	email		
+computers-phones	簡訊	jian3 xun4	noun	text message	zh-Hant	
+computers-phones	短信	duan3 xin4	noun	text message	zh-Hans	
+computers-phones	傳訊息	chuan2 xun4 xi2	verb	to send a message	zh-Hant	
+computers-phones	發消息	fa1 xiao1 xi5	verb	to send a message	zh-Hans	review: mainland term
+computers-phones	社群媒體	she4 qun2 mei2 ti3	noun	social media	zh-Hant	
+computers-phones	社交媒體	she4 jiao1 mei2 ti3	noun	social media	zh-Hans	
+computers-phones	貼文	tie1 wen2	noun	post (on social media)	zh-Hant	
+computers-phones	帖子	tie3 zi5	noun	post (on social media)	zh-Hans	review: mainland term
+computers-phones	按讚	an4 zan4	verb	to like (a post)	zh-Hant	
+computers-phones	點贊	dian3 zan4	verb	to like (a post)	zh-Hans	
+computers-phones	留言	liu2 yan2	verb	to leave a comment		
+computers-phones	分享	fen1 xiang3	verb	to share		
+computers-phones	追蹤	zhui1 zong1	verb	to follow (an account)	zh-Hant	
+computers-phones	關注	guan1 zhu4	verb	to follow (an account)	zh-Hans	
+computers-phones	帳號	zhang4 hao4	noun	account (online)		
+computers-phones	密碼	mi4 ma3	noun	password		
+computers-phones	登入	deng1 ru4	verb	to log in	zh-Hant	
+computers-phones	登錄	deng1 lu4	verb	to log in	zh-Hans	
+computers-phones	登出	deng1 chu1	verb	to log out	zh-Hant	
+computers-phones	線上遊戲	xian4 shang4 you2 xi4	noun	online game	zh-Hant	
+computers-phones	網絡遊戲	wang3 luo4 you2 xi4	noun	online game	zh-Hans	
+computers-phones	玩遊戲	wan2 you2 xi4	verb	to play games		
+computers-phones	打電動	da3 dian4 dong4	verb	to play video games	zh-Hant	
+computers-phones	拍照	pai1 zhao4	verb	to take a photo		
+computers-phones	截圖	jie2 tu2	verb	to take a screenshot		
+computers-phones	掃描	sao3 miao2	verb	to scan		
+computers-phones	存檔	cun2 dang4	verb	to save (a file)	zh-Hant	
+computers-phones	保存	bao3 cun2	verb	to save (a file)	zh-Hans	
+computers-phones	當機	dang4 ji1	verb	to crash; to freeze (computer)	zh-Hant	
+computers-phones	死機	si3 ji1	verb	to crash; to freeze (computer)	zh-Hans	
+computers-phones	重新開機	chong2 xin1 kai1 ji1	verb	to restart (a device)		
+computers-phones	藍牙	lan2 ya2	noun	Bluetooth		
+computers-phones	雲端	yun2 duan1	noun	the cloud (online storage)	zh-Hant	
+computers-phones	病毒	bing4 du2	noun	virus		
+computers-phones	詐騙	zha4 pian4	noun	scam; fraud		
+software-engineering	工程師	gong1 cheng2 shi1	noun	engineer		
+software-engineering	軟體工程師	ruan3 ti3 gong1 cheng2 shi1	noun	software engineer	zh-Hant	
+software-engineering	軟件工程師	ruan3 jian4 gong1 cheng2 shi1	noun	software engineer	zh-Hans	
+software-engineering	科技業	ke1 ji4 ye4	noun	tech industry	zh-Hant	
+software-engineering	半導體	ban4 dao3 ti3	noun	semiconductors		
+software-engineering	新創	xin1 chuang4	noun	startup	zh-Hant	
+software-engineering	初創	chu1 chuang4	noun	startup	zh-Hans	review: mainland term
+software-engineering	前端	qian2 duan1	noun	front end		
+software-engineering	後端	hou4 duan1	noun	back end		
+software-engineering	全端	quan2 duan1	noun	full stack	zh-Hant	
+software-engineering	全棧	quan2 zhan4	noun	full stack	zh-Hans	review: mainland term
+software-engineering	開發	kai1 fa1	verb	to develop		
+software-engineering	寫程式	xie3 cheng2 shi4	verb	to write code	zh-Hant	
+software-engineering	寫代碼	xie3 dai4 ma3	verb	to write code	zh-Hans	
+software-engineering	程式碼	cheng2 shi4 ma3	noun	code	zh-Hant	
+software-engineering	代碼	dai4 ma3	noun	code	zh-Hans	
+software-engineering	程式語言	cheng2 shi4 yu3 yan2	noun	programming language	zh-Hant	
+software-engineering	編程語言	bian1 cheng2 yu3 yan2	noun	programming language	zh-Hans	
+software-engineering	函式	han2 shi4	noun	function (in code)	zh-Hant	
+software-engineering	函數	han2 shu4	noun	function (in code)	zh-Hans	
+software-engineering	變數	bian4 shu4	noun	variable	zh-Hant	
+software-engineering	變量	bian4 liang4	noun	variable	zh-Hans	
+software-engineering	資料庫	zi1 liao4 ku4	noun	database	zh-Hant	
+software-engineering	數據庫	shu4 ju4 ku4	noun	database	zh-Hans	
+software-engineering	伺服器	si4 fu2 qi4	noun	server	zh-Hant	
+software-engineering	服務器	fu2 wu4 qi4	noun	server	zh-Hans	
+software-engineering	使用者	shi3 yong4 zhe3	noun	user	zh-Hant	
+software-engineering	用戶	yong4 hu4	noun	user	zh-Hans	
+software-engineering	需求	xu1 qiu2	noun	requirements		
+software-engineering	功能	gong1 neng2	noun	feature; function		
+software-engineering	架構	jia4 gou4	noun	architecture		
+software-engineering	演算法	yan3 suan4 fa3	noun	algorithm	zh-Hant	
+software-engineering	算法	suan4 fa3	noun	algorithm	zh-Hans	
+software-engineering	測試	ce4 shi4	verb	to test		
+software-engineering	錯誤	cuo4 wu4	noun	error; bug		
+software-engineering	除錯	chu2 cuo4	verb	to debug	zh-Hant	
+software-engineering	調試	tiao2 shi4	verb	to debug	zh-Hans	
+software-engineering	程式碼審查	cheng2 shi4 ma3 shen3 cha2	noun	code review	zh-Hant	
+software-engineering	代碼審查	dai4 ma3 shen3 cha2	noun	code review	zh-Hans	
+software-engineering	部署	bu4 shu4	verb	to deploy		
+software-engineering	上線	shang4 xian4	verb	to go live; to launch		
+software-engineering	版本	ban3 ben3	noun	version		
+software-engineering	效能	xiao4 neng2	noun	performance (speed)	zh-Hant	
+software-engineering	性能	xing4 neng2	noun	performance (speed)	zh-Hans	
+software-engineering	資安	zi1 an1	noun	cybersecurity	zh-Hant	
+software-engineering	網絡安全	wang3 luo4 an1 quan2	noun	cybersecurity	zh-Hans	
+software-engineering	人工智慧	ren2 gong1 zhi4 hui4	noun	artificial intelligence (AI)	zh-Hant	
+software-engineering	人工智能	ren2 gong1 zhi4 neng2	noun	artificial intelligence (AI)	zh-Hans	
+software-engineering	開源	kai1 yuan2	adjective	open-source		
+software-engineering	站立會議	zhan4 li4 hui4 yi4	noun	stand-up meeting		
+software-engineering	敏捷開發	min3 jie2 kai1 fa1	noun	agile development		
+software-engineering	遠端工作	yuan3 duan1 gong1 zuo4	noun	remote work	zh-Hant	
+software-engineering	遠程辦公	yuan3 cheng2 ban4 gong1	noun	remote work	zh-Hans	
+software-engineering	跑	pao3	verb	to run (a program)		
+software-engineering	系統掛了	xi4 tong3 gua4 le5	phrase	the system is down		
+software-engineering	修好了	xiu1 hao3 le5	phrase	it's fixed		
+software-engineering	在我的電腦上可以跑	zai4 wo3 de5 dian4 nao3 shang4 ke3 yi3 pao3	phrase	it works on my computer		
+remote-work	遠端工作	yuan3 duan1 gong1 zuo4	noun	remote work	zh-Hant	
+remote-work	遠程辦公	yuan3 cheng2 ban4 gong1	noun	remote work	zh-Hans	
+remote-work	在家工作	zai4 jia1 gong1 zuo4	verb	to work from home		
+remote-work	居家辦公	ju1 jia1 ban4 gong1	noun	working from home	zh-Hant	
+remote-work	混合辦公	hun4 he2 ban4 gong1	noun	hybrid work		
+remote-work	數位遊牧	shu4 wei4 you2 mu4	noun	digital nomad	zh-Hant	
+remote-work	數字遊民	shu4 zi4 you2 min2	noun	digital nomad	zh-Hans	review: mainland term
+remote-work	自由工作者	zi4 you2 gong1 zuo4 zhe3	noun	freelancer	zh-Hant	
+remote-work	自由職業者	zi4 you2 zhi2 ye4 zhe3	noun	freelancer	zh-Hans	
+remote-work	接案	jie1 an4	verb	to take on freelance projects	zh-Hant	
+remote-work	外包	wai4 bao1	verb	to outsource		
+remote-work	共同工作空間	gong4 tong2 gong1 zuo4 kong1 jian1	noun	coworking space	zh-Hant	
+remote-work	聯合辦公空間	lian2 he2 ban4 gong1 kong1 jian1	noun	coworking space	zh-Hans	review: mainland term
+remote-work	時差	shi2 cha1	noun	time difference; jet lag		
+remote-work	時區	shi2 qu1	noun	time zone		
+remote-work	海外客戶	hai3 wai4 ke4 hu4	noun	overseas client		
+remote-work	工作時間	gong1 zuo4 shi2 jian1	noun	working hours		
+remote-work	彈性工時	tan2 xing4 gong1 shi2	noun	flexible hours	zh-Hant	
+remote-work	行事曆	xing2 shi4 li4	noun	calendar (schedule)	zh-Hant	
+remote-work	排時間	pai2 shi2 jian1	verb	to find a time (for a meeting)		
+remote-work	線上會議	xian4 shang4 hui4 yi4	noun	online meeting	zh-Hant	
+remote-work	視訊	shi4 xun4	noun	video call	zh-Hant	
+remote-work	視頻	shi4 pin2	noun	video call	zh-Hans	
+remote-work	開鏡頭	kai1 jing4 tou2	verb	to turn on your camera		
+remote-work	麥克風	mai4 ke4 feng1	noun	microphone		
+remote-work	耳機	er3 ji1	noun	headphones		
+remote-work	分享螢幕	fen1 xiang3 ying2 mu4	verb	to share your screen	zh-Hant	
+remote-work	共享屏幕	gong4 xiang3 ping2 mu4	verb	to share your screen	zh-Hans	
+remote-work	你看得到我的螢幕嗎	ni3 kan4 de5 dao4 wo3 de5 ying2 mu4 ma5	phrase	can you see my screen?	zh-Hant	
+remote-work	即時通訊	ji2 shi2 tong1 xun4	noun	instant messaging	zh-Hant	
+remote-work	回覆	hui2 fu4	verb	to reply		
+remote-work	晚點回覆你	wan3 dian3 hui2 fu4 ni3	phrase	I'll get back to you later		
+remote-work	網路很慢	wang3 lu4 hen3 man4	phrase	the internet is slow	zh-Hant	
+remote-work	斷線了	duan4 xian4 le5	phrase	the connection dropped		
+gold-card	就業金卡	jiu4 ye4 jin1 ka3	noun	Employment Gold Card (Taiwan)	zh-Hant	
+gold-card	金卡	jin1 ka3	noun	Gold Card (short form)	zh-Hant	
+gold-card	金卡持有人	jin1 ka3 chi2 you3 ren2	noun	Gold Card holder	zh-Hant	
+gold-card	外國專業人才	wai4 guo2 zhuan1 ye4 ren2 cai2	noun	foreign professional	zh-Hant	
+gold-card	攬才專法	lan3 cai2 zhuan1 fa3	noun	Foreign Professionals Act	zh-Hant	
+gold-card	國發會	guo2 fa1 hui4	noun	National Development Council	zh-Hant	
+gold-card	移民署	yi2 min2 shu3	noun	National Immigration Agency	zh-Hant	
+gold-card	工作簽證	gong1 zuo4 qian1 zheng4	noun	work visa		
+gold-card	居留簽證	ju1 liu2 qian1 zheng4	noun	resident visa		
+gold-card	工作許可	gong1 zuo4 xu3 ke3	noun	work permit		
+gold-card	居留證	ju1 liu2 zheng4	noun	resident certificate (ARC)	zh-Hant	
+gold-card	永久居留	yong3 jiu3 ju1 liu2	noun	permanent residence		
+gold-card	線上申請	xian4 shang4 shen1 qing3	noun	online application	zh-Hant	
+gold-card	申請進度	shen1 qing3 jin4 du4	noun	application status		
+gold-card	審核	shen3 he2	noun	review (of an application)		
+gold-card	核准	he2 zhun3	verb	to approve		
+gold-card	效期	xiao4 qi2	noun	validity period	zh-Hant	
+gold-card	到期	dao4 qi2	verb	to expire		
+gold-card	延期	yan2 qi2	verb	to extend; to postpone		
+gold-card	雇主	gu4 zhu3	noun	employer		
+gold-card	不需要雇主	bu4 xu1 yao4 gu4 zhu3	phrase	no employer needed		
+gold-card	可以自由換工作	ke3 yi3 zi4 you2 huan4 gong1 zuo4	phrase	can change jobs freely		
+gold-card	眷屬	juan4 shu3	noun	dependents (family members)		
+gold-card	依親	yi1 qin1	noun	joining family (residence)	zh-Hant	
+gold-card	在職證明	zai4 zhi2 zheng4 ming2	noun	employment certificate		
+gold-card	薪資證明	xin1 zi1 zheng4 ming2	noun	proof of salary	zh-Hant	
+gold-card	學歷證明	xue2 li4 zheng4 ming2	noun	proof of education		
+gold-card	無犯罪紀錄證明	wu2 fan4 zui4 ji4 lu4 zheng4 ming2	noun	police clearance certificate	zh-Hant	
+gold-card	租稅優惠	zu1 shui4 you1 hui4	noun	tax benefits	zh-Hant	
