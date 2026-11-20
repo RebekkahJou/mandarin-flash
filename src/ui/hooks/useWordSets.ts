@@ -17,8 +17,12 @@ import { showMessage } from '../confirm';
 import { useCharacterSplit } from './useCharacterSplit';
 
 const TOPICS_TITLE = 'Topic word sets';
-const TOPICS_HINT = 'Choose a topic to see its word sets.';
-const SETS_HINT = 'Choose the sets you need. You can add more later.';
+const TOPICS_HINT =
+  'Choose a topic to see its word sets. Each topic’s words go into a list of their own, ' +
+  'General Vocabulary and their word-type lists.';
+const SETS_HINT =
+  'Choose the sets you need. We suggest one or two at a time, since smaller batches are easier ' +
+  'to learn. You can add more later.';
 
 function toggled<Value>(values: ReadonlySet<Value>, value: Value): Set<Value> {
   const next = new Set(values);
@@ -58,7 +62,7 @@ function useWordSetServices(): WordSetServices {
  * Topic word sets (health, parenting…): which the pack offers, and adding chosen ones. The modal
  * lists the topics first; choosing one shows its sets.
  */
-export function useWordSets() {
+export function useWordSets(onAdded: () => void) {
   const services = useWordSetServices();
   const [topics, setTopics] = useState<WordSetTopicChoices[]>([]);
   const [chosenTopic, setChosenTopic] = useState<WordSetTopic | null>(null);
@@ -113,6 +117,7 @@ export function useWordSets() {
     } finally {
       setIsAdding(false);
       await refresh();
+      onAdded();
     }
   };
 

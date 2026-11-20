@@ -11,10 +11,12 @@ import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
 import { StarterVocabularyCard } from '../../ui/components/StarterVocabularyCard';
 import { WordListRow } from '../../ui/components/WordListRow';
+import { WordSetsModal } from '../../ui/components/WordSetsModal';
 import { useListsTabImport } from '../../ui/hooks/useListsTabImport';
 import { useStarterVocabulary } from '../../ui/hooks/useStarterVocabulary';
 import { useWordListManagement } from '../../ui/hooks/useWordListManagement';
 import { useWordListSummaries } from '../../ui/hooks/useWordListSummaries';
+import { useWordSets } from '../../ui/hooks/useWordSets';
 import { spacing } from '../../ui/theme';
 
 function openList(wordListId: number) {
@@ -33,6 +35,17 @@ export default function WordListsScreen() {
       isAdding={starterVocabulary.isAdding}
       onAdd={() => void starterVocabulary.addNextSet()}
     />
+  ) : null;
+  const wordSets = useWordSets(() => void refresh());
+  const wordSetsButton = wordSets.isOffered ? (
+    <View style={styles.buttonRow}>
+      <PrimaryButton
+        label="Add topic word sets"
+        onPress={wordSets.open}
+        isOutlined
+        isDisabled={wordSets.isAdding}
+      />
+    </View>
   ) : null;
   const reorderLabel = management.isReordering ? 'Done' : 'Reorder';
 
@@ -61,6 +74,7 @@ export default function WordListsScreen() {
         <PrimaryButton label="Add a word" onPress={() => router.push('/words/add')} />
         <PrimaryButton label="Import CSV" onPress={csvImport.openPicker} isOutlined />
       </View>
+      {wordSetsButton}
       <WordListRow
         name="All words"
         wordCount={shownWordCount}
@@ -102,6 +116,7 @@ export default function WordListsScreen() {
         suggestedNames={management.suggestedListNames}
         onPickSuggestion={(name) => void management.createSuggestedList(name)}
       />
+      <WordSetsModal {...wordSets.modal} />
     </ScreenContainer>
   );
 }

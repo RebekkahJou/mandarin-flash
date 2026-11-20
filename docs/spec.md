@@ -5,7 +5,7 @@ The build plan's decisions refine this spec:
 - A word's frequency tier is shared across all lists. The app calls it the word's **learning
   level**: 'high incidence' is shown as **High practice**, 'memory reinforcement' as
   **Reinforcement**, and Retention keeps its name (stored values are unchanged).
-- Optional topic word sets (health, parenting and more) can be added from Settings: choose a topic,
+- Optional topic word sets (health, parenting and more) can be added from the Word lists tab: choose a topic,
   then its sets (see docs/multi-language-plan.md).
 - Fonts are open-licensed (OFL) rather than strictly public domain.
 

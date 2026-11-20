@@ -733,6 +733,11 @@ lists tab (next to the starter set card), opening the "Add topic word sets" moda
 section from Settings. A fourth tab would fit on Android (3–5 is normal), but adding sets is an
 occasional action, and the tab slot is better kept for Phase 6 games.
 
+**Progress:** items 3, 4 and 9 done 2026-11-20 and checked on the phone (temporary profile): the
+"Add topic word sets" button sits under Add a word and Import CSV on Word lists and is gone from
+Settings (the topic modal's hint now says where words go); the sets page shows the one-or-two tip;
+with Both selected, the revealed card shows qián above ㄑㄧㄢˊ.
+
 **Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
 deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)
 saved sets, which reuses the paused-set storage.
