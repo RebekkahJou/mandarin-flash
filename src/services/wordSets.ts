@@ -8,11 +8,12 @@ import { PartOfSpeech } from '../domain/partOfSpeech';
 import { listForStarterWordType } from '../domain/starterVocabulary';
 import type { Word } from '../domain/word';
 import type { WordList } from '../domain/wordList';
-import type { WordSetTopic } from '../domain/wordSets';
+import type { SkippedWordSetEntries, WordSetTopic } from '../domain/wordSets';
 import {
   WORD_SET_TOPIC_LIST_NAMES,
   WORD_SET_TOPICS,
   withoutRepeatedWords,
+  withoutSkippedEntries,
 } from '../domain/wordSets';
 import type { DictionaryLookup, WordSetEntry, WordSetSummary } from './dictionaryLookup';
 import { createProfileListFinder } from './profileListFinder';
@@ -95,8 +96,18 @@ async function createEntryWord(services: WordSetServices, entry: WordSetEntry): 
   });
 }
 
+/** A set's words for the profile's language, for previewing before it is added. */
+export async function loadWordSetPreview(
+  services: WordSetServices,
+  setId: string,
+): Promise<WordSetEntry[]> {
+  return withoutRepeatedWords(
+    await services.dictionaryLookup.wordSetEntries([setId], services.languageId),
+  );
+}
+
 /**
- * Adds the chosen sets: each new word goes into General Vocabulary, the list for its curated
+ * Adds the chosen sets, minus the words unchecked in their previews: each new word goes into General Vocabulary, the list for its curated
  * word type (created if missing), the topic's list (created if missing) and any extra lists
  * chosen, with its curated meanings. A word in several sets is added once; a word the profile
  * already has keeps its meanings and lists, and joins the topic's list and the extra lists.
@@ -106,11 +117,11 @@ export async function addWordSets(
   topic: WordSetTopic,
   setIds: readonly string[],
   extraListIds: readonly number[],
+  skipped: SkippedWordSetEntries = new Map(),
 ): Promise<WordSetAddition> {
   const { profileId, languageId, languageExtraLists } = services;
-  const entries = withoutRepeatedWords(
-    await services.dictionaryLookup.wordSetEntries(setIds, languageId),
-  );
+  const setEntries = await services.dictionaryLookup.wordSetEntries(setIds, languageId);
+  const entries = withoutRepeatedWords(withoutSkippedEntries(setEntries, skipped));
   const ensureList = await createProfileListFinder(profileId, services.wordListRepository);
   const topicListName = WORD_SET_TOPIC_LIST_NAMES[topic];
   const topicList = await ensureList({ name: topicListName });

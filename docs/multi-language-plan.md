@@ -740,6 +740,12 @@ with Both selected, the revealed card shows qián above ㄑㄧㄢˊ.
 Item 1 done 2026-11-20 and checked on the phone: Delete word on 個's screen asked "Delete 個?"
 and All words went from 109 to 108; Select mode ticked 的 and 嗎, showed "Delete 2 words", and
 deleting left 106 and ended Select mode.
+Item 2 done 2026-11-20 and checked on the phone: the preview is a third page in the same modal
+(topics, sets, one set's words), which keeps every choice and avoids stacking modals on Android.
+Children's health with 嬰兒 and 退燒貼 unchecked read "34 of 36 words"; Babies with 新生兒
+unchecked read "31 of 32 words"; reopening Children's health still showed 34 checked; adding both
+added 65 words, as expected. Not done yet: previewing an already added set to add its skipped
+words later (added sets have no Preview button for now).
 
 **Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
 deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)

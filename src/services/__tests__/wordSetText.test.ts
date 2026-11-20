@@ -6,6 +6,7 @@ import {
   describeWordSetAddition,
   wordSetChoiceLabel,
   wordSetOptions,
+  wordSetPreviewButtonLabel,
   wordSetTopicLabel,
 } from '../wordSetText';
 import type { WordSetAddition } from '../wordSets';
@@ -45,6 +46,18 @@ describe('word set text', () => {
     expect(wordSetChoiceLabel({ ...choice, entryCount: 1, isAdded: true })).toBe(
       'Cold/Flu (1 word) · Added',
     );
+  });
+
+  it('counts the words still checked once some are unchecked in the preview', () => {
+    expect(wordSetChoiceLabel(choice, 2)).toBe('Cold/Flu (17 of 19 words)');
+    const options = wordSetOptions([choice], new Map([['cold-flu', 1]]));
+    expect(options[0].label).toBe('Cold/Flu (18 of 19 words)');
+  });
+
+  it('labels the preview button with the checked words, or goes back when none are', () => {
+    expect(wordSetPreviewButtonLabel(0)).toBe('Back to sets');
+    expect(wordSetPreviewButtonLabel(1)).toBe('Choose 1 word');
+    expect(wordSetPreviewButtonLabel(35)).toBe('Choose 35 words');
   });
 
   it('lists sets still to add first and added sets greyed out at the bottom', () => {

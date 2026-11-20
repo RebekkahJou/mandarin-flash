@@ -10,6 +10,8 @@ import {
   extraListChoicesForWordSets,
   isWordSetEntryForLanguage,
   withoutRepeatedWords,
+  withoutSkippedEntries,
+  wordSetEntryKey,
 } from '../wordSets';
 
 describe('isWordSetEntryForLanguage', () => {
@@ -57,6 +59,26 @@ describe('extraListChoicesForWordSets', () => {
       new GeneralWordList({ id: 7, profileId: 1, name: 'Trip to Tainan' }),
     ];
     expect(extraListChoicesForWordSets(lists).map((list) => list.id)).toEqual([2, 7]);
+  });
+});
+
+describe('withoutSkippedEntries', () => {
+  const jaundice = { headword: '黃疸', reading: 'huang2 dan3', setId: 'children-health' };
+  const fever = { headword: '發燒', reading: 'fa1 shao1', setId: 'children-health' };
+
+  it('leaves out the words unchecked in their set', () => {
+    const skipped = new Map([['children-health', new Set([wordSetEntryKey(jaundice)])]]);
+    expect(withoutSkippedEntries([jaundice, fever], skipped)).toEqual([fever]);
+  });
+
+  it('keeps a word skipped in one set when another chosen set has it checked', () => {
+    const feverInColdFlu = { ...fever, setId: 'cold-flu' };
+    const skipped = new Map([['children-health', new Set([wordSetEntryKey(fever)])]]);
+    expect(withoutSkippedEntries([fever, feverInColdFlu], skipped)).toEqual([feverInColdFlu]);
+  });
+
+  it('keeps everything when nothing was skipped', () => {
+    expect(withoutSkippedEntries([jaundice, fever], new Map())).toEqual([jaundice, fever]);
   });
 });
 

@@ -11,12 +11,17 @@ import { createInMemoryDatabase } from '../../data/testing/nodeSqlDatabase';
 import { writeTestPack } from '../../data/testing/testPack';
 import { LanguageId, languageDefinitionFor } from '../../domain/language';
 import { PartOfSpeech } from '../../domain/partOfSpeech';
-import { WordSetTopic } from '../../domain/wordSets';
+import { WordSetTopic, wordSetEntryKey } from '../../domain/wordSets';
 import { toMainlandSimplified } from '../chineseConverter';
 import type { DictionaryForm } from '../dictionaryLookup';
 import { createDictionaryLookup } from '../dictionaryLookup';
 import type { WordSetServices } from '../wordSets';
-import { addWordSets, loadWordSetChoices, loadWordSetTopics } from '../wordSets';
+import {
+  addWordSets,
+  loadWordSetChoices,
+  loadWordSetPreview,
+  loadWordSetTopics,
+} from '../wordSets';
 
 const INSERT_SET_SQL = 'INSERT INTO word_sets (set_id, topic, title, position) VALUES (?, ?, ?, ?)';
 const INSERT_ENTRY_SQL = `INSERT INTO word_set_entries (set_id, position, headword, variant,
@@ -125,6 +130,17 @@ describe('word sets', () => {
     });
     const doctor = await services.wordRepository.findWord(services.profileId, '醫生', 'yi1 sheng1');
     expect(doctor?.definitions).toEqual(['doctor']);
+  });
+
+  it('previews a set and leaves out the words unchecked in it', async () => {
+    const services = await setUp();
+    const preview = await loadWordSetPreview(services, 'doctor');
+    expect(preview.map((entry) => entry.headword)).toEqual(['醫生', '看病', '健保卡', '我不舒服']);
+    const skipped = new Map([['doctor', new Set([wordSetEntryKey(preview[2])])]]);
+    const addition = await addWordSets(services, WordSetTopic.Health, ['doctor'], [], skipped);
+    expect(addition.addedWords.map((word) => word.headword)).toEqual(['醫生', '看病', '我不舒服']);
+    const choices = await loadWordSetChoices(services, WordSetTopic.Health);
+    expect(choices.find((choice) => choice.setId === 'doctor')?.isAdded).toBe(true);
   });
 
   it('marks added sets', async () => {
