@@ -23,6 +23,14 @@ import { colors, fontSizes, spacing } from '../../ui/theme';
 
 const entryKey = (entry: WordListEntry) => String(entry.entryId);
 
+const NEW_WORDS_NOTE =
+  'Your newest High practice words that you haven’t marked Learned yet. Marking one Learned ' +
+  'brings in the next newest. Change how many it holds in Settings.';
+
+function openWord(wordId: number) {
+  router.push({ pathname: '/words/[wordId]', params: { wordId: String(wordId) } });
+}
+
 export default function WordListScreen() {
   const { listId } = useLocalSearchParams<{ listId: string }>();
   const {
@@ -34,6 +42,7 @@ export default function WordListScreen() {
     exportCsv,
     importCsv,
     reload,
+    isFilledAutomatically,
   } = useWordListDetail(Number(listId));
   const renameDelete = useWordListRenameDelete(list, reload);
   const listHiding = useListHiding(list);
@@ -80,6 +89,12 @@ export default function WordListScreen() {
         to edit its meanings.
       </Text>
     ) : null;
+  const importButton = isFilledAutomatically ? null : (
+    <PrimaryButton label="Import CSV" onPress={importCsv} isOutlined />
+  );
+  const automaticNote = isFilledAutomatically ? (
+    <Text style={styles.empty}>{NEW_WORDS_NOTE}</Text>
+  ) : null;
   const isEditorVisible = editingEntry !== null;
   const editorContent = editingEntry ? (
     <>
@@ -92,13 +107,21 @@ export default function WordListScreen() {
   const renderEntry = ({ item }: ListRenderItemInfo<WordListEntry>) => {
     const warning = mismatchedWordIds.has(item.word.id) ? mismatchWarning : undefined;
     const meanings = definitionsForEntry(item);
+    // New Words has no entries to edit or remove, so its rows open the word instead.
+    const onPress = isFilledAutomatically ? () => openWord(item.word.id) : () => startEditing(item);
+    const pressHint = isFilledAutomatically
+      ? "Change this word's lists and learning level"
+      : 'Edit meanings in this list';
+    const onRemove = isFilledAutomatically
+      ? undefined
+      : () => removeEntry(item.entryId, item.word.headword);
     return (
       <WordRow
         word={item.word}
         meanings={meanings}
-        onPress={() => startEditing(item)}
-        pressHint="Edit meanings in this list"
-        onRemove={() => removeEntry(item.entryId, item.word.headword)}
+        onPress={onPress}
+        pressHint={pressHint}
+        onRemove={onRemove}
         warning={warning}
       />
     );
@@ -108,7 +131,7 @@ export default function WordListScreen() {
     <ScreenContainer>
       <Stack.Screen options={screenOptions} />
       <View style={styles.buttonRow}>
-        <PrimaryButton label="Import CSV" onPress={importCsv} isOutlined />
+        {importButton}
         <PrimaryButton
           label="Export CSV"
           onPress={exportCsv}
@@ -118,6 +141,7 @@ export default function WordListScreen() {
       </View>
       {renameDeleteButtons}
       {hideButtonRow}
+      {automaticNote}
       {mismatchSummary}
       <FlatList
         data={entries}

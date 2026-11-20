@@ -1,6 +1,7 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 
+import { isNewWordsList } from '../../domain/newWordsList';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import type { WordList, WordListEntry } from '../../domain/wordList';
 import { definitionsOverrideFor } from '../../domain/wordList';
@@ -80,5 +81,7 @@ export function useWordListDetail(wordListId: number) {
     setEntryMeanings,
     exportCsv,
     importCsv,
+    /** New Words fills itself: no CSV import, and its words can't be removed or edited here. */
+    isFilledAutomatically: list !== null && isNewWordsList(list),
   };
 }

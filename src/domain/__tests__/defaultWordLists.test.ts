@@ -14,7 +14,7 @@ const MEASURE_WORDS = { name: 'Measure words', partOfSpeech: PartOfSpeech.Measur
 describe('defaultWordListsFor', () => {
   it("adds the language's own lists after the shared ones", () => {
     const names = defaultWordListsFor([MEASURE_WORDS]).map((list) => list.name);
-    expect(names.slice(0, 2)).toEqual(['General Vocabulary', 'Focus Vocabulary']);
+    expect(names.slice(0, 3)).toEqual(['New Words', 'General Vocabulary', 'Focus Vocabulary']);
     expect(names).toContain('Adverbs');
     expect(names[names.length - 1]).toBe('Measure words');
   });

@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { PhoneticDisplay, SimplifiedDisplay } from '../../data/repositories/settingsRepository';
+import { NEW_WORDS_LIST_SIZES } from '../../domain/newWordsList';
 import { PRACTICE_SET_SIZES } from '../../domain/practiceSetBuilder';
 import { useAppServices, useSettings } from '../../ui/AppServicesContext';
 import { Checkboxes } from '../../ui/components/Checkboxes';
@@ -34,6 +35,15 @@ const LEARN_ZHUYIN_OPTIONS = [
 ];
 
 const SET_SIZE_CHOICES = PRACTICE_SET_SIZES.map((size) => ({ value: size, label: `${size}` }));
+
+const NEW_WORDS_SIZE_CHOICES = NEW_WORDS_LIST_SIZES.map((size) => ({
+  value: size,
+  label: `${size}`,
+}));
+
+const NEW_WORDS_HINT =
+  'How many of your newest High practice words the New Words list holds. Marking one Learned ' +
+  'brings in the next newest.';
 
 export default function SettingsScreen() {
   const { settings, updateSetting } = useSettings();
@@ -90,6 +100,14 @@ export default function SettingsScreen() {
         choices={SET_SIZE_CHOICES}
         selectedValue={settings.defaultPracticeSetSize}
         onSelect={(value) => updateSetting('defaultPracticeSetSize', value)}
+      />
+
+      <SectionTitle title="New Words list size" />
+      <Text style={styles.hint}>{NEW_WORDS_HINT}</Text>
+      <ChoiceChips
+        choices={NEW_WORDS_SIZE_CHOICES}
+        selectedValue={settings.newWordsListSize}
+        onSelect={(value) => updateSetting('newWordsListSize', value)}
       />
 
       <SectionTitle title="Languages" />

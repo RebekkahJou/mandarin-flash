@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { listsForAddingWords } from '../../domain/newWordsList';
 import { useAppServices } from '../../ui/AppServicesContext';
 import type { Choice } from '../../ui/components/ChoiceChips';
 import { ChoiceChips } from '../../ui/components/ChoiceChips';
@@ -21,7 +22,7 @@ import { colors, fontSizes, radii, spacing } from '../../ui/theme';
 export default function AddWordScreen() {
   const { languageBundle } = useAppServices();
   const { summaries } = useWordListSummaries();
-  const lists = summaries.map((summary) => summary.list);
+  const lists = listsForAddingWords(summaries.map((summary) => summary.list));
   const addWord = useAddWord(lists);
   const characterSplit = useCharacterSplit();
   const splitModal = characterSplit.modal;

@@ -51,6 +51,7 @@ describe('user database', () => {
     const { profile, wordListRepository } = await setUp();
     const summaries = await wordListRepository.listSummaries(profile.id);
     expect(summaries.map((summary) => summary.list.name)).toEqual([
+      'New Words',
       'General Vocabulary',
       'Focus Vocabulary',
       'Nouns',
@@ -247,6 +248,70 @@ describe('user database', () => {
     expect(events).toEqual([]);
   });
 
+  it('fills New Words with the newest High practice words never marked Learned', async () => {
+    const { database, profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const addWord = (headword: string, addedAtMs: number) =>
+      wordRepository.findOrCreateWord({
+        profileId: profile.id,
+        headword,
+        reading: 'zi4',
+        definitions: [headword],
+        addedAtMs,
+      });
+    const words = [];
+    for (let index = 0; index < 12; index++) words.push(await addWord(`字${index}`, index));
+    const newWordsListId = listIdByName('New Words');
+    const headwordsInNewWords = async () =>
+      (await wordListRepository.getListWithEntries(newWordsListId))?.words.map(
+        (entry) => entry.word.headword,
+      );
+
+    expect(await headwordsInNewWords()).toEqual([
+      '字11',
+      '字10',
+      '字9',
+      '字8',
+      '字7',
+      '字6',
+      '字5',
+      '字4',
+      '字3',
+      '字2',
+    ]);
+
+    await wordRepository.markWordLearned(words[11].id);
+    await createReviewEventRepository(database).recordReviewEvent({
+      profileId: profile.id,
+      wordId: words[11].id,
+      answer: ReviewAnswer.Learned,
+      answeredAtMs: 1,
+    });
+    await wordRepository.setFrequencyTier(words[11].id, FrequencyTier.HighIncidence);
+    const afterLearning = await headwordsInNewWords();
+    expect(afterLearning).not.toContain('字11');
+    expect(afterLearning?.[afterLearning.length - 1]).toBe('字1');
+
+    await createSettingsRepository(database).saveSetting(profile.id, 'newWordsListSize', 20);
+    expect(await headwordsInNewWords()).toHaveLength(11);
+    const summaries = await wordListRepository.listSummaries(profile.id);
+    expect(summaries.find(({ list }) => list.name === 'New Words')?.length).toBe(11);
+  });
+
+  it('leaves study cards such as components out of New Words', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const component = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: '氵',
+      reading: 'shui3',
+      definitions: ['water'],
+    });
+    await wordListRepository.addWordToLists(component.id, [
+      { wordListId: listIdByName('Components') },
+    ]);
+    const newWords = await wordListRepository.getListWithEntries(listIdByName('New Words'));
+    expect(newWords?.length).toBe(0);
+  });
+
   it('adds a new general list after the existing ones', async () => {
     const { profile, wordListRepository } = await setUp();
     const newListId = await wordListRepository.createList(profile.id, { name: 'Food' });
@@ -272,7 +337,7 @@ describe('user database', () => {
     await wordListRepository.renameList(listIdByName('Phrases'), 'Sayings');
     const list = await wordListRepository.getListWithEntries(listIdByName('Phrases'));
     expect(list?.name).toBe('Sayings');
-    expect((await wordListRepository.listSummaries(profile.id)).length).toBe(9);
+    expect((await wordListRepository.listSummaries(profile.id)).length).toBe(10);
   });
 
   it('deletes a list and its entries but keeps the words', async () => {

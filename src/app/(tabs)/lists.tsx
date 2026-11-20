@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import type { WordListSummary } from '../../data/repositories/wordListRepository';
+import { listsForAddingWords } from '../../domain/newWordsList';
 import { CompactButton } from '../../ui/components/CompactButton';
 import { DraggableReorderList } from '../../ui/components/DraggableReorderList';
 import { ListPickerModal } from '../../ui/components/ListPickerModal';
@@ -26,6 +27,7 @@ function openList(wordListId: number) {
 export default function WordListsScreen() {
   const { summaries, shownWordCount, refresh } = useWordListSummaries();
   const lists = summaries.map((summary) => summary.list);
+  const importableLists = listsForAddingWords(lists);
   const csvImport = useListsTabImport(lists, () => void refresh());
   const management = useWordListManagement(lists, refresh);
   const starterVocabulary = useStarterVocabulary(() => void refresh());
@@ -98,7 +100,7 @@ export default function WordListsScreen() {
       <ListPickerModal
         isVisible={csvImport.isPickerVisible}
         title="Import into which lists?"
-        lists={lists}
+        lists={importableLists}
         selectedListIds={csvImport.selectedListIds}
         onToggle={csvImport.toggleList}
         onClose={csvImport.chooseFileAndImport}

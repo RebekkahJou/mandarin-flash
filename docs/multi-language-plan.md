@@ -758,8 +758,16 @@ words later (added sets have no Preview button for now).
 - Item 5 done (2026-11-20): `Word.addedAtMs` comes from `words.created_at`; CSV export adds an
   "added" column (ISO date and time, UTC); import reads it (any date JavaScript parses) and gives
   rows without one 2000-01-01 (`UNKNOWN_ADDED_AT_MS`). Old 3-column files still import.
+- Item 6 done (2026-11-20): `WordListKind.NewWords` (`new_words`), first for every profile (new
+  profiles by default, existing ones by migration). Its words are worked out on load:
+  High practice, no `learned` review event, not in Components or a script study list, newest
+  first with a hashed word-id tie-break, up to the "New Words list size" setting (10/20/30/40,
+  default 10). It can't be renamed, deleted, imported into or picked when adding words; its rows
+  open the word's screen.
 - **Phone check still to do:** after adding Computers & phones under School, Daily errands shows it
-  as Added; the 錢 card on the user's profile reads "one tenth of a tael 兩 (liǎng)".
+  as Added; the 錢 card on the user's profile reads "one tenth of a tael 兩 (liǎng)"; New Words
+  shows first on both tabs with up to 10 words, marking one Learned swaps in the next, and the
+  size setting changes it.
 
 **Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
 deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)

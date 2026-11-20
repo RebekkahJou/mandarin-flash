@@ -16,6 +16,8 @@ export enum WordListKind {
   Components = 'components',
   /** Cards for learning a script itself, such as zhuyin symbols; turned on in Settings. */
   ScriptStudy = 'script_study',
+  /** The newest High practice words, worked out each time; holds no entries. */
+  NewWords = 'new_words',
 }
 
 export interface WordListValidationWarning {

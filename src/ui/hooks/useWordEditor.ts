@@ -2,6 +2,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 import type { FrequencyTier } from '../../domain/frequencyTier';
+import { listsForAddingWords } from '../../domain/newWordsList';
 import type { Word } from '../../domain/word';
 import type { WordList } from '../../domain/wordList';
 import { WordListKind } from '../../domain/wordList';
@@ -20,7 +21,7 @@ export function useWordEditor(wordId: number) {
 
   const reload = useCallback(async () => {
     const summaries = await wordListRepository.listSummaries(profileId);
-    setLists(summaries.map((summary) => summary.list));
+    setLists(listsForAddingWords(summaries.map((summary) => summary.list)));
     setMemberListIds(new Set(await wordListRepository.listIdsContainingWord(wordId)));
     setWord(await wordRepository.getWord(wordId));
   }, [profileId, wordId, wordRepository, wordListRepository]);

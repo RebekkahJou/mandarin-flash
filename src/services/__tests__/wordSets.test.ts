@@ -122,6 +122,7 @@ describe('word sets', () => {
     expect(addition.addedNouns.map((word) => word.headword)).toEqual(['醫生', '健保卡', '牙醫']);
     expect(addition.alreadyHadCount).toBe(0);
     expect(await headwordsByList(services)).toEqual({
+      'New Words': ['健保卡', '我不舒服', '牙醫', '看病', '醫生'],
       'General Vocabulary': ['健保卡', '我不舒服', '牙醫', '看病', '醫生'],
       Nouns: ['健保卡', '牙醫', '醫生'],
       Verbs: ['看病'],

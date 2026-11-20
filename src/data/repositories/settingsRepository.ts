@@ -1,3 +1,5 @@
+import type { NewWordsListSize } from '../../domain/newWordsList';
+import { DEFAULT_NEW_WORDS_LIST_SIZE, NEW_WORDS_LIST_SIZES } from '../../domain/newWordsList';
 import type { PracticeSetSize } from '../../domain/practiceSetBuilder';
 import { DEFAULT_PRACTICE_SET_SIZE, PRACTICE_SET_SIZES } from '../../domain/practiceSetBuilder';
 import type { SqlDatabase } from '../sqlDatabase';
@@ -18,6 +20,8 @@ export interface AppSettings {
   phoneticDisplay: PhoneticDisplay;
   simplifiedDisplay: SimplifiedDisplay;
   defaultPracticeSetSize: PracticeSetSize;
+  /** How many words the New Words list holds at most. */
+  newWordsListSize: NewWordsListSize;
   /** Show the Zhuyin study list (only while pronunciation isn't shown as zhuyin alone). */
   learnZhuyin: boolean;
   /** All words view options. */
@@ -31,6 +35,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   phoneticDisplay: PhoneticDisplay.Pinyin,
   simplifiedDisplay: SimplifiedDisplay.Hidden,
   defaultPracticeSetSize: DEFAULT_PRACTICE_SET_SIZE,
+  newWordsListSize: DEFAULT_NEW_WORDS_LIST_SIZE,
   learnZhuyin: false,
   allWordsShowsScriptStudyCards: true,
   allWordsShowsComponents: true,
@@ -82,6 +87,11 @@ function parseSettings(storedValues: Record<string, unknown>): AppSettings {
       PRACTICE_SET_SIZES,
       storedValues.defaultPracticeSetSize,
       DEFAULT_SETTINGS.defaultPracticeSetSize,
+    ),
+    newWordsListSize: oneOf(
+      NEW_WORDS_LIST_SIZES,
+      storedValues.newWordsListSize,
+      DEFAULT_SETTINGS.newWordsListSize,
     ),
   };
 }

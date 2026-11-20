@@ -136,6 +136,16 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
     PRIMARY KEY (profile_id, pack_id, set_id)
   ) WITHOUT ROWID;
   `,
+  // Every profile gets the New Words list, first in its lists. It holds no entries: its words
+  // are worked out from the profile's words each time.
+  `
+  UPDATE word_lists SET sort_order = sort_order + 1;
+  INSERT INTO word_lists (profile_id, name, kind, part_of_speech, sort_order)
+    SELECT id, 'New Words', 'new_words', NULL, 0 FROM profiles
+    WHERE NOT EXISTS (
+      SELECT 1 FROM word_lists WHERE word_lists.profile_id = profiles.id AND kind = 'new_words'
+    );
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {

@@ -1,6 +1,7 @@
 import { FrequencyTier, isFrequencyTier } from '../../domain/frequencyTier';
 import { ComponentsWordList } from '../../domain/componentsWordList';
 import { GeneralWordList } from '../../domain/generalWordList';
+import { NewWordsWordList } from '../../domain/newWordsWordList';
 import { isPartOfSpeech } from '../../domain/partOfSpeech';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { ScriptStudyWordList } from '../../domain/scriptStudyWordList';
@@ -83,5 +84,6 @@ export function toWordList(row: WordListRow, entries: WordListEntry[] = []): Wor
   }
   if (row.kind === WordListKind.Components) return new ComponentsWordList(props);
   if (row.kind === WordListKind.ScriptStudy) return new ScriptStudyWordList(props);
+  if (row.kind === WordListKind.NewWords) return new NewWordsWordList(props);
   return new GeneralWordList(props);
 }
