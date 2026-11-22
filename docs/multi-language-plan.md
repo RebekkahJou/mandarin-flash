@@ -3,9 +3,9 @@
 Status: approved 2026-11-05. **Phases 1–3 done** and merged. **Phase 4, 4b and 4c done** and
 merged into main. **Phase 5 (store-hosted packs) done for Android** and merged into main
 (2026-11-17; see "Phase 5 decisions" below). Its iOS half waits for the iOS port; the real Play
-download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Phase 4e built** (2026-11-20, phone
-check pending; see "Practice and word list improvements"). **Next: Phase 6 (add-ons framework and
-games).**
+download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Phase 4e done** (phone-checked
+2026-11-22; see "Practice and word list improvements"). **Phase 6 (add-ons framework and games)
+in progress** (see "Games (Phase 6)").
 Update this file as work lands or decisions change.
 
 Phase 5 decisions (2026-11-16):
@@ -789,6 +789,43 @@ words later (added sets have no Preview button for now).
 **Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
 deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)
 saved sets, which reuses the paused-set storage.
+
+## Games (Phase 6)
+
+Decided with the user on 2026-11-22. Two profiles play on one phone, passing it between turns.
+
+**Add-on switch.** Settings gets an Add-ons section with "Games", off by default (a per-profile
+setting). While it is on, a Games tab shows between Word lists and Settings. Games need a second
+profile; with only one, the Games tab says so and offers Add a new user.
+
+**Shared words.** A game uses words both profiles have in All words, leaving out Components and
+script study cards (zhuyin). Words match by meaning:
+- Profiles whose languages share a match scheme (Traditional and Simplified Mandarin) match by
+  characters: both headwords converted to Taiwan Traditional (老師 = 老师). Readings may differ
+  (Taiwan and mainland), so they are not compared.
+- Other pairs (later languages) match by English meaning: each meaning lowercased, with brackets,
+  a leading "to", "a", "an" or "the" and outer punctuation removed; a pair matches when any
+  meaning is the same. "scam; fraud" counts as two meanings.
+- Each word is used once. The language adapter supplies the match scheme, so callers never
+  branch on language.
+
+**Speed race.** Options: words per set (20, 40 or 60), rounds (1 to 5) and which side shows first
+(English meaning, or the word in the player's own language). Each round draws a random set of
+shared words, not repeating words across rounds while enough remain. Profile 1 plays the set,
+then profile 2 plays the same words, each seeing their own language. A card is revealed by tap,
+then Missed (comes back in a few cards) or Gotten, as in practice, without Learned. A player's
+time stops when every card is gotten. Fewer shared words than the set size makes a smaller set
+(at least 10 shared words are needed). The lower total time wins; each round's times show too.
+
+**Meaning match.** Options: rounds (5 to 20). Each round both players take one turn at
+answering, swapping roles: the picker sees 20 shared words in their own language and picks one;
+the answerer sees its English meanings and picks the word in their own language from 4 options
+(3 others drawn from their shared words). The most correct answers win; equal scores tie. At
+least 4 shared words are needed.
+
+**Separate from learning.** Games never change learning levels, New Words or practice history.
+They keep their own results (`game_results`: game, players, options, scores or times, winner,
+when), and the Games tab lists recent results.
 
 ## Splitting multi-character words
 
