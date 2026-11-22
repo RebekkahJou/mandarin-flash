@@ -778,12 +778,13 @@ words later (added sets have no Preview button for now).
   deck-completed time (paused time left out) only when every word was gotten; saving from the
   summary counts the run just finished. Saved sets play in a fresh order each time; pausing
   remembers it's the saved set. Loading lives in `services/practiceSetLoading.ts`.
-- **Phone check still to do:** after adding Computers & phones under School, Daily errands shows it
-  as Added; the 錢 card on the user's profile reads "one tenth of a tael 兩 (liǎng)"; New Words
-  shows first on both tabs with up to 10 words, marking one Learned swaps in the next, and the
-  size setting changes it; Pause returns to the Practice tab, Resume carries on with the same
-  card, progress and time, and the time doesn't count the pause; Save set, finish it, then the
-  Practice tab lists its time, and "Practice saved set" plays the same words.
+- Phone check passed (2026-11-22, temporary profile): Computers & phones added under School shows
+  as Added under Daily errands; New Words is first on both tabs with 10 words, marking one Learned
+  swaps in the next and the size setting changes the count; Pause returns to the Practice tab and
+  Resume carries on with the same card and time, leaving out the pause; a saved set records its
+  time and plays the same 10 words in a new order, with times listed newest first.
+- **Phone check still to do:** the 錢 card reads "one tenth of a tael 兩 (liǎng)" (needs Chinese
+  input, so the user checks it).
 
 **Order (suggested):** (4) stacked readings and (3) the tip, both small; (9) moving the entry; (1)
 deleting words; (2) set preview; (5) the CSV time column, then (6) New Words; (7) pause, then (8)
