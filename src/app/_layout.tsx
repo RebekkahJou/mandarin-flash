@@ -32,6 +32,7 @@ function RootStack() {
         <Stack.Screen name="lists/[listId]" options={{ title: 'Word list' }} />
         <Stack.Screen name="words/index" options={{ title: 'All words' }} />
         <Stack.Screen name="words/[wordId]" options={{ title: 'Word' }} />
+        <Stack.Screen name="words/add-words" options={{ title: 'Add words' }} />
         <Stack.Screen name="words/add" options={{ title: 'Add a word' }} />
         <Stack.Screen name="profiles/edit" options={{ title: 'Edit profile' }} />
       </Stack.Protected>

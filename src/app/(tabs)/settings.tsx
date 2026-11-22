@@ -79,6 +79,15 @@ export default function SettingsScreen() {
         />
       </View>
 
+      <SectionTitle title="Words" />
+      <View style={styles.buttonRow}>
+        <PrimaryButton
+          label="Add words"
+          onPress={() => router.push('/words/add-words')}
+          isOutlined
+        />
+      </View>
+
       <SectionTitle title="Pronunciation" />
       <ChoiceChips
         choices={PHONETIC_CHOICES}
