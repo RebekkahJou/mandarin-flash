@@ -42,9 +42,7 @@ export function useWordListRenameDelete(list: WordList | null, onRenamed: () => 
 
   const deleteList = async (): Promise<ListDeletionResult> => {
     if (!list) return ListDeletionResult.NotDeleted;
-    const message =
-      `Delete ${list.name} and its ${formatWordCount(list.length)}? ` +
-      'The words stay in All words and in any other lists they are in.';
+    const message = `Delete ${list.name} and its ${formatWordCount(list.length)}? The words stay in All words and in any other lists they are in.`;
     if (!(await confirm('Delete list?', message, 'Delete'))) return ListDeletionResult.NotDeleted;
     await wordListRepository.deleteList(list.id);
     return ListDeletionResult.Deleted;

@@ -10,9 +10,15 @@ export function wordSetTopicLabel({ topic, choices }: WordSetTopicChoices): stri
   return `${WORD_SET_TOPIC_TITLES[topic]} (${counts})`;
 }
 
-/** "Cold/Flu (19 words)", with "Added" for a set the profile already added. */
-export function wordSetChoiceLabel(choice: WordSetChoice): string {
-  const label = `${choice.title} (${formatWordCount(choice.entryCount)})`;
+/**
+ * "Cold/Flu (19 words)", "Cold/Flu (17 of 19 words)" once words are unchecked in its preview,
+ * with "Added" for a set the profile already added.
+ */
+export function wordSetChoiceLabel(choice: WordSetChoice, skippedCount = 0): string {
+  const allWords = formatWordCount(choice.entryCount);
+  const counts =
+    skippedCount === 0 ? allWords : `${choice.entryCount - skippedCount} of ${allWords}`;
+  const label = `${choice.title} (${counts})`;
   return choice.isAdded ? `${label} · Added` : label;
 }
 
@@ -23,15 +29,24 @@ export interface WordSetOption {
 }
 
 /** Sets still to add first, in pack order; sets already added greyed out at the bottom. */
-export function wordSetOptions(choices: readonly WordSetChoice[]): WordSetOption[] {
+export function wordSetOptions(
+  choices: readonly WordSetChoice[],
+  skippedCounts: ReadonlyMap<string, number> = new Map(),
+): WordSetOption[] {
   const toOption = (choice: WordSetChoice) => ({
     value: choice.setId,
-    label: wordSetChoiceLabel(choice),
+    label: wordSetChoiceLabel(choice, skippedCounts.get(choice.setId) ?? 0),
     isDisabled: choice.isAdded,
   });
   const notAdded = choices.filter((choice) => !choice.isAdded).map(toOption);
   const added = choices.filter((choice) => choice.isAdded).map(toOption);
   return [...notAdded, ...added];
+}
+
+/** The preview's button goes back to the sets when every word is unchecked. */
+export function wordSetPreviewButtonLabel(checkedCount: number): string {
+  if (checkedCount === 0) return 'Back to sets';
+  return `Choose ${formatWordCount(checkedCount)}`;
 }
 
 /** The modal's button closes it when nothing is chosen. */

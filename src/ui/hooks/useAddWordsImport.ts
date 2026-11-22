@@ -5,8 +5,8 @@ import type { WordList } from '../../domain/wordList';
 import { showMessage } from '../confirm';
 import { CsvImportResult, useCsvImport } from './useCsvImport';
 
-/** Import from the Word lists tab: choose target lists first (General Vocabulary by default). */
-export function useListsTabImport(lists: readonly WordList[], onImported: () => void) {
+/** Import from the Add words screen: choose target lists first (General Vocabulary by default). */
+export function useAddWordsImport(lists: readonly WordList[], onImported: () => void) {
   const importCsv = useCsvImport();
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [explicitListIds, setExplicitListIds] = useState<Set<number> | null>(null);

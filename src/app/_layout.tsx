@@ -6,6 +6,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { BUNDLED_CHINESE_FONTS } from '../services/fontRotation';
 import { useAppCoreLoader } from '../ui/AppServicesContext';
 import { LanguagePacksProvider } from '../ui/LanguagePacksContext';
+import { useProfileBadgeHeader } from '../ui/hooks/useProfileBadgeHeader';
 import { ProfileSessionProvider, useProfileSession } from '../ui/ProfileSessionContext';
 import { colors, fontSizes, spacing } from '../ui/theme';
 
@@ -24,14 +25,17 @@ function RootStack() {
   const { showsFirstRun, showsWelcome } = useProfileSession();
   const isInApp = !showsFirstRun && !showsWelcome;
   const appRedirect = showsFirstRun ? '/first-run' : '/welcome';
+  const profileBadgeHeader = useProfileBadgeHeader();
+  const screenOptions = { ...STACK_SCREEN_OPTIONS, ...profileBadgeHeader };
   return (
-    <Stack screenOptions={STACK_SCREEN_OPTIONS}>
+    <Stack screenOptions={screenOptions}>
       <Stack.Protected guard={isInApp} redirectTo={appRedirect}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="practice/session" options={{ title: 'Practice' }} />
         <Stack.Screen name="lists/[listId]" options={{ title: 'Word list' }} />
         <Stack.Screen name="words/index" options={{ title: 'All words' }} />
         <Stack.Screen name="words/[wordId]" options={{ title: 'Word' }} />
+        <Stack.Screen name="words/add-words" options={{ title: 'Add words' }} />
         <Stack.Screen name="words/add" options={{ title: 'Add a word' }} />
         <Stack.Screen name="profiles/edit" options={{ title: 'Edit profile' }} />
       </Stack.Protected>

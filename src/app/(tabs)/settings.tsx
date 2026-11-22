@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { PhoneticDisplay, SimplifiedDisplay } from '../../data/repositories/settingsRepository';
+import { NEW_WORDS_LIST_SIZES } from '../../domain/newWordsList';
 import { PRACTICE_SET_SIZES } from '../../domain/practiceSetBuilder';
 import { useAppServices, useSettings } from '../../ui/AppServicesContext';
 import { Checkboxes } from '../../ui/components/Checkboxes';
@@ -9,9 +10,7 @@ import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SectionTitle } from '../../ui/components/SectionTitle';
-import { WordSetsModal } from '../../ui/components/WordSetsModal';
 import { useProfileSwitcher } from '../../ui/hooks/useProfileSwitcher';
-import { useWordSets } from '../../ui/hooks/useWordSets';
 import { useZhuyinStudy } from '../../ui/hooks/useZhuyinStudy';
 import { colors, fontSizes } from '../../ui/theme';
 
@@ -35,11 +34,15 @@ const LEARN_ZHUYIN_OPTIONS = [
   },
 ];
 
-const WORD_SETS_HINT =
-  'Ready-made sets of words for topics such as health. Each topic’s words go into a list of ' +
-  'their own, General Vocabulary and their word-type lists.';
-
 const SET_SIZE_CHOICES = PRACTICE_SET_SIZES.map((size) => ({ value: size, label: `${size}` }));
+
+const NEW_WORDS_SIZE_CHOICES = NEW_WORDS_LIST_SIZES.map((size) => ({
+  value: size,
+  label: `${size}`,
+}));
+
+const NEW_WORDS_HINT =
+  'How many of your newest High practice words the New Words list holds. Marking one Learned brings in the next newest.';
 
 export default function SettingsScreen() {
   const { settings, updateSetting } = useSettings();
@@ -53,21 +56,6 @@ export default function SettingsScreen() {
       selectedValues={learnZhuyinSelection}
       onToggle={zhuyinStudy.toggle}
     />
-  ) : null;
-  const wordSets = useWordSets();
-  const wordSetsSection = wordSets.isOffered ? (
-    <>
-      <SectionTitle title="Topic word sets" />
-      <Text style={styles.hint}>{WORD_SETS_HINT}</Text>
-      <View style={styles.buttonRow}>
-        <PrimaryButton
-          label="Add topic word sets"
-          onPress={wordSets.open}
-          isOutlined
-          isDisabled={wordSets.isAdding}
-        />
-      </View>
-    </>
   ) : null;
   const variantSectionTitle = `${variantName} characters`;
   const variantHint = `How to show the ${variantName.toLowerCase()} form on flashcards, when one exists.`;
@@ -90,6 +78,15 @@ export default function SettingsScreen() {
         />
       </View>
 
+      <SectionTitle title="Words" />
+      <View style={styles.buttonRow}>
+        <PrimaryButton
+          label="Add words"
+          onPress={() => router.push('/words/add-words')}
+          isOutlined
+        />
+      </View>
+
       <SectionTitle title="Pronunciation" />
       <ChoiceChips
         choices={PHONETIC_CHOICES}
@@ -106,13 +103,19 @@ export default function SettingsScreen() {
         onSelect={(value) => updateSetting('simplifiedDisplay', value)}
       />
 
-      {wordSetsSection}
-
       <SectionTitle title="Default cards per set" />
       <ChoiceChips
         choices={SET_SIZE_CHOICES}
         selectedValue={settings.defaultPracticeSetSize}
         onSelect={(value) => updateSetting('defaultPracticeSetSize', value)}
+      />
+
+      <SectionTitle title="New Words list size" />
+      <Text style={styles.hint}>{NEW_WORDS_HINT}</Text>
+      <ChoiceChips
+        choices={NEW_WORDS_SIZE_CHOICES}
+        selectedValue={settings.newWordsListSize}
+        onSelect={(value) => updateSetting('newWordsListSize', value)}
       />
 
       <SectionTitle title="Languages" />
@@ -128,8 +131,6 @@ export default function SettingsScreen() {
       <View style={styles.buttonRow}>
         <PrimaryButton label="About & licenses" onPress={() => router.push('/about')} isOutlined />
       </View>
-
-      <WordSetsModal {...wordSets.modal} />
     </ScreenContainer>
   );
 }

@@ -11,13 +11,25 @@ export interface CardAnswerResult {
   isAllLearned: boolean;
 }
 
+/** Everything a paused practice set needs to carry on later. */
+export interface PracticeSessionSnapshot {
+  /** Every word in the set. */
+  wordIds: number[];
+  /** Cards still to answer, the current one first. */
+  queue: number[];
+  completedWordIds: number[];
+  learnedWordIds: number[];
+  /** Word id and how many times it was missed. */
+  missedCounts: [number, number][];
+}
+
 /**
  * Card order for one practice set. Cards are identified by word id.
  * missed → back in a few cards; gotten → end of queue; learned → removed.
  */
 export class PracticeSession {
   private queue: number[];
-  private readonly totalCardCount: number;
+  private readonly wordIds: readonly number[];
   private readonly completedWordIds = new Set<number>();
   private readonly learnedWordIds = new Set<number>();
   private readonly missedCounts = new Map<number, number>();
@@ -25,8 +37,35 @@ export class PracticeSession {
 
   constructor(wordIds: readonly number[], random: RandomSource = Math.random) {
     this.queue = [...new Set(wordIds)];
-    this.totalCardCount = this.queue.length;
+    this.wordIds = [...this.queue];
     this.random = random;
+  }
+
+  /** Picks a paused set up again, leaving out words that no longer exist (deleted meanwhile). */
+  static fromSnapshot(
+    snapshot: PracticeSessionSnapshot,
+    existingWordIds: ReadonlySet<number>,
+    random: RandomSource = Math.random,
+  ): PracticeSession {
+    const exists = (wordId: number) => existingWordIds.has(wordId);
+    const session = new PracticeSession(snapshot.wordIds.filter(exists), random);
+    session.queue = snapshot.queue.filter(exists);
+    snapshot.completedWordIds.filter(exists).forEach((id) => session.completedWordIds.add(id));
+    snapshot.learnedWordIds.filter(exists).forEach((id) => session.learnedWordIds.add(id));
+    for (const [wordId, count] of snapshot.missedCounts) {
+      if (exists(wordId)) session.missedCounts.set(wordId, count);
+    }
+    return session;
+  }
+
+  toSnapshot(): PracticeSessionSnapshot {
+    return {
+      wordIds: [...this.wordIds],
+      queue: [...this.queue],
+      completedWordIds: [...this.completedWordIds],
+      learnedWordIds: [...this.learnedWordIds],
+      missedCounts: [...this.missedCounts],
+    };
   }
 
   get currentWordId(): number | undefined {
@@ -42,7 +81,7 @@ export class PracticeSession {
   }
 
   get cardCount(): number {
-    return this.totalCardCount;
+    return this.wordIds.length;
   }
 
   get learnedWordIdList(): number[] {
@@ -50,11 +89,11 @@ export class PracticeSession {
   }
 
   get isDeckCompleted(): boolean {
-    return this.totalCardCount > 0 && this.completedWordIds.size === this.totalCardCount;
+    return this.wordIds.length > 0 && this.completedWordIds.size === this.wordIds.length;
   }
 
   get isAllLearned(): boolean {
-    return this.totalCardCount > 0 && this.queue.length === 0;
+    return this.wordIds.length > 0 && this.queue.length === 0;
   }
 
   missCountFor(wordId: number): number {

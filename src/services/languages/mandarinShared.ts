@@ -16,7 +16,7 @@ function pinyinSearchKey(pinyin: string): string {
 
 /** What Traditional and Simplified Mandarin handle the same way: Han script and pinyin. */
 export const MANDARIN_SHARED = {
-  csvHeaders: { headword: 'character', meaning: 'meaning', reading: 'pinyin' },
+  csvHeaders: { headword: 'character', meaning: 'meaning', reading: 'pinyin', added: 'added' },
   containsLanguageScript: containsChineseCharacters,
   normalizeReading: toNumberedPinyin,
   formatReading: toToneMarkedPinyin,

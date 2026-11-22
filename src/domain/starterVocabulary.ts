@@ -8,6 +8,8 @@ import {
 import { FrequencyTier } from './frequencyTier';
 import type { PartOfSpeech } from './partOfSpeech';
 import { isPartOfSpeech } from './partOfSpeech';
+import type { WordList } from './wordList';
+import { WordListKind } from './wordList';
 
 /**
  * Curated starter vocabulary: numbered sets of common words shipped in a language pack. A profile
@@ -91,4 +93,24 @@ export function listForStarterWordType(
   const candidates = [...defaultWordListsFor(languageExtraLists), ...SUGGESTED_WORD_LISTS];
   const matching = candidates.find((list) => list.partOfSpeech === wordType);
   return matching ?? { name: pluralListName(wordType), partOfSpeech: wordType };
+}
+
+/** Lists the app fills by itself, so their entries aren't words the user added. */
+const SELF_FILLED_LIST_KINDS: ReadonlySet<WordListKind> = new Set([
+  WordListKind.Components,
+  WordListKind.ScriptStudy,
+  WordListKind.NewWords,
+]);
+
+/** A list's kind with its current length. */
+export interface ListLength {
+  list: Pick<WordList, 'kind'>;
+  length: number;
+}
+
+/** True while the profile has added no words yet, so the starter card is worth showing upfront. */
+export function hasNoAddedWords(listLengths: readonly ListLength[]): boolean {
+  return listLengths.every(
+    ({ list, length }) => SELF_FILLED_LIST_KINDS.has(list.kind) || length === 0,
+  );
 }

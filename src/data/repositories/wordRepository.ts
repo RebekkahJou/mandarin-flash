@@ -1,5 +1,6 @@
 import type { FrequencyTier } from '../../domain/frequencyTier';
 import { NEW_WORD_TIER, downgradeTier } from '../../domain/frequencyTier';
+import type { SavedMeanings } from '../../domain/savedMeaningUpdates';
 import type { Word } from '../../domain/word';
 import { WordListKind, allMeaningsOf } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
@@ -18,6 +19,8 @@ export interface NewWord {
   variant?: string;
   reading: string;
   definitions: readonly string[];
+  /** When the word was added; now unless given, e.g. by a CSV file's time added. */
+  addedAtMs?: number;
 }
 
 /** How many of a profile's words from one starter set sit in one tier. */
@@ -63,6 +66,7 @@ export function createWordRepository(database: SqlDatabase) {
   async function findOrCreateWord(newWord: NewWord): Promise<Word> {
     const existing = await findWord(newWord.profileId, newWord.headword, newWord.reading);
     if (existing) return existing;
+    const addedAtMs = newWord.addedAtMs ?? Date.now();
     const result = await database.run(
       `INSERT INTO words (profile_id, headword, variant, reading, definitions, frequency_tier, created_at)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -73,7 +77,7 @@ export function createWordRepository(database: SqlDatabase) {
         newWord.reading,
         serializeDefinitions(newWord.definitions),
         NEW_WORD_TIER,
-        Date.now(),
+        addedAtMs,
       ],
     );
     return {
@@ -84,6 +88,7 @@ export function createWordRepository(database: SqlDatabase) {
       reading: newWord.reading,
       definitions: [...newWord.definitions],
       frequencyTier: NEW_WORD_TIER,
+      addedAtMs,
     };
   }
 
@@ -152,6 +157,31 @@ export function createWordRepository(database: SqlDatabase) {
       [profileId],
     );
     return rows.map((row) => ({ wordId: row.id, headword: row.headword, reading: row.reading }));
+  }
+
+  /** Each word's own meanings, for updating saved copies when the pack's meanings change. */
+  async function listWordMeanings(profileId: number): Promise<SavedMeanings[]> {
+    const rows = await database.getAll<{ id: number; definitions: string }>(
+      'SELECT id, definitions FROM words WHERE profile_id = ?',
+      [profileId],
+    );
+    return rows.map((row) => ({ id: row.id, meanings: parseDefinitions(row.definitions) }));
+  }
+
+  async function setWordMeanings(wordId: number, meanings: readonly string[]): Promise<void> {
+    await database.run('UPDATE words SET definitions = ? WHERE id = ?', [
+      serializeDefinitions(meanings),
+      wordId,
+    ]);
+  }
+
+  /** Deletes words from the profile; their list entries, practice history and character links go too. */
+  async function deleteWords(wordIds: readonly number[]): Promise<void> {
+    await database.transaction(async () => {
+      for (const wordId of wordIds) {
+        await database.run('DELETE FROM words WHERE id = ?', [wordId]);
+      }
+    });
   }
 
   /** Moves everything attached to one word onto another, then deletes the first. */
@@ -308,6 +338,9 @@ export function createWordRepository(database: SqlDatabase) {
     listWordLevelsWithListIds,
     listWordReadings,
     changeWordReading,
+    deleteWords,
+    listWordMeanings,
+    setWordMeanings,
     countWords,
     setFrequencyTier,
     setFrequencyTierForList,

@@ -11,6 +11,7 @@ import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { ReviewAnswer } from '../../domain/reviewEvent';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
 import { createInstalledPackRepository } from '../repositories/installedPackRepository';
+import { createPracticeSessionRepository } from '../repositories/practiceSessionRepository';
 import { createProfileRepository } from '../repositories/profileRepository';
 import { createReviewEventRepository } from '../repositories/reviewEventRepository';
 import { PhoneticDisplay, createSettingsRepository } from '../repositories/settingsRepository';
@@ -51,6 +52,7 @@ describe('user database', () => {
     const { profile, wordListRepository } = await setUp();
     const summaries = await wordListRepository.listSummaries(profile.id);
     expect(summaries.map((summary) => summary.list.name)).toEqual([
+      'New Words',
       'General Vocabulary',
       'Focus Vocabulary',
       'Nouns',
@@ -211,6 +213,160 @@ describe('user database', () => {
     expect(await wordRepository.getWord(word.id)).not.toBeNull();
   });
 
+  it('deletes words with their list entries and practice history, keeping other words', async () => {
+    const { database, profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const walk = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    const eat = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: '吃',
+      reading: 'chi1',
+      definitions: ['to eat'],
+    });
+    const run = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: '跑',
+      reading: 'pao3',
+      definitions: ['to run'],
+    });
+    for (const word of [walk, eat, run]) {
+      await wordListRepository.addWordToLists(word.id, [{ wordListId: listIdByName('Verbs') }]);
+    }
+    await createReviewEventRepository(database).recordReviewEvent({
+      profileId: profile.id,
+      wordId: walk.id,
+      answer: ReviewAnswer.Gotten,
+      answeredAtMs: 1,
+    });
+
+    await wordRepository.deleteWords([walk.id, eat.id]);
+
+    expect(await wordRepository.getWord(walk.id)).toBeNull();
+    expect(await wordRepository.getWord(eat.id)).toBeNull();
+    expect(await wordRepository.getWord(run.id)).not.toBeNull();
+    const verbs = await wordListRepository.getListWithEntries(listIdByName('Verbs'));
+    expect(verbs?.words.map((entry) => entry.word.id)).toEqual([run.id]);
+    const events = await database.getAll('SELECT id FROM review_events');
+    expect(events).toEqual([]);
+  });
+
+  it('fills New Words with the newest High practice words never marked Learned', async () => {
+    const { database, profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const addWord = (headword: string, addedAtMs: number) =>
+      wordRepository.findOrCreateWord({
+        profileId: profile.id,
+        headword,
+        reading: 'zi4',
+        definitions: [headword],
+        addedAtMs,
+      });
+    const words = [];
+    for (let index = 0; index < 12; index++) words.push(await addWord(`字${index}`, index));
+    const newWordsListId = listIdByName('New Words');
+    const headwordsInNewWords = async () =>
+      (await wordListRepository.getListWithEntries(newWordsListId))?.words.map(
+        (entry) => entry.word.headword,
+      );
+
+    expect(await headwordsInNewWords()).toEqual([
+      '字11',
+      '字10',
+      '字9',
+      '字8',
+      '字7',
+      '字6',
+      '字5',
+      '字4',
+      '字3',
+      '字2',
+    ]);
+
+    await wordRepository.markWordLearned(words[11].id);
+    await createReviewEventRepository(database).recordReviewEvent({
+      profileId: profile.id,
+      wordId: words[11].id,
+      answer: ReviewAnswer.Learned,
+      answeredAtMs: 1,
+    });
+    await wordRepository.setFrequencyTier(words[11].id, FrequencyTier.HighIncidence);
+    const afterLearning = await headwordsInNewWords();
+    expect(afterLearning).not.toContain('字11');
+    expect(afterLearning?.[afterLearning.length - 1]).toBe('字1');
+
+    await createSettingsRepository(database).saveSetting(profile.id, 'newWordsListSize', 20);
+    expect(await headwordsInNewWords()).toHaveLength(11);
+    const summaries = await wordListRepository.listSummaries(profile.id);
+    expect(summaries.find(({ list }) => list.name === 'New Words')?.length).toBe(11);
+  });
+
+  it('leaves study cards such as components out of New Words', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const component = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: '氵',
+      reading: 'shui3',
+      definitions: ['water'],
+    });
+    await wordListRepository.addWordToLists(component.id, [
+      { wordListId: listIdByName('Components') },
+    ]);
+    const newWords = await wordListRepository.getListWithEntries(listIdByName('New Words'));
+    expect(newWords?.length).toBe(0);
+  });
+
+  it('keeps one paused practice set per list, replaced by the next pause', async () => {
+    const { database, profile, listIdByName } = await setUp();
+    const repository = createPracticeSessionRepository(database);
+    const state = (queue: number[]) => ({
+      session: {
+        wordIds: [1, 2],
+        queue,
+        completedWordIds: [],
+        learnedWordIds: [],
+        missedCounts: [],
+      },
+      timer: { startedAtMs: 0, elapsedMs: 1000 },
+    });
+    const verbsId = listIdByName('Verbs');
+    await repository.savePausedSet(profile.id, {
+      wordListId: verbsId,
+      setSize: 20,
+      state: state([1, 2]),
+    });
+    await repository.savePausedSet(profile.id, {
+      wordListId: verbsId,
+      setSize: 20,
+      state: state([2]),
+    });
+
+    expect((await repository.loadPausedSet(verbsId))?.state.session.queue).toEqual([2]);
+    expect(await repository.listPausedSets(profile.id)).toHaveLength(1);
+    await repository.deletePausedSet(verbsId);
+    expect(await repository.loadPausedSet(verbsId)).toBeNull();
+  });
+
+  it('keeps one saved set per list with its times, cleared when the set is replaced', async () => {
+    const { database, profile, listIdByName } = await setUp();
+    const repository = createPracticeSessionRepository(database);
+    const verbsId = listIdByName('Verbs');
+    await repository.saveSavedSet(profile.id, verbsId, [3, 1, 2]);
+    await repository.recordSavedSetTime(verbsId, 90_000);
+    await repository.recordSavedSetTime(verbsId, 80_000);
+
+    expect(await repository.loadSavedSet(verbsId)).toEqual({
+      wordListId: verbsId,
+      wordIds: [3, 1, 2],
+      timesMs: [80_000, 90_000],
+    });
+
+    await repository.saveSavedSet(profile.id, verbsId, [4, 5]);
+    expect(await repository.loadSavedSet(verbsId)).toEqual({
+      wordListId: verbsId,
+      wordIds: [4, 5],
+      timesMs: [],
+    });
+    expect(await repository.listSavedSets(profile.id)).toHaveLength(1);
+  });
+
   it('adds a new general list after the existing ones', async () => {
     const { profile, wordListRepository } = await setUp();
     const newListId = await wordListRepository.createList(profile.id, { name: 'Food' });
@@ -236,7 +392,7 @@ describe('user database', () => {
     await wordListRepository.renameList(listIdByName('Phrases'), 'Sayings');
     const list = await wordListRepository.getListWithEntries(listIdByName('Phrases'));
     expect(list?.name).toBe('Sayings');
-    expect((await wordListRepository.listSummaries(profile.id)).length).toBe(9);
+    expect((await wordListRepository.listSummaries(profile.id)).length).toBe(10);
   });
 
   it('deletes a list and its entries but keeps the words', async () => {

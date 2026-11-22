@@ -1,10 +1,23 @@
 import type { DefaultWordListDefinition } from '../../domain/defaultWordLists';
 import { listKindFor } from '../../domain/defaultWordLists';
+import { FrequencyTier } from '../../domain/frequencyTier';
+import { selectNewWords } from '../../domain/newWordsList';
+import { ReviewAnswer } from '../../domain/reviewEvent';
+import type { SavedMeanings } from '../../domain/savedMeaningUpdates';
+import type { Word } from '../../domain/word';
 import type { WordList } from '../../domain/wordList';
 import { WordListKind } from '../../domain/wordList';
 import type { SqlDatabase } from '../sqlDatabase';
-import type { WordListEntryRow, WordListRow } from './rowMappers';
-import { WORD_COLUMNS, serializeDefinitions, toWordList, toWordListEntry } from './rowMappers';
+import { createSettingsRepository } from './settingsRepository';
+import type { WordListEntryRow, WordListRow, WordRow } from './rowMappers';
+import {
+  WORD_COLUMNS,
+  parseDefinitions,
+  serializeDefinitions,
+  toWord,
+  toWordList,
+  toWordListEntry,
+} from './rowMappers';
 
 export interface WordListSummary {
   list: WordList;
@@ -29,6 +42,33 @@ export interface WordListTarget {
 const WORD_LIST_COLUMNS = 'id, profile_id, name, kind, part_of_speech';
 
 export function createWordListRepository(database: SqlDatabase) {
+  const settingsRepository = createSettingsRepository(database);
+
+  /**
+   * The words in the profile's New Words list: High practice, never marked Learned and not a
+   * study card (components, script study), newest first up to the list size setting.
+   */
+  async function newWords(profileId: number): Promise<Word[]> {
+    const rows = await database.getAll<WordRow>(
+      `SELECT ${WORD_COLUMNS} FROM words
+       WHERE words.profile_id = ? AND words.frequency_tier = ?
+         AND NOT EXISTS (SELECT 1 FROM review_events
+                         WHERE review_events.word_id = words.id AND review_events.answer = ?)
+         AND NOT EXISTS (SELECT 1 FROM word_list_entries
+                         JOIN word_lists ON word_lists.id = word_list_entries.word_list_id
+                         WHERE word_list_entries.word_id = words.id AND word_lists.kind IN (?, ?))`,
+      [
+        profileId,
+        FrequencyTier.HighIncidence,
+        ReviewAnswer.Learned,
+        WordListKind.Components,
+        WordListKind.ScriptStudy,
+      ],
+    );
+    const { newWordsListSize } = await settingsRepository.loadSettings(profileId);
+    return selectNewWords(rows.map(toWord), newWordsListSize);
+  }
+
   async function listSummaries(profileId: number): Promise<WordListSummary[]> {
     const rows = await database.getAll<WordListRow & { entry_count: number }>(
       `SELECT ${WORD_LIST_COLUMNS},
@@ -36,7 +76,12 @@ export function createWordListRepository(database: SqlDatabase) {
        FROM word_lists WHERE profile_id = ? AND is_hidden = 0 ORDER BY sort_order, id`,
       [profileId],
     );
-    return rows.map((row) => ({ list: toWordList(row), length: row.entry_count }));
+    const hasNewWordsList = rows.some((row) => row.kind === WordListKind.NewWords);
+    const newWordCount = hasNewWordsList ? (await newWords(profileId)).length : 0;
+    return rows.map((row) => ({
+      list: toWordList(row),
+      length: row.kind === WordListKind.NewWords ? newWordCount : row.entry_count,
+    }));
   }
 
   async function getListWithEntries(wordListId: number): Promise<WordList | null> {
@@ -45,6 +90,14 @@ export function createWordListRepository(database: SqlDatabase) {
       [wordListId],
     );
     if (!listRow) return null;
+    if (listRow.kind === WordListKind.NewWords) {
+      // Its words have no entries, so each word's id stands in for an entry id.
+      const words = await newWords(listRow.profile_id);
+      return toWordList(
+        listRow,
+        words.map((word) => ({ entryId: word.id, word })),
+      );
+    }
     const entryRows = await database.getAll<WordListEntryRow>(
       `SELECT word_list_entries.id AS entry_id, word_list_entries.definitions_override, ${WORD_COLUMNS}
        FROM word_list_entries JOIN words ON words.id = word_list_entries.word_id
@@ -226,6 +279,20 @@ export function createWordListRepository(database: SqlDatabase) {
     ]);
   }
 
+  /** List entries with meanings of their own, for updating saved copies. */
+  async function listEntryMeanings(profileId: number): Promise<SavedMeanings[]> {
+    const rows = await database.getAll<{ id: number; definitions_override: string }>(
+      `SELECT word_list_entries.id, word_list_entries.definitions_override
+       FROM word_list_entries JOIN word_lists ON word_lists.id = word_list_entries.word_list_id
+       WHERE word_lists.profile_id = ? AND word_list_entries.definitions_override IS NOT NULL`,
+      [profileId],
+    );
+    return rows.map((row) => ({
+      id: row.id,
+      meanings: parseDefinitions(row.definitions_override),
+    }));
+  }
+
   async function setEntryDefinitions(
     entryId: number,
     definitions: readonly string[] | null,
@@ -256,6 +323,7 @@ export function createWordListRepository(database: SqlDatabase) {
     listIdsContainingWord,
     removeWordFromList,
     setEntryDefinitions,
+    listEntryMeanings,
   };
 }
 

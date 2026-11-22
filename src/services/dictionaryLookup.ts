@@ -37,7 +37,11 @@ export interface DictionaryForm {
   readsVariants: boolean;
   /** Sentences are stored like headwords; this converts them for display. */
   convertSentence: (text: string) => string;
+  /** Makes a pack meaning readable, e.g. its references to other words; unchanged if absent. */
+  formatMeaning?: (meaning: string) => string;
 }
+
+const unchangedMeaning = (meaning: string) => meaning;
 
 /** A curated starter word with its dictionary entry, read the way the profile's language needs. */
 export interface StarterWord {
@@ -100,7 +104,10 @@ function isSerializedGloss(value: unknown): value is [string, number] {
 }
 
 /** Packs are validated on install, but a malformed gloss list still only loses its meanings. */
-function definitionCandidatesFrom(serializedGlosses: string): DefinitionCandidate[] {
+function definitionCandidatesFrom(
+  serializedGlosses: string,
+  formatMeaning: (meaning: string) => string,
+): DefinitionCandidate[] {
   let glosses: unknown;
   try {
     glosses = JSON.parse(serializedGlosses);
@@ -108,27 +115,32 @@ function definitionCandidatesFrom(serializedGlosses: string): DefinitionCandidat
     return [];
   }
   if (!Array.isArray(glosses)) return [];
-  return glosses
-    .filter(isSerializedGloss)
-    .map(([text, flags]) => ({ text, partsOfSpeech: partsOfSpeechFromFlags(flags) }));
+  return glosses.filter(isSerializedGloss).map(([text, flags]) => ({
+    text: formatMeaning(text),
+    partsOfSpeech: partsOfSpeechFromFlags(flags),
+  }));
 }
 
 /** The variant columns are empty when they match the headword's. */
 function toDictionaryEntry(row: PackEntryRow, form: DictionaryForm): DictionaryEntry {
   const hasVariant = row.variant !== '';
+  const definitionCandidates = definitionCandidatesFrom(
+    row.glosses,
+    form.formatMeaning ?? unchangedMeaning,
+  );
   if (!form.readsVariants) {
     return {
       headword: row.headword,
       variant: hasVariant ? row.variant : undefined,
       reading: row.reading,
-      definitionCandidates: definitionCandidatesFrom(row.glosses),
+      definitionCandidates,
     };
   }
   return {
     headword: hasVariant ? row.variant : row.headword,
     variant: hasVariant ? row.headword : undefined,
     reading: row.variant_reading !== '' ? row.variant_reading : row.reading,
-    definitionCandidates: definitionCandidatesFrom(row.glosses),
+    definitionCandidates,
   };
 }
 
@@ -151,6 +163,11 @@ function toWordSetEntry(row: PackWordSetEntryRow, form: DictionaryForm): WordSet
   if (!isStarterWordType(row.part_of_speech) || meanings.length === 0) return null;
   const { headword, variant, reading } = toDictionaryEntry({ ...row, glosses: '[]' }, form);
   return { setId: row.set_id, wordType: row.part_of_speech, headword, variant, reading, meanings };
+}
+
+async function hasColumn(database: SqlDatabase, table: string, column: string): Promise<boolean> {
+  const columns = await database.getAll<{ name: string }>(`PRAGMA table_info(${table})`);
+  return columns.some((candidate) => candidate.name === column);
 }
 
 async function hasTable(database: SqlDatabase, table: string): Promise<boolean> {
@@ -350,6 +367,22 @@ export function createDictionaryLookup(
   }
 
   /**
+   * Each set's source: the set whose entries it copies, or itself. Sets with the same source
+   * are the same set shown under two topics. Before schema 4 every set is its own source.
+   */
+  async function wordSetSources(): Promise<Map<string, string>> {
+    if (!(await hasTable(packDatabase, 'word_sets'))) return new Map();
+    if (!(await hasColumn(packDatabase, 'word_sets', 'entries_from'))) {
+      const rows = await packDatabase.getAll<{ set_id: string }>('SELECT set_id FROM word_sets');
+      return new Map(rows.map((row) => [row.set_id, row.set_id]));
+    }
+    const rows = await packDatabase.getAll<{ set_id: string; entries_from: string }>(
+      'SELECT set_id, entries_from FROM word_sets',
+    );
+    return new Map(rows.map((row) => [row.set_id, row.entries_from || row.set_id]));
+  }
+
+  /**
    * Every reading of each headword that has a replaced reading (variant_reading), for updating
    * words saved before the pack changed. Empty for languages that read the variants, since their
    * readings didn't change.
@@ -375,8 +408,10 @@ export function createDictionaryLookup(
 
   return {
     lookUp,
+    formatMeaning: form.formatMeaning ?? unchangedMeaning,
     replacedReadings,
     wordSets,
+    wordSetSources,
     wordSetEntries: readWordSetEntries,
     findExampleSentences,
     components,

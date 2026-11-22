@@ -211,6 +211,13 @@ function withSharedEntries(
   return [...entries, ...copies];
 }
 
+/** Packs built before schema 4 lack word_sets.entries_from. */
+function addEntriesFromColumn(database: Database.Database): void {
+  const columns = database.prepare('PRAGMA table_info(word_sets)').all() as { name: string }[];
+  if (columns.some((column) => column.name === 'entries_from')) return;
+  database.exec("ALTER TABLE word_sets ADD COLUMN entries_from TEXT NOT NULL DEFAULT ''");
+}
+
 /**
  * Replaces the pack's word sets, creating the tables in a pack built before schema 3. A set
  * that shares another set's entries gets its own copy, since each entry row names one set.
@@ -225,12 +232,15 @@ export function writeWordSets(
     .get();
   database.transaction(() => {
     if (!hasTables) database.exec(WORD_SETS_TABLES_SQL);
+    else addEntriesFromColumn(database);
     database.exec('DELETE FROM word_sets; DELETE FROM word_set_entries');
     // Prepared only now, since the tables may have just been created.
     const insertSet = database.prepare(
-      'INSERT INTO word_sets (set_id, topic, title, position) VALUES (?, ?, ?, ?)',
+      'INSERT INTO word_sets (set_id, topic, title, position, entries_from) VALUES (?, ?, ?, ?, ?)',
     );
-    sets.forEach((set, index) => insertSet.run(set.setId, set.topic, set.title, index + 1));
+    sets.forEach((set, index) =>
+      insertSet.run(set.setId, set.topic, set.title, index + 1, set.entriesFrom ?? ''),
+    );
     const insertEntry = database.prepare(
       `INSERT INTO word_set_entries (set_id, position, headword, variant, reading,
          variant_reading, part_of_speech, meanings, languages) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,

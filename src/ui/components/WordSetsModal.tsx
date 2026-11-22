@@ -1,14 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { WordList } from '../../domain/wordList';
 import type { WordSetTopic } from '../../domain/wordSets';
 import { colors, fontSizes, spacing } from '../theme';
+import { CheckboxMark } from './CheckboxMark';
 import type { CheckboxOption } from './Checkboxes';
-import { Checkboxes } from './Checkboxes';
 import { CompactButton } from './CompactButton';
 import { InfoModal } from './InfoModal';
 import { ListCheckboxes } from './ListCheckboxes';
 import { PrimaryButton } from './PrimaryButton';
+import type { WordSetPreviewListProps } from './WordSetPreviewList';
+import { WordSetPreviewList } from './WordSetPreviewList';
 
 interface WordSetTopicOption {
   value: WordSetTopic;
@@ -31,6 +33,10 @@ interface WordSetsModalProps {
   setOptions: readonly CheckboxOption<string>[];
   selectedSetIds: ReadonlySet<string>;
   onToggleSet: (setId: string) => void;
+  /** Opens a set's words so the user can uncheck the ones they don't need. */
+  onPreviewSet: (setId: string) => void;
+  /** The previewed set's words, or null while the topics or sets show. */
+  preview: WordSetPreviewListProps | null;
   /** Lists the words may also go into, such as Focus Vocabulary. */
   extraLists: readonly WordList[];
   selectedExtraListIds: ReadonlySet<number>;
@@ -66,16 +72,51 @@ type SetChoicesProps = Omit<
   | 'hint'
   | 'topicOptions'
   | 'onChooseTopic'
+  | 'preview'
   | 'confirmLabel'
   | 'onConfirm'
   | 'onDismiss'
 >;
+
+interface SetRowProps {
+  option: CheckboxOption<string>;
+  isSelected: boolean;
+  onToggle: () => void;
+  onPreview: () => void;
+}
+
+/** A set's checkbox, with a Preview button while the set can still be added. */
+function SetRow({ option, isSelected, onToggle, onPreview }: SetRowProps) {
+  const isDisabled = option.isDisabled === true;
+  const isChecked = isDisabled || isSelected;
+  const accessibilityState = { checked: isChecked, disabled: isDisabled };
+  const labelStyle = [styles.setLabel, isDisabled && styles.disabledLabel];
+  const previewButton = isDisabled ? null : (
+    <CompactButton label="Preview" onPress={onPreview} isOutlined />
+  );
+  return (
+    <View style={styles.setRow}>
+      <Pressable
+        onPress={onToggle}
+        disabled={isDisabled}
+        accessibilityRole="checkbox"
+        accessibilityState={accessibilityState}
+        style={styles.setCheckbox}
+      >
+        <CheckboxMark isChecked={isChecked} isDisabled={isDisabled} />
+        <Text style={labelStyle}>{option.label}</Text>
+      </Pressable>
+      {previewButton}
+    </View>
+  );
+}
 
 function SetChoices({
   onBack,
   setOptions,
   selectedSetIds,
   onToggleSet,
+  onPreviewSet,
   extraLists,
   selectedExtraListIds,
   onToggleExtraList,
@@ -96,17 +137,33 @@ function SetChoices({
       <View style={styles.backRow}>
         <CompactButton label="Back to topics" onPress={onBack} isOutlined />
       </View>
-      <Checkboxes options={setOptions} selectedValues={selectedSetIds} onToggle={onToggleSet} />
+      {setOptions.map((option) => (
+        <SetRow
+          key={option.value}
+          option={option}
+          isSelected={selectedSetIds.has(option.value)}
+          onToggle={() => onToggleSet(option.value)}
+          onPreview={() => onPreviewSet(option.value)}
+        />
+      ))}
       {extraListsTitle}
       {extraListCheckboxes}
     </>
   );
 }
 
-/** Picks a topic (health, parenting…), then word sets to add and other lists for their words. */
+function ModalContent(props: WordSetsModalProps) {
+  if (props.preview) return <WordSetPreviewList {...props.preview} />;
+  if (props.isChoosingTopic) return <TopicList {...props} />;
+  return <SetChoices {...props} />;
+}
+
+/**
+ * Picks a topic (health, parenting…), then word sets to add and other lists for their words. A
+ * set's preview shows its words to uncheck, then returns to the sets with every choice kept.
+ */
 export function WordSetsModal(props: WordSetsModalProps) {
-  const { isVisible, isChoosingTopic, title, hint, confirmLabel, onConfirm, onDismiss } = props;
-  const content = isChoosingTopic ? <TopicList {...props} /> : <SetChoices {...props} />;
+  const { isVisible, title, hint, confirmLabel, onConfirm, onDismiss } = props;
   return (
     <InfoModal
       isVisible={isVisible}
@@ -116,7 +173,7 @@ export function WordSetsModal(props: WordSetsModalProps) {
     >
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.hint}>{hint}</Text>
-      {content}
+      <ModalContent {...props} />
     </InfoModal>
   );
 }
@@ -144,5 +201,25 @@ const styles = StyleSheet.create({
   },
   backRow: {
     flexDirection: 'row',
+  },
+  setRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.small,
+  },
+  setCheckbox: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.medium,
+    paddingVertical: spacing.small,
+  },
+  setLabel: {
+    flexShrink: 1,
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
+  },
+  disabledLabel: {
+    color: colors.textSecondary,
   },
 });

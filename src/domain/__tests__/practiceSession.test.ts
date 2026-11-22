@@ -67,6 +67,27 @@ describe('PracticeSession', () => {
     expect(session.markGotten().hasJustCompletedDeck).toBe(true);
   });
 
+  it('carries on from a snapshot with the same order, progress and misses', () => {
+    const session = new PracticeSession([1, 2, 3, 4], () => 0);
+    session.markGotten();
+    session.markMissed();
+    session.markLearned();
+    const resumed = PracticeSession.fromSnapshot(session.toSnapshot(), new Set([1, 2, 3, 4]));
+    expect(resumed.toSnapshot()).toEqual(session.toSnapshot());
+    expect(resumed.completedCardCount).toBe(2);
+    expect(resumed.missCountFor(2)).toBe(1);
+    expect(resumed.cardCount).toBe(4);
+  });
+
+  it('leaves out words deleted while the set was paused', () => {
+    const session = new PracticeSession([1, 2, 3], () => 0);
+    session.markGotten();
+    const resumed = PracticeSession.fromSnapshot(session.toSnapshot(), new Set([2, 3]));
+    expect(resumed.cardCount).toBe(2);
+    expect(resumed.completedCardCount).toBe(0);
+    expect(resumed.currentWordId).toBe(2);
+  });
+
   it('ends when all words are learned', () => {
     const session = new PracticeSession([1, 2]);
     session.markLearned();

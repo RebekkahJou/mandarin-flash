@@ -32,6 +32,15 @@ export function groupProfilesByLanguage(profiles: readonly Profile[]): LanguageP
   }));
 }
 
+/** The active profile's name for screen headers; null when there is no one else to mix it up with. */
+export function activeProfileBadgeName(
+  profiles: readonly Profile[],
+  activeProfile: Profile | null,
+): string | null {
+  if (!activeProfile || profiles.length < 2) return null;
+  return activeProfile.name;
+}
+
 /** The first profile created. It can't be deleted, so there is always someone to practice as. */
 export function isOriginalProfile(profile: Profile, profiles: readonly Profile[]): boolean {
   return profiles.every((other) => other.id >= profile.id);

@@ -6,6 +6,7 @@ import {
   describeWordSetAddition,
   wordSetChoiceLabel,
   wordSetOptions,
+  wordSetPreviewButtonLabel,
   wordSetTopicLabel,
 } from '../wordSetText';
 import type { WordSetAddition } from '../wordSets';
@@ -20,6 +21,7 @@ function additionOf(addedCount: number, alreadyHadCount: number): WordSetAdditio
     reading: 'yao4',
     definitions: ['medicine'],
     frequencyTier: FrequencyTier.HighIncidence,
+    addedAtMs: 0,
   };
   return {
     addedWords: Array.from({ length: addedCount }, () => word),
@@ -47,6 +49,18 @@ describe('word set text', () => {
     );
   });
 
+  it('counts the words still checked once some are unchecked in the preview', () => {
+    expect(wordSetChoiceLabel(choice, 2)).toBe('Cold/Flu (17 of 19 words)');
+    const options = wordSetOptions([choice], new Map([['cold-flu', 1]]));
+    expect(options[0].label).toBe('Cold/Flu (18 of 19 words)');
+  });
+
+  it('labels the preview button with the checked words, or goes back when none are', () => {
+    expect(wordSetPreviewButtonLabel(0)).toBe('Back to sets');
+    expect(wordSetPreviewButtonLabel(1)).toBe('Choose 1 word');
+    expect(wordSetPreviewButtonLabel(35)).toBe('Choose 35 words');
+  });
+
   it('lists sets still to add first and added sets greyed out at the bottom', () => {
     const options = wordSetOptions([
       { ...choice, setId: 'doctor', title: 'Doctor', isAdded: true },
@@ -69,8 +83,7 @@ describe('word set text', () => {
       'Added 2 words to Health-related words, General Vocabulary and their word-type lists.',
     );
     expect(describeWordSetAddition(additionOf(2, 1))).toBe(
-      'Added 2 words to Health-related words, General Vocabulary and their word-type lists. ' +
-        '1 word you already had was added to Health-related words.',
+      'Added 2 words to Health-related words, General Vocabulary and their word-type lists. 1 word you already had was added to Health-related words.',
     );
   });
 

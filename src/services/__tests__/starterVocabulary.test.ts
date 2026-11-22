@@ -90,6 +90,7 @@ describe('starter vocabulary', () => {
     const addition = await addStarterSet(services, 1);
     expect(addition.addedWords.map((word) => word.headword)).toEqual(['我', '走', '你好']);
     expect(await headwordsByList(services)).toEqual({
+      'New Words': ['你好', '我', '走'],
       'General Vocabulary': ['你好', '我', '走'],
       Phrases: ['你好'],
       Pronouns: ['我'],

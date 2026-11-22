@@ -136,6 +136,44 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
     PRIMARY KEY (profile_id, pack_id, set_id)
   ) WITHOUT ROWID;
   `,
+  // Every profile gets the New Words list, first in its lists. It holds no entries: its words
+  // are worked out from the profile's words each time.
+  `
+  UPDATE word_lists SET sort_order = sort_order + 1;
+  INSERT INTO word_lists (profile_id, name, kind, part_of_speech, sort_order)
+    SELECT id, 'New Words', 'new_words', NULL, 0 FROM profiles
+    WHERE NOT EXISTS (
+      SELECT 1 FROM word_lists WHERE word_lists.profile_id = profiles.id AND kind = 'new_words'
+    );
+  `,
+  // One paused practice set per list, so the user can resume it later. state is JSON: the card
+  // order, progress and timer.
+  `
+  CREATE TABLE paused_practice_sets (
+    word_list_id INTEGER PRIMARY KEY REFERENCES word_lists(id) ON DELETE CASCADE,
+    profile_id INTEGER NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    set_size INTEGER NOT NULL,
+    state TEXT NOT NULL,
+    paused_at INTEGER NOT NULL
+  );
+  `,
+  // One saved practice set per list (its word ids as JSON), and the times to get every word in
+  // it, which go when the set is replaced.
+  `
+  CREATE TABLE saved_practice_sets (
+    word_list_id INTEGER PRIMARY KEY REFERENCES word_lists(id) ON DELETE CASCADE,
+    profile_id INTEGER NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    word_ids TEXT NOT NULL,
+    saved_at INTEGER NOT NULL
+  );
+  CREATE TABLE saved_set_times (
+    id INTEGER PRIMARY KEY,
+    word_list_id INTEGER NOT NULL REFERENCES saved_practice_sets(word_list_id) ON DELETE CASCADE,
+    deck_completed_ms INTEGER NOT NULL,
+    completed_at INTEGER NOT NULL
+  );
+  CREATE INDEX saved_set_times_by_list ON saved_set_times(word_list_id);
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {

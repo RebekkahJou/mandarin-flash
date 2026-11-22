@@ -1,7 +1,7 @@
 import type { StarterSetAddition, StarterVocabularyStatus } from './starterVocabulary';
 import { formatWordCount } from './wordCount';
 
-/** What the Lists tab shows about starter vocabulary. */
+/** What the starter vocabulary card shows. */
 export interface StarterVocabularyCardText {
   title: string;
   /** Progress through the latest set, once one is added. */

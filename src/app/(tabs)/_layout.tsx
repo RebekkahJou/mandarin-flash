@@ -3,7 +3,8 @@ import type { StatusBarStyle } from 'expo-status-bar';
 import { StatusBar } from 'expo-status-bar';
 
 import { TabIcon } from '../../ui/components/TabIcon';
-import { colors } from '../../ui/theme';
+import { useProfileBadgeHeader } from '../../ui/hooks/useProfileBadgeHeader';
+import { colors, spacing } from '../../ui/theme';
 
 const TAB_ICON_CHARACTERS = {
   practice: '練',
@@ -16,6 +17,7 @@ const TAB_SCREEN_OPTIONS = {
   tabBarInactiveTintColor: colors.textSecondary,
   headerStyle: { backgroundColor: colors.primary },
   headerTintColor: colors.onPrimary,
+  headerRightContainerStyle: { paddingRight: spacing.medium },
   sceneStyle: { backgroundColor: colors.background },
 };
 
@@ -25,10 +27,12 @@ export default function TabsLayout() {
   // back the dark style when the tabs are covered.
   const isFocused = useIsFocused();
   const statusBarStyle: StatusBarStyle = isFocused ? 'light' : 'dark';
+  const profileBadgeHeader = useProfileBadgeHeader();
+  const screenOptions = { ...TAB_SCREEN_OPTIONS, ...profileBadgeHeader };
   return (
     <>
       <StatusBar style={statusBarStyle} />
-      <Tabs screenOptions={TAB_SCREEN_OPTIONS}>
+      <Tabs screenOptions={screenOptions}>
         <Tabs.Screen
           name="index"
           options={{

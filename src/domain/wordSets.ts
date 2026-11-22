@@ -82,15 +82,33 @@ export function extraListChoicesForWordSets(lists: readonly WordList[]): WordLis
   );
 }
 
+/** Identifies a word within word sets: the same headword and reading is the same word. */
+export function wordSetEntryKey(entry: { headword: string; reading: string }): string {
+  return `${entry.headword}\u0000${entry.reading}`;
+}
+
 /** The same word in several chosen sets (醫生, 藥局) is added once, at its first appearance. */
 export function withoutRepeatedWords<Entry extends { headword: string; reading: string }>(
   entries: readonly Entry[],
 ): Entry[] {
   const seen = new Set<string>();
   return entries.filter((entry) => {
-    const key = `${entry.headword}\u0000${entry.reading}`;
+    const key = wordSetEntryKey(entry);
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
+}
+
+/** Word set entries keyed by set id, each holding the entry keys the user unchecked. */
+export type SkippedWordSetEntries = ReadonlyMap<string, ReadonlySet<string>>;
+
+/**
+ * Leaves out the words the user unchecked in a set's preview. A word skipped in one set is still
+ * added from another chosen set where it stayed checked.
+ */
+export function withoutSkippedEntries<
+  Entry extends { setId: string; headword: string; reading: string },
+>(entries: readonly Entry[], skipped: SkippedWordSetEntries): Entry[] {
+  return entries.filter((entry) => !skipped.get(entry.setId)?.has(wordSetEntryKey(entry)));
 }

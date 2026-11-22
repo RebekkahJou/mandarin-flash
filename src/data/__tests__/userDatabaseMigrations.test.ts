@@ -41,6 +41,19 @@ async function migratedDatabase(): Promise<SqlDatabase> {
   return database;
 }
 
+describe('migration adding New Words', () => {
+  it('puts a New Words list first for existing profiles', async () => {
+    const database = await migratedDatabase();
+    const lists = await database.getAll<{ name: string; kind: string }>(
+      'SELECT name, kind FROM word_lists WHERE profile_id = 1 ORDER BY sort_order',
+    );
+    expect(lists).toEqual([
+      { name: 'New Words', kind: 'new_words' },
+      { name: 'Verbs', kind: 'part_of_speech' },
+    ]);
+  });
+});
+
 describe('migration to language-neutral words', () => {
   it('records the latest schema version', async () => {
     const database = await migratedDatabase();

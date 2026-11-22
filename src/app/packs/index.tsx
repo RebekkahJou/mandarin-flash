@@ -11,13 +11,9 @@ import { useStorePacks } from '../../ui/hooks/useStorePacks';
 import { colors, fontSizes, spacing } from '../../ui/theme';
 
 const HINT =
-  "A language pack holds a language's dictionary and example sentences. To add one, tap Open on " +
-  'a downloaded .mfpack file and choose Mandarin Flash, or pick the file here. Packs are checked ' +
-  'before they are installed, and the app never goes online to get them.';
+  "A language pack holds a language's dictionary and example sentences. To add one, tap Open on a downloaded .mfpack file and choose Mandarin Flash, or pick the file here. Packs are checked before they are installed, and the app never goes online to get them.";
 const HINT_WITH_STORE_PACKS =
-  "A language pack holds a language's dictionary and example sentences. Get one from Google " +
-  'Play below, tap Open on a downloaded .mfpack file and choose Mandarin Flash, or pick the file ' +
-  'here. Packs are checked before they are installed, and the app itself never goes online.';
+  "A language pack holds a language's dictionary and example sentences. Get one from Google Play below, tap Open on a downloaded .mfpack file and choose Mandarin Flash, or pick the file here. Packs are checked before they are installed, and the app itself never goes online.";
 
 export default function LanguagePacksScreen() {
   const { rows, isInstalling, chooseAndInstall, remove } = useLanguagePackList();
