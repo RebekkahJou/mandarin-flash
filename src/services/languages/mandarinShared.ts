@@ -1,6 +1,9 @@
-import { containsChineseCharacters } from '../chineseConverter';
+import { containsChineseCharacters, toTaiwanTraditional } from '../chineseConverter';
 import { toNumberedPinyin, toToneMarkedPinyin } from '../pinyin';
 import type { LanguageAdapter } from './languageAdapter';
+
+/** Both Mandarin variants write the same words in Han characters, so they match by characters. */
+const HAN_CHARACTERS_MATCH_SCHEME = 'han-characters';
 
 const TONE_NUMBERS_AND_SPACES = /[0-9\s]/g;
 const COMBINING_MARKS = /[̀-ͯ]/g;
@@ -21,4 +24,7 @@ export const MANDARIN_SHARED = {
   normalizeReading: toNumberedPinyin,
   formatReading: toToneMarkedPinyin,
   readingSearchKey: pinyinSearchKey,
+  wordMatchScheme: HAN_CHARACTERS_MATCH_SCHEME,
+  // Taiwan Traditional, so 老师 and 老師 match (readings may differ between Taiwan and mainland).
+  wordMatchKey: toTaiwanTraditional,
 } satisfies Partial<LanguageAdapter>;

@@ -1,8 +1,8 @@
 import type { TextStyle } from 'react-native';
 import { Text } from 'react-native';
 
-import { PhoneticDisplay } from '../../data/repositories/settingsRepository';
-import { toToneMarkedPinyin, toZhuyin } from '../../services/pinyin';
+import type { PhoneticDisplay } from '../../data/repositories/settingsRepository';
+import { phoneticText } from '../../services/phoneticText';
 import { useSettings } from '../AppServicesContext';
 import { ENGLISH_FONT_FAMILY } from '../theme';
 
@@ -11,21 +11,18 @@ interface PhoneticTextProps {
   style?: TextStyle;
   /** With both readings shown, puts pinyin on one line and zhuyin on the line below. */
   isStacked?: boolean;
+  /** Another profile's setting, e.g. the other player's in a game; the active profile's by default. */
+  phoneticDisplay?: PhoneticDisplay;
 }
 
-const INLINE_READING_SEPARATOR = '  ';
-const STACKED_READING_SEPARATOR = '\n';
-
 /** Shows pinyin, Zhuyin or both, following the user's setting. Zhuyin is derived, never stored. */
-export function PhoneticText({ numberedPinyin, style, isStacked = false }: PhoneticTextProps) {
-  const { phoneticDisplay } = useSettings().settings;
-  const pinyin = toToneMarkedPinyin(numberedPinyin);
-  const zhuyin = toZhuyin(numberedPinyin);
-  const separator = isStacked ? STACKED_READING_SEPARATOR : INLINE_READING_SEPARATOR;
-  const text = {
-    [PhoneticDisplay.Pinyin]: pinyin,
-    [PhoneticDisplay.Zhuyin]: zhuyin,
-    [PhoneticDisplay.Both]: `${pinyin}${separator}${zhuyin}`,
-  }[phoneticDisplay];
+export function PhoneticText({
+  numberedPinyin,
+  style,
+  isStacked = false,
+  phoneticDisplay,
+}: PhoneticTextProps) {
+  const { settings } = useSettings();
+  const text = phoneticText(numberedPinyin, phoneticDisplay ?? settings.phoneticDisplay, isStacked);
   return <Text style={[{ fontFamily: ENGLISH_FONT_FAMILY }, style]}>{text}</Text>;
 }

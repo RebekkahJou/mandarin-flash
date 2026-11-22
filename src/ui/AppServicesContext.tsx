@@ -4,6 +4,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 import { createExpoPackFileStore } from '../data/expoPackFileStore';
 import { openBuiltInPack, openUserDatabase } from '../data/openDatabases';
+import type { GameResultRepository } from '../data/repositories/gameResultRepository';
+import { createGameResultRepository } from '../data/repositories/gameResultRepository';
 import { createInstalledPackRepository } from '../data/repositories/installedPackRepository';
 import type { PracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
 import { createPracticeSessionRepository } from '../data/repositories/practiceSessionRepository';
@@ -48,6 +50,7 @@ export interface AppCore {
   reviewEventRepository: ReviewEventRepository;
   settingsRepository: SettingsRepository;
   wordSetRepository: WordSetRepository;
+  gameResultRepository: GameResultRepository;
   /** Language packs open at startup: the built-in pack, then installed ones. */
   initialPacks: LoadedPack[];
   packInstaller: PackInstaller;
@@ -68,6 +71,7 @@ export interface AppServices {
   reviewEventRepository: ReviewEventRepository;
   settingsRepository: SettingsRepository;
   wordSetRepository: WordSetRepository;
+  gameResultRepository: GameResultRepository;
   /** The language pack the profile's language reads, e.g. for remembering added word sets. */
   packId: string;
   packVersion: number;
@@ -100,6 +104,7 @@ async function createAppCore(): Promise<AppCore> {
     reviewEventRepository: createReviewEventRepository(userDatabase),
     settingsRepository: createSettingsRepository(userDatabase),
     wordSetRepository: createWordSetRepository(userDatabase),
+    gameResultRepository: createGameResultRepository(userDatabase),
     initialPacks: [{ ...builtInPack, isBuiltIn: true, fonts: [] }, ...installedPacks],
     packInstaller,
     initialProfiles: await profileRepository.listProfiles(),
@@ -149,6 +154,7 @@ function createProfileServices(
     reviewEventRepository: core.reviewEventRepository,
     settingsRepository: core.settingsRepository,
     wordSetRepository: core.wordSetRepository,
+    gameResultRepository: core.gameResultRepository,
     packId: pack.metadata.packId,
     packVersion: pack.metadata.packVersion,
     dictionaryLookup: createDictionaryLookup(

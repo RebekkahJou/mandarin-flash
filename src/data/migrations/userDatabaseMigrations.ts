@@ -174,6 +174,23 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
   );
   CREATE INDEX saved_set_times_by_list ON saved_set_times(word_list_id);
   `,
+  // Results of games between two profiles. Scores are times in milliseconds (speed race) or
+  // correct answers (meaning match); options is JSON. Games never touch practice history.
+  `
+  CREATE TABLE game_results (
+    id INTEGER PRIMARY KEY,
+    game TEXT NOT NULL,
+    first_profile_id INTEGER NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    second_profile_id INTEGER NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    options TEXT NOT NULL,
+    first_score INTEGER NOT NULL,
+    second_score INTEGER NOT NULL,
+    winner TEXT NOT NULL,
+    played_at INTEGER NOT NULL
+  );
+  CREATE INDEX game_results_by_first_profile ON game_results(first_profile_id, played_at);
+  CREATE INDEX game_results_by_second_profile ON game_results(second_profile_id, played_at);
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {

@@ -21,4 +21,11 @@ export interface LanguageAdapter {
   formatReading(storedReading: string): string;
   /** Folds a reading or search query so loosely typed queries still match (e.g. ignoring tones). */
   readingSearchKey(text: string): string;
+  /**
+   * Games pair two profiles' words by wordMatchKey when their languages share this scheme (as
+   * Traditional and Simplified Mandarin do), and by English meaning otherwise.
+   */
+  wordMatchScheme: string;
+  /** What a headword matches on within its scheme, e.g. its Taiwan Traditional characters. */
+  wordMatchKey(headword: string): string;
 }
