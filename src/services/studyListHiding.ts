@@ -27,8 +27,7 @@ export interface RetentionQuestion {
  */
 export function retentionQuestion(cardsName: string, howToShowAgain = ''): RetentionQuestion {
   const levelsNote =
-    "They'll come up rarely in practice and can be hidden from All words. Showing the list " +
-    "again won't move them back; you can change a card's learning level on its screen.";
+    "They'll come up rarely in practice and can be hidden from All words. Showing the list again won't move them back; you can change a card's learning level on its screen.";
   return {
     title: `Move all ${cardsName} to Retention?`,
     message: [levelsNote, howToShowAgain].filter((sentence) => sentence !== '').join(' '),

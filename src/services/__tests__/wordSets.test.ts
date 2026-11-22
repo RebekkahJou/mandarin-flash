@@ -11,12 +11,17 @@ import { createInMemoryDatabase } from '../../data/testing/nodeSqlDatabase';
 import { writeTestPack } from '../../data/testing/testPack';
 import { LanguageId, languageDefinitionFor } from '../../domain/language';
 import { PartOfSpeech } from '../../domain/partOfSpeech';
-import { WordSetTopic } from '../../domain/wordSets';
+import { WordSetTopic, wordSetEntryKey } from '../../domain/wordSets';
 import { toMainlandSimplified } from '../chineseConverter';
 import type { DictionaryForm } from '../dictionaryLookup';
 import { createDictionaryLookup } from '../dictionaryLookup';
 import type { WordSetServices } from '../wordSets';
-import { addWordSets, loadWordSetChoices } from '../wordSets';
+import {
+  addWordSets,
+  loadWordSetChoices,
+  loadWordSetPreview,
+  loadWordSetTopics,
+} from '../wordSets';
 
 const INSERT_SET_SQL = 'INSERT INTO word_sets (set_id, topic, title, position) VALUES (?, ?, ?, ?)';
 const INSERT_ENTRY_SQL = `INSERT INTO word_set_entries (set_id, position, headword, variant,
@@ -33,6 +38,8 @@ async function createWordSetPack(): Promise<SqlDatabase> {
   await writeTestPack(pack);
   await pack.run(INSERT_SET_SQL, ['doctor', 'health', 'Going to the doctor', 1]);
   await pack.run(INSERT_SET_SQL, ['dental', 'health', 'Dental issues', 2]);
+  await pack.run(INSERT_SET_SQL, ['school-forms', 'school', 'School forms', 3]);
+  await pack.run(INSERT_SET_SQL, ['babies', 'parenting', 'Babies', 4]);
   const entries: (string | number)[][] = [
     ['doctor', 1, '醫生', '医生', 'yi1 sheng1', '', 'noun', '["doctor"]', ''],
     ['doctor', 2, '看病', '', 'kan4 bing4', '', 'verb', '["to see a doctor"]', ''],
@@ -41,6 +48,18 @@ async function createWordSetPack(): Promise<SqlDatabase> {
     ['doctor', 5, '我不舒服', '', 'wo3 bu4 shu1 fu5', '', 'phrase', '["I feel ill"]', ''],
     ['dental', 1, '牙醫', '牙医', 'ya2 yi1', '', 'noun', '["dentist"]', ''],
     ['dental', 2, '醫生', '医生', 'yi1 sheng1', '', 'noun', '["doctor"]', ''],
+    [
+      'school-forms',
+      1,
+      '聯絡簿',
+      '联络簿',
+      'lian2 luo4 bu4',
+      '',
+      'noun',
+      '["contact book"]',
+      'zh-Hant',
+    ],
+    ['babies', 1, '嬰兒', '婴儿', 'ying1 er2', '', 'noun', '["baby"]', ''],
   ];
   for (const entry of entries) await pack.run(INSERT_ENTRY_SQL, entry);
   return pack;
@@ -103,6 +122,7 @@ describe('word sets', () => {
     expect(addition.addedNouns.map((word) => word.headword)).toEqual(['醫生', '健保卡', '牙醫']);
     expect(addition.alreadyHadCount).toBe(0);
     expect(await headwordsByList(services)).toEqual({
+      'New Words': ['健保卡', '我不舒服', '牙醫', '看病', '醫生'],
       'General Vocabulary': ['健保卡', '我不舒服', '牙醫', '看病', '醫生'],
       Nouns: ['健保卡', '牙醫', '醫生'],
       Verbs: ['看病'],
@@ -111,6 +131,17 @@ describe('word sets', () => {
     });
     const doctor = await services.wordRepository.findWord(services.profileId, '醫生', 'yi1 sheng1');
     expect(doctor?.definitions).toEqual(['doctor']);
+  });
+
+  it('previews a set and leaves out the words unchecked in it', async () => {
+    const services = await setUp();
+    const preview = await loadWordSetPreview(services, 'doctor');
+    expect(preview.map((entry) => entry.headword)).toEqual(['醫生', '看病', '健保卡', '我不舒服']);
+    const skipped = new Map([['doctor', new Set([wordSetEntryKey(preview[2])])]]);
+    const addition = await addWordSets(services, WordSetTopic.Health, ['doctor'], [], skipped);
+    expect(addition.addedWords.map((word) => word.headword)).toEqual(['醫生', '看病', '我不舒服']);
+    const choices = await loadWordSetChoices(services, WordSetTopic.Health);
+    expect(choices.find((choice) => choice.setId === 'doctor')?.isAdded).toBe(true);
   });
 
   it('marks added sets', async () => {
@@ -168,6 +199,54 @@ describe('word sets', () => {
       ['医保卡', '醫保卡'],
       ['我不舒服', undefined],
     ]);
+  });
+
+  it('lists topics in display order, leaving out those with no sets for the language', async () => {
+    const traditional = await setUp();
+    const traditionalTopics = await loadWordSetTopics(traditional);
+    expect(traditionalTopics.map(({ topic }) => topic)).toEqual([
+      WordSetTopic.Health,
+      WordSetTopic.Parenting,
+      WordSetTopic.School,
+    ]);
+    expect(traditionalTopics[1].choices).toEqual([
+      { setId: 'babies', title: 'Babies', entryCount: 1, isAdded: false },
+    ]);
+    const simplified = await setUp(LanguageId.MandarinSimplified, SIMPLIFIED_FORM);
+    expect((await loadWordSetTopics(simplified)).map(({ topic }) => topic)).toEqual([
+      WordSetTopic.Health,
+      WordSetTopic.Parenting,
+    ]);
+  });
+
+  it('marks a set shown under two topics as added under both', async () => {
+    const services = await setUp();
+    const pack = await createWordSetPack();
+    await pack.run(
+      'INSERT INTO word_sets (set_id, topic, title, position, entries_from) VALUES (?, ?, ?, ?, ?)',
+      ['school-dental', 'school', 'Dental issues', 5, 'dental'],
+    );
+    await pack.run(INSERT_ENTRY_SQL, [
+      'school-dental',
+      1,
+      '牙醫',
+      '牙医',
+      'ya2 yi1',
+      '',
+      'noun',
+      '["dentist"]',
+      '',
+    ]);
+    const withCopy = {
+      ...services,
+      dictionaryLookup: createDictionaryLookup(pack, TRADITIONAL_FORM, []),
+    };
+    await addWordSets(withCopy, WordSetTopic.School, ['school-dental'], []);
+    const health = await loadWordSetChoices(withCopy, WordSetTopic.Health);
+    expect(health.find((choice) => choice.setId === 'dental')?.isAdded).toBe(true);
+    expect(health.find((choice) => choice.setId === 'doctor')?.isAdded).toBe(false);
+    const school = await loadWordSetChoices(withCopy, WordSetTopic.School);
+    expect(school.find((choice) => choice.setId === 'school-dental')?.isAdded).toBe(true);
   });
 
   it('offers no sets from a pack without word set tables', async () => {

@@ -56,7 +56,7 @@ export function Flashcard({
   });
   const answer = isRevealed ? (
     <>
-      <PhoneticText numberedPinyin={word.reading} style={styles.phonetic} />
+      <PhoneticText numberedPinyin={word.reading} style={styles.phonetic} isStacked />
       {definitions.map((definition) => (
         <Text key={definition} style={styles.definition}>
           {definition}

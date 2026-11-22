@@ -41,6 +41,7 @@ export function useWordListSummaries() {
       packVersionKey: `${packId}:${packVersion}`,
       dictionaryLookup,
       wordRepository,
+      wordListRepository,
       settingsRepository,
     });
     // A new Components list is filled before it is first shown, so its count is right.

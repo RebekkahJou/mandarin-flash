@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Word } from '../../domain/word';
 import { LEARNING_LEVEL_LABELS } from '../../services/learningLevelText';
 import { ENGLISH_FONT_FAMILY, colors, fontSizes, radii, spacing } from '../theme';
+import { CheckboxMark } from './CheckboxMark';
 import { ChineseText } from './ChineseText';
 import { PhoneticText } from './PhoneticText';
 
@@ -24,6 +25,8 @@ interface WordRowProps {
   warning?: string;
   /** Shows the word's learning level (High practice, Reinforcement, Retention). */
   showsLearningLevel?: boolean;
+  /** Shows a checkbox, checked or not, while the user selects words; undefined otherwise. */
+  isSelected?: boolean;
 }
 
 export function WordRow({
@@ -36,6 +39,7 @@ export function WordRow({
   onRemove,
   warning,
   showsLearningLevel = true,
+  isSelected,
 }: WordRowProps) {
   const hasWarning = warning !== undefined;
   const rowStyle = [styles.row, hasWarning && styles.warningRow];
@@ -51,6 +55,10 @@ export function WordRow({
         {detail}
       </Text>
     );
+  const isSelecting = isSelected !== undefined;
+  const selectionMark = isSelecting ? <CheckboxMark isChecked={isSelected} /> : null;
+  const accessibilityRole = isSelecting ? 'checkbox' : 'button';
+  const accessibilityState = isSelecting ? { checked: isSelected } : undefined;
   const removeLabel = `Remove ${word.headword}`;
   const removeButton = onRemove ? (
     <Pressable
@@ -67,9 +75,11 @@ export function WordRow({
       <Pressable
         style={styles.details}
         onPress={onPress}
-        accessibilityRole="button"
+        accessibilityRole={accessibilityRole}
+        accessibilityState={accessibilityState}
         accessibilityHint={pressHint}
       >
+        {selectionMark}
         <ChineseText text={word.headword} style={styles.character} />
         <View style={styles.text}>
           <PhoneticText numberedPinyin={word.reading} style={styles.phonetic} />

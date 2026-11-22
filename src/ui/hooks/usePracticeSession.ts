@@ -1,15 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { PracticeCard } from '../../domain/practiceCard';
-import { distinctPracticeCards } from '../../domain/practiceCard';
-import { buildPracticeSet } from '../../domain/practiceSetBuilder';
 import { ReviewAnswer } from '../../domain/reviewEvent';
-import { PracticeSession } from '../../domain/practiceSession';
-import type { CardAnswerResult } from '../../domain/practiceSession';
+import type { CardAnswerResult, PracticeSession } from '../../domain/practiceSession';
 import type { SessionTimes } from '../../domain/sessionTimer';
-import { SessionTimer } from '../../domain/sessionTimer';
 import type { CardFontFamily } from '../../services/fontRotation';
 import { pickNextCardFont } from '../../services/fontRotation';
+import type { LoadedPracticeSet, PracticeStart } from '../../services/practiceSetLoading';
+import { loadPracticeSet } from '../../services/practiceSetLoading';
+import {
+  REPLACE_SAVED_LABEL,
+  REPLACE_SAVED_MESSAGE,
+  REPLACE_SAVED_TITLE,
+} from '../../services/savedPracticeText';
 import { useAppServices } from '../AppServicesContext';
 import { confirm } from '../confirm';
 
@@ -20,14 +23,12 @@ export interface PracticeSummary extends SessionTimes {
   learnedCount: number;
 }
 
-interface LoadedSession {
-  session: PracticeSession;
-  timer: SessionTimer;
-  cardsByWordId: Map<number, PracticeCard>;
-}
-
-/** Runs one practice set: card order, reveal state, font rotation, timers and saving results. */
-export function usePracticeSession(wordListId: number, setSize: number) {
+/**
+ * Runs one practice set: card order, reveal state, font rotation, timers and saving results. A
+ * set can be paused and resumed later, and saved to practice again; finishing the saved set
+ * records its time to get every word.
+ */
+export function usePracticeSession(wordListId: number, setSize: number, start: PracticeStart) {
   const {
     profileId,
     wordListRepository,
@@ -36,7 +37,7 @@ export function usePracticeSession(wordListId: number, setSize: number) {
     reviewEventRepository,
     cardFonts,
   } = useAppServices();
-  const loadedRef = useRef<LoadedSession | null>(null);
+  const loadedRef = useRef<LoadedPracticeSet | null>(null);
   const [currentCard, setCurrentCard] = useState<PracticeCard | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRevealed, setIsRevealed] = useState(false);
@@ -45,6 +46,7 @@ export function usePracticeSession(wordListId: number, setSize: number) {
   const [isDeckCompletePromptVisible, setIsDeckCompletePromptVisible] = useState(false);
   const [summary, setSummary] = useState<PracticeSummary | null>(null);
   const [progress, setProgress] = useState({ completed: 0, total: 0 });
+  const [isSavedSet, setIsSavedSet] = useState(false);
 
   const updateProgress = (session: PracticeSession) =>
     setProgress({ completed: session.completedCardCount, total: session.cardCount });
@@ -52,24 +54,20 @@ export function usePracticeSession(wordListId: number, setSize: number) {
   useEffect(() => {
     let isCancelled = false;
     void (async () => {
-      const list = await wordListRepository.getListWithEntries(wordListId);
+      const sources = { wordListRepository, wordRepository, practiceSessionRepository };
+      const loaded = await loadPracticeSet(sources, wordListId, setSize, start);
       if (isCancelled) return;
-      const cards = distinctPracticeCards(list?.words ?? []);
-      const cardsByWordId = new Map(cards.map((card) => [card.word.id, card]));
-      const practiceSet = buildPracticeSet(
-        cards.map((card) => card.word),
-        setSize,
-      );
-      const session = new PracticeSession(practiceSet.map((word) => word.id));
-      loadedRef.current = { session, timer: new SessionTimer(), cardsByWordId };
-      setCurrentCard(cardsByWordId.get(session.currentWordId ?? -1) ?? null);
-      updateProgress(session);
+      loadedRef.current = loaded;
+      setIsSavedSet(loaded.isSavedSet);
+      setCurrentCard(loaded.cardsByWordId.get(loaded.session.currentWordId ?? -1) ?? null);
+      setElapsedMs(loaded.timer.elapsedMs());
+      updateProgress(loaded.session);
       setIsLoading(false);
     })();
     return () => {
       isCancelled = true;
     };
-  }, [wordListId, setSize, wordListRepository]);
+  }, [wordListId, setSize, start, wordListRepository, wordRepository, practiceSessionRepository]);
 
   useEffect(() => {
     if (isLoading || summary) return undefined;
@@ -89,11 +87,56 @@ export function usePracticeSession(wordListId: number, setSize: number) {
       learnedCount: loaded.session.learnedWordIdList.length,
     });
     setIsDeckCompletePromptVisible(false);
+    await practiceSessionRepository.deletePausedSet(wordListId);
+    if (loaded.isSavedSet && times.deckCompletedMs !== undefined) {
+      await practiceSessionRepository.recordSavedSetTime(wordListId, times.deckCompletedMs);
+    }
     await practiceSessionRepository.saveCompletedSession({
       ...times,
       profileId,
       wordListId,
       setSize,
+    });
+  }, [practiceSessionRepository, profileId, setSize, summary, wordListId]);
+
+  /**
+   * Keeps this set as the list's saved set, asking before it replaces another. Saved from the
+   * summary, the run just finished counts as its first time.
+   */
+  const saveSet = useCallback(async () => {
+    const loaded = loadedRef.current;
+    if (!loaded || loaded.isSavedSet) return;
+    const existing = await practiceSessionRepository.loadSavedSet(wordListId);
+    if (existing) {
+      const isConfirmed = await confirm(
+        REPLACE_SAVED_TITLE,
+        REPLACE_SAVED_MESSAGE,
+        REPLACE_SAVED_LABEL,
+      );
+      if (!isConfirmed) return;
+    }
+    const { wordIds } = loaded.session.toSnapshot();
+    await practiceSessionRepository.saveSavedSet(profileId, wordListId, wordIds);
+    loaded.isSavedSet = true;
+    setIsSavedSet(true);
+    if (summary?.deckCompletedMs !== undefined) {
+      await practiceSessionRepository.recordSavedSetTime(wordListId, summary.deckCompletedMs);
+    }
+  }, [practiceSessionRepository, profileId, summary, wordListId]);
+
+  /** Saves the set for this list so it can be resumed from the Practice tab; time stops. */
+  const pauseSession = useCallback(async () => {
+    const loaded = loadedRef.current;
+    if (!loaded || summary) return;
+    loaded.timer.pause();
+    await practiceSessionRepository.savePausedSet(profileId, {
+      wordListId,
+      setSize,
+      state: {
+        session: loaded.session.toSnapshot(),
+        timer: loaded.timer.toSnapshot(),
+        isSavedSet: loaded.isSavedSet,
+      },
     });
   }, [practiceSessionRepository, profileId, setSize, summary, wordListId]);
 
@@ -175,6 +218,9 @@ export function usePracticeSession(wordListId: number, setSize: number) {
     markGotten,
     markLearned,
     endSession,
+    pauseSession,
+    saveSet,
+    isSavedSet,
     summary,
   };
 }

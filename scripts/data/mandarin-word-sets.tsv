@@ -1,11 +1,67 @@
-set_id	topic	title
-doctor	health	Going to the doctor
-cold-flu	health	Cold/Flu
-diabetes	health	Diabetes
-womens-health	health	Women's health
-wound-infection	health	Wound infection
-chronic-ailments	health	Chronic ailments
-medicine	health	Medicine
-first-aid	health	First aid
-dental	health	Dental issues
-injuries	health	Injuries
+set_id	topic	title	entries_from
+doctor	health	Going to the doctor	
+body-symptoms	health	Body parts & symptoms	
+cold-flu	health	Cold/Flu	
+children-health	health	Children's health	
+pregnancy	health	Pregnancy	
+womens-health	health	Women's health	
+diabetes	health	Diabetes	
+chronic-ailments	health	Chronic ailments	
+mental-health	health	Mental health	
+allergies	health	Allergies	
+eyes	health	Eyes & vision	
+dental	health	Dental issues	
+medicine	health	Medicine	
+first-aid	health	First aid	
+injuries	health	Injuries	
+wound-infection	health	Wound infection	
+hospital	health	Hospital & emergency	
+parenting-children-health	parenting	Children's health	children-health
+babies	parenting	Babies	
+toddlers	parenting	Toddlers	
+kindergarten	parenting	Kindergarten	
+grade-school-parents	parenting	Grade school for parents	
+playground	parenting	Playground & activities	
+phrases-with-kids	parenting	Everyday phrases with kids	
+daily-care	caregiving	Daily care	
+mobility-safety	caregiving	Mobility & safety	
+memory-aging	caregiving	Memory & aging	
+care-services	caregiving	Care services & paperwork	
+care-staff	caregiving	Talking with care staff	
+comfort-feelings	caregiving	Comfort & feelings	
+airport	travel	Airport	
+trains	travel	MRT & trains	
+bus-taxi-scooter	travel	Bus, taxi & scooter	
+hotel	travel	Hotel	
+directions	travel	Directions	
+travel-problems	travel	Travel problems	
+ordering	food	Ordering	
+night-market	food	Night markets & street food	
+drinks	food	Drinks	
+dietary-needs	food	Dietary needs & allergies	
+tastes-cooking	food	Tastes & cooking	
+paying-bill	food	Paying & splitting the bill	
+convenience-store	errands	Convenience store	
+bank	errands	Bank & ATM	
+post-deliveries	errands	Post office & deliveries	
+phone-sim	errands	Phone & SIM	
+computers-phones	errands	Computers & phones	
+renting-repairs	errands	Renting & home repairs	
+bills-utilities	errands	Bills & utilities	
+government-offices	errands	Government offices	
+classroom	school	Classroom	
+subjects	school	Subjects	
+homework-exams	school	Homework & exams	
+school-life	school	School life	
+school-computers	school	Computers & phones	computers-phones
+office	work	Office	
+meetings	work	Meetings	
+email-phone	work	Email & phone phrases	
+job-hunting	work	Job hunting & interviews	
+leave-pay	work	Leave & pay	
+software-engineering	work	Software engineering	
+remote-work	work	Remote work	
+gold-card	work	Gold Card & work visas	
+errands-gold-card	errands	Gold Card & work visas	gold-card
+teaching	work	For teachers	
+school-teaching	school	For teachers	teaching

@@ -9,8 +9,7 @@ describe('learning level text', () => {
 
   it("explains each level's share of a practice set", () => {
     expect(learningLevelShareNote()).toBe(
-      'High practice words make up 60% of each practice set, Reinforcement words 30% and ' +
-        'Retention words 10%.',
+      'High practice words make up 60% of each practice set, Reinforcement words 30% and Retention words 10%.',
     );
   });
 });

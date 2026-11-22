@@ -1,6 +1,7 @@
 import { LanguageId } from '../language';
 import type { Profile } from '../profileGroups';
 import {
+  activeProfileBadgeName,
   groupProfilesByLanguage,
   isOriginalProfile,
   otherNamesInLanguage,
@@ -51,6 +52,17 @@ describe('profileNamesToCopy', () => {
   it('compares names ignoring case', () => {
     const mixedCase = [makeProfile(1, 'me', MANDARIN, 1), makeProfile(2, 'ME', OTHER_LANGUAGE, 2)];
     expect(profileNamesToCopy(mixedCase, MANDARIN)).toEqual([]);
+  });
+});
+
+describe('activeProfileBadgeName', () => {
+  it('names the active profile when there are several', () => {
+    expect(activeProfileBadgeName(profiles, profiles[1])).toBe('Kid');
+  });
+
+  it('is null with a single profile or none active', () => {
+    expect(activeProfileBadgeName([profiles[0]], profiles[0])).toBeNull();
+    expect(activeProfileBadgeName(profiles, null)).toBeNull();
   });
 });
 

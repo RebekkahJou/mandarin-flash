@@ -14,10 +14,15 @@ import { LanguageId } from '../../domain/language';
 import { ReviewAnswer } from '../../domain/reviewEvent';
 import type { DictionaryForm } from '../dictionaryLookup';
 import { createDictionaryLookup } from '../dictionaryLookup';
+import { formatCrossReferences } from '../meaningCrossReferences';
 import type { SavedReadingServices } from '../savedReadings';
 import { updateSavedReadings } from '../savedReadings';
 
-const TRADITIONAL: DictionaryForm = { readsVariants: false, convertSentence: (text) => text };
+const TRADITIONAL: DictionaryForm = {
+  readsVariants: false,
+  convertSentence: (text) => text,
+  formatMeaning: (meaning) => formatCrossReferences(meaning, false),
+};
 const SIMPLIFIED: DictionaryForm = { readsVariants: true, convertSentence: (text) => text };
 
 async function setUp(form = TRADITIONAL) {
@@ -38,6 +43,7 @@ async function setUp(form = TRADITIONAL) {
     packVersionKey: 'mandarin:3',
     dictionaryLookup: createDictionaryLookup(pack, form, []),
     wordRepository,
+    wordListRepository,
     settingsRepository: createSettingsRepository(database),
   };
   const summaries = await wordListRepository.listSummaries(profile.id);
@@ -56,6 +62,24 @@ async function setUp(form = TRADITIONAL) {
 }
 
 describe('updateSavedReadings', () => {
+  it('makes dictionary references readable in saved meanings and list meanings', async () => {
+    const { services, wordRepository, wordListRepository, listId, saveWord } = await setUp();
+    const raw = 'one tenth of a tael 兩|两[liang3]';
+    const word = await saveWord('xiu1 xi5', 'Verbs', ['coin', raw]);
+    await wordListRepository.addWordToLists(word.id, [
+      { wordListId: listId('Phrases'), definitionsOverride: [raw] },
+    ]);
+
+    await updateSavedReadings(services);
+
+    expect((await wordRepository.getWord(word.id))?.definitions).toEqual([
+      'coin',
+      'one tenth of a tael 兩 (liǎng)',
+    ]);
+    const [entry] = await wordListRepository.listEntryMeanings(services.profileId);
+    expect(entry.meanings).toEqual(['one tenth of a tael 兩 (liǎng)']);
+  });
+
   it('gives saved words the Taiwan reading, keeping their lists', async () => {
     const { services, wordRepository, wordListRepository, listId, saveWord } = await setUp();
     const rest = await saveWord('xiu1 xi5', 'Verbs');

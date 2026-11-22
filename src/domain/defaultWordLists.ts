@@ -1,3 +1,4 @@
+import { NEW_WORDS_LIST_NAME } from './newWordsList';
 import { PartOfSpeech } from './partOfSpeech';
 import type { WordList } from './wordList';
 import { WordListKind } from './wordList';
@@ -6,18 +7,17 @@ export interface DefaultWordListDefinition {
   name: string;
   partOfSpeech?: PartOfSpeech;
   /** Only for lists of a special kind, such as Components; otherwise derived from partOfSpeech. */
-  kind?: WordListKind.Components | WordListKind.ScriptStudy;
+  kind?: WordListKind.Components | WordListKind.ScriptStudy | WordListKind.NewWords;
 }
 
 export const GENERAL_VOCABULARY_LIST_NAME = 'General Vocabulary';
 export const PHRASES_LIST_NAME = 'Phrases';
 export const TIME_WORDS_LIST_NAME = 'Time words';
 export const COMPONENTS_LIST_NAME = 'Components';
-/** Made when a profile adds its first health-related word set, and again if it was deleted. */
-export const HEALTH_WORDS_LIST_NAME = 'Health-related words';
 
 /** Created for every new profile, in display order, before the language's own extra lists. */
 export const DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [
+  { name: NEW_WORDS_LIST_NAME, kind: WordListKind.NewWords },
   { name: GENERAL_VOCABULARY_LIST_NAME },
   { name: 'Focus Vocabulary' },
   { name: 'Nouns', partOfSpeech: PartOfSpeech.Noun },
@@ -71,7 +71,10 @@ export function defaultListIdsForNewWords(lists: readonly WordList[]): Set<numbe
   return new Set(generalList ? [generalList.id] : []);
 }
 
-/** General Vocabulary is found by name and receives new words, so it can't be renamed or deleted. */
+/**
+ * General Vocabulary is found by name and receives new words, and New Words fills itself, so
+ * neither can be renamed or deleted.
+ */
 export function canRenameOrDeleteList(list: WordList): boolean {
-  return list.name !== GENERAL_VOCABULARY_LIST_NAME;
+  return list.name !== GENERAL_VOCABULARY_LIST_NAME && list.kind !== WordListKind.NewWords;
 }

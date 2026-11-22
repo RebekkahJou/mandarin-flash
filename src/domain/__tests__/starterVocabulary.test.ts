@@ -1,7 +1,9 @@
 import { FrequencyTier } from '../frequencyTier';
 import { PartOfSpeech } from '../partOfSpeech';
+import { WordListKind } from '../wordList';
 import {
   StarterWordGroup,
+  hasNoAddedWords,
   isStarterWordLearned,
   isStarterWordType,
   learnedNeededToUnlock,
@@ -94,5 +96,25 @@ describe('listForStarterWordType', () => {
       name: 'Measure words',
       partOfSpeech: PartOfSpeech.MeasureWord,
     });
+  });
+});
+
+describe('hasNoAddedWords', () => {
+  it('ignores lists the app fills by itself', () => {
+    const listLengths = [
+      { list: { kind: WordListKind.General }, length: 0 },
+      { list: { kind: WordListKind.Components }, length: 59 },
+      { list: { kind: WordListKind.ScriptStudy }, length: 42 },
+      { list: { kind: WordListKind.NewWords }, length: 0 },
+    ];
+    expect(hasNoAddedWords(listLengths)).toBe(true);
+  });
+
+  it('is false once any list the user adds to has a word', () => {
+    const listLengths = [
+      { list: { kind: WordListKind.General }, length: 0 },
+      { list: { kind: WordListKind.PartOfSpeech }, length: 1 },
+    ];
+    expect(hasNoAddedWords(listLengths)).toBe(false);
   });
 });

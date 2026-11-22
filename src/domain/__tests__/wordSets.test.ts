@@ -4,9 +4,14 @@ import { LanguageId } from '../language';
 import { PartOfSpeech } from '../partOfSpeech';
 import { PartOfSpeechWordList } from '../partOfSpeechWordList';
 import {
+  WORD_SET_TOPIC_LIST_NAMES,
+  WORD_SET_TOPIC_TITLES,
+  WORD_SET_TOPICS,
   extraListChoicesForWordSets,
   isWordSetEntryForLanguage,
   withoutRepeatedWords,
+  withoutSkippedEntries,
+  wordSetEntryKey,
 } from '../wordSets';
 
 describe('isWordSetEntryForLanguage', () => {
@@ -18,6 +23,22 @@ describe('isWordSetEntryForLanguage', () => {
     expect(isWordSetEntryForLanguage('zh-Hant', LanguageId.MandarinTraditional)).toBe(true);
     expect(isWordSetEntryForLanguage('zh-Hant', LanguageId.MandarinSimplified)).toBe(false);
     expect(isWordSetEntryForLanguage('zh-Hans,zh-Hant', LanguageId.MandarinTraditional)).toBe(true);
+  });
+});
+
+describe('word set topics', () => {
+  it('gives every topic a title and a list name of its own', () => {
+    const listNames = WORD_SET_TOPICS.map((topic) => WORD_SET_TOPIC_LIST_NAMES[topic]);
+    expect(new Set(listNames).size).toBe(WORD_SET_TOPICS.length);
+    expect(WORD_SET_TOPICS.every((topic) => WORD_SET_TOPIC_TITLES[topic] !== '')).toBe(true);
+  });
+
+  it('never offers a topic list as an extra list', () => {
+    const lists = WORD_SET_TOPICS.map(
+      (topic, index) =>
+        new GeneralWordList({ id: index, profileId: 1, name: WORD_SET_TOPIC_LIST_NAMES[topic] }),
+    );
+    expect(extraListChoicesForWordSets(lists)).toEqual([]);
   });
 });
 
@@ -38,6 +59,26 @@ describe('extraListChoicesForWordSets', () => {
       new GeneralWordList({ id: 7, profileId: 1, name: 'Trip to Tainan' }),
     ];
     expect(extraListChoicesForWordSets(lists).map((list) => list.id)).toEqual([2, 7]);
+  });
+});
+
+describe('withoutSkippedEntries', () => {
+  const jaundice = { headword: '黃疸', reading: 'huang2 dan3', setId: 'children-health' };
+  const fever = { headword: '發燒', reading: 'fa1 shao1', setId: 'children-health' };
+
+  it('leaves out the words unchecked in their set', () => {
+    const skipped = new Map([['children-health', new Set([wordSetEntryKey(jaundice)])]]);
+    expect(withoutSkippedEntries([jaundice, fever], skipped)).toEqual([fever]);
+  });
+
+  it('keeps a word skipped in one set when another chosen set has it checked', () => {
+    const feverInColdFlu = { ...fever, setId: 'cold-flu' };
+    const skipped = new Map([['children-health', new Set([wordSetEntryKey(fever)])]]);
+    expect(withoutSkippedEntries([fever, feverInColdFlu], skipped)).toEqual([feverInColdFlu]);
+  });
+
+  it('keeps everything when nothing was skipped', () => {
+    expect(withoutSkippedEntries([jaundice, fever], new Map())).toEqual([jaundice, fever]);
   });
 });
 

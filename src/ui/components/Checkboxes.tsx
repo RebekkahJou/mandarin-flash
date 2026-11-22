@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, fontSizes, radii, spacing } from '../theme';
+import { colors, fontSizes, spacing } from '../theme';
+import { CheckboxMark } from './CheckboxMark';
 
 export interface CheckboxOption<Value> {
   value: Value;
@@ -27,13 +28,6 @@ export function Checkboxes<Value extends string | number>({
         const isDisabled = option.isDisabled === true;
         const isSelected = isDisabled || selectedValues.has(option.value);
         const accessibilityState = { checked: isSelected, disabled: isDisabled };
-        const checkboxStyle = [
-          styles.checkbox,
-          isSelected && styles.checkedBox,
-          isDisabled && styles.disabledBox,
-        ];
-        const checkmarkStyle = [styles.checkmark, isDisabled && styles.disabledCheckmark];
-        const checkmark = isSelected ? <Text style={checkmarkStyle}>✓</Text> : null;
         const labelStyle = [styles.label, isDisabled && styles.disabledLabel];
         return (
           <Pressable
@@ -44,7 +38,7 @@ export function Checkboxes<Value extends string | number>({
             accessibilityState={accessibilityState}
             style={styles.option}
           >
-            <View style={checkboxStyle}>{checkmark}</View>
+            <CheckboxMark isChecked={isSelected} isDisabled={isDisabled} />
             <Text style={labelStyle}>{option.label}</Text>
           </Pressable>
         );
@@ -52,8 +46,6 @@ export function Checkboxes<Value extends string | number>({
     </View>
   );
 }
-
-const CHECKBOX_SIZE = 24;
 
 const styles = StyleSheet.create({
   options: {
@@ -64,30 +56,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.medium,
     paddingVertical: spacing.small,
-  },
-  checkbox: {
-    width: CHECKBOX_SIZE,
-    height: CHECKBOX_SIZE,
-    borderRadius: radii.small,
-    borderWidth: 2,
-    borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checkedBox: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary,
-  },
-  disabledBox: {
-    borderColor: colors.disabled,
-    backgroundColor: colors.disabled,
-  },
-  checkmark: {
-    color: colors.onPrimary,
-    fontWeight: '700',
-  },
-  disabledCheckmark: {
-    color: colors.textSecondary,
   },
   label: {
     flexShrink: 1,

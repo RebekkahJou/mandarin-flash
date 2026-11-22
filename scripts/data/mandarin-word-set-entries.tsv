@@ -25,6 +25,72 @@ doctor	藥店	yao4 dian4	noun	pharmacy	zh-Hans
 doctor	症狀	zheng4 zhuang4	noun	symptom		
 doctor	我不舒服	wo3 bu4 shu1 fu2	phrase	I don't feel well		
 doctor	哪裡不舒服	na3 li3 bu4 shu1 fu2	phrase	where does it hurt? / what is wrong?		
+doctor	掛號費	gua4 hao4 fei4	noun	registration fee		
+doctor	健保	jian4 bao3	noun	National Health Insurance (Taiwan)	zh-Hant	
+doctor	部分負擔	bu4 fen4 fu4 dan1	noun	copayment	zh-Hant	
+doctor	自費	zi4 fei4	noun	paying out of pocket (not covered by insurance)		
+doctor	醫療保險	yi1 liao2 bao3 xian3	noun	medical insurance		
+doctor	旅遊保險	lu:3 you2 bao3 xian3	noun	travel insurance		
+doctor	收據	shou1 ju4	noun	receipt		
+doctor	診斷證明書	zhen3 duan4 zheng4 ming2 shu1	noun	medical certificate (for insurance, school or work)		
+doctor	病歷	bing4 li4	noun	medical record		
+doctor	初診	chu1 zhen3	noun	first visit (new patient)		
+doctor	複診	fu4 zhen3	noun	follow-up visit		
+doctor	候診	hou4 zhen3	verb	to wait to see the doctor		
+doctor	叫號	jiao4 hao4	verb	to call the next number (in a queue)		
+doctor	有會說英文的醫生嗎	you3 hui4 shuo1 ying1 wen2 de5 yi1 sheng1 ma5	phrase	is there a doctor who speaks English?		
+doctor	居留證	ju1 liu2 zheng4	noun	resident certificate (ARC)	zh-Hant	
+doctor	居留證號碼	ju1 liu2 zheng4 hao4 ma3	noun	ARC number	zh-Hant	
+doctor	統一證號	tong3 yi1 zheng4 hao4	noun	resident ID number (on the ARC)	zh-Hant	
+doctor	身分證字號	shen1 fen4 zheng4 zi4 hao4	noun	national ID number	zh-Hant	
+doctor	身份證號碼	shen1 fen4 zheng4 hao4 ma3	noun	ID card number	zh-Hans	
+doctor	身分證字號是多少	shen1 fen4 zheng4 zi4 hao4 shi4 duo1 shao3	phrase	what is your ID number?	zh-Hant	
+doctor	我沒有身分證	wo3 mei2 you3 shen1 fen4 zheng4	phrase	I don't have a Taiwan ID card	zh-Hant	
+doctor	可以用居留證號碼嗎	ke3 yi3 yong4 ju1 liu2 zheng4 hao4 ma3 ma5	phrase	can I use my ARC number instead?	zh-Hant	
+doctor	請出示證件	qing3 chu1 shi4 zheng4 jian4	phrase	please show your ID		
+doctor	證件號碼	zheng4 jian4 hao4 ma3	noun	ID number (of any ID document)		
+doctor	用居留證掛號	yong4 ju1 liu2 zheng4 gua4 hao4	phrase	to register (at a clinic) with an ARC	zh-Hant	
+body-symptoms	頭	tou2	noun	head		
+body-symptoms	臉	lian3	noun	face		
+body-symptoms	眼睛	yan3 jing1	noun	eye		
+body-symptoms	耳朵	er3 duo5	noun	ear		
+body-symptoms	鼻子	bi2 zi5	noun	nose		
+body-symptoms	嘴巴	zui3 ba1	noun	mouth		
+body-symptoms	喉嚨	hou2 long2	noun	throat		
+body-symptoms	脖子	bo2 zi5	noun	neck		
+body-symptoms	肩膀	jian1 bang3	noun	shoulder		
+body-symptoms	手臂	shou3 bi4	noun	arm		
+body-symptoms	手	shou3	noun	hand		
+body-symptoms	手指	shou3 zhi3	noun	finger		
+body-symptoms	胸口	xiong1 kou3	noun	chest		
+body-symptoms	背	bei4	noun	back		
+body-symptoms	腰	yao1	noun	lower back; waist		
+body-symptoms	肚子	du4 zi5	noun	belly, tummy		
+body-symptoms	胃	wei4	noun	stomach		
+body-symptoms	屁股	pi4 gu3	noun	bottom, buttocks		
+body-symptoms	腿	tui3	noun	leg		
+body-symptoms	膝蓋	xi1 gai4	noun	knee		
+body-symptoms	腳	jiao3	noun	foot		
+body-symptoms	皮膚	pi2 fu1	noun	skin		
+body-symptoms	心臟	xin1 zang4	noun	heart		
+body-symptoms	肺	fei4	noun	lungs		
+body-symptoms	骨頭	gu2 tou5	noun	bone		
+body-symptoms	痛	tong4	adjective	painful; to hurt		
+body-symptoms	痠	suan1	adjective	sore, aching		
+body-symptoms	癢	yang3	adjective	itchy		
+body-symptoms	麻	ma2	adjective	numb, tingling		
+body-symptoms	腫	zhong3	adjective	swollen		
+body-symptoms	我這裡很痛	wo3 zhe4 li3 hen3 tong4	phrase	it hurts here		
+body-symptoms	肚子痛	du4 zi5 tong4	phrase	stomachache		
+body-symptoms	胸悶	xiong1 men1	noun	chest tightness		
+body-symptoms	喘不過氣	chuan3 bu4 guo4 qi4	phrase	can't catch my breath		
+body-symptoms	噁心	e3 xin1	adjective	nauseous		
+body-symptoms	沒有胃口	mei2 you3 wei4 kou3	phrase	no appetite		
+body-symptoms	從昨天開始	cong2 zuo2 tian1 kai1 shi3	phrase	since yesterday		
+body-symptoms	痛了三天	tong4 le5 san1 tian1	phrase	it has hurt for three days		
+body-symptoms	越來越痛	yue4 lai2 yue4 tong4	phrase	it hurts more and more		
+body-symptoms	有時候	you3 shi2 hou4	adverb	sometimes		
+body-symptoms	一直	yi1 zhi2	adverb	all the time, continuously		
 cold-flu	感冒	gan3 mao4	noun	cold (illness); to catch a cold		
 cold-flu	流感	liu2 gan3	noun	flu		
 cold-flu	新冠肺炎	xin1 guan1 fei4 yan2	noun	COVID-19		
@@ -44,22 +110,92 @@ cold-flu	全身痠痛	quan2 shen1 suan1 tong4	phrase	body aches
 cold-flu	拉肚子	la1 du4 zi5	noun	diarrhea (everyday word)		
 cold-flu	腹瀉	fu4 xie4	noun	diarrhea (formal)		
 cold-flu	想吐	xiang3 tu4	verb	to feel like vomiting		
-diabetes	糖尿病	tang2 niao4 bing4	noun	diabetes		
-diabetes	血糖	xue4 tang2	noun	blood sugar		
-diabetes	低血糖	di1 xue4 tang2	noun	low blood sugar		
-diabetes	高血糖	gao1 xue4 tang2	noun	high blood sugar		
-diabetes	胰島素	yi2 dao3 su4	noun	insulin		
-diabetes	血糖機	xue4 tang2 ji1	noun	glucose meter		
-diabetes	試紙	shi4 zhi3	noun	test strips		
-diabetes	針頭	zhen1 tou2	noun	needle (for injection)		
-diabetes	口渴	kou3 ke3	adjective	thirsty		
-diabetes	頻尿	pin2 niao4	noun	frequent urination		
-diabetes	疲倦	pi2 juan4	adjective	tired, fatigued		
-diabetes	頭暈	tou2 yun1	adjective	dizzy		
-diabetes	發抖	fa1 dou3	verb	to shake, tremble		
-diabetes	冒冷汗	mao4 leng3 han4	verb	to break out in a cold sweat		
-diabetes	視力模糊	shi4 li4 mo2 hu2	phrase	blurred vision		
-diabetes	果汁	guo3 zhi1	noun	fruit juice (for low blood sugar)		
+cold-flu	喉嚨癢	hou2 long2 yang3	phrase	itchy throat		
+cold-flu	聲音沙啞	sheng1 yin1 sha1 ya3	phrase	hoarse voice		
+cold-flu	鼻涕	bi2 ti4	noun	nasal mucus		
+cold-flu	沒有力氣	mei2 you3 li4 qi5	phrase	no energy, weak		
+cold-flu	口罩	kou3 zhao4	noun	face mask		
+cold-flu	戴口罩	dai4 kou3 zhao4	verb	to wear a mask		
+cold-flu	傳染	chuan2 ran3	verb	to spread (an illness); contagious		
+cold-flu	隔離	ge2 li2	verb	to isolate, quarantine		
+cold-flu	陽性	yang2 xing4	adjective	positive (test result)		
+cold-flu	陰性	yin1 xing4	adjective	negative (test result)		
+cold-flu	流感疫苗	liu2 gan3 yi4 miao2	noun	flu vaccine		
+cold-flu	喉糖	hou2 tang2	noun	throat lozenge		
+cold-flu	請病假	qing3 bing4 jia4	verb	to take sick leave		
+children-health	小兒科	xiao3 er2 ke1	noun	pediatrics; pediatric clinic		
+children-health	兒科醫生	er2 ke1 yi1 sheng1	noun	pediatrician		
+children-health	嬰兒	ying1 er2	noun	baby		
+children-health	孩子發燒了	hai2 zi5 fa1 shao1 le5	phrase	my child has a fever		
+children-health	量體溫	liang2 ti3 wen1	verb	to take someone's temperature		
+children-health	耳溫槍	er3 wen1 qiang1	noun	ear thermometer		
+children-health	退燒貼	tui4 shao1 tie1	noun	cooling gel patch (for fever)		
+children-health	退燒藥水	tui4 shao1 yao4 shui3	noun	liquid fever reducer		
+children-health	塞劑	sai1 ji4	noun	suppository	zh-Hant	
+children-health	栓劑	shuan1 ji4	noun	suppository	zh-Hans	review: mainland term
+children-health	餵藥	wei4 yao4	verb	to give medicine (to a child)		
+children-health	熱痙攣	re4 jing4 luan2	noun	febrile seizure		
+children-health	腸病毒	chang2 bing4 du2	noun	enterovirus		
+children-health	手足口病	shou3 zu2 kou3 bing4	noun	hand, foot and mouth disease		
+children-health	停課	ting2 ke4	verb	class suspended (e.g. during an outbreak)		
+children-health	腸胃炎	chang2 wei4 yan2	noun	stomach flu, gastroenteritis		
+children-health	嘔吐	ou3 tu4	verb	to vomit		
+children-health	脫水	tuo1 shui3	noun	dehydration		
+children-health	中耳炎	zhong1 er3 yan2	noun	ear infection		
+children-health	水痘	shui3 dou4	noun	chickenpox		
+children-health	疹子	zhen3 zi5	noun	rash		
+children-health	尿布疹	niao4 bu4 zhen3	noun	diaper rash		
+children-health	濕疹	shi1 zhen3	noun	eczema		
+children-health	異位性皮膚炎	yi4 wei4 xing4 pi2 fu1 yan2	noun	atopic dermatitis (eczema)	zh-Hant	
+children-health	便秘	bian4 bi4	noun	constipation		
+children-health	長牙	zhang3 ya2	verb	to teethe		
+children-health	黃疸	huang2 dan3	noun	jaundice (in newborns)		
+children-health	頭蝨	tou2 shi1	noun	head lice		
+children-health	疫苗	yi4 miao2	noun	vaccine		
+children-health	打預防針	da3 yu4 fang2 zhen1	verb	to get a vaccination (everyday)		
+children-health	兒童健康手冊	er2 tong2 jian4 kang1 shou3 ce4	noun	child health booklet (records checkups and vaccines)	zh-Hant	
+children-health	兒童預防保健	er2 tong2 yu4 fang2 bao3 jian4	noun	free well-child checkup	zh-Hant	
+children-health	體重	ti3 zhong4	noun	weight		
+children-health	身高	shen1 gao1	noun	height		
+children-health	孩子吃不下	hai2 zi5 chi1 bu4 xia4	phrase	my child won't eat		
+children-health	一直哭	yi1 zhi2 ku1	phrase	keeps crying		
+children-health	精神不好	jing1 shen2 bu4 hao3	phrase	listless, low energy		
+pregnancy	懷孕	huai2 yun4	verb	pregnant; pregnancy		
+pregnancy	我懷孕了	wo3 huai2 yun4 le5	phrase	I'm pregnant		
+pregnancy	驗孕棒	yan4 yun4 bang4	noun	pregnancy test (stick)		
+pregnancy	懷孕幾週	huai2 yun4 ji3 zhou1	phrase	how many weeks pregnant?		
+pregnancy	預產期	yu4 chan3 qi2	noun	due date		
+pregnancy	產檢	chan3 jian3	noun	prenatal checkup		
+pregnancy	孕婦	yun4 fu4	noun	pregnant woman		
+pregnancy	孕婦健康手冊	yun4 fu4 jian4 kang1 shou3 ce4	noun	maternal health booklet	zh-Hant	
+pregnancy	超音波	chao1 yin1 bo1	noun	ultrasound	zh-Hant	
+pregnancy	B超	B chao1	noun	ultrasound scan	zh-Hans	review: mainland term
+pregnancy	葉酸	ye4 suan1	noun	folic acid		
+pregnancy	孕吐	yun4 tu4	noun	morning sickness		
+pregnancy	害喜	hai4 xi3	verb	to have morning sickness (everyday)	zh-Hant	
+pregnancy	胎兒	tai1 er2	noun	fetus, unborn baby		
+pregnancy	胎動	tai1 dong4	noun	the baby's movements		
+pregnancy	寶寶	bao3 bao5	noun	baby		
+pregnancy	妊娠糖尿病	ren4 shen1 tang2 niao4 bing4	noun	gestational diabetes		
+pregnancy	子癲前症	zi3 dian1 qian2 zheng4	noun	preeclampsia	zh-Hant	
+pregnancy	出血	chu1 xue4	verb	to bleed; bleeding		
+pregnancy	流產	liu2 chan3	noun	miscarriage		
+pregnancy	陣痛	zhen4 tong4	noun	contractions, labor pains		
+pregnancy	破水	po4 shui3	verb	my water broke		
+pregnancy	要生了	yao4 sheng1 le5	phrase	the baby is coming		
+pregnancy	生產	sheng1 chan3	verb	to give birth		
+pregnancy	自然產	zi4 ran2 chan3	noun	vaginal birth	zh-Hant	
+pregnancy	順產	shun4 chan3	noun	vaginal birth	zh-Hans	review: mainland term
+pregnancy	剖腹產	pou3 fu4 chan3	noun	C-section		
+pregnancy	無痛分娩	wu2 tong4 fen1 mian3	noun	epidural (pain-free labor)		
+pregnancy	坐月子	zuo4 yue4 zi5	verb	to observe the postpartum month of rest		
+pregnancy	月子中心	yue4 zi5 zhong1 xin1	noun	postpartum care center		
+pregnancy	母乳	mu3 ru3	noun	breast milk		
+pregnancy	哺乳	bu3 ru3	verb	to breastfeed		
+pregnancy	擠奶	ji3 nai3	verb	to pump breast milk		
+pregnancy	產假	chan3 jia4	noun	maternity leave		
+pregnancy	陪產假	pei2 chan3 jia4	noun	paternity leave	zh-Hant	
+pregnancy	圓韌帶疼痛	yuan2 ren4 dai4 teng2 tong4	noun	round ligament pain		
 womens-health	月經	yue4 jing1	noun	menstruation, period		
 womens-health	生理期	sheng1 li3 qi2	noun	period (everyday word)		
 womens-health	經痛	jing1 tong4	noun	menstrual pain, cramps		
@@ -77,21 +213,50 @@ womens-health	懷孕	huai2 yun4	verb	pregnant; pregnancy
 womens-health	驗孕	yan4 yun4	noun	pregnancy test		
 womens-health	避孕藥	bi4 yun4 yao4	noun	birth control pill		
 womens-health	事後避孕藥	shi4 hou4 bi4 yun4 yao4	noun	emergency contraception		
-wound-infection	傷口	shang1 kou3	noun	wound		
-wound-infection	割傷	ge1 shang1	noun	cut		
-wound-infection	擦傷	ca1 shang1	noun	scrape, abrasion		
-wound-infection	咬傷	yao3 shang1	noun	bite wound		
-wound-infection	流血	liu2 xue4	verb	to bleed		
-wound-infection	感染	gan3 ran3	noun	infection; to become infected		
-wound-infection	發炎	fa1 yan2	verb	inflamed; inflammation		
-wound-infection	紅腫	hong2 zhong3	adjective	red and swollen		
-wound-infection	化膿	hua4 nong2	verb	to fester, have pus		
-wound-infection	發燙	fa1 tang4	verb	to feel hot (to the touch)		
-wound-infection	疼痛	teng2 tong4	noun	pain		
-wound-infection	結痂	jie2 jia1	verb	to scab over		
-wound-infection	縫針	feng2 zhen1	noun	stitches; to get stitches		
-wound-infection	破傷風	po4 shang1 feng1	noun	tetanus		
-wound-infection	抗生素	kang4 sheng1 su4	noun	antibiotic		
+womens-health	經期	jing1 qi2	noun	period (the days of menstruation)		
+womens-health	月經不規則	yue4 jing1 bu4 gui1 ze2	phrase	irregular periods		
+womens-health	月經沒來	yue4 jing1 mei2 lai2	phrase	my period hasn't come		
+womens-health	子宮	zi3 gong1	noun	uterus		
+womens-health	卵巢	luan3 chao2	noun	ovary		
+womens-health	乳房	ru3 fang2	noun	breast		
+womens-health	乳房攝影	ru3 fang2 she4 ying3	noun	mammogram	zh-Hant	
+womens-health	子宮頸抹片	zi3 gong1 jing3 mo3 pian4	noun	Pap smear	zh-Hant	
+womens-health	子宮頸癌疫苗	zi3 gong1 jing3 ai2 yi4 miao2	noun	HPV vaccine (cervical cancer vaccine)		
+womens-health	骨盆腔發炎	gu3 pen2 qiang1 fa1 yan2	noun	pelvic inflammatory disease	zh-Hant	
+womens-health	更年期	geng1 nian2 qi2	noun	menopause		
+womens-health	熱潮紅	re4 chao2 hong2	noun	hot flashes	zh-Hant	
+diabetes	糖尿病	tang2 niao4 bing4	noun	diabetes		
+diabetes	血糖	xue4 tang2	noun	blood sugar		
+diabetes	低血糖	di1 xue4 tang2	noun	low blood sugar		
+diabetes	高血糖	gao1 xue4 tang2	noun	high blood sugar		
+diabetes	胰島素	yi2 dao3 su4	noun	insulin		
+diabetes	血糖機	xue4 tang2 ji1	noun	glucose meter		
+diabetes	試紙	shi4 zhi3	noun	test strips		
+diabetes	針頭	zhen1 tou2	noun	needle (for injection)		
+diabetes	口渴	kou3 ke3	adjective	thirsty		
+diabetes	頻尿	pin2 niao4	noun	frequent urination		
+diabetes	疲倦	pi2 juan4	adjective	tired, fatigued		
+diabetes	頭暈	tou2 yun1	adjective	dizzy		
+diabetes	發抖	fa1 dou3	verb	to shake, tremble		
+diabetes	冒冷汗	mao4 leng3 han4	verb	to break out in a cold sweat		
+diabetes	視力模糊	shi4 li4 mo2 hu2	phrase	blurred vision		
+diabetes	果汁	guo3 zhi1	noun	fruit juice (for low blood sugar)		
+diabetes	我有糖尿病	wo3 you3 tang2 niao4 bing4	phrase	I have diabetes		
+diabetes	第一型糖尿病	di4 yi1 xing2 tang2 niao4 bing4	noun	type 1 diabetes		
+diabetes	第二型糖尿病	di4 er4 xing2 tang2 niao4 bing4	noun	type 2 diabetes		
+diabetes	測血糖	ce4 xue4 tang2	verb	to check blood sugar		
+diabetes	打胰島素	da3 yi2 dao3 su4	verb	to inject insulin		
+diabetes	胰島素筆	yi2 dao3 su4 bi3	noun	insulin pen		
+diabetes	胰島素幫浦	yi2 dao3 su4 bang1 pu3	noun	insulin pump	zh-Hant	
+diabetes	胰島素泵	yi2 dao3 su4 beng4	noun	insulin pump	zh-Hans	review: mainland term
+diabetes	胰島素要冷藏	yi2 dao3 su4 yao4 leng3 cang2	phrase	insulin must be kept refrigerated		
+diabetes	連續血糖監測	lian2 xu4 xue4 tang2 jian1 ce4	noun	continuous glucose monitoring (CGM)		
+diabetes	糖化血色素	tang2 hua4 xue4 se4 su4	noun	HbA1c (average blood sugar test)	zh-Hant	
+diabetes	糖化血紅蛋白	tang2 hua4 xue4 hong2 dan4 bai2	noun	HbA1c (average blood sugar test)	zh-Hans	review: mainland term
+diabetes	空腹	kong1 fu4	adjective	fasting, on an empty stomach		
+diabetes	飯前	fan4 qian2	time word	before meals		
+diabetes	我需要吃點糖	wo3 xu1 yao4 chi1 dian3 tang2	phrase	I need to eat some sugar		
+diabetes	酮酸中毒	tong2 suan1 zhong4 du2	noun	ketoacidosis		
 chronic-ailments	慢性病	man4 xing4 bing4	noun	chronic illness		
 chronic-ailments	高血壓	gao1 xue4 ya1	noun	high blood pressure		
 chronic-ailments	心臟病	xin1 zang4 bing4	noun	heart disease		
@@ -105,6 +270,161 @@ chronic-ailments	膽固醇	dan3 gu4 chun2	noun	cholesterol
 chronic-ailments	憂鬱症	you1 yu4 zheng4	noun	depression		
 chronic-ailments	焦慮症	jiao1 lu:4 zheng4	noun	anxiety disorder		
 chronic-ailments	長期服藥	chang2 qi2 fu2 yao4	phrase	to take medication long-term		
+chronic-ailments	糖尿病	tang2 niao4 bing4	noun	diabetes		
+chronic-ailments	我有高血壓	wo3 you3 gao1 xue4 ya1	phrase	I have high blood pressure		
+chronic-ailments	血壓計	xue4 ya1 ji4	noun	blood pressure monitor		
+chronic-ailments	量血壓	liang2 xue4 ya1	verb	to take blood pressure		
+chronic-ailments	心律不整	xin1 lu:4 bu4 zheng3	noun	irregular heartbeat	zh-Hant	
+chronic-ailments	心律不齊	xin1 lu:4 bu4 qi2	noun	irregular heartbeat	zh-Hans	
+chronic-ailments	中風	zhong4 feng1	noun	stroke		
+chronic-ailments	腎臟病	shen4 zang4 bing4	noun	kidney disease		
+chronic-ailments	洗腎	xi3 shen4	verb	to have dialysis (everyday)	zh-Hant	
+chronic-ailments	透析	tou4 xi1	noun	dialysis		
+chronic-ailments	肝炎	gan1 yan2	noun	hepatitis		
+chronic-ailments	癌症	ai2 zheng4	noun	cancer		
+chronic-ailments	痛風	tong4 feng1	noun	gout		
+chronic-ailments	骨質疏鬆	gu3 zhi2 shu1 song1	noun	osteoporosis		
+chronic-ailments	失智症	shi1 zhi4 zheng4	noun	dementia	zh-Hant	
+chronic-ailments	帕金森氏症	pa4 jin1 sen1 shi4 zheng4	noun	Parkinson's disease	zh-Hant	
+chronic-ailments	癲癇	dian1 xian2	noun	epilepsy		
+chronic-ailments	定期回診	ding4 qi2 hui2 zhen3	phrase	regular follow-up visits		
+chronic-ailments	飲食控制	yin3 shi2 kong4 zhi4	noun	controlling your diet		
+chronic-ailments	髖關節	kuan1 guan1 jie2	noun	hip joint		
+chronic-ailments	髖關節痛	kuan1 guan1 jie2 tong4	noun	hip pain		
+chronic-ailments	人工關節	ren2 gong1 guan1 jie2	noun	artificial joint (joint replacement)		
+chronic-ailments	人工關節置換	ren2 gong1 guan1 jie2 zhi4 huan4	noun	joint replacement surgery (hip, knee, shoulder)		
+chronic-ailments	物理治療	wu4 li3 zhi4 liao2	noun	physical therapy		
+chronic-ailments	復健	fu4 jian4	noun	physical therapy, rehabilitation (Taiwan)		
+mental-health	心理健康	xin1 li3 jian4 kang1	noun	mental health		
+mental-health	心理師	xin1 li3 shi1	noun	psychologist, therapist	zh-Hant	
+mental-health	心理諮詢師	xin1 li3 zi1 xun2 shi1	noun	counselor, therapist	zh-Hans	review: mainland term
+mental-health	心理諮商	xin1 li3 zi1 shang1	noun	counseling, therapy	zh-Hant	
+mental-health	精神科	jing1 shen2 ke1	noun	psychiatry		
+mental-health	身心科	shen1 xin1 ke1	noun	psychiatric clinic (gentler name)	zh-Hant	
+mental-health	壓力	ya1 li4	noun	stress, pressure		
+mental-health	壓力很大	ya1 li4 hen3 da4	phrase	under a lot of stress		
+mental-health	情緒	qing2 xu4	noun	mood, emotions		
+mental-health	心情不好	xin1 qing2 bu4 hao3	phrase	feeling down		
+mental-health	焦慮	jiao1 lu:4	adjective	anxious		
+mental-health	憂鬱	you1 yu4	adjective	depressed, low		
+mental-health	憂鬱症	you1 yu4 zheng4	noun	depression		
+mental-health	焦慮症	jiao1 lu:4 zheng4	noun	anxiety disorder		
+mental-health	恐慌症	kong3 huang1 zheng4	noun	panic disorder		
+mental-health	恐慌發作	kong3 huang1 fa1 zuo4	noun	panic attack		
+mental-health	失眠	shi1 mian2	noun	insomnia		
+mental-health	睡不著	shui4 bu4 zhao2	phrase	can't sleep		
+mental-health	沒有動力	mei2 you3 dong4 li4	phrase	no motivation		
+mental-health	想哭	xiang3 ku1	phrase	feel like crying		
+mental-health	孤單	gu1 dan1	adjective	lonely		
+mental-health	害怕	hai4 pa4	adjective	afraid, scared		
+mental-health	創傷	chuang1 shang1	noun	trauma		
+mental-health	創傷後壓力症候群	chuang1 shang1 hou4 ya1 li4 zheng4 hou4 qun2	noun	PTSD	zh-Hant	
+mental-health	注意力不足過動症	zhu4 yi4 li4 bu4 zu2 guo4 dong4 zheng4	noun	ADHD	zh-Hant	
+mental-health	自閉症	zi4 bi4 zheng4	noun	autism		
+mental-health	產後憂鬱	chan3 hou4 you1 yu4	noun	postpartum depression	zh-Hant	
+mental-health	產後抑鬱	chan3 hou4 yi4 yu4	noun	postpartum depression	zh-Hans	review: mainland term
+mental-health	抗憂鬱藥	kang4 you1 yu4 yao4	noun	antidepressant	zh-Hant	
+mental-health	抗抑鬱藥	kang4 yi4 yu4 yao4	noun	antidepressant	zh-Hans	
+mental-health	安眠藥	an1 mian2 yao4	noun	sleeping pill		
+mental-health	我想找人談談	wo3 xiang3 zhao3 ren2 tan2 tan2	phrase	I'd like to talk to someone		
+mental-health	安心專線	an1 xin1 zhuan1 xian4	noun	free 24-hour mental health helpline (call 1925)	zh-Hant	
+mental-health	心理援助熱線	xin1 li3 yuan2 zhu4 re4 xian4	noun	mental health helpline	zh-Hans	review: mainland term
+allergies	過敏	guo4 min3	adjective	allergy; allergic		
+allergies	過敏原	guo4 min3 yuan2	noun	allergen		
+allergies	我對花生過敏	wo3 dui4 hua1 sheng1 guo4 min3	phrase	I'm allergic to peanuts		
+allergies	這裡面有花生嗎	zhe4 li3 mian4 you3 hua1 sheng1 ma5	phrase	does this contain peanuts?		
+allergies	花生	hua1 sheng1	noun	peanut		
+allergies	堅果	jian1 guo3	noun	tree nuts		
+allergies	海鮮	hai3 xian1	noun	seafood		
+allergies	蝦子	xia1 zi5	noun	shrimp		
+allergies	帶殼海鮮	dai4 ke2 hai3 xian1	noun	shellfish		
+allergies	蛋	dan4	noun	egg		
+allergies	牛奶	niu2 nai3	noun	milk		
+allergies	小麥	xiao3 mai4	noun	wheat		
+allergies	麩質	fu1 zhi2	noun	gluten		
+allergies	花粉	hua1 fen3	noun	pollen		
+allergies	塵蟎	chen2 man3	noun	dust mites		
+allergies	貓毛	mao1 mao2	noun	cat hair		
+allergies	蜜蜂	mi4 feng1	noun	bee		
+allergies	被蜜蜂叮	bei4 mi4 feng1 ding1	phrase	stung by a bee		
+allergies	蕁麻疹	xun2 ma2 zhen3	noun	hives		
+allergies	起疹子	qi3 zhen3 zi5	verb	to break out in a rash		
+allergies	嘴唇腫起來	zui3 chun2 zhong3 qi3 lai2	phrase	my lips are swelling		
+allergies	呼吸困難	hu1 xi1 kun4 nan2	noun	difficulty breathing		
+allergies	過敏性休克	guo4 min3 xing4 xiu1 ke4	noun	anaphylactic shock		
+allergies	腎上腺素筆	shen4 shang4 xian4 su4 bi3	noun	epinephrine pen (EpiPen)		
+allergies	抗組織胺	kang4 zu3 zhi1 an1	noun	antihistamine	zh-Hant	
+allergies	抗組胺藥	kang4 zu3 an1 yao4	noun	antihistamine	zh-Hans	
+allergies	過敏性鼻炎	guo4 min3 xing4 bi2 yan2	noun	allergic rhinitis (hay fever)		
+allergies	季節性過敏	ji4 jie2 xing4 guo4 min3	noun	seasonal allergies; hay fever		
+allergies	食物不耐症	shi2 wu4 bu4 nai4 zheng4	noun	food intolerance		
+allergies	只是食物不耐症	zhi3 shi4 shi2 wu4 bu4 nai4 zheng4	phrase	it's just a food intolerance (not an allergy)		
+eyes	眼睛	yan3 jing1	noun	eye		
+eyes	視力	shi4 li4	noun	eyesight		
+eyes	看不清楚	kan4 bu4 qing1 chu3	phrase	I can't see clearly		
+eyes	近視	jin4 shi4	adjective	nearsighted		
+eyes	遠視	yuan3 shi4	adjective	farsighted		
+eyes	散光	san3 guang1	noun	astigmatism		
+eyes	老花眼	lao3 hua1 yan3	noun	age-related farsightedness (needing reading glasses)		
+eyes	眼科	yan3 ke1	noun	ophthalmology (eye doctor)		
+eyes	驗光	yan4 guang1	verb	to have an eye test (for glasses)		
+eyes	度數	du4 shu4	noun	prescription strength (of glasses)		
+eyes	眼鏡	yan3 jing4	noun	glasses		
+eyes	眼鏡行	yan3 jing4 hang2	noun	optician's shop	zh-Hant	
+eyes	隱形眼鏡	yin3 xing2 yan3 jing4	noun	contact lenses		
+eyes	保養液	bao3 yang3 ye4	noun	contact lens solution	zh-Hant	
+eyes	墨鏡	mo4 jing4	noun	sunglasses		
+eyes	眼睛痛	yan3 jing1 tong4	phrase	my eye hurts		
+eyes	眼睛癢	yan3 jing1 yang3	phrase	my eyes are itchy		
+eyes	眼睛紅	yan3 jing1 hong2	phrase	my eyes are red		
+eyes	有東西跑進眼睛	you3 dong1 xi1 pao3 jin4 yan3 jing1	phrase	something got in my eye		
+eyes	乾眼症	gan1 yan3 zheng4	noun	dry eye		
+eyes	結膜炎	jie2 mo2 yan2	noun	conjunctivitis (pink eye)		
+eyes	針眼	zhen1 yan3	noun	stye		
+eyes	飛蚊症	fei1 wen2 zheng4	noun	eye floaters		
+eyes	白內障	bai2 nei4 zhang4	noun	cataract		
+eyes	青光眼	qing1 guang1 yan3	noun	glaucoma		
+eyes	散瞳	san4 tong2	verb	to dilate the pupils (for an eye exam)		
+dental	牙科	ya2 ke1	noun	dentistry; dental clinic		
+dental	牙齒	ya2 chi3	noun	tooth, teeth		
+dental	牙痛	ya2 tong4	noun	toothache		
+dental	我牙齒很痛	wo3 ya2 chi3 hen3 tong4	phrase	my tooth hurts a lot		
+dental	咬東西會痛	yao3 dong1 xi5 hui4 tong4	phrase	it hurts when I bite		
+dental	牙齒敏感	ya2 chi3 min3 gan3	phrase	sensitive teeth		
+dental	冷熱會痠	leng3 re4 hui4 suan1	phrase	it aches with hot or cold		
+dental	蛀牙	zhu4 ya2	noun	cavity, tooth decay		
+dental	補牙	bu3 ya2	verb	to fill a tooth; a filling		
+dental	拔牙	ba2 ya2	verb	to pull a tooth		
+dental	智齒	zhi4 chi3	noun	wisdom tooth		
+dental	洗牙	xi3 ya2	noun	dental cleaning		
+dental	牙齦	ya2 yin2	noun	gums		
+dental	牙齦出血	ya2 yin2 chu1 xue4	phrase	bleeding gums		
+dental	牙周病	ya2 zhou1 bing4	noun	gum disease		
+dental	根管治療	gen1 guan3 zhi4 liao2	noun	root canal		
+dental	牙齒裂開	ya2 chi3 lie4 kai1	phrase	cracked tooth		
+dental	牙套	ya2 tao4	noun	crown (cap); also used for braces		
+dental	假牙	jia3 ya2	noun	dentures, false tooth		
+dental	植牙	zhi2 ya2	noun	dental implant		
+dental	麻醉	ma2 zui4	noun	anesthesia; to numb		
+dental	漱口	shu4 kou3	verb	to rinse your mouth		
+dental	牙刷	ya2 shua1	noun	toothbrush		
+dental	牙膏	ya2 gao1	noun	toothpaste		
+dental	牙線	ya2 xian4	noun	dental floss		
+dental	齒顎矯正	chi3 e4 jiao3 zheng4	noun	orthodontics (Taiwan term)	zh-Hant	
+dental	牙齒矯正	ya2 chi3 jiao3 zheng4	noun	orthodontic treatment, braces		
+dental	矯正器	jiao3 zheng4 qi4	noun	braces (orthodontic appliance)		
+dental	隱形矯正	yin3 xing2 jiao3 zheng4	noun	clear aligners		
+dental	維持器	wei2 chi2 qi4	noun	retainer (Taiwan term)	zh-Hant	
+dental	保持器	bao3 chi2 qi4	noun	retainer	zh-Hans	
+dental	鋼絲	gang1 si1	noun	wire (of braces)		
+dental	橡皮筋	xiang4 pi2 jin1	noun	rubber bands (elastics)		
+dental	矯正器脫落	jiao3 zheng4 qi4 tuo1 luo4	phrase	a bracket came off		
+dental	鋼絲刺到	gang1 si1 ci4 dao4	phrase	the wire is poking me		
+dental	咬合	yao3 he2	noun	bite (how the teeth meet)		
+dental	暴牙	bao4 ya2	noun	buck teeth		
+dental	戽斗	hu4 dou3	noun	underbite (Taiwan, everyday word)	zh-Hant	
+dental	地包天	di4 bao1 tian1	noun	underbite (everyday word)	zh-Hans	review: mainland term
+dental	牙齒不整齊	ya2 chi3 bu4 zheng3 qi2	phrase	crooked teeth		
 medicine	藥	yao4	noun	medicine		
 medicine	處方箋	chu3 fang1 jian1	noun	prescription (slip)		
 medicine	處方藥	chu3 fang1 yao4	noun	prescription medicine		
@@ -151,6 +471,16 @@ medicine	學名	xue2 ming2	noun	generic name (of a medicine)
 medicine	同樣的藥	tong2 yang4 de5 yao4	phrase	the same medicine		
 medicine	替代藥	ti4 dai4 yao4	noun	substitute medicine		
 medicine	藥袋	yao4 dai4	noun	medicine bag (with dosing instructions printed on it)		
+medicine	藥師	yao4 shi1	noun	pharmacist (everyday)		
+medicine	健保藥局	jian4 bao3 yao4 ju2	noun	pharmacy that fills health insurance prescriptions	zh-Hant	
+medicine	藥丸	yao4 wan2	noun	pill		
+medicine	膠囊	jiao1 nang2	noun	capsule		
+medicine	藥粉	yao4 fen3	noun	powdered medicine		
+medicine	一天兩次	yi1 tian1 liang3 ci4	phrase	twice a day		
+medicine	睡前	shui4 qian2	time word	before bed		
+medicine	空腹吃	kong1 fu4 chi1	phrase	take on an empty stomach		
+medicine	每四到六小時	mei3 si4 dao4 liu4 xiao3 shi2	phrase	every 4 to 6 hours		
+medicine	需要時服用	xu1 yao4 shi2 fu2 yong4	phrase	take as needed		
 first-aid	急救	ji2 jiu4	noun	first aid		
 first-aid	急救箱	ji2 jiu4 xiang1	noun	first aid kit		
 first-aid	繃帶	beng1 dai4	noun	bandage		
@@ -168,46 +498,23 @@ first-aid	扭傷	niu3 shang1	noun	sprain
 first-aid	燙傷	tang4 shang1	noun	burn (from heat)		
 first-aid	骨折	gu3 zhe2	noun	broken bone, fracture		
 first-aid	中暑	zhong4 shu3	noun	heatstroke		
-dental	牙科	ya2 ke1	noun	dentistry; dental clinic		
-dental	牙齒	ya2 chi3	noun	tooth, teeth		
-dental	牙痛	ya2 tong4	noun	toothache		
-dental	我牙齒很痛	wo3 ya2 chi3 hen3 tong4	phrase	my tooth hurts a lot		
-dental	咬東西會痛	yao3 dong1 xi5 hui4 tong4	phrase	it hurts when I bite		
-dental	牙齒敏感	ya2 chi3 min3 gan3	phrase	sensitive teeth		
-dental	冷熱會痠	leng3 re4 hui4 suan1	phrase	it aches with hot or cold		
-dental	蛀牙	zhu4 ya2	noun	cavity, tooth decay		
-dental	補牙	bu3 ya2	verb	to fill a tooth; a filling		
-dental	拔牙	ba2 ya2	verb	to pull a tooth		
-dental	智齒	zhi4 chi3	noun	wisdom tooth		
-dental	洗牙	xi3 ya2	noun	dental cleaning		
-dental	牙齦	ya2 yin2	noun	gums		
-dental	牙齦出血	ya2 yin2 chu1 xue4	phrase	bleeding gums		
-dental	牙周病	ya2 zhou1 bing4	noun	gum disease		
-dental	根管治療	gen1 guan3 zhi4 liao2	noun	root canal		
-dental	牙齒裂開	ya2 chi3 lie4 kai1	phrase	cracked tooth		
-dental	牙套	ya2 tao4	noun	crown (cap); also used for braces		
-dental	假牙	jia3 ya2	noun	dentures, false tooth		
-dental	植牙	zhi2 ya2	noun	dental implant		
-dental	麻醉	ma2 zui4	noun	anesthesia; to numb		
-dental	漱口	shu4 kou3	verb	to rinse your mouth		
-dental	牙刷	ya2 shua1	noun	toothbrush		
-dental	牙膏	ya2 gao1	noun	toothpaste		
-dental	牙線	ya2 xian4	noun	dental floss		
-dental	齒顎矯正	chi3 e4 jiao3 zheng4	noun	orthodontics (Taiwan term)	zh-Hant	
-dental	牙齒矯正	ya2 chi3 jiao3 zheng4	noun	orthodontic treatment, braces		
-dental	矯正器	jiao3 zheng4 qi4	noun	braces (orthodontic appliance)		
-dental	隱形矯正	yin3 xing2 jiao3 zheng4	noun	clear aligners		
-dental	維持器	wei2 chi2 qi4	noun	retainer (Taiwan term)	zh-Hant	
-dental	保持器	bao3 chi2 qi4	noun	retainer	zh-Hans	
-dental	鋼絲	gang1 si1	noun	wire (of braces)		
-dental	橡皮筋	xiang4 pi2 jin1	noun	rubber bands (elastics)		
-dental	矯正器脫落	jiao3 zheng4 qi4 tuo1 luo4	phrase	a bracket came off		
-dental	鋼絲刺到	gang1 si1 ci4 dao4	phrase	the wire is poking me		
-dental	咬合	yao3 he2	noun	bite (how the teeth meet)		
-dental	暴牙	bao4 ya2	noun	buck teeth		
-dental	戽斗	hu4 dou3	noun	underbite (Taiwan, everyday word)	zh-Hant	
-dental	地包天	di4 bao1 tian1	noun	underbite (everyday word)	zh-Hans	review: mainland term
-dental	牙齒不整齊	ya2 chi3 bu4 zheng3 qi2	phrase	crooked teeth		
+first-aid	OK繃	O K beng1	noun	adhesive bandage (Band-Aid)	zh-Hant	
+first-aid	創可貼	chuang1 ke3 tie1	noun	adhesive bandage (Band-Aid)	zh-Hans	
+first-aid	棉花棒	mian2 hua1 bang4	noun	cotton swab		
+first-aid	酒精	jiu3 jing1	noun	rubbing alcohol		
+first-aid	生理食鹽水	sheng1 li3 shi2 yan2 shui3	noun	saline solution	zh-Hant	
+first-aid	體溫計	ti3 wen1 ji4	noun	thermometer		
+first-aid	你還好嗎	ni3 hai2 hao3 ma5	phrase	are you okay?		
+first-aid	不要動	bu4 yao4 dong4	phrase	don't move		
+first-aid	叫救護車	jiao4 jiu4 hu4 che1	verb	to call an ambulance (119 in Taiwan, 120 in mainland China)		
+first-aid	心肺復甦術	xin1 fei4 fu4 su1 shu4	noun	CPR		
+first-aid	AED	A E D	noun	AED (defibrillator)		
+first-aid	昏倒	hun1 dao3	verb	to faint		
+first-aid	噎到	ye1 dao4	verb	to choke (on food)		
+first-aid	流鼻血	liu2 bi2 xie3	verb	to have a nosebleed		
+first-aid	蚊子	wen2 zi5	noun	mosquito		
+first-aid	被蟲咬	bei4 chong2 yao3	phrase	bitten by an insect		
+first-aid	防蚊液	fang2 wen2 ye4	noun	insect repellent	zh-Hant	
 injuries	受傷	shou4 shang1	verb	to get hurt, injured		
 injuries	跌倒	die2 dao3	verb	to fall down		
 injuries	摔倒	shuai1 dao3	verb	to slip and fall		
@@ -239,3 +546,1554 @@ injuries	石膏	shi2 gao1	noun	plaster cast
 injuries	打石膏	da3 shi2 gao1	verb	to put on a cast		
 injuries	拐杖	guai3 zhang4	noun	crutches; walking stick		
 injuries	復健	fu4 jian4	noun	physical therapy, rehabilitation (Taiwan)		
+injuries	物理治療	wu4 li3 zhi4 liao2	noun	physical therapy		
+wound-infection	傷口	shang1 kou3	noun	wound		
+wound-infection	割傷	ge1 shang1	noun	cut		
+wound-infection	擦傷	ca1 shang1	noun	scrape, abrasion		
+wound-infection	咬傷	yao3 shang1	noun	bite wound		
+wound-infection	流血	liu2 xue4	verb	to bleed		
+wound-infection	感染	gan3 ran3	noun	infection; to become infected		
+wound-infection	發炎	fa1 yan2	verb	inflamed; inflammation		
+wound-infection	紅腫	hong2 zhong3	adjective	red and swollen		
+wound-infection	化膿	hua4 nong2	verb	to fester, have pus		
+wound-infection	發燙	fa1 tang4	verb	to feel hot (to the touch)		
+wound-infection	疼痛	teng2 tong4	noun	pain		
+wound-infection	結痂	jie2 jia1	verb	to scab over		
+wound-infection	縫針	feng2 zhen1	noun	stitches; to get stitches		
+wound-infection	破傷風	po4 shang1 feng1	noun	tetanus		
+wound-infection	抗生素	kang4 sheng1 su4	noun	antibiotic		
+wound-infection	換藥	huan4 yao4	verb	to change a dressing		
+wound-infection	優碘	you1 dian3	noun	povidone-iodine (Betadine)	zh-Hant	
+wound-infection	人工皮	ren2 gong1 pi2	noun	hydrocolloid bandage	zh-Hant	
+wound-infection	碰水	peng4 shui3	verb	to get wet		
+wound-infection	傷口不能碰水	shang1 kou3 bu4 neng2 peng4 shui3	phrase	keep the wound dry		
+wound-infection	拆線	chai1 xian4	verb	to have stitches removed		
+wound-infection	膿	nong2	noun	pus		
+wound-infection	有臭味	you3 chou4 wei4	phrase	it smells bad		
+wound-infection	越來越紅	yue4 lai2 yue4 hong2	phrase	it's getting redder		
+wound-infection	蜂窩性組織炎	feng1 wo1 xing4 zu3 zhi1 yan2	noun	cellulitis	zh-Hant	
+wound-infection	癒合	yu4 he2	verb	to heal (of a wound)		
+wound-infection	疤	ba1	noun	scar		
+wound-infection	留疤	liu2 ba1	verb	to leave a scar		
+wound-infection	被狗咬	bei4 gou3 yao3	phrase	bitten by a dog		
+wound-infection	狂犬病	kuang2 quan3 bing4	noun	rabies		
+hospital	住院	zhu4 yuan4	verb	to be admitted to hospital		
+hospital	出院	chu1 yuan4	verb	to be discharged from hospital		
+hospital	病房	bing4 fang2	noun	hospital ward, room		
+hospital	病床	bing4 chuang2	noun	hospital bed		
+hospital	探病	tan4 bing4	verb	to visit a patient		
+hospital	探病時間	tan4 bing4 shi2 jian1	noun	visiting hours		
+hospital	家屬	jia1 shu3	noun	family members (of a patient)		
+hospital	陪病	pei2 bing4	verb	to stay with a patient in hospital	zh-Hant	
+hospital	看護	kan1 hu4	noun	hired caregiver (in hospital or at home)	zh-Hant	
+hospital	手術	shou3 shu4	noun	surgery, operation		
+hospital	開刀	kai1 dao1	verb	to have surgery (everyday)		
+hospital	同意書	tong2 yi4 shu1	noun	consent form		
+hospital	簽名	qian1 ming2	verb	to sign; signature		
+hospital	抽血	chou1 xue4	verb	to draw blood		
+hospital	打點滴	da3 dian3 di1	verb	to get an IV drip		
+hospital	加護病房	jia1 hu4 bing4 fang2	noun	intensive care unit (ICU)	zh-Hant	
+hospital	重症監護室	zhong4 zheng4 jian1 hu4 shi4	noun	intensive care unit (ICU)	zh-Hans	review: mainland term
+hospital	急診室	ji2 zhen3 shi4	noun	emergency room		
+hospital	檢傷	jian3 shang1	noun	triage (in an emergency room)	zh-Hant	
+hospital	快叫救護車	kuai4 jiao4 jiu4 hu4 che1	phrase	call an ambulance, quickly!		
+hospital	胸痛	xiong1 tong4	noun	chest pain		
+hospital	過敏反應	guo4 min3 fan3 ying4	noun	allergic reaction		
+hospital	中毒	zhong4 du2	verb	poisoned; poisoning		
+babies	新生兒	xin1 sheng1 er2	noun	newborn		
+babies	寶寶	bao3 bao5	noun	baby (affectionate)		
+babies	餵奶	wei4 nai3	verb	to feed (milk)		
+babies	餵母乳	wei4 mu3 ru3	verb	to breastfeed		
+babies	母乳	mu3 ru3	noun	breast milk		
+babies	奶瓶	nai3 ping2	noun	baby bottle		
+babies	配方奶	pei4 fang1 nai3	noun	formula (milk)		
+babies	奶粉	nai3 fen3	noun	powdered formula; milk powder		
+babies	泡奶	pao4 nai3	verb	to make up a bottle (of formula)		
+babies	拍嗝	pai1 ge2	verb	to burp (a baby)		
+babies	吐奶	tu4 nai3	verb	to spit up milk		
+babies	夜奶	ye4 nai3	noun	night feeding		
+babies	奶嘴	nai3 zui3	noun	pacifier		
+babies	副食品	fu4 shi2 pin3	noun	baby food (first solids)	zh-Hant	
+babies	輔食	fu3 shi2	noun	baby food (first solids)	zh-Hans	review: mainland term
+babies	尿布	niao4 bu4	noun	diaper		
+babies	換尿布	huan4 niao4 bu4	verb	to change a diaper		
+babies	濕紙巾	shi1 zhi3 jin1	noun	baby wipes; wet wipes		
+babies	包巾	bao1 jin1	noun	swaddle blanket	zh-Hant	
+babies	嬰兒床	ying1 er2 chuang2	noun	crib		
+babies	嬰兒車	ying1 er2 che1	noun	stroller		
+babies	背巾	bei1 jin1	noun	baby carrier; baby sling	zh-Hant	
+babies	背帶	bei1 dai4	noun	baby carrier	zh-Hans	review: mainland term
+babies	汽車安全座椅	qi4 che1 an1 quan2 zuo4 yi3	noun	car seat		
+babies	哄睡	hong3 shui4	verb	to get a baby to sleep		
+babies	翻身	fan1 shen1	verb	to roll over		
+babies	爬	pa2	verb	to crawl; to climb		
+babies	坐月子	zuo4 yue4 zi5	verb	to rest for the first month after giving birth		
+babies	月子中心	yue4 zi5 zhong1 xin1	noun	postpartum care center		
+babies	保母	bao3 mu3	noun	nanny; babysitter	zh-Hant	
+babies	保姆	bao3 mu3	noun	nanny; babysitter	zh-Hans	
+babies	托嬰中心	tuo1 ying1 zhong1 xin1	noun	daycare (for babies)	zh-Hant	
+babies	托育中心	tuo1 yu4 zhong1 xin1	noun	daycare (for babies)	zh-Hans	review: mainland term
+babies	寶寶餓了	bao3 bao5 e4 le5	phrase	the baby is hungry		
+babies	寶寶睡著了	bao3 bao5 shui4 zhao2 le5	phrase	the baby fell asleep		
+babies	滿月	man3 yue4	noun	one month old (and its celebration)		
+toddlers	幼兒	you4 er2	noun	toddler; young child		
+toddlers	學走路	xue2 zou3 lu4	verb	to learn to walk		
+toddlers	學說話	xue2 shuo1 hua4	verb	to learn to talk		
+toddlers	戒尿布	jie4 niao4 bu4	verb	to potty train (stop using diapers)		
+toddlers	小馬桶	xiao3 ma3 tong3	noun	potty		
+toddlers	尿尿	niao4 niao4	verb	to pee (child's word)		
+toddlers	便便	bian4 bian4	noun	poop (child's word)		
+toddlers	我要尿尿	wo3 yao4 niao4 niao4	phrase	I need to pee		
+toddlers	上廁所	shang4 ce4 suo3	verb	to go to the toilet		
+toddlers	洗手	xi3 shou3	verb	to wash your hands		
+toddlers	刷牙	shua1 ya2	verb	to brush your teeth		
+toddlers	穿鞋子	chuan1 xie2 zi5	verb	to put on shoes		
+toddlers	脫衣服	tuo1 yi1 fu2	verb	to take off clothes		
+toddlers	自己吃	zi4 ji3 chi1	phrase	eat by yourself		
+toddlers	圍兜	wei2 dou1	noun	bib		
+toddlers	兒童餐椅	er2 tong2 can1 yi3	noun	high chair		
+toddlers	玩具	wan2 ju4	noun	toy		
+toddlers	積木	ji1 mu4	noun	building blocks		
+toddlers	繪本	hui4 ben3	noun	picture book		
+toddlers	講故事	jiang3 gu4 shi4	verb	to tell a story		
+toddlers	唱歌	chang4 ge1	verb	to sing		
+toddlers	鬧脾氣	nao4 pi2 qi4	verb	to throw a tantrum		
+toddlers	哭鬧	ku1 nao4	verb	to cry and fuss		
+toddlers	生氣	sheng1 qi4	adjective	angry		
+toddlers	分享	fen1 xiang3	verb	to share		
+toddlers	輪流	lun2 liu2	verb	to take turns		
+toddlers	收玩具	shou1 wan2 ju4	verb	to put toys away		
+toddlers	午睡	wu3 shui4	noun	nap		
+toddlers	親子館	qin1 zi3 guan3	noun	indoor play center for parents and young children	zh-Hant	
+toddlers	早療	zao3 liao2	noun	early intervention (therapy for young children)	zh-Hant	
+kindergarten	幼兒園	you4 er2 yuan2	noun	kindergarten; preschool		
+kindergarten	幼幼班	you4 you4 ban1	noun	class for two-year-olds	zh-Hant	
+kindergarten	小班	xiao3 ban1	noun	youngest kindergarten class (ages 3–4)		
+kindergarten	中班	zhong1 ban1	noun	middle kindergarten class (ages 4–5)		
+kindergarten	大班	da4 ban1	noun	oldest kindergarten class (ages 5–6)		
+kindergarten	公立	gong1 li4	adjective	public (school)		
+kindergarten	私立	si1 li4	adjective	private (school)		
+kindergarten	老師	lao3 shi1	noun	teacher		
+kindergarten	園長	yuan2 zhang3	noun	kindergarten principal		
+kindergarten	同學	tong2 xue2	noun	classmate		
+kindergarten	上學	shang4 xue2	verb	to go to school		
+kindergarten	放學	fang4 xue2	verb	to finish school for the day		
+kindergarten	接送	jie1 song4	verb	to drop off and pick up		
+kindergarten	接小孩	jie1 xiao3 hai2	verb	to pick up the kids		
+kindergarten	娃娃車	wa2 wa5 che1	noun	kindergarten bus	zh-Hant	
+kindergarten	校車	xiao4 che1	noun	school bus		
+kindergarten	書包	shu1 bao1	noun	schoolbag		
+kindergarten	餐袋	can1 dai4	noun	lunch bag (for a cup and utensils)	zh-Hant	
+kindergarten	水壺	shui3 hu2	noun	water bottle		
+kindergarten	室內鞋	shi4 nei4 xie2	noun	indoor shoes		
+kindergarten	點心	dian3 xin1	noun	snack		
+kindergarten	午餐	wu3 can1	noun	lunch		
+kindergarten	棉被	mian2 bei4	noun	blanket (for nap time)		
+kindergarten	制服	zhi4 fu2	noun	uniform		
+kindergarten	學費	xue2 fei4	noun	tuition; school fees		
+kindergarten	報名	bao4 ming2	verb	to sign up; to enroll		
+kindergarten	抽籤	chou1 qian1	verb	to draw lots (for a school place)		
+kindergarten	適應	shi4 ying4	verb	to adjust; to get used to		
+kindergarten	分離焦慮	fen1 li2 jiao1 lu:4	noun	separation anxiety		
+kindergarten	請假	qing3 jia4	verb	to ask for time off; to call in absent		
+kindergarten	今天請假	jin1 tian1 qing3 jia4	phrase	(my child) will be absent today		
+kindergarten	畢業典禮	bi4 ye4 dian3 li3	noun	graduation ceremony		
+grade-school-parents	國小	guo2 xiao3	noun	elementary school	zh-Hant	
+grade-school-parents	小學	xiao3 xue2	noun	elementary school		
+grade-school-parents	一年級	yi1 nian2 ji2	noun	first grade		
+grade-school-parents	導師	dao3 shi1	noun	homeroom teacher	zh-Hant	
+grade-school-parents	班主任	ban1 zhu3 ren4	noun	homeroom teacher	zh-Hans	
+grade-school-parents	家長	jia1 zhang3	noun	parent (of a student)		
+grade-school-parents	聯絡簿	lian2 luo4 bu4	noun	communication book (between parents and teacher)	zh-Hant	
+grade-school-parents	簽聯絡簿	qian1 lian2 luo4 bu4	verb	to sign the communication book	zh-Hant	
+grade-school-parents	功課	gong1 ke4	noun	homework		
+grade-school-parents	寫功課	xie3 gong1 ke4	verb	to do homework		
+grade-school-parents	作業	zuo4 ye4	noun	assignment; homework		
+grade-school-parents	考試	kao3 shi4	noun	exam; test		
+grade-school-parents	考卷	kao3 juan4	noun	test paper		
+grade-school-parents	成績	cheng2 ji1	noun	grades; results		
+grade-school-parents	家長會	jia1 zhang3 hui4	noun	parent-teacher meeting		
+grade-school-parents	親師座談會	qin1 shi1 zuo4 tan2 hui4	noun	parent-teacher night	zh-Hant	
+grade-school-parents	同意書	tong2 yi4 shu1	noun	consent form		
+grade-school-parents	繳費	jiao3 fei4	verb	to pay (a fee)		
+grade-school-parents	營養午餐	ying2 yang3 wu3 can1	noun	school lunch	zh-Hant	
+grade-school-parents	文具	wen2 ju4	noun	stationery; school supplies		
+grade-school-parents	安親班	an1 qin1 ban1	noun	after-school care (private)	zh-Hant	
+grade-school-parents	托管班	tuo1 guan3 ban1	noun	after-school care	zh-Hans	review: mainland term
+grade-school-parents	課後照顧	ke4 hou4 zhao4 gu4	noun	after-school care (at school)	zh-Hant	
+grade-school-parents	補習班	bu3 xi2 ban1	noun	cram school; tutoring center		
+grade-school-parents	才藝班	cai2 yi4 ban1	noun	extracurricular class (music, art)	zh-Hant	
+grade-school-parents	興趣班	xing4 qu4 ban1	noun	extracurricular class (music, art)	zh-Hans	review: mainland term
+grade-school-parents	校外教學	xiao4 wai4 jiao4 xue2	noun	field trip	zh-Hant	
+grade-school-parents	運動會	yun4 dong4 hui4	noun	sports day		
+grade-school-parents	開學	kai1 xue2	verb	school starts (for the term)		
+grade-school-parents	寒假	han2 jia4	noun	winter break		
+grade-school-parents	暑假	shu3 jia4	noun	summer break		
+grade-school-parents	被同學欺負	bei4 tong2 xue2 qi1 fu4	phrase	bullied by classmates		
+playground	公園	gong1 yuan2	noun	park		
+playground	遊樂場	you2 le4 chang3	noun	playground		
+playground	溜滑梯	liu1 hua2 ti1	noun	slide		
+playground	鞦韆	qiu1 qian1	noun	swing		
+playground	盪鞦韆	dang4 qiu1 qian1	verb	to swing (on a swing)		
+playground	蹺蹺板	qiao1 qiao1 ban3	noun	seesaw		
+playground	沙坑	sha1 keng1	noun	sandbox		
+playground	攀爬架	pan1 pa2 jia4	noun	climbing frame		
+playground	跑步	pao3 bu4	verb	to run		
+playground	跳	tiao4	verb	to jump		
+playground	捉迷藏	zhuo1 mi2 cang2	noun	hide-and-seek		
+playground	鬼抓人	gui3 zhua1 ren2	noun	tag (the game)	zh-Hant	
+playground	球	qiu2	noun	ball		
+playground	踢球	ti1 qiu2	verb	to kick a ball; to play soccer		
+playground	騎腳踏車	qi2 jiao3 ta4 che1	verb	to ride a bike	zh-Hant	
+playground	騎自行車	qi2 zi4 xing2 che1	verb	to ride a bike	zh-Hans	
+playground	滑板車	hua2 ban3 che1	noun	kick scooter		
+playground	游泳課	you2 yong3 ke4	noun	swimming lesson		
+playground	畫畫	hua4 hua4	verb	to draw; to paint		
+playground	蠟筆	la4 bi3	noun	crayon		
+playground	黏土	nian2 tu3	noun	clay; play dough		
+playground	圖書館	tu2 shu1 guan3	noun	library		
+playground	說故事時間	shuo1 gu4 shi4 shi2 jian1	noun	story time		
+playground	動物園	dong4 wu4 yuan2	noun	zoo		
+playground	博物館	bo2 wu4 guan3	noun	museum		
+playground	排隊	pai2 dui4	verb	to wait in line		
+playground	帽子	mao4 zi5	noun	hat		
+playground	防曬乳	fang2 shai4 ru3	noun	sunscreen	zh-Hant	
+playground	防曬霜	fang2 shai4 shuang1	noun	sunscreen	zh-Hans	review: mainland term
+playground	防蚊液	fang2 wen2 ye4	noun	insect repellent	zh-Hant	
+playground	驅蚊液	qu1 wen2 ye4	noun	insect repellent	zh-Hans	review: mainland term
+playground	好玩	hao3 wan2	adjective	fun		
+phrases-with-kids	小心	xiao3 xin1	phrase	careful!		
+phrases-with-kids	不可以	bu4 ke3 yi3	phrase	no, you can't do that		
+phrases-with-kids	好棒	hao3 bang4	phrase	great job!		
+phrases-with-kids	乖	guai1	adjective	well-behaved; good		
+phrases-with-kids	過來	guo4 lai2	phrase	come here		
+phrases-with-kids	等一下	deng3 yi1 xia4	phrase	wait a moment		
+phrases-with-kids	快一點	kuai4 yi1 dian3	phrase	hurry up		
+phrases-with-kids	慢慢走	man4 man4 zou3	phrase	walk slowly		
+phrases-with-kids	不要跑	bu4 yao4 pao3	phrase	don't run		
+phrases-with-kids	牽手	qian1 shou3	verb	to hold hands		
+phrases-with-kids	手給我	shou3 gei3 wo3	phrase	give me your hand		
+phrases-with-kids	該睡覺了	gai1 shui4 jiao4 le5	phrase	time for bed		
+phrases-with-kids	起床了	qi3 chuang2 le5	phrase	time to get up		
+phrases-with-kids	吃飽了嗎	chi1 bao3 le5 ma5	phrase	are you full?		
+phrases-with-kids	多喝水	duo1 he1 shui3	phrase	drink more water		
+phrases-with-kids	說謝謝	shuo1 xie4 xie5	phrase	say thank you		
+phrases-with-kids	說對不起	shuo1 dui4 bu4 qi3	phrase	say sorry		
+phrases-with-kids	沒關係	mei2 guan1 xi4	phrase	it's okay		
+phrases-with-kids	加油	jia1 you2	phrase	you can do it!		
+phrases-with-kids	你好厲害	ni3 hao3 li4 hai4	phrase	you're amazing!		
+phrases-with-kids	不哭不哭	bu4 ku1 bu4 ku1	phrase	there, there, don't cry		
+phrases-with-kids	抱抱	bao4 bao4	verb	to hug (child's word)		
+phrases-with-kids	我愛你	wo3 ai4 ni3	phrase	I love you		
+phrases-with-kids	好不好	hao3 bu4 hao3	phrase	okay? (asking someone to agree)		
+phrases-with-kids	怎麼了	zen3 me5 le5	phrase	what's wrong?		
+phrases-with-kids	哪裡痛	na3 li3 tong4	phrase	where does it hurt?		
+phrases-with-kids	收好	shou1 hao3	phrase	put it away		
+phrases-with-kids	輪到你了	lun2 dao4 ni3 le5	phrase	it's your turn		
+phrases-with-kids	慢慢來	man4 man4 lai2	phrase	take your time		
+phrases-with-kids	你做到了	ni3 zuo4 dao4 le5	phrase	you did it!		
+daily-care	照顧	zhao4 gu4	verb	to take care of		
+daily-care	照顧者	zhao4 gu4 zhe3	noun	caregiver		
+daily-care	洗澡	xi3 zao3	verb	to bathe; to shower		
+daily-care	擦澡	ca1 zao3	verb	to give a sponge bath		
+daily-care	洗頭	xi3 tou2	verb	to wash someone's hair		
+daily-care	刷牙	shua1 ya2	verb	to brush your teeth		
+daily-care	假牙	jia3 ya2	noun	dentures		
+daily-care	刮鬍子	gua1 hu2 zi5	verb	to shave		
+daily-care	剪指甲	jian3 zhi3 jia3	verb	to trim nails		
+daily-care	穿衣服	chuan1 yi1 fu2	verb	to get dressed		
+daily-care	換衣服	huan4 yi1 fu2	verb	to change clothes		
+daily-care	上廁所	shang4 ce4 suo3	verb	to go to the toilet		
+daily-care	成人紙尿褲	cheng2 ren2 zhi3 niao4 ku4	noun	adult diaper		
+daily-care	看護墊	kan1 hu4 dian4	noun	bed pad (disposable)	zh-Hant	
+daily-care	護理墊	hu4 li3 dian4	noun	bed pad (disposable)	zh-Hans	review: mainland term
+daily-care	便盆椅	bian4 pen2 yi3	noun	commode chair		
+daily-care	尿壺	niao4 hu2	noun	urinal (bottle)		
+daily-care	餵飯	wei4 fan4	verb	to feed (someone a meal)		
+daily-care	軟食	ruan3 shi2	noun	soft food		
+daily-care	切碎	qie1 sui4	verb	to chop finely		
+daily-care	吞嚥困難	tun1 yan4 kun4 nan2	noun	difficulty swallowing		
+daily-care	增稠劑	zeng1 chou2 ji4	noun	food thickener (for easier swallowing)		
+daily-care	吃藥	chi1 yao4	verb	to take medicine		
+daily-care	藥盒	yao4 he2	noun	pill organizer		
+daily-care	量血壓	liang2 xue4 ya1	verb	to take someone's blood pressure		
+daily-care	翻身	fan1 shen1	verb	to turn over (in bed)		
+daily-care	褥瘡	ru4 chuang1	noun	bedsore		
+daily-care	擦乳液	ca1 ru3 ye4	verb	to put on lotion		
+daily-care	起床	qi3 chuang2	verb	to get up		
+daily-care	睡不著	shui4 bu4 zhao2	phrase	can't sleep		
+mobility-safety	輪椅	lun2 yi3	noun	wheelchair		
+mobility-safety	推輪椅	tui1 lun2 yi3	verb	to push a wheelchair		
+mobility-safety	拐杖	guai3 zhang4	noun	cane; crutch		
+mobility-safety	四腳拐	si4 jiao3 guai3	noun	quad cane	zh-Hant	
+mobility-safety	助行器	zhu4 xing2 qi4	noun	walker (walking frame)		
+mobility-safety	扶	fu2	verb	to support (someone) by the arm		
+mobility-safety	扶手	fu2 shou3	noun	handrail; grab bar		
+mobility-safety	防滑墊	fang2 hua2 dian4	noun	non-slip mat		
+mobility-safety	洗澡椅	xi3 zao3 yi3	noun	shower chair		
+mobility-safety	跌倒	die2 dao3	verb	to fall down		
+mobility-safety	小心跌倒	xiao3 xin1 die2 dao3	phrase	careful not to fall		
+mobility-safety	站起來	zhan4 qi3 lai2	phrase	stand up		
+mobility-safety	坐下	zuo4 xia4	verb	to sit down		
+mobility-safety	慢慢走	man4 man4 zou3	phrase	walk slowly		
+mobility-safety	走不動	zou3 bu4 dong4	phrase	can't walk any farther		
+mobility-safety	頭暈	tou2 yun1	adjective	dizzy		
+mobility-safety	病床	bing4 chuang2	noun	hospital bed		
+mobility-safety	電動床	dian4 dong4 chuang2	noun	electric adjustable bed		
+mobility-safety	床欄	chuang2 lan2	noun	bed rail		
+mobility-safety	無障礙	wu2 zhang4 ai4	adjective	accessible (barrier-free)		
+mobility-safety	斜坡	xie2 po1	noun	ramp; slope		
+mobility-safety	電梯	dian4 ti1	noun	elevator		
+mobility-safety	樓梯	lou2 ti1	noun	stairs		
+mobility-safety	博愛座	bo2 ai4 zuo4	noun	priority seat	zh-Hant	
+mobility-safety	愛心座	ai4 xin1 zuo4	noun	priority seat	zh-Hans	review: mainland term
+mobility-safety	復康巴士	fu4 kang1 ba1 shi4	noun	accessible transport van	zh-Hant	
+mobility-safety	復健	fu4 jian4	noun	rehabilitation; physical therapy	zh-Hant	
+mobility-safety	康復	kang1 fu4	noun	rehabilitation	zh-Hans	review: mainland term
+mobility-safety	物理治療	wu4 li3 zhi4 liao2	noun	physical therapy		
+mobility-safety	緊急呼叫鈴	jin3 ji2 hu1 jiao4 ling2	noun	emergency call button		
+memory-aging	老人	lao3 ren2	noun	elderly person		
+memory-aging	長輩	zhang3 bei4	noun	elder (polite)		
+memory-aging	年紀大了	nian2 ji4 da4 le5	phrase	getting older		
+memory-aging	失智症	shi1 zhi4 zheng4	noun	dementia	zh-Hant	
+memory-aging	認知障礙症	ren4 zhi1 zhang4 ai4 zheng4	noun	dementia	zh-Hans	review: mainland term
+memory-aging	阿茲海默症	a1 zi1 hai3 mo4 zheng4	noun	Alzheimer's disease	zh-Hant	
+memory-aging	阿爾茨海默病	a1 er3 ci2 hai3 mo4 bing4	noun	Alzheimer's disease	zh-Hans	review: mainland term
+memory-aging	記憶力	ji4 yi4 li4	noun	memory (the ability to remember)		
+memory-aging	健忘	jian4 wang4	adjective	forgetful		
+memory-aging	忘記	wang4 ji4	verb	to forget		
+memory-aging	記不得	ji4 bu4 de2	phrase	can't remember		
+memory-aging	一直重複問	yi1 zhi2 chong2 fu4 wen4	phrase	keeps asking the same thing		
+memory-aging	迷路	mi2 lu4	verb	to get lost		
+memory-aging	走失	zou3 shi1	verb	to wander off and go missing		
+memory-aging	認不得人	ren4 bu4 de2 ren2	phrase	doesn't recognize people		
+memory-aging	混亂	hun4 luan4	adjective	confused		
+memory-aging	日夜顛倒	ri4 ye4 dian1 dao3	phrase	sleeps by day and is awake at night		
+memory-aging	黃昏症候群	huang2 hun1 zheng4 hou4 qun2	noun	sundowning (late-day confusion)	zh-Hant	
+memory-aging	情緒	qing2 xu4	noun	mood; emotions		
+memory-aging	脾氣	pi2 qi4	noun	temper		
+memory-aging	重聽	zhong4 ting1	adjective	hard of hearing		
+memory-aging	助聽器	zhu4 ting1 qi4	noun	hearing aid		
+memory-aging	老花眼	lao3 hua1 yan3	noun	age-related farsightedness		
+memory-aging	骨質疏鬆	gu3 zhi2 shu1 song1	noun	osteoporosis		
+memory-aging	退化	tui4 hua4	verb	to decline (with age)		
+memory-aging	回憶	hui2 yi4	noun	memories; recollections		
+memory-aging	老照片	lao3 zhao4 pian4	noun	old photos		
+memory-aging	陪伴	pei2 ban4	verb	to keep someone company		
+memory-aging	聊天	liao2 tian1	verb	to chat		
+memory-aging	散步	san4 bu4	verb	to take a walk		
+care-services	長照	chang2 zhao4	noun	long-term care	zh-Hant	
+care-services	長照專線	chang2 zhao4 zhuan1 xian4	noun	long-term care hotline (1966)	zh-Hant	
+care-services	養老服務	yang3 lao3 fu2 wu4	noun	elder care services	zh-Hans	review: mainland term
+care-services	居家服務	ju1 jia1 fu2 wu4	noun	home care services	zh-Hant	
+care-services	居服員	ju1 fu2 yuan2	noun	home care worker	zh-Hant	
+care-services	看護	kan1 hu4	noun	care aide (hired caregiver)	zh-Hant	
+care-services	外籍看護	wai4 ji2 kan1 hu4	noun	foreign care aide	zh-Hant	
+care-services	護工	hu4 gong1	noun	care aide (hired caregiver)	zh-Hans	review: mainland term
+care-services	日照中心	ri4 zhao4 zhong1 xin1	noun	adult day care center	zh-Hant	
+care-services	養老院	yang3 lao3 yuan4	noun	nursing home; retirement home		
+care-services	護理之家	hu4 li3 zhi1 jia1	noun	nursing home (with nursing care)	zh-Hant	
+care-services	喘息服務	chuan3 xi2 fu2 wu4	noun	respite care	zh-Hant	
+care-services	交通接送	jiao1 tong1 jie1 song4	noun	transport service (to appointments)		
+care-services	送餐服務	song4 can1 fu2 wu4	noun	meal delivery service		
+care-services	申請	shen1 qing3	verb	to apply		
+care-services	評估	ping2 gu1	noun	assessment		
+care-services	照管專員	zhao4 guan3 zhuan1 yuan2	noun	care assessor	zh-Hant	
+care-services	個案管理師	ge4 an4 guan3 li3 shi1	noun	case manager		
+care-services	補助	bu3 zhu4	noun	subsidy		
+care-services	身心障礙證明	shen1 xin1 zhang4 ai4 zheng4 ming2	noun	disability certificate	zh-Hant	
+care-services	殘疾人證	can2 ji2 ren2 zheng4	noun	disability certificate	zh-Hans	review: mainland term
+care-services	診斷證明	zhen3 duan4 zheng4 ming2	noun	doctor's certificate	zh-Hant	
+care-services	輔具	fu3 ju4	noun	assistive devices	zh-Hant	
+care-services	租借	zu1 jie4	verb	to rent; to borrow		
+care-services	表格	biao3 ge2	noun	form		
+care-services	填表	tian2 biao3	verb	to fill out a form		
+care-services	簽名	qian1 ming2	verb	to sign (your name)		
+care-services	委託書	wei3 tuo1 shu1	noun	letter of authorization		
+care-staff	護理師	hu4 li3 shi1	noun	nurse	zh-Hant	
+care-staff	護士	hu4 shi4	noun	nurse		
+care-staff	社工	she4 gong1	noun	social worker		
+care-staff	家屬	jia1 shu3	noun	family members (of a patient)		
+care-staff	緊急聯絡人	jin3 ji2 lian2 luo4 ren2	noun	emergency contact		
+care-staff	探病時間	tan4 bing4 shi2 jian1	noun	visiting hours		
+care-staff	交班	jiao1 ban1	verb	to hand over a shift		
+care-staff	排班	pai2 ban1	noun	shift schedule		
+care-staff	注意事項	zhu4 yi4 shi4 xiang4	noun	things to watch for; instructions		
+care-staff	狀況	zhuang4 kuang4	noun	condition; situation		
+care-staff	好轉	hao3 zhuan3	verb	to get better		
+care-staff	變差	bian4 cha4	verb	to get worse		
+care-staff	發燒	fa1 shao1	verb	to have a fever		
+care-staff	喘	chuan3	verb	to be short of breath		
+care-staff	飲食	yin3 shi2	noun	diet; eating		
+care-staff	水分	shui3 fen4	noun	fluid intake		
+care-staff	紀錄	ji4 lu4	noun	record; log		
+care-staff	按鈴	an4 ling2	verb	to press the call bell		
+care-staff	他今天好嗎	ta1 jin1 tian1 hao3 ma5	phrase	how is he (or she) today?		
+care-staff	吃得下嗎	chi1 de5 xia4 ma5	phrase	is (he or she) eating?		
+care-staff	睡得好嗎	shui4 de5 hao3 ma5	phrase	did (he or she) sleep well?		
+care-staff	有沒有大便	you3 mei2 you3 da4 bian4	phrase	has (he or she) had a bowel movement?		
+care-staff	他會痛	ta1 hui4 tong4	phrase	he (or she) is in pain		
+care-staff	請幫忙	qing3 bang1 mang2	phrase	please help		
+care-staff	請幫他翻身	qing3 bang1 ta1 fan1 shen1	phrase	please help turn him (or her) over		
+care-staff	什麼時候	shen2 me5 shi2 hou4	phrase	when?		
+care-staff	有問題請打給我	you3 wen4 ti2 qing3 da3 gei3 wo3	phrase	if there's a problem, please call me		
+care-staff	謝謝你的照顧	xie4 xie5 ni3 de5 zhao4 gu4	phrase	thank you for taking care of (him or her)		
+care-staff	辛苦了	xin1 ku3 le5	phrase	thank you for your hard work		
+comfort-feelings	舒服	shu1 fu2	adjective	comfortable		
+comfort-feelings	不舒服	bu4 shu1 fu2	adjective	unwell; uncomfortable		
+comfort-feelings	哪裡不舒服	na3 li3 bu4 shu1 fu2	phrase	where do you feel unwell?		
+comfort-feelings	會冷嗎	hui4 leng3 ma5	phrase	are you cold?		
+comfort-feelings	會熱嗎	hui4 re4 ma5	phrase	are you hot?		
+comfort-feelings	要不要喝水	yao4 bu4 yao4 he1 shui3	phrase	do you want some water?		
+comfort-feelings	別擔心	bie2 dan1 xin1	phrase	don't worry		
+comfort-feelings	我在這裡	wo3 zai4 zhe4 li3	phrase	I'm here		
+comfort-feelings	我陪你	wo3 pei2 ni3	phrase	I'll stay with you		
+comfort-feelings	握著你的手	wo4 zhe5 ni3 de5 shou3	phrase	holding your hand		
+comfort-feelings	慢慢來	man4 man4 lai2	phrase	take your time		
+comfort-feelings	沒關係	mei2 guan1 xi4	phrase	it's okay		
+comfort-feelings	你做得很好	ni3 zuo4 de5 hen3 hao3	phrase	you're doing well		
+comfort-feelings	害怕	hai4 pa4	adjective	afraid		
+comfort-feelings	寂寞	ji2 mo4	adjective	lonely		
+comfort-feelings	難過	nan2 guo4	adjective	sad		
+comfort-feelings	擔心	dan1 xin1	verb	to worry		
+comfort-feelings	放心	fang4 xin1	verb	to stop worrying; to be at ease		
+comfort-feelings	開心	kai1 xin1	adjective	happy		
+comfort-feelings	累	lei4	adjective	tired		
+comfort-feelings	休息	xiu1 xi2	verb	to rest		
+comfort-feelings	心情	xin1 qing2	noun	mood		
+comfort-feelings	想家	xiang3 jia1	verb	to be homesick		
+comfort-feelings	家人	jia1 ren2	noun	family		
+comfort-feelings	蓋被子	gai4 bei4 zi5	verb	to cover (someone) with a blanket		
+comfort-feelings	毯子	tan3 zi5	noun	blanket		
+comfort-feelings	枕頭	zhen3 tou5	noun	pillow		
+comfort-feelings	按摩	an4 mo2	verb	to massage		
+comfort-feelings	聽音樂	ting1 yin1 yue4	verb	to listen to music		
+comfort-feelings	照顧者也要休息	zhao4 gu4 zhe3 ye3 yao4 xiu1 xi2	phrase	caregivers need rest too		
+teaching	外籍老師	wai4 ji2 lao3 shi1	noun	foreign teacher		
+teaching	外師	wai4 shi1	noun	foreign teacher (short form)	zh-Hant	
+teaching	中師	zhong1 shi1	noun	local co-teacher (works with a foreign teacher)	zh-Hant	
+teaching	協同教學	xie2 tong2 jiao4 xue2	noun	co-teaching		
+teaching	雙語教育	shuang1 yu3 jiao4 yu4	noun	bilingual education		
+teaching	雙語課程	shuang1 yu3 ke4 cheng2	noun	bilingual classes		
+teaching	全英語授課	quan2 ying1 yu3 shou4 ke4	noun	teaching only in English	zh-Hant	
+teaching	英文老師	ying1 wen2 lao3 shi1	noun	English teacher		
+teaching	補習班	bu3 xi2 ban1	noun	cram school; tutoring center		
+teaching	校長	xiao4 zhang3	noun	principal		
+teaching	主任	zhu3 ren4	noun	director (head of a school office)		
+teaching	教務處	jiao4 wu4 chu4	noun	academic affairs office		
+teaching	辦公室	ban4 gong1 shi4	noun	office		
+teaching	課表	ke4 biao3	noun	class timetable		
+teaching	教案	jiao4 an4	noun	lesson plan		
+teaching	備課	bei4 ke4	verb	to prepare lessons		
+teaching	課本	ke4 ben3	noun	textbook		
+teaching	教材	jiao4 cai2	noun	teaching materials		
+teaching	學習單	xue2 xi2 dan1	noun	worksheet	zh-Hant	
+teaching	學期	xue2 qi2	noun	semester; term		
+teaching	上課	shang4 ke4	verb	to start class; to attend class		
+teaching	下課	xia4 ke4	verb	to finish class; class break		
+teaching	點名	dian3 ming2	verb	to take attendance		
+teaching	代課	dai4 ke4	verb	to substitute teach		
+teaching	代課老師	dai4 ke4 lao3 shi1	noun	substitute teacher		
+teaching	段考	duan4 kao3	noun	term exam	zh-Hant	
+teaching	改考卷	gai3 kao3 juan4	verb	to grade tests		
+teaching	打分數	da3 fen1 shu4	verb	to give a grade		
+teaching	發音	fa1 yin1	noun	pronunciation		
+teaching	單字	dan1 zi4	noun	vocabulary word	zh-Hant	
+teaching	單詞	dan1 ci2	noun	vocabulary word	zh-Hans	
+teaching	文法	wen2 fa3	noun	grammar	zh-Hant	
+teaching	語法	yu3 fa3	noun	grammar	zh-Hans	
+teaching	拼字	pin1 zi4	noun	spelling	zh-Hant	
+teaching	口說	kou3 shuo1	noun	speaking (as a skill)	zh-Hant	
+teaching	聽力	ting1 li4	noun	listening (as a skill)		
+teaching	閱讀	yue4 du2	noun	reading		
+teaching	安靜	an1 jing4	phrase	quiet, please		
+teaching	請坐好	qing3 zuo4 hao3	phrase	please sit properly		
+teaching	舉手	ju3 shou3	verb	to raise your hand		
+teaching	跟我念	gen1 wo3 nian4	phrase	repeat after me		
+teaching	再說一次	zai4 shuo1 yi1 ci4	phrase	say it again		
+teaching	大聲一點	da4 sheng1 yi1 dian3	phrase	a little louder		
+teaching	翻到第十頁	fan1 dao4 di4 shi2 ye4	phrase	turn to page 10		
+teaching	拿出課本	na2 chu1 ke4 ben3	phrase	take out your textbooks		
+teaching	分組	fen1 zu3	verb	to split into groups		
+teaching	交作業	jiao1 zuo4 ye4	verb	to hand in homework		
+teaching	聽懂了嗎	ting1 dong3 le5 ma5	phrase	do you understand?		
+teaching	有沒有問題	you3 mei2 you3 wen4 ti2	phrase	any questions?		
+teaching	合約	he2 yue1	noun	contract		
+teaching	鐘點費	zhong1 dian3 fei4	noun	hourly pay (for teaching)	zh-Hant	
+teaching	教師證	jiao4 shi1 zheng4	noun	teaching license		
+teaching	工作證	gong1 zuo4 zheng4	noun	work permit		
+airport	機場	ji1 chang3	noun	airport		
+airport	桃園機場	tao2 yuan2 ji1 chang3	noun	Taoyuan Airport	zh-Hant	
+airport	航廈	hang2 xia4	noun	airport terminal	zh-Hant	
+airport	航站樓	hang2 zhan4 lou2	noun	airport terminal	zh-Hans	review: mainland term
+airport	護照	hu4 zhao4	noun	passport		
+airport	簽證	qian1 zheng4	noun	visa		
+airport	機票	ji1 piao4	noun	plane ticket		
+airport	班機	ban1 ji1	noun	flight	zh-Hant	
+airport	航班	hang2 ban1	noun	flight		
+airport	登機證	deng1 ji1 zheng4	noun	boarding pass	zh-Hant	
+airport	登機牌	deng1 ji1 pai2	noun	boarding pass	zh-Hans	
+airport	報到	bao4 dao4	verb	to check in (for a flight)	zh-Hant	
+airport	值機	zhi2 ji1	verb	to check in (for a flight)	zh-Hans	review: mainland term
+airport	櫃檯	gui4 tai2	noun	counter; front desk		
+airport	行李	xing2 li3	noun	luggage		
+airport	行李箱	xing2 li3 xiang1	noun	suitcase		
+airport	手提行李	shou3 ti2 xing2 li3	noun	carry-on luggage		
+airport	託運	tuo1 yun4	verb	to check (luggage)		
+airport	超重	chao1 zhong4	adjective	overweight (luggage)		
+airport	安檢	an1 jian3	noun	security check		
+airport	登機門	deng1 ji1 men2	noun	boarding gate		
+airport	登機	deng1 ji1	verb	to board (a plane)		
+airport	起飛	qi3 fei1	verb	to take off		
+airport	降落	jiang4 luo4	verb	to land		
+airport	入境	ru4 jing4	verb	to enter a country		
+airport	出境	chu1 jing4	verb	to leave a country		
+airport	海關	hai3 guan1	noun	customs		
+airport	申報	shen1 bao4	verb	to declare (at customs)		
+airport	轉機	zhuan3 ji1	verb	to change planes		
+airport	靠窗	kao4 chuang1	phrase	by the window (seat)		
+airport	靠走道	kao4 zou3 dao4	phrase	on the aisle (seat)		
+airport	行李提領	xing2 li3 ti2 ling3	noun	baggage claim	zh-Hant	
+airport	行李提取	xing2 li3 ti2 qu3	noun	baggage claim	zh-Hans	review: mainland term
+airport	機場捷運	ji1 chang3 jie2 yun4	noun	airport MRT	zh-Hant	
+airport	外幣兌換	wai4 bi4 dui4 huan4	noun	currency exchange		
+trains	捷運	jie2 yun4	noun	MRT; metro	zh-Hant	
+trains	地鐵	di4 tie3	noun	subway; metro	zh-Hans	
+trains	捷運站	jie2 yun4 zhan4	noun	MRT station	zh-Hant	
+trains	地鐵站	di4 tie3 zhan4	noun	subway station	zh-Hans	
+trains	火車	huo3 che1	noun	train		
+trains	火車站	huo3 che1 zhan4	noun	train station		
+trains	車站	che1 zhan4	noun	station		
+trains	台鐵	tai2 tie3	noun	Taiwan Railway	zh-Hant	
+trains	高鐵	gao1 tie3	noun	high-speed rail		
+trains	悠遊卡	you1 you2 ka3	noun	EasyCard (transit card)	zh-Hant	
+trains	交通卡	jiao1 tong1 ka3	noun	transit card	zh-Hans	review: mainland term
+trains	加值	jia1 zhi2	verb	to top up (a card)	zh-Hant	
+trains	充值	chong1 zhi2	verb	to top up (a card)	zh-Hans	
+trains	月台	yue4 tai2	noun	platform		
+trains	出口	chu1 kou3	noun	exit		
+trains	入口	ru4 kou3	noun	entrance		
+trains	轉乘	zhuan3 cheng2	verb	to transfer (between lines)	zh-Hant	
+trains	換乘	huan4 cheng2	verb	to transfer (between lines)	zh-Hans	
+trains	終點站	zhong1 dian3 zhan4	noun	last stop		
+trains	下一站	xia4 yi1 zhan4	noun	next stop		
+trains	車廂	che1 xiang1	noun	train car		
+trains	自由座	zi4 you2 zuo4	noun	unreserved seat	zh-Hant	
+trains	對號座	dui4 hao4 zuo4	noun	reserved seat	zh-Hant	
+trains	車票	che1 piao4	noun	ticket (train or bus)		
+trains	單程票	dan1 cheng2 piao4	noun	one-way ticket		
+trains	來回票	lai2 hui2 piao4	noun	round-trip ticket		
+trains	售票機	shou4 piao4 ji1	noun	ticket machine		
+trains	誤點	wu4 dian3	verb	to be late (train)	zh-Hant	
+trains	晚點	wan3 dian3	verb	to be late (train)	zh-Hans	
+trains	黃線	huang2 xian4	noun	yellow safety line		
+trains	請勿飲食	qing3 wu4 yin3 shi2	phrase	no eating or drinking		
+trains	在哪一站下車	zai4 na3 yi1 zhan4 xia4 che1	phrase	which stop do I get off at?		
+trains	居留證	ju1 liu2 zheng4	noun	resident certificate (ARC)	zh-Hant	
+trains	居留證號碼	ju1 liu2 zheng4 hao4 ma3	noun	ARC number	zh-Hant	
+trains	統一證號	tong3 yi1 zheng4 hao4	noun	resident ID number (on the ARC)	zh-Hant	
+trains	身分證字號	shen1 fen4 zheng4 zi4 hao4	noun	national ID number	zh-Hant	
+trains	身份證號碼	shen1 fen4 zheng4 hao4 ma3	noun	ID card number	zh-Hans	
+trains	可以用居留證號碼嗎	ke3 yi3 yong4 ju1 liu2 zheng4 hao4 ma3 ma5	phrase	can I use my ARC number instead?	zh-Hant	
+trains	證件號碼	zheng4 jian4 hao4 ma3	noun	ID number (of any ID document)		
+trains	護照號碼	hu4 zhao4 hao4 ma3	noun	passport number		
+trains	訂票	ding4 piao4	verb	to book tickets		
+trains	訂票要填證件號碼	ding4 piao4 yao4 tian2 zheng4 jian4 hao4 ma3	phrase	you need an ID number to book tickets		
+bus-taxi-scooter	公車	gong1 che1	noun	bus	zh-Hant	
+bus-taxi-scooter	公交車	gong1 jiao1 che1	noun	bus	zh-Hans	
+bus-taxi-scooter	公車站	gong1 che1 zhan4	noun	bus stop	zh-Hant	
+bus-taxi-scooter	客運	ke4 yun4	noun	intercity bus	zh-Hant	
+bus-taxi-scooter	長途汽車	chang2 tu2 qi4 che1	noun	intercity bus	zh-Hans	review: mainland term
+bus-taxi-scooter	上車	shang4 che1	verb	to get on (a vehicle)		
+bus-taxi-scooter	下車	xia4 che1	verb	to get off (a vehicle)		
+bus-taxi-scooter	下車鈴	xia4 che1 ling2	noun	stop button (on a bus)	zh-Hant	
+bus-taxi-scooter	刷卡	shua1 ka3	verb	to tap or swipe a card		
+bus-taxi-scooter	司機	si1 ji1	noun	driver		
+bus-taxi-scooter	計程車	ji4 cheng2 che1	noun	taxi	zh-Hant	
+bus-taxi-scooter	出租車	chu1 zu1 che1	noun	taxi	zh-Hans	
+bus-taxi-scooter	叫車	jiao4 che1	verb	to call a taxi		
+bus-taxi-scooter	跳表	tiao4 biao3	verb	to run the meter (taxi)	zh-Hant	
+bus-taxi-scooter	到這裡就好	dao4 zhe4 li3 jiu4 hao3	phrase	here is fine (you can stop here)		
+bus-taxi-scooter	請到台北車站	qing3 dao4 tai2 bei3 che1 zhan4	phrase	please take me to Taipei Main Station	zh-Hant	
+bus-taxi-scooter	機車	ji1 che1	noun	scooter; motorcycle	zh-Hant	
+bus-taxi-scooter	摩托車	mo2 tuo1 che1	noun	motorcycle; scooter		
+bus-taxi-scooter	騎機車	qi2 ji1 che1	verb	to ride a scooter	zh-Hant	
+bus-taxi-scooter	安全帽	an1 quan2 mao4	noun	helmet		
+bus-taxi-scooter	駕照	jia4 zhao4	noun	driver's license		
+bus-taxi-scooter	加油站	jia1 you2 zhan4	noun	gas station		
+bus-taxi-scooter	停車場	ting2 che1 chang3	noun	parking lot		
+bus-taxi-scooter	停車位	ting2 che1 wei4	noun	parking space		
+bus-taxi-scooter	腳踏車	jiao3 ta4 che1	noun	bicycle	zh-Hant	
+bus-taxi-scooter	自行車	zi4 xing2 che1	noun	bicycle	zh-Hans	
+bus-taxi-scooter	紅綠燈	hong2 lu:4 deng1	noun	traffic light		
+bus-taxi-scooter	斑馬線	ban1 ma3 xian4	noun	crosswalk		
+bus-taxi-scooter	過馬路	guo4 ma3 lu4	verb	to cross the street		
+bus-taxi-scooter	塞車	sai1 che1	verb	to be stuck in traffic	zh-Hant	
+bus-taxi-scooter	堵車	du3 che1	verb	to be stuck in traffic	zh-Hans	
+bus-taxi-scooter	開車	kai1 che1	verb	to drive		
+bus-taxi-scooter	租車	zu1 che1	verb	to rent a car		
+bus-taxi-scooter	小心車子	xiao3 xin1 che1 zi5	phrase	watch out for cars		
+hotel	飯店	fan4 dian4	noun	hotel		
+hotel	旅館	lu:3 guan3	noun	inn; small hotel		
+hotel	民宿	min2 su4	noun	guesthouse; B&B		
+hotel	訂房	ding4 fang2	verb	to book a room		
+hotel	入住	ru4 zhu4	verb	to check in		
+hotel	退房	tui4 fang2	verb	to check out		
+hotel	櫃檯	gui4 tai2	noun	front desk; counter		
+hotel	房卡	fang2 ka3	noun	key card		
+hotel	房間	fang2 jian1	noun	room		
+hotel	單人房	dan1 ren2 fang2	noun	single room		
+hotel	雙人房	shuang1 ren2 fang2	noun	double room		
+hotel	早餐	zao3 can1	noun	breakfast		
+hotel	含早餐	han2 zao3 can1	phrase	breakfast included		
+hotel	押金	ya1 jin1	noun	deposit		
+hotel	寄放行李	ji4 fang4 xing2 li3	verb	to leave your luggage (with the hotel)		
+hotel	冷氣	leng3 qi4	noun	air conditioning	zh-Hant	
+hotel	空調	kong1 tiao2	noun	air conditioning	zh-Hans	
+hotel	遙控器	yao2 kong4 qi4	noun	remote control		
+hotel	無線網路	wu2 xian4 wang3 lu4	noun	Wi-Fi	zh-Hant	
+hotel	密碼	mi4 ma3	noun	password		
+hotel	毛巾	mao2 jin1	noun	towel		
+hotel	吹風機	chui1 feng1 ji1	noun	hair dryer		
+hotel	熱水	re4 shui3	noun	hot water		
+hotel	沒有熱水	mei2 you3 re4 shui3	phrase	there's no hot water		
+hotel	樓	lou2	noun	floor (of a building)		
+hotel	電梯	dian4 ti1	noun	elevator		
+hotel	打掃	da3 sao3	verb	to clean		
+hotel	請勿打擾	qing3 wu4 da3 rao3	phrase	do not disturb		
+hotel	換房間	huan4 fang2 jian1	verb	to change rooms		
+hotel	叫醒服務	jiao4 xing3 fu2 wu4	noun	wake-up call		
+hotel	居留證	ju1 liu2 zheng4	noun	resident certificate (ARC)	zh-Hant	
+hotel	居留證號碼	ju1 liu2 zheng4 hao4 ma3	noun	ARC number	zh-Hant	
+hotel	身分證字號	shen1 fen4 zheng4 zi4 hao4	noun	national ID number	zh-Hant	
+hotel	身份證號碼	shen1 fen4 zheng4 hao4 ma3	noun	ID card number	zh-Hans	
+hotel	請出示證件	qing3 chu1 shi4 zheng4 jian4	phrase	please show your ID		
+hotel	證件號碼	zheng4 jian4 hao4 ma3	noun	ID number (of any ID document)		
+hotel	護照號碼	hu4 zhao4 hao4 ma3	noun	passport number		
+directions	在哪裡	zai4 na3 li3	phrase	where is it?		
+directions	怎麼走	zen3 me5 zou3	phrase	how do I get there?		
+directions	直走	zhi2 zou3	verb	to go straight		
+directions	左轉	zuo3 zhuan3	verb	to turn left		
+directions	右轉	you4 zhuan3	verb	to turn right		
+directions	迴轉	hui2 zhuan3	verb	to make a U-turn	zh-Hant	
+directions	掉頭	diao4 tou2	verb	to make a U-turn	zh-Hans	
+directions	路口	lu4 kou3	noun	intersection		
+directions	十字路口	shi2 zi4 lu4 kou3	noun	crossroads		
+directions	對面	dui4 mian4	noun	across from; opposite		
+directions	旁邊	pang2 bian1	noun	next to; beside		
+directions	前面	qian2 mian4	noun	in front; ahead		
+directions	後面	hou4 mian4	noun	behind		
+directions	附近	fu4 jin4	noun	nearby		
+directions	遠	yuan3	adjective	far		
+directions	近	jin4	adjective	near		
+directions	多遠	duo1 yuan3	phrase	how far?		
+directions	走路	zou3 lu4	verb	to walk		
+directions	走路要多久	zou3 lu4 yao4 duo1 jiu3	phrase	how long is the walk?		
+directions	東	dong1	noun	east		
+directions	西	xi1	noun	west		
+directions	南	nan2	noun	south		
+directions	北	bei3	noun	north		
+directions	地圖	di4 tu2	noun	map		
+directions	地址	di4 zhi3	noun	address		
+directions	巷	xiang4	noun	lane (in addresses)		
+directions	弄	long4	noun	alley (in addresses)		
+directions	號	hao4	noun	number (in addresses)		
+directions	樓上	lou2 shang4	noun	upstairs		
+directions	樓下	lou2 xia4	noun	downstairs		
+directions	迷路了	mi2 lu4 le5	phrase	I'm lost		
+travel-problems	遺失	yi2 shi1	verb	to lose (something)		
+travel-problems	我的錢包不見了	wo3 de5 qian2 bao1 bu4 jian4 le5	phrase	my wallet is gone		
+travel-problems	被偷	bei4 tou1	verb	to be stolen		
+travel-problems	失物招領	shi1 wu4 zhao1 ling3	noun	lost and found		
+travel-problems	警察局	jing3 cha2 ju2	noun	police station		
+travel-problems	報案	bao4 an4	verb	to report (to the police)		
+travel-problems	延誤	yan2 wu4	verb	to be delayed (flight)		
+travel-problems	取消	qu3 xiao1	verb	to cancel		
+travel-problems	改期	gai3 qi2	verb	to reschedule; to change the date		
+travel-problems	退票	tui4 piao4	verb	to get a ticket refunded		
+travel-problems	退款	tui4 kuan3	verb	to refund		
+travel-problems	錯過	cuo4 guo4	verb	to miss (a train or flight)		
+travel-problems	趕不上	gan3 bu4 shang4	phrase	won't make it in time		
+travel-problems	颱風	tai2 feng1	noun	typhoon		
+travel-problems	停駛	ting2 shi3	verb	(service) is suspended	zh-Hant	
+travel-problems	地震	di4 zhen4	noun	earthquake		
+travel-problems	大使館	da4 shi3 guan3	noun	embassy		
+travel-problems	緊急	jin3 ji2	adjective	urgent; emergency		
+travel-problems	手機沒電了	shou3 ji1 mei2 dian4 le5	phrase	my phone's battery is dead		
+travel-problems	充電	chong1 dian4	verb	to charge (a battery)		
+travel-problems	行動電源	xing2 dong4 dian4 yuan2	noun	power bank	zh-Hant	
+travel-problems	充電寶	chong1 dian4 bao3	noun	power bank	zh-Hans	
+travel-problems	插座	cha1 zuo4	noun	power outlet		
+travel-problems	請幫我	qing3 bang1 wo3	phrase	please help me		
+travel-problems	我聽不懂	wo3 ting1 bu4 dong3	phrase	I don't understand		
+travel-problems	請說慢一點	qing3 shuo1 man4 yi1 dian3	phrase	please speak more slowly		
+travel-problems	你會說英文嗎	ni3 hui4 shuo1 ying1 wen2 ma5	phrase	do you speak English?		
+travel-problems	可以寫下來嗎	ke3 yi3 xie3 xia4 lai2 ma5	phrase	can you write it down?		
+ordering	菜單	cai4 dan1	noun	menu		
+ordering	點菜	dian3 cai4	verb	to order (dishes)		
+ordering	點餐	dian3 can1	verb	to order (a meal)		
+ordering	內用	nei4 yong4	phrase	for here (eat in)	zh-Hant	
+ordering	堂食	tang2 shi2	phrase	for here (eat in)	zh-Hans	review: mainland term
+ordering	外帶	wai4 dai4	phrase	to go (take away)		
+ordering	外送	wai4 song4	noun	food delivery	zh-Hant	
+ordering	外賣	wai4 mai4	noun	food delivery; takeout	zh-Hans	
+ordering	幾位	ji3 wei4	phrase	how many people?		
+ordering	兩位	liang3 wei4	phrase	two people		
+ordering	有位子嗎	you3 wei4 zi5 ma5	phrase	do you have a table?		
+ordering	要等多久	yao4 deng3 duo1 jiu3	phrase	how long is the wait?		
+ordering	推薦	tui1 jian4	verb	to recommend		
+ordering	招牌菜	zhao1 pai2 cai4	noun	signature dish		
+ordering	我要這個	wo3 yao4 zhe4 ge5	phrase	I'll have this one		
+ordering	一份	yi1 fen4	phrase	one portion		
+ordering	套餐	tao4 can1	noun	set meal		
+ordering	飯	fan4	noun	rice; meal		
+ordering	麵	mian4	noun	noodles		
+ordering	湯	tang1	noun	soup		
+ordering	小菜	xiao3 cai4	noun	side dish		
+ordering	大碗	da4 wan3	noun	large bowl		
+ordering	小碗	xiao3 wan3	noun	small bowl		
+ordering	筷子	kuai4 zi5	noun	chopsticks		
+ordering	湯匙	tang1 chi2	noun	spoon		
+ordering	叉子	cha1 zi5	noun	fork		
+ordering	餐巾紙	can1 jin1 zhi3	noun	napkin		
+ordering	服務生	fu2 wu4 sheng1	noun	server; waiter	zh-Hant	
+ordering	服務員	fu2 wu4 yuan2	noun	server; waiter	zh-Hans	
+ordering	不要香菜	bu4 yao4 xiang1 cai4	phrase	no cilantro, please		
+ordering	加點	jia1 dian3	verb	to order more		
+ordering	這樣就好	zhe4 yang4 jiu4 hao3	phrase	that's all, thanks		
+night-market	夜市	ye4 shi4	noun	night market		
+night-market	攤販	tan1 fan4	noun	street vendor; stall		
+night-market	小吃	xiao3 chi1	noun	snacks; street food		
+night-market	臭豆腐	chou4 dou4 fu3	noun	stinky tofu		
+night-market	雞排	ji1 pai2	noun	fried chicken cutlet		
+night-market	鹽酥雞	yan2 su1 ji1	noun	Taiwanese popcorn chicken	zh-Hant	
+night-market	滷肉飯	lu3 rou4 fan4	noun	braised pork rice	zh-Hant	
+night-market	牛肉麵	niu2 rou4 mian4	noun	beef noodle soup		
+night-market	小籠包	xiao3 long2 bao1	noun	soup dumplings		
+night-market	水餃	shui3 jiao3	noun	boiled dumplings		
+night-market	鍋貼	guo1 tie1	noun	potstickers		
+night-market	蔥油餅	cong1 you2 bing3	noun	scallion pancake		
+night-market	珍珠奶茶	zhen1 zhu1 nai3 cha2	noun	bubble tea		
+night-market	地瓜球	di4 gua1 qiu2	noun	sweet potato balls	zh-Hant	
+night-market	烤香腸	kao3 xiang1 chang2	noun	grilled sausage		
+night-market	豆花	dou4 hua1	noun	tofu pudding		
+night-market	剉冰	cuo4 bing1	noun	shaved ice	zh-Hant	
+night-market	芒果冰	mang2 guo3 bing1	noun	mango shaved ice		
+night-market	串	chuan4	noun	skewer		
+night-market	烤	kao3	verb	to grill; to roast		
+night-market	炸	zha4	verb	to deep-fry		
+night-market	一份多少錢	yi1 fen4 duo1 shao3 qian2	phrase	how much for one?		
+night-market	好吃	hao3 chi1	adjective	tasty		
+night-market	燙	tang4	adjective	hot (to the touch)		
+night-market	小心燙	xiao3 xin1 tang4	phrase	careful, it's hot		
+night-market	試吃	shi4 chi1	verb	to taste a sample		
+night-market	袋子	dai4 zi5	noun	bag		
+night-market	要袋子嗎	yao4 dai4 zi5 ma5	phrase	do you need a bag?		
+night-market	排隊	pai2 dui4	verb	to wait in line		
+drinks	飲料	yin3 liao4	noun	drink		
+drinks	飲料店	yin3 liao4 dian4	noun	drink shop		
+drinks	手搖飲	shou3 yao2 yin3	noun	shaken tea drinks	zh-Hant	
+drinks	珍珠	zhen1 zhu1	noun	tapioca pearls		
+drinks	甜度	tian2 du4	noun	sweetness level		
+drinks	冰塊	bing1 kuai4	noun	ice cubes		
+drinks	正常甜	zheng4 chang2 tian2	phrase	regular sugar	zh-Hant	
+drinks	半糖	ban4 tang2	phrase	half sugar		
+drinks	微糖	wei2 tang2	phrase	light sugar		
+drinks	無糖	wu2 tang2	phrase	no sugar		
+drinks	少冰	shao3 bing1	phrase	less ice		
+drinks	微冰	wei2 bing1	phrase	a little ice		
+drinks	去冰	qu4 bing1	phrase	no ice	zh-Hant	
+drinks	常溫	chang2 wen1	phrase	room temperature		
+drinks	溫的	wen1 de5	phrase	warm		
+drinks	熱的	re4 de5	phrase	hot		
+drinks	大杯	da4 bei1	noun	large (cup)		
+drinks	中杯	zhong1 bei1	noun	medium (cup)		
+drinks	吸管	xi1 guan3	noun	straw		
+drinks	環保杯	huan2 bao3 bei1	noun	reusable cup		
+drinks	紅茶	hong2 cha2	noun	black tea		
+drinks	綠茶	lu:4 cha2	noun	green tea		
+drinks	烏龍茶	wu1 long2 cha2	noun	oolong tea		
+drinks	奶茶	nai3 cha2	noun	milk tea		
+drinks	珍珠奶茶	zhen1 zhu1 nai3 cha2	noun	bubble tea		
+drinks	珍奶	zhen1 nai3	noun	bubble tea (short for 珍珠奶茶)	zh-Hant	
+drinks	波霸奶茶	bo1 ba4 nai3 cha2	noun	milk tea with large tapioca pearls	zh-Hant	
+drinks	鮮奶	xian1 nai3	noun	fresh milk		
+drinks	豆漿	dou4 jiang1	noun	soy milk		
+drinks	咖啡	ka1 fei1	noun	coffee		
+drinks	果汁	guo3 zhi1	noun	juice		
+drinks	礦泉水	kuang4 quan2 shui3	noun	mineral water		
+drinks	開水	kai1 shui3	noun	drinking water (boiled)		
+dietary-needs	吃素	chi1 su4	verb	to be vegetarian		
+dietary-needs	素食	su4 shi2	noun	vegetarian food		
+dietary-needs	全素	quan2 su4	noun	vegan	zh-Hant	
+dietary-needs	蛋奶素	dan4 nai3 su4	noun	lacto-ovo vegetarian	zh-Hant	
+dietary-needs	不吃肉	bu4 chi1 rou4	phrase	I don't eat meat		
+dietary-needs	不吃牛肉	bu4 chi1 niu2 rou4	phrase	I don't eat beef		
+dietary-needs	不吃豬肉	bu4 chi1 zhu1 rou4	phrase	I don't eat pork		
+dietary-needs	清真	qing1 zhen1	adjective	halal		
+dietary-needs	過敏	guo4 min3	noun	allergy		
+dietary-needs	我對花生過敏	wo3 dui4 hua1 sheng1 guo4 min3	phrase	I'm allergic to peanuts		
+dietary-needs	花生	hua1 sheng1	noun	peanuts		
+dietary-needs	堅果	jian1 guo3	noun	nuts		
+dietary-needs	海鮮	hai3 xian1	noun	seafood		
+dietary-needs	蝦子	xia1 zi5	noun	shrimp	zh-Hant	
+dietary-needs	蛋	dan4	noun	egg		
+dietary-needs	牛奶	niu2 nai3	noun	milk		
+dietary-needs	食物不耐症	shi2 wu4 bu4 nai4 zheng4	noun	food intolerance		
+dietary-needs	乳糖不耐症	ru3 tang2 bu4 nai4 zheng4	noun	lactose intolerance		
+dietary-needs	只是不耐症	zhi3 shi4 bu4 nai4 zheng4	phrase	it's just an intolerance		
+dietary-needs	不是過敏	bu4 shi4 guo4 min3	phrase	it's not an allergy		
+dietary-needs	麩質	fu1 zhi2	noun	gluten		
+dietary-needs	無麩質	wu2 fu1 zhi2	adjective	gluten-free		
+dietary-needs	小麥	xiao3 mai4	noun	wheat		
+dietary-needs	含有	han2 you3	verb	to contain		
+dietary-needs	裡面有沒有	li3 mian4 you3 mei2 you3	phrase	is there any … in it?		
+dietary-needs	不能吃	bu4 neng2 chi1	phrase	can't eat		
+dietary-needs	不加味精	bu4 jia1 wei4 jing1	phrase	no MSG, please		
+dietary-needs	不要辣	bu4 yao4 la4	phrase	not spicy, please		
+dietary-needs	少油	shao3 you2	phrase	less oil		
+dietary-needs	少鹽	shao3 yan2	phrase	less salt		
+tastes-cooking	甜	tian2	adjective	sweet		
+tastes-cooking	鹹	xian2	adjective	salty		
+tastes-cooking	酸	suan1	adjective	sour		
+tastes-cooking	苦	ku3	adjective	bitter		
+tastes-cooking	辣	la4	adjective	spicy		
+tastes-cooking	淡	dan4	adjective	bland; light		
+tastes-cooking	油	you2	adjective	oily		
+tastes-cooking	香	xiang1	adjective	fragrant; smells good		
+tastes-cooking	脆	cui4	adjective	crispy		
+tastes-cooking	軟	ruan3	adjective	soft		
+tastes-cooking	太鹹了	tai4 xian2 le5	phrase	too salty		
+tastes-cooking	煮	zhu3	verb	to boil; to cook		
+tastes-cooking	炒	chao3	verb	to stir-fry		
+tastes-cooking	蒸	zheng1	verb	to steam		
+tastes-cooking	滷	lu3	verb	to braise (in soy sauce)		
+tastes-cooking	煎	jian1	verb	to pan-fry		
+tastes-cooking	燉	dun4	verb	to stew		
+tastes-cooking	切	qie1	verb	to cut		
+tastes-cooking	醬油	jiang4 you2	noun	soy sauce		
+tastes-cooking	醋	cu4	noun	vinegar		
+tastes-cooking	鹽	yan2	noun	salt		
+tastes-cooking	糖	tang2	noun	sugar		
+tastes-cooking	胡椒	hu2 jiao1	noun	pepper		
+tastes-cooking	蒜頭	suan4 tou2	noun	garlic	zh-Hant	
+tastes-cooking	薑	jiang1	noun	ginger		
+tastes-cooking	蔥	cong1	noun	green onion		
+tastes-cooking	辣椒	la4 jiao1	noun	chili pepper		
+tastes-cooking	青菜	qing1 cai4	noun	vegetables (leafy greens)		
+tastes-cooking	雞肉	ji1 rou4	noun	chicken		
+tastes-cooking	豬肉	zhu1 rou4	noun	pork		
+tastes-cooking	牛肉	niu2 rou4	noun	beef		
+tastes-cooking	魚	yu2	noun	fish		
+paying-bill	買單	mai3 dan1	verb	to pay the bill		
+paying-bill	結帳	jie2 zhang4	verb	to pay; to check out		
+paying-bill	多少錢	duo1 shao3 qian2	phrase	how much?		
+paying-bill	一共	yi1 gong4	adverb	altogether		
+paying-bill	現金	xian4 jin1	noun	cash		
+paying-bill	付現	fu4 xian4	verb	to pay cash	zh-Hant	
+paying-bill	刷卡	shua1 ka3	verb	to pay by card		
+paying-bill	信用卡	xin4 yong4 ka3	noun	credit card		
+paying-bill	行動支付	xing2 dong4 zhi1 fu4	noun	mobile payment	zh-Hant	
+paying-bill	移動支付	yi2 dong4 zhi1 fu4	noun	mobile payment	zh-Hans	
+paying-bill	可以刷卡嗎	ke3 yi3 shua1 ka3 ma5	phrase	can I pay by card?		
+paying-bill	只收現金	zhi3 shou1 xian4 jin1	phrase	cash only		
+paying-bill	找錢	zhao3 qian2	verb	to give change		
+paying-bill	零錢	ling2 qian2	noun	coins; small change		
+paying-bill	收據	shou1 ju4	noun	receipt		
+paying-bill	發票	fa1 piao4	noun	receipt (Taiwan's official invoice)		
+paying-bill	統一編號	tong3 yi1 bian1 hao4	noun	company tax ID (for receipts)	zh-Hant	
+paying-bill	載具	zai4 ju4	noun	e-receipt barcode (on a phone)	zh-Hant	
+paying-bill	各付各的	ge4 fu4 ge4 de5	phrase	let's each pay for our own		
+paying-bill	分開付	fen1 kai1 fu4	phrase	pay separately		
+paying-bill	一起付	yi1 qi3 fu4	phrase	pay together		
+paying-bill	我請客	wo3 qing3 ke4	phrase	it's my treat		
+paying-bill	請客	qing3 ke4	verb	to treat (someone to a meal)		
+paying-bill	服務費	fu2 wu4 fei4	noun	service charge		
+paying-bill	小費	xiao3 fei4	noun	tip		
+paying-bill	低消	di1 xiao1	noun	minimum charge per person	zh-Hant	
+paying-bill	打折	da3 zhe2	verb	to give a discount		
+paying-bill	優惠	you1 hui4	noun	discount; special offer		
+paying-bill	算錯了	suan4 cuo4 le5	phrase	the bill is wrong		
+convenience-store	便利商店	bian4 li4 shang1 dian4	noun	convenience store	zh-Hant	
+convenience-store	便利店	bian4 li4 dian4	noun	convenience store	zh-Hans	
+convenience-store	超商	chao1 shang1	noun	convenience store (short form)	zh-Hant	
+convenience-store	店員	dian4 yuan2	noun	store clerk		
+convenience-store	微波	wei2 bo1	verb	to microwave		
+convenience-store	要微波嗎	yao4 wei2 bo1 ma5	phrase	would you like it heated?		
+convenience-store	加熱	jia1 re4	verb	to heat up		
+convenience-store	便當	bian4 dang1	noun	boxed lunch	zh-Hant	
+convenience-store	盒飯	he2 fan4	noun	boxed lunch	zh-Hans	
+convenience-store	飯糰	fan4 tuan2	noun	rice ball		
+convenience-store	茶葉蛋	cha2 ye4 dan4	noun	tea egg		
+convenience-store	關東煮	guan1 dong1 zhu3	noun	oden (simmered snacks)		
+convenience-store	集點	ji2 dian3	verb	to collect points (or stamps)	zh-Hant	
+convenience-store	會員	hui4 yuan2	noun	member		
+convenience-store	繳費	jiao3 fei4	verb	to pay (a bill)		
+convenience-store	影印	ying3 yin4	verb	to photocopy	zh-Hant	
+convenience-store	複印	fu4 yin4	verb	to photocopy	zh-Hans	
+convenience-store	列印	lie4 yin4	verb	to print	zh-Hant	
+convenience-store	打印	da3 yin4	verb	to print	zh-Hans	
+convenience-store	取貨	qu3 huo4	verb	to pick up a package		
+convenience-store	店到店	dian4 dao4 dian4	noun	store-to-store parcel delivery	zh-Hant	
+convenience-store	提款機	ti2 kuan3 ji1	noun	ATM	zh-Hant	
+convenience-store	塑膠袋	su4 jiao1 dai4	noun	plastic bag		
+convenience-store	購物袋	gou4 wu4 dai4	noun	shopping bag		
+convenience-store	買一送一	mai3 yi1 song4 yi1	phrase	buy one, get one free		
+convenience-store	第二件六折	di4 er4 jian4 liu4 zhe2	phrase	second item 40% off		
+convenience-store	衛生紙	wei4 sheng1 zhi3	noun	toilet paper; tissues		
+convenience-store	雨傘	yu3 san3	noun	umbrella		
+convenience-store	電池	dian4 chi2	noun	battery		
+convenience-store	廁所在哪裡	ce4 suo3 zai4 na3 li3	phrase	where's the restroom?		
+bank	銀行	yin2 hang2	noun	bank		
+bank	開戶	kai1 hu4	verb	to open an account		
+bank	帳戶	zhang4 hu4	noun	bank account		
+bank	存摺	cun2 zhe2	noun	passbook		
+bank	存錢	cun2 qian2	verb	to deposit money; to save money		
+bank	存款	cun2 kuan3	noun	savings; deposit		
+bank	領錢	ling3 qian2	verb	to withdraw money	zh-Hant	
+bank	取錢	qu3 qian2	verb	to withdraw money	zh-Hans	
+bank	提款卡	ti2 kuan3 ka3	noun	ATM card; debit card	zh-Hant	
+bank	銀行卡	yin2 hang2 ka3	noun	bank card; debit card	zh-Hans	
+bank	提款機	ti2 kuan3 ji1	noun	ATM	zh-Hant	
+bank	取款機	qu3 kuan3 ji1	noun	ATM	zh-Hans	
+bank	密碼	mi4 ma3	noun	PIN; password		
+bank	轉帳	zhuan3 zhang4	verb	to transfer money		
+bank	匯款	hui4 kuan3	verb	to send money; to wire money		
+bank	匯率	hui4 lu:4	noun	exchange rate		
+bank	換錢	huan4 qian2	verb	to exchange money		
+bank	台幣	tai2 bi4	noun	Taiwan dollar	zh-Hant	
+bank	人民幣	ren2 min2 bi4	noun	renminbi (Chinese yuan)	zh-Hans	
+bank	美元	mei3 yuan2	noun	US dollar		
+bank	手續費	shou3 xu4 fei4	noun	service fee		
+bank	利息	li4 xi2	noun	interest (on money)		
+bank	餘額	yu2 e2	noun	balance		
+bank	號碼牌	hao4 ma3 pai2	noun	queue number ticket		
+bank	填單	tian2 dan1	verb	to fill out a slip		
+bank	印章	yin4 zhang1	noun	personal seal (name stamp)		
+bank	證件	zheng4 jian4	noun	ID documents		
+bank	網路銀行	wang3 lu4 yin2 hang2	noun	online banking	zh-Hant	
+bank	網上銀行	wang3 shang4 yin2 hang2	noun	online banking	zh-Hans	
+bank	掛失	gua4 shi1	verb	to report (a card) lost		
+bank	卡被吃了	ka3 bei4 chi1 le5	phrase	the machine kept my card		
+bank	居留證	ju1 liu2 zheng4	noun	resident certificate (ARC)	zh-Hant	
+bank	居留證號碼	ju1 liu2 zheng4 hao4 ma3	noun	ARC number	zh-Hant	
+bank	統一證號	tong3 yi1 zheng4 hao4	noun	resident ID number (on the ARC)	zh-Hant	
+bank	身分證字號	shen1 fen4 zheng4 zi4 hao4	noun	national ID number	zh-Hant	
+bank	身份證號碼	shen1 fen4 zheng4 hao4 ma3	noun	ID card number	zh-Hans	
+bank	身分證字號是多少	shen1 fen4 zheng4 zi4 hao4 shi4 duo1 shao3	phrase	what is your ID number?	zh-Hant	
+bank	我沒有身分證	wo3 mei2 you3 shen1 fen4 zheng4	phrase	I don't have a Taiwan ID card	zh-Hant	
+bank	可以用居留證號碼嗎	ke3 yi3 yong4 ju1 liu2 zheng4 hao4 ma3 ma5	phrase	can I use my ARC number instead?	zh-Hant	
+bank	請出示證件	qing3 chu1 shi4 zheng4 jian4	phrase	please show your ID		
+bank	證件號碼	zheng4 jian4 hao4 ma3	noun	ID number (of any ID document)		
+bank	開戶要居留證	kai1 hu4 yao4 ju1 liu2 zheng4	phrase	you need an ARC to open an account	zh-Hant	
+post-deliveries	郵局	you2 ju2	noun	post office		
+post-deliveries	寄信	ji4 xin4	verb	to send a letter		
+post-deliveries	寄包裹	ji4 bao1 guo3	verb	to send a package		
+post-deliveries	包裹	bao1 guo3	noun	package		
+post-deliveries	信封	xin4 feng1	noun	envelope		
+post-deliveries	郵票	you2 piao4	noun	stamp		
+post-deliveries	明信片	ming2 xin4 pian4	noun	postcard		
+post-deliveries	掛號	gua4 hao4	noun	registered mail		
+post-deliveries	平信	ping2 xin4	noun	regular mail	zh-Hant	
+post-deliveries	快遞	kuai4 di4	noun	courier; express delivery		
+post-deliveries	航空郵件	hang2 kong1 you2 jian4	noun	airmail		
+post-deliveries	郵遞區號	you2 di4 qu1 hao4	noun	postal code	zh-Hant	
+post-deliveries	郵政編碼	you2 zheng4 bian1 ma3	noun	postal code	zh-Hans	
+post-deliveries	收件人	shou1 jian4 ren2	noun	recipient		
+post-deliveries	寄件人	ji4 jian4 ren2	noun	sender		
+post-deliveries	地址	di4 zhi3	noun	address		
+post-deliveries	簽收	qian1 shou1	verb	to sign for (a delivery)		
+post-deliveries	宅配	zhai2 pei4	noun	home delivery	zh-Hant	
+post-deliveries	外送員	wai4 song4 yuan2	noun	delivery rider	zh-Hant	
+post-deliveries	外賣員	wai4 mai4 yuan2	noun	delivery rider	zh-Hans	review: mainland term
+post-deliveries	貨到付款	huo4 dao4 fu4 kuan3	noun	cash on delivery		
+post-deliveries	網購	wang3 gou4	verb	to shop online		
+post-deliveries	追蹤	zhui1 zong1	verb	to track (a package)	zh-Hant	
+post-deliveries	不在家	bu4 zai4 jia1	phrase	not at home		
+post-deliveries	放在門口	fang4 zai4 men2 kou3	phrase	leave it at the door		
+post-deliveries	管理員	guan3 li3 yuan2	noun	building manager; doorman	zh-Hant	
+post-deliveries	代收	dai4 shou1	verb	to receive (a package) for someone		
+post-deliveries	退貨	tui4 huo4	verb	to return (an item)		
+post-deliveries	重量	zhong4 liang4	noun	weight		
+post-deliveries	易碎	yi4 sui4	adjective	fragile		
+phone-sim	手機	shou3 ji1	noun	cell phone		
+phone-sim	電話號碼	dian4 hua4 hao4 ma3	noun	phone number		
+phone-sim	預付卡	yu4 fu4 ka3	noun	prepaid SIM card	zh-Hant	
+phone-sim	門號	men2 hao4	noun	phone number (with a plan)	zh-Hant	
+phone-sim	月租	yue4 zu1	noun	monthly plan	zh-Hant	
+phone-sim	吃到飽	chi1 dao4 bao3	noun	unlimited data; all-you-can-eat	zh-Hant	
+phone-sim	上網	shang4 wang3	verb	to go online		
+phone-sim	網路	wang3 lu4	noun	internet; network	zh-Hant	
+phone-sim	網絡	wang3 luo4	noun	internet; network	zh-Hans	
+phone-sim	流量	liu2 liang4	noun	mobile data		
+phone-sim	訊號	xun4 hao4	noun	signal (reception)	zh-Hant	
+phone-sim	信號	xin4 hao4	noun	signal (reception)	zh-Hans	
+phone-sim	簡訊	jian3 xun4	noun	text message	zh-Hant	
+phone-sim	短信	duan3 xin4	noun	text message	zh-Hans	
+phone-sim	驗證碼	yan4 zheng4 ma3	noun	verification code		
+phone-sim	電信公司	dian4 xin4 gong1 si1	noun	phone company		
+phone-sim	綁約	bang3 yue1	verb	to sign up for a contract (phone plan)	zh-Hant	
+phone-sim	儲值	chu2 zhi2	verb	to top up (prepaid credit)	zh-Hant	
+phone-sim	充電器	chong1 dian4 qi4	noun	charger		
+phone-sim	充電線	chong1 dian4 xian4	noun	charging cable		
+phone-sim	螢幕	ying2 mu4	noun	screen	zh-Hant	
+phone-sim	屏幕	ping2 mu4	noun	screen	zh-Hans	
+phone-sim	保護貼	bao3 hu4 tie1	noun	screen protector	zh-Hant	
+phone-sim	壞了	huai4 le5	phrase	it's broken		
+phone-sim	修手機	xiu1 shou3 ji1	verb	to repair a phone		
+phone-sim	打電話	da3 dian4 hua4	verb	to make a phone call		
+phone-sim	接電話	jie1 dian4 hua4	verb	to answer the phone		
+phone-sim	漫遊	man4 you2	noun	roaming		
+renting-repairs	租房子	zu1 fang2 zi5	verb	to rent a place to live		
+renting-repairs	房東	fang2 dong1	noun	landlord		
+renting-repairs	房客	fang2 ke4	noun	tenant		
+renting-repairs	房租	fang2 zu1	noun	rent		
+renting-repairs	租約	zu1 yue1	noun	lease	zh-Hant	
+renting-repairs	押金	ya1 jin1	noun	security deposit		
+renting-repairs	套房	tao4 fang2	noun	studio (with its own bathroom)	zh-Hant	
+renting-repairs	雅房	ya3 fang2	noun	room with a shared bathroom	zh-Hant	
+renting-repairs	仲介	zhong4 jie4	noun	real estate agent	zh-Hant	
+renting-repairs	中介	zhong1 jie4	noun	real estate agent	zh-Hans	
+renting-repairs	看房子	kan4 fang2 zi5	verb	to view a place (to rent)		
+renting-repairs	家具	jia1 ju4	noun	furniture		
+renting-repairs	管理費	guan3 li3 fei4	noun	building management fee		
+renting-repairs	修理	xiu1 li3	verb	to repair		
+renting-repairs	壞掉了	huai4 diao4 le5	phrase	it's broken		
+renting-repairs	漏水	lou4 shui3	verb	to leak (water)		
+renting-repairs	馬桶塞住了	ma3 tong3 sai1 zhu4 le5	phrase	the toilet is clogged		
+renting-repairs	水管	shui3 guan3	noun	water pipe		
+renting-repairs	熱水器	re4 shui3 qi4	noun	water heater		
+renting-repairs	燈泡	deng1 pao4	noun	light bulb		
+renting-repairs	停電	ting2 dian4	verb	to have a power outage		
+renting-repairs	跳電	tiao4 dian4	verb	(the circuit breaker) trips	zh-Hant	
+renting-repairs	鑰匙	yao4 shi5	noun	key		
+renting-repairs	換鎖	huan4 suo3	verb	to change the lock		
+renting-repairs	水電師傅	shui3 dian4 shi1 fu4	noun	plumber or electrician	zh-Hant	
+renting-repairs	蟑螂	zhang1 lang2	noun	cockroach		
+renting-repairs	除濕機	chu2 shi1 ji1	noun	dehumidifier		
+renting-repairs	發霉	fa1 mei2	verb	to get moldy		
+renting-repairs	垃圾	le4 se4	noun	trash; garbage		
+renting-repairs	倒垃圾	dao4 le4 se4	verb	to take out the trash		
+renting-repairs	資源回收	zi1 yuan2 hui2 shou1	noun	recycling		
+bills-utilities	帳單	zhang4 dan1	noun	bill		
+bills-utilities	繳費單	jiao3 fei4 dan1	noun	payment slip		
+bills-utilities	繳	jiao3	verb	to pay (a bill or fee)		
+bills-utilities	水費	shui3 fei4	noun	water bill		
+bills-utilities	電費	dian4 fei4	noun	electricity bill		
+bills-utilities	瓦斯	wa3 si1	noun	gas (for cooking and heating)	zh-Hant	
+bills-utilities	煤氣	mei2 qi4	noun	gas (for cooking and heating)	zh-Hans	
+bills-utilities	瓦斯費	wa3 si1 fei4	noun	gas bill	zh-Hant	
+bills-utilities	燃氣費	ran2 qi4 fei4	noun	gas bill	zh-Hans	review: mainland term
+bills-utilities	網路費	wang3 lu4 fei4	noun	internet bill	zh-Hant	
+bills-utilities	電話費	dian4 hua4 fei4	noun	phone bill		
+bills-utilities	繳費期限	jiao3 fei4 qi2 xian4	noun	payment due date		
+bills-utilities	逾期	yu2 qi2	verb	to be overdue		
+bills-utilities	滯納金	zhi4 na4 jin1	noun	late fee		
+bills-utilities	自動扣款	zi4 dong4 kou4 kuan3	noun	automatic payment		
+bills-utilities	金額	jin1 e2	noun	amount (of money)		
+bills-utilities	收費	shou1 fei4	verb	to charge (a fee)		
+bills-utilities	付清	fu4 qing1	verb	to pay off		
+bills-utilities	電表	dian4 biao3	noun	electricity meter		
+bills-utilities	水表	shui3 biao3	noun	water meter		
+bills-utilities	抄表	chao1 biao3	verb	to read the meter		
+bills-utilities	台電	tai2 dian4	noun	Taipower (the electric company)	zh-Hant	
+bills-utilities	自來水	zi4 lai2 shui3	noun	tap water		
+bills-utilities	停水	ting2 shui3	verb	to have the water cut off		
+bills-utilities	省電	sheng3 dian4	verb	to save electricity		
+bills-utilities	所得稅	suo3 de2 shui4	noun	income tax		
+bills-utilities	報稅	bao4 shui4	verb	to file taxes		
+bills-utilities	房屋稅	fang2 wu1 shui4	noun	property tax	zh-Hant	
+bills-utilities	健保費	jian4 bao3 fei4	noun	health insurance premium	zh-Hant	
+bills-utilities	罰單	fa2 dan1	noun	ticket (fine)		
+government-offices	戶政事務所	hu4 zheng4 shi4 wu4 suo3	noun	household registration office	zh-Hant	
+government-offices	區公所	qu1 gong1 suo3	noun	district office	zh-Hant	
+government-offices	移民署	yi2 min2 shu3	noun	National Immigration Agency	zh-Hant	
+government-offices	出入境管理局	chu1 ru4 jing4 guan3 li3 ju2	noun	exit and entry administration	zh-Hans	review: mainland term
+government-offices	居留證	ju1 liu2 zheng4	noun	resident certificate (ARC)	zh-Hant	
+government-offices	永久居留	yong3 jiu3 ju1 liu2	noun	permanent residence		
+government-offices	工作許可	gong1 zuo4 xu3 ke3	noun	work permit		
+government-offices	延期	yan2 qi2	verb	to extend; to postpone		
+government-offices	身分證	shen1 fen4 zheng4	noun	national ID card	zh-Hant	
+government-offices	身份證	shen1 fen4 zheng4	noun	national ID card	zh-Hans	
+government-offices	戶口名簿	hu4 kou3 ming2 bu4	noun	household register (booklet)	zh-Hant	
+government-offices	戶籍	hu4 ji2	noun	household registration		
+government-offices	登記	deng1 ji4	verb	to register		
+government-offices	結婚登記	jie2 hun1 deng1 ji4	noun	marriage registration		
+government-offices	出生登記	chu1 sheng1 deng1 ji4	noun	birth registration		
+government-offices	申請書	shen1 qing3 shu1	noun	application form		
+government-offices	大頭照	da4 tou2 zhao4	noun	ID photo	zh-Hant	
+government-offices	證件照	zheng4 jian4 zhao4	noun	ID photo	zh-Hans	
+government-offices	影本	ying3 ben3	noun	photocopy (of a document)	zh-Hant	
+government-offices	複印件	fu4 yin4 jian4	noun	photocopy (of a document)	zh-Hans	
+government-offices	正本	zheng4 ben3	noun	original (document)		
+government-offices	翻譯	fan1 yi4	noun	translation; translator		
+government-offices	公證	gong1 zheng4	verb	to notarize		
+government-offices	驗證	yan4 zheng4	verb	to authenticate (documents)		
+government-offices	預約	yu4 yue1	verb	to make an appointment		
+government-offices	規費	gui1 fei4	noun	government fee	zh-Hant	
+government-offices	窗口	chuang1 kou3	noun	service window		
+government-offices	承辦人	cheng2 ban4 ren2	noun	official handling the case		
+government-offices	需要帶什麼	xu1 yao4 dai4 shen2 me5	phrase	what do I need to bring?		
+government-offices	資料不齊	zi1 liao4 bu4 qi2	phrase	the documents are incomplete		
+classroom	教室	jiao4 shi4	noun	classroom		
+classroom	黑板	hei1 ban3	noun	blackboard		
+classroom	白板	bai2 ban3	noun	whiteboard		
+classroom	課桌	ke4 zhuo1	noun	school desk		
+classroom	椅子	yi3 zi5	noun	chair		
+classroom	座位	zuo4 wei4	noun	seat		
+classroom	鉛筆	qian1 bi3	noun	pencil		
+classroom	原子筆	yuan2 zi3 bi3	noun	ballpoint pen	zh-Hant	
+classroom	圓珠筆	yuan2 zhu1 bi3	noun	ballpoint pen	zh-Hans	
+classroom	橡皮擦	xiang4 pi2 ca1	noun	eraser	zh-Hant	
+classroom	橡皮	xiang4 pi2	noun	eraser	zh-Hans	
+classroom	尺	chi3	noun	ruler		
+classroom	剪刀	jian3 dao1	noun	scissors		
+classroom	膠水	jiao1 shui3	noun	glue		
+classroom	筆記本	bi3 ji4 ben3	noun	notebook		
+classroom	鉛筆盒	qian1 bi3 he2	noun	pencil case	zh-Hant	
+classroom	文具盒	wen2 ju4 he2	noun	pencil case	zh-Hans	review: mainland term
+classroom	課本	ke4 ben3	noun	textbook		
+classroom	班長	ban1 zhang3	noun	class leader		
+classroom	值日生	zhi2 ri4 sheng1	noun	student on duty (for the day)		
+classroom	上課	shang4 ke4	verb	to start class; to attend class		
+classroom	下課	xia4 ke4	verb	to finish class; class break		
+classroom	遲到	chi2 dao4	verb	to be late		
+classroom	舉手	ju3 shou3	verb	to raise your hand		
+classroom	回答	hui2 da2	verb	to answer		
+classroom	問問題	wen4 wen4 ti2	verb	to ask a question		
+classroom	起立	qi3 li4	phrase	stand up (start of the class greeting)		
+classroom	敬禮	jing4 li3	phrase	bow (class greeting)		
+classroom	老師好	lao3 shi1 hao3	phrase	hello, teacher (class greeting)		
+classroom	我不懂	wo3 bu4 dong3	phrase	I don't understand		
+classroom	可以再說一次嗎	ke3 yi3 zai4 shuo1 yi1 ci4 ma5	phrase	could you say that again?		
+classroom	我可以去廁所嗎	wo3 ke3 yi3 qu4 ce4 suo3 ma5	phrase	may I go to the restroom?		
+classroom	借我	jie4 wo3	phrase	lend me		
+subjects	科目	ke1 mu4	noun	school subject		
+subjects	國語	guo2 yu3	noun	Mandarin (the school subject)	zh-Hant	
+subjects	語文	yu3 wen2	noun	Chinese (the school subject)	zh-Hans	
+subjects	英文	ying1 wen2	noun	English		
+subjects	數學	shu4 xue2	noun	math		
+subjects	自然	zi4 ran2	noun	science (elementary school)	zh-Hant	
+subjects	科學	ke1 xue2	noun	science		
+subjects	社會	she4 hui4	noun	social studies	zh-Hant	
+subjects	歷史	li4 shi3	noun	history		
+subjects	地理	di4 li3	noun	geography		
+subjects	物理	wu4 li3	noun	physics		
+subjects	化學	hua4 xue2	noun	chemistry		
+subjects	生物	sheng1 wu4	noun	biology		
+subjects	體育	ti3 yu4	noun	PE (physical education)		
+subjects	音樂	yin1 yue4	noun	music		
+subjects	美術	mei3 shu4	noun	art		
+subjects	健康教育	jian4 kang1 jiao4 yu4	noun	health education	zh-Hant	
+subjects	電腦課	dian4 nao3 ke4	noun	computer class		
+subjects	本土語	ben3 tu3 yu3	noun	local language class (Taiwanese, Hakka or Indigenous)	zh-Hant	
+subjects	台語	tai2 yu3	noun	Taiwanese (Hokkien)	zh-Hant	
+subjects	客語	ke4 yu3	noun	Hakka	zh-Hant	
+subjects	加法	jia1 fa3	noun	addition		
+subjects	減法	jian3 fa3	noun	subtraction		
+subjects	乘法	cheng2 fa3	noun	multiplication		
+subjects	除法	chu2 fa3	noun	division		
+subjects	九九乘法表	jiu3 jiu3 cheng2 fa3 biao3	noun	times tables		
+subjects	注音符號	zhu4 yin1 fu2 hao4	noun	Zhuyin symbols	zh-Hant	
+subjects	拼音	pin1 yin1	noun	pinyin		
+subjects	作文	zuo4 wen2	noun	essay; composition		
+subjects	書法	shu1 fa3	noun	calligraphy		
+subjects	實驗	shi2 yan4	noun	experiment		
+subjects	我最喜歡的科目	wo3 zui4 xi3 huan1 de5 ke1 mu4	phrase	my favorite subject		
+homework-exams	功課	gong1 ke4	noun	homework		
+homework-exams	作業	zuo4 ye4	noun	assignment; homework		
+homework-exams	寫作業	xie3 zuo4 ye4	verb	to do homework		
+homework-exams	交作業	jiao1 zuo4 ye4	verb	to hand in homework		
+homework-exams	忘記帶	wang4 ji4 dai4	phrase	forgot to bring (it)		
+homework-exams	我還沒寫完	wo3 hai2 mei2 xie3 wan2	phrase	I haven't finished yet		
+homework-exams	複習	fu4 xi2	verb	to review (lessons)		
+homework-exams	預習	yu4 xi2	verb	to prepare for a lesson		
+homework-exams	背	bei4	verb	to memorize		
+homework-exams	考試	kao3 shi4	noun	exam; test		
+homework-exams	小考	xiao3 kao3	noun	quiz		
+homework-exams	期中考	qi2 zhong1 kao3	noun	midterm exam		
+homework-exams	期末考	qi2 mo4 kao3	noun	final exam		
+homework-exams	考卷	kao3 juan4	noun	test paper		
+homework-exams	題目	ti2 mu4	noun	question (on a test)		
+homework-exams	答案	da2 an4	noun	answer		
+homework-exams	選擇題	xuan3 ze2 ti2	noun	multiple-choice question		
+homework-exams	填空	tian2 kong4	noun	fill in the blank		
+homework-exams	分數	fen1 shu4	noun	score; grade		
+homework-exams	一百分	yi1 bai3 fen1	phrase	full marks (100)		
+homework-exams	及格	ji2 ge2	verb	to pass		
+homework-exams	不及格	bu4 ji2 ge2	verb	to fail		
+homework-exams	成績單	cheng2 ji1 dan1	noun	report card		
+homework-exams	訂正	ding4 zheng4	verb	to correct (mistakes)		
+homework-exams	錯字	cuo4 zi4	noun	wrongly written character		
+homework-exams	考得怎麼樣	kao3 de5 zen3 me5 yang4	phrase	how did the test go?		
+homework-exams	考得很好	kao3 de5 hen3 hao3	phrase	did well on the test		
+homework-exams	會考	hui4 kao3	noun	junior high exit exam	zh-Hant	
+homework-exams	學測	xue2 ce4	noun	college entrance exam	zh-Hant	
+homework-exams	高考	gao1 kao3	noun	college entrance exam	zh-Hans	
+school-life	學校	xue2 xiao4	noun	school		
+school-life	國中	guo2 zhong1	noun	junior high school	zh-Hant	
+school-life	初中	chu1 zhong1	noun	junior high school	zh-Hans	
+school-life	高中	gao1 zhong1	noun	high school		
+school-life	大學	da4 xue2	noun	university		
+school-life	同學	tong2 xue2	noun	classmate		
+school-life	好朋友	hao3 peng2 you3	noun	good friend		
+school-life	新同學	xin1 tong2 xue2	noun	new classmate		
+school-life	下課時間	xia4 ke4 shi2 jian1	noun	recess		
+school-life	午休	wu3 xiu1	noun	lunchtime rest		
+school-life	營養午餐	ying2 yang3 wu3 can1	noun	school lunch	zh-Hant	
+school-life	福利社	fu2 li4 she4	noun	school store	zh-Hant	
+school-life	小賣部	xiao3 mai4 bu4	noun	school store	zh-Hans	
+school-life	操場	cao1 chang3	noun	sports field		
+school-life	體育館	ti3 yu4 guan3	noun	gym		
+school-life	圖書館	tu2 shu1 guan3	noun	library		
+school-life	保健室	bao3 jian4 shi4	noun	school nurse's office	zh-Hant	
+school-life	醫務室	yi1 wu4 shi4	noun	school nurse's office	zh-Hans	
+school-life	社團	she4 tuan2	noun	club		
+school-life	參加社團	can1 jia1 she4 tuan2	verb	to join a club		
+school-life	補習班	bu3 xi2 ban1	noun	cram school; tutoring center		
+school-life	補習	bu3 xi2	verb	to go to cram school		
+school-life	打掃時間	da3 sao3 shi2 jian1	noun	cleaning time	zh-Hant	
+school-life	朝會	zhao1 hui4	noun	morning assembly	zh-Hant	
+school-life	升旗	sheng1 qi2	verb	to raise the flag (morning assembly)	zh-Hant	
+school-life	放學	fang4 xue2	verb	to finish school for the day		
+school-life	畢業旅行	bi4 ye4 lu:3 xing2	noun	graduation trip	zh-Hant	
+school-life	畢業	bi4 ye4	verb	to graduate		
+school-life	轉學	zhuan3 xue2	verb	to change schools		
+school-life	一起玩	yi1 qi3 wan2	phrase	let's play together		
+school-life	你叫什麼名字	ni3 jiao4 shen2 me5 ming2 zi4	phrase	what's your name?		
+school-life	我是新來的	wo3 shi4 xin1 lai2 de5	phrase	I'm new here		
+office	公司	gong1 si1	noun	company		
+office	辦公室	ban4 gong1 shi4	noun	office		
+office	上班	shang4 ban1	verb	to go to work		
+office	下班	xia4 ban1	verb	to finish work		
+office	加班	jia1 ban1	verb	to work overtime		
+office	打卡	da3 ka3	verb	to clock in or out		
+office	同事	tong2 shi4	noun	coworker		
+office	主管	zhu3 guan3	noun	supervisor		
+office	老闆	lao3 ban3	noun	boss		
+office	經理	jing1 li3	noun	manager		
+office	部門	bu4 men2	noun	department		
+office	新人	xin1 ren2	noun	new employee		
+office	名片	ming2 pian4	noun	business card		
+office	電腦	dian4 nao3	noun	computer		
+office	印表機	yin4 biao3 ji1	noun	printer	zh-Hant	
+office	打印機	da3 yin4 ji1	noun	printer	zh-Hans	
+office	影印機	ying3 yin4 ji1	noun	photocopier	zh-Hant	
+office	複印機	fu4 yin4 ji1	noun	photocopier	zh-Hans	
+office	文件	wen2 jian4	noun	document		
+office	檔案	dang4 an4	noun	file	zh-Hant	
+office	資料夾	zi1 liao4 jia1	noun	folder	zh-Hant	
+office	文件夾	wen2 jian4 jia1	noun	folder	zh-Hans	
+office	報告	bao4 gao4	noun	report		
+office	專案	zhuan1 an4	noun	project	zh-Hant	
+office	項目	xiang4 mu4	noun	project	zh-Hans	
+office	截止日期	jie2 zhi3 ri4 qi2	noun	deadline		
+office	茶水間	cha2 shui3 jian1	noun	office pantry		
+office	忙	mang2	adjective	busy		
+office	請幫我看一下	qing3 bang1 wo3 kan4 yi1 xia4	phrase	could you take a look for me?		
+office	我先走了	wo3 xian1 zou3 le5	phrase	I'm heading out now		
+office	辛苦了	xin1 ku3 le5	phrase	thanks for your hard work		
+meetings	開會	kai1 hui4	verb	to have a meeting		
+meetings	會議	hui4 yi4	noun	meeting		
+meetings	會議室	hui4 yi4 shi4	noun	meeting room		
+meetings	視訊會議	shi4 xun4 hui4 yi4	noun	video meeting	zh-Hant	
+meetings	視頻會議	shi4 pin2 hui4 yi4	noun	video meeting	zh-Hans	
+meetings	議程	yi4 cheng2	noun	agenda		
+meetings	會議紀錄	hui4 yi4 ji4 lu4	noun	meeting minutes	zh-Hant	
+meetings	會議記錄	hui4 yi4 ji4 lu4	noun	meeting minutes	zh-Hans	
+meetings	簡報	jian3 bao4	noun	presentation (slides)	zh-Hant	
+meetings	討論	tao3 lun4	verb	to discuss		
+meetings	決定	jue2 ding4	verb	to decide		
+meetings	同意	tong2 yi4	verb	to agree		
+meetings	不同意	bu4 tong2 yi4	verb	to disagree		
+meetings	意見	yi4 jian4	noun	opinion		
+meetings	建議	jian4 yi4	noun	suggestion		
+meetings	問題	wen4 ti2	noun	question; problem		
+meetings	進度	jin4 du4	noun	progress		
+meetings	目標	mu4 biao1	noun	goal		
+meetings	預算	yu4 suan4	noun	budget		
+meetings	客戶	ke4 hu4	noun	client		
+meetings	延後	yan2 hou4	verb	to postpone	zh-Hant	
+meetings	提前	ti2 qian2	verb	to move earlier		
+meetings	準時	zhun3 shi2	adjective	on time		
+meetings	我有一個問題	wo3 you3 yi1 ge4 wen4 ti2	phrase	I have a question		
+meetings	我同意	wo3 tong2 yi4	phrase	I agree		
+meetings	我補充一下	wo3 bu3 chong1 yi1 xia4	phrase	let me add something		
+meetings	聽得到嗎	ting1 de5 dao4 ma5	phrase	can you hear me?		
+meetings	你靜音了	ni3 jing4 yin1 le5	phrase	you're on mute		
+meetings	今天就到這裡	jin1 tian1 jiu4 dao4 zhe4 li3	phrase	let's stop here for today		
+meetings	下次再討論	xia4 ci4 zai4 tao3 lun4	phrase	let's discuss it next time		
+email-phone	電子郵件	dian4 zi3 you2 jian4	noun	email		
+email-phone	信箱	xin4 xiang1	noun	inbox; mailbox		
+email-phone	回信	hui2 xin4	verb	to reply (to an email or letter)		
+email-phone	轉寄	zhuan3 ji4	verb	to forward (an email)	zh-Hant	
+email-phone	轉發	zhuan3 fa1	verb	to forward (an email)	zh-Hans	
+email-phone	附件	fu4 jian4	noun	attachment		
+email-phone	主旨	zhu3 zhi3	noun	subject line	zh-Hant	
+email-phone	主題	zhu3 ti2	noun	subject line	zh-Hans	
+email-phone	副本	fu4 ben3	noun	cc (copy)		
+email-phone	收到	shou1 dao4	verb	to receive		
+email-phone	已收到	yi3 shou1 dao4	phrase	received, thanks		
+email-phone	您好	nin2 hao3	phrase	hello (polite)		
+email-phone	謝謝您	xie4 xie5 nin2	phrase	thank you (polite)		
+email-phone	麻煩你了	ma2 fan2 ni3 le5	phrase	sorry to trouble you; thanks		
+email-phone	請見附件	qing3 jian4 fu4 jian4	phrase	please see the attachment		
+email-phone	請盡快回覆	qing3 jin4 kuai4 hui2 fu4	phrase	please reply as soon as possible		
+email-phone	喂	wei2	phrase	hello (on the phone)		
+email-phone	請問是哪位	qing3 wen4 shi4 na3 wei4	phrase	may I ask who's calling?		
+email-phone	請稍等	qing3 shao1 deng3	phrase	please hold on		
+email-phone	他不在	ta1 bu4 zai4	phrase	he (or she) isn't in		
+email-phone	要留言嗎	yao4 liu2 yan2 ma5	phrase	would you like to leave a message?		
+email-phone	請他回電	qing3 ta1 hui2 dian4	phrase	please ask him (or her) to call back		
+email-phone	打錯了	da3 cuo4 le5	phrase	wrong number		
+email-phone	分機	fen1 ji1	noun	extension (phone)		
+email-phone	轉接	zhuan3 jie1	verb	to transfer (a call)		
+email-phone	語音信箱	yu3 yin1 xin4 xiang1	noun	voicemail		
+email-phone	聽不清楚	ting1 bu4 qing1 chu3	phrase	I can't hear you clearly		
+email-phone	晚點再打給你	wan3 dian3 zai4 da3 gei3 ni3	phrase	I'll call you back later		
+job-hunting	找工作	zhao3 gong1 zuo4	verb	to look for a job		
+job-hunting	應徵	ying4 zheng1	verb	to apply for a job	zh-Hant	
+job-hunting	應聘	ying4 pin4	verb	to apply for a job	zh-Hans	
+job-hunting	履歷	lu:3 li4	noun	résumé	zh-Hant	
+job-hunting	簡歷	jian3 li4	noun	résumé	zh-Hans	
+job-hunting	自傳	zi4 zhuan4	noun	personal statement (sent with a résumé)	zh-Hant	
+job-hunting	面試	mian4 shi4	noun	interview		
+job-hunting	人力銀行	ren2 li4 yin2 hang2	noun	job website	zh-Hant	
+job-hunting	職缺	zhi2 que1	noun	job opening	zh-Hant	
+job-hunting	全職	quan2 zhi2	noun	full-time (job)		
+job-hunting	兼職	jian1 zhi2	noun	part-time (job)		
+job-hunting	打工	da3 gong1	verb	to work part-time		
+job-hunting	經驗	jing1 yan4	noun	experience		
+job-hunting	學歷	xue2 li4	noun	education (background)		
+job-hunting	專長	zhuan1 chang2	noun	specialty; skills		
+job-hunting	優點	you1 dian3	noun	strength		
+job-hunting	缺點	que1 dian3	noun	weakness		
+job-hunting	自我介紹	zi4 wo3 jie4 shao4	noun	self-introduction		
+job-hunting	薪水	xin1 shui3	noun	salary		
+job-hunting	期望薪資	qi2 wang4 xin1 zi1	noun	expected salary	zh-Hant	
+job-hunting	福利	fu2 li4	noun	benefits		
+job-hunting	試用期	shi4 yong4 qi2	noun	probation period		
+job-hunting	錄取	lu4 qu3	verb	to hire; to accept (an applicant)		
+job-hunting	通知	tong1 zhi1	verb	to notify		
+job-hunting	工作許可	gong1 zuo4 xu3 ke3	noun	work permit		
+job-hunting	離職	li2 zhi2	verb	to leave a job		
+job-hunting	為什麼想來這裡工作	wei4 shen2 me5 xiang3 lai2 zhe4 li3 gong1 zuo4	phrase	why do you want to work here?		
+job-hunting	什麼時候可以上班	shen2 me5 shi2 hou4 ke3 yi3 shang4 ban1	phrase	when can you start?		
+job-hunting	我可以馬上開始	wo3 ke3 yi3 ma3 shang4 kai1 shi3	phrase	I can start right away		
+job-hunting	有什麼問題嗎	you3 shen2 me5 wen4 ti2 ma5	phrase	do you have any questions?		
+job-hunting	謝謝您的時間	xie4 xie5 nin2 de5 shi2 jian1	phrase	thank you for your time		
+leave-pay	請假	qing3 jia4	verb	to take time off		
+leave-pay	請假單	qing3 jia4 dan1	noun	leave request form		
+leave-pay	病假	bing4 jia4	noun	sick leave		
+leave-pay	事假	shi4 jia4	noun	personal leave		
+leave-pay	年假	nian2 jia4	noun	annual leave		
+leave-pay	特休	te4 xiu1	noun	annual paid leave	zh-Hant	
+leave-pay	產假	chan3 jia4	noun	maternity leave		
+leave-pay	陪產假	pei2 chan3 jia4	noun	paternity leave		
+leave-pay	育嬰假	yu4 ying1 jia4	noun	parental leave	zh-Hant	
+leave-pay	育兒假	yu4 er2 jia4	noun	parental leave	zh-Hans	review: mainland term
+leave-pay	喪假	sang1 jia4	noun	bereavement leave		
+leave-pay	颱風假	tai2 feng1 jia4	noun	typhoon day off	zh-Hant	
+leave-pay	國定假日	guo2 ding4 jia4 ri4	noun	national holiday	zh-Hant	
+leave-pay	法定節假日	fa3 ding4 jie2 jia4 ri4	noun	national holiday	zh-Hans	review: mainland term
+leave-pay	連假	lian2 jia4	noun	long weekend; holiday run	zh-Hant	
+leave-pay	補班	bu3 ban1	verb	to work a make-up workday	zh-Hant	
+leave-pay	調休	tiao2 xiu1	verb	to swap workdays (around a holiday)	zh-Hans	review: mainland term
+leave-pay	我明天要請假	wo3 ming2 tian1 yao4 qing3 jia4	phrase	I need to take tomorrow off		
+leave-pay	我生病了	wo3 sheng1 bing4 le5	phrase	I'm sick		
+leave-pay	月薪	yue4 xin1	noun	monthly salary		
+leave-pay	時薪	shi2 xin1	noun	hourly wage		
+leave-pay	底薪	di3 xin1	noun	base salary		
+leave-pay	最低工資	zui4 di1 gong1 zi1	noun	minimum wage		
+leave-pay	發薪日	fa1 xin1 ri4	noun	payday		
+leave-pay	薪資單	xin1 zi1 dan1	noun	pay slip	zh-Hant	
+leave-pay	工資條	gong1 zi1 tiao2	noun	pay slip	zh-Hans	review: mainland term
+leave-pay	加班費	jia1 ban1 fei4	noun	overtime pay		
+leave-pay	獎金	jiang3 jin1	noun	bonus		
+leave-pay	年終獎金	nian2 zhong1 jiang3 jin1	noun	year-end bonus		
+leave-pay	加薪	jia1 xin1	verb	to get a raise		
+leave-pay	扣稅	kou4 shui4	verb	to withhold tax		
+leave-pay	勞保	lao2 bao3	noun	labor insurance	zh-Hant	
+leave-pay	勞健保	lao2 jian4 bao3	noun	labor and health insurance	zh-Hant	
+computers-phones	電腦	dian4 nao3	noun	computer		
+computers-phones	筆電	bi3 dian4	noun	laptop	zh-Hant	
+computers-phones	筆記本電腦	bi3 ji4 ben3 dian4 nao3	noun	laptop	zh-Hans	
+computers-phones	平板	ping2 ban3	noun	tablet		
+computers-phones	智慧型手機	zhi4 hui4 xing2 shou3 ji1	noun	smartphone	zh-Hant	
+computers-phones	智能手機	zhi4 neng2 shou3 ji1	noun	smartphone	zh-Hans	
+computers-phones	鍵盤	jian4 pan2	noun	keyboard		
+computers-phones	滑鼠	hua2 shu3	noun	mouse (computer)	zh-Hant	
+computers-phones	鼠標	shu3 biao1	noun	mouse (computer)	zh-Hans	
+computers-phones	螢幕	ying2 mu4	noun	screen	zh-Hant	
+computers-phones	屏幕	ping2 mu4	noun	screen	zh-Hans	
+computers-phones	軟體	ruan3 ti3	noun	software	zh-Hant	
+computers-phones	軟件	ruan3 jian4	noun	software	zh-Hans	
+computers-phones	應用程式	ying4 yong4 cheng2 shi4	noun	app (application)	zh-Hant	
+computers-phones	應用程序	ying4 yong4 cheng2 xu4	noun	app (application)	zh-Hans	
+computers-phones	下載	xia4 zai4	verb	to download		
+computers-phones	安裝	an1 zhuang1	verb	to install		
+computers-phones	更新	geng1 xin1	verb	to update		
+computers-phones	上網	shang4 wang3	verb	to go online		
+computers-phones	線上	xian4 shang4	adjective	online	zh-Hant	
+computers-phones	在線	zai4 xian4	adjective	online	zh-Hans	
+computers-phones	網站	wang3 zhan4	noun	website		
+computers-phones	網址	wang3 zhi3	noun	web address		
+computers-phones	瀏覽器	liu2 lan3 qi4	noun	web browser		
+computers-phones	搜尋	sou1 xun2	verb	to search (online)	zh-Hant	
+computers-phones	搜索	sou1 suo3	verb	to search (online)	zh-Hans	
+computers-phones	電子郵件	dian4 zi3 you2 jian4	noun	email		
+computers-phones	簡訊	jian3 xun4	noun	text message	zh-Hant	
+computers-phones	短信	duan3 xin4	noun	text message	zh-Hans	
+computers-phones	傳訊息	chuan2 xun4 xi2	verb	to send a message	zh-Hant	
+computers-phones	發消息	fa1 xiao1 xi5	verb	to send a message	zh-Hans	review: mainland term
+computers-phones	社群媒體	she4 qun2 mei2 ti3	noun	social media	zh-Hant	
+computers-phones	社交媒體	she4 jiao1 mei2 ti3	noun	social media	zh-Hans	
+computers-phones	貼文	tie1 wen2	noun	post (on social media)	zh-Hant	
+computers-phones	帖子	tie3 zi5	noun	post (on social media)	zh-Hans	review: mainland term
+computers-phones	按讚	an4 zan4	verb	to like (a post)	zh-Hant	
+computers-phones	點贊	dian3 zan4	verb	to like (a post)	zh-Hans	
+computers-phones	留言	liu2 yan2	verb	to leave a comment		
+computers-phones	分享	fen1 xiang3	verb	to share		
+computers-phones	追蹤	zhui1 zong1	verb	to follow (an account)	zh-Hant	
+computers-phones	關注	guan1 zhu4	verb	to follow (an account)	zh-Hans	
+computers-phones	帳號	zhang4 hao4	noun	account (online)		
+computers-phones	密碼	mi4 ma3	noun	password		
+computers-phones	登入	deng1 ru4	verb	to log in	zh-Hant	
+computers-phones	登錄	deng1 lu4	verb	to log in	zh-Hans	
+computers-phones	登出	deng1 chu1	verb	to log out	zh-Hant	
+computers-phones	線上遊戲	xian4 shang4 you2 xi4	noun	online game	zh-Hant	
+computers-phones	網絡遊戲	wang3 luo4 you2 xi4	noun	online game	zh-Hans	
+computers-phones	玩遊戲	wan2 you2 xi4	verb	to play games		
+computers-phones	打電動	da3 dian4 dong4	verb	to play video games	zh-Hant	
+computers-phones	拍照	pai1 zhao4	verb	to take a photo		
+computers-phones	截圖	jie2 tu2	verb	to take a screenshot		
+computers-phones	掃描	sao3 miao2	verb	to scan		
+computers-phones	存檔	cun2 dang4	verb	to save (a file)	zh-Hant	
+computers-phones	保存	bao3 cun2	verb	to save (a file)	zh-Hans	
+computers-phones	當機	dang4 ji1	verb	to crash; to freeze (computer)	zh-Hant	
+computers-phones	死機	si3 ji1	verb	to crash; to freeze (computer)	zh-Hans	
+computers-phones	重新開機	chong2 xin1 kai1 ji1	verb	to restart (a device)		
+computers-phones	藍牙	lan2 ya2	noun	Bluetooth		
+computers-phones	雲端	yun2 duan1	noun	the cloud (online storage)	zh-Hant	
+computers-phones	病毒	bing4 du2	noun	virus (computer)		
+computers-phones	詐騙	zha4 pian4	noun	scam; fraud		
+software-engineering	工程師	gong1 cheng2 shi1	noun	engineer		
+software-engineering	軟體工程師	ruan3 ti3 gong1 cheng2 shi1	noun	software engineer	zh-Hant	
+software-engineering	軟件工程師	ruan3 jian4 gong1 cheng2 shi1	noun	software engineer	zh-Hans	
+software-engineering	科技業	ke1 ji4 ye4	noun	tech industry	zh-Hant	
+software-engineering	半導體	ban4 dao3 ti3	noun	semiconductors		
+software-engineering	新創	xin1 chuang4	noun	startup	zh-Hant	
+software-engineering	初創	chu1 chuang4	noun	startup	zh-Hans	review: mainland term
+software-engineering	前端	qian2 duan1	noun	front end		
+software-engineering	後端	hou4 duan1	noun	back end		
+software-engineering	全端	quan2 duan1	noun	full stack	zh-Hant	
+software-engineering	全棧	quan2 zhan4	noun	full stack	zh-Hans	review: mainland term
+software-engineering	開發	kai1 fa1	verb	to develop		
+software-engineering	寫程式	xie3 cheng2 shi4	verb	to write code	zh-Hant	
+software-engineering	寫代碼	xie3 dai4 ma3	verb	to write code	zh-Hans	
+software-engineering	程式碼	cheng2 shi4 ma3	noun	code	zh-Hant	
+software-engineering	代碼	dai4 ma3	noun	code	zh-Hans	
+software-engineering	程式語言	cheng2 shi4 yu3 yan2	noun	programming language	zh-Hant	
+software-engineering	編程語言	bian1 cheng2 yu3 yan2	noun	programming language	zh-Hans	
+software-engineering	函式	han2 shi4	noun	function (in code)	zh-Hant	
+software-engineering	函數	han2 shu4	noun	function (in code)	zh-Hans	
+software-engineering	變數	bian4 shu4	noun	variable	zh-Hant	
+software-engineering	變量	bian4 liang4	noun	variable	zh-Hans	
+software-engineering	資料庫	zi1 liao4 ku4	noun	database	zh-Hant	
+software-engineering	數據庫	shu4 ju4 ku4	noun	database	zh-Hans	
+software-engineering	伺服器	si4 fu2 qi4	noun	server	zh-Hant	
+software-engineering	服務器	fu2 wu4 qi4	noun	server	zh-Hans	
+software-engineering	使用者	shi3 yong4 zhe3	noun	user	zh-Hant	
+software-engineering	用戶	yong4 hu4	noun	user	zh-Hans	
+software-engineering	需求	xu1 qiu2	noun	requirements		
+software-engineering	功能	gong1 neng2	noun	feature; function		
+software-engineering	架構	jia4 gou4	noun	architecture		
+software-engineering	演算法	yan3 suan4 fa3	noun	algorithm	zh-Hant	
+software-engineering	算法	suan4 fa3	noun	algorithm	zh-Hans	
+software-engineering	測試	ce4 shi4	verb	to test		
+software-engineering	錯誤	cuo4 wu4	noun	error; bug		
+software-engineering	除錯	chu2 cuo4	verb	to debug	zh-Hant	
+software-engineering	調試	tiao2 shi4	verb	to debug	zh-Hans	
+software-engineering	程式碼審查	cheng2 shi4 ma3 shen3 cha2	noun	code review	zh-Hant	
+software-engineering	代碼審查	dai4 ma3 shen3 cha2	noun	code review	zh-Hans	
+software-engineering	部署	bu4 shu4	verb	to deploy		
+software-engineering	上線	shang4 xian4	verb	to go live; to launch		
+software-engineering	版本	ban3 ben3	noun	version		
+software-engineering	效能	xiao4 neng2	noun	performance (speed)	zh-Hant	
+software-engineering	性能	xing4 neng2	noun	performance (speed)	zh-Hans	
+software-engineering	資安	zi1 an1	noun	cybersecurity	zh-Hant	
+software-engineering	網絡安全	wang3 luo4 an1 quan2	noun	cybersecurity	zh-Hans	
+software-engineering	人工智慧	ren2 gong1 zhi4 hui4	noun	artificial intelligence (AI)	zh-Hant	
+software-engineering	人工智能	ren2 gong1 zhi4 neng2	noun	artificial intelligence (AI)	zh-Hans	
+software-engineering	開源	kai1 yuan2	adjective	open-source		
+software-engineering	站立會議	zhan4 li4 hui4 yi4	noun	stand-up meeting		
+software-engineering	敏捷開發	min3 jie2 kai1 fa1	noun	agile development		
+software-engineering	遠端工作	yuan3 duan1 gong1 zuo4	noun	remote work	zh-Hant	
+software-engineering	遠程辦公	yuan3 cheng2 ban4 gong1	noun	remote work	zh-Hans	
+software-engineering	跑	pao3	verb	to run (a program)		
+software-engineering	系統掛了	xi4 tong3 gua4 le5	phrase	the system is down		
+software-engineering	修好了	xiu1 hao3 le5	phrase	it's fixed		
+software-engineering	在我的電腦上可以跑	zai4 wo3 de5 dian4 nao3 shang4 ke3 yi3 pao3	phrase	it works on my computer		
+remote-work	遠端工作	yuan3 duan1 gong1 zuo4	noun	remote work	zh-Hant	
+remote-work	遠程辦公	yuan3 cheng2 ban4 gong1	noun	remote work	zh-Hans	
+remote-work	在家工作	zai4 jia1 gong1 zuo4	verb	to work from home		
+remote-work	居家辦公	ju1 jia1 ban4 gong1	noun	working from home	zh-Hant	
+remote-work	混合辦公	hun4 he2 ban4 gong1	noun	hybrid work		
+remote-work	數位遊牧	shu4 wei4 you2 mu4	noun	digital nomad	zh-Hant	
+remote-work	數字遊民	shu4 zi4 you2 min2	noun	digital nomad	zh-Hans	review: mainland term
+remote-work	自由工作者	zi4 you2 gong1 zuo4 zhe3	noun	freelancer	zh-Hant	
+remote-work	自由職業者	zi4 you2 zhi2 ye4 zhe3	noun	freelancer	zh-Hans	
+remote-work	接案	jie1 an4	verb	to take on freelance projects	zh-Hant	
+remote-work	外包	wai4 bao1	verb	to outsource		
+remote-work	共同工作空間	gong4 tong2 gong1 zuo4 kong1 jian1	noun	coworking space	zh-Hant	
+remote-work	聯合辦公空間	lian2 he2 ban4 gong1 kong1 jian1	noun	coworking space	zh-Hans	review: mainland term
+remote-work	時差	shi2 cha1	noun	time difference; jet lag		
+remote-work	時區	shi2 qu1	noun	time zone		
+remote-work	海外客戶	hai3 wai4 ke4 hu4	noun	overseas client		
+remote-work	工作時間	gong1 zuo4 shi2 jian1	noun	working hours		
+remote-work	彈性工時	tan2 xing4 gong1 shi2	noun	flexible hours	zh-Hant	
+remote-work	行事曆	xing2 shi4 li4	noun	calendar (schedule)	zh-Hant	
+remote-work	排時間	pai2 shi2 jian1	verb	to find a time (for a meeting)		
+remote-work	線上會議	xian4 shang4 hui4 yi4	noun	online meeting	zh-Hant	
+remote-work	視訊	shi4 xun4	noun	video call	zh-Hant	
+remote-work	視頻	shi4 pin2	noun	video call	zh-Hans	
+remote-work	開鏡頭	kai1 jing4 tou2	verb	to turn on your camera		
+remote-work	麥克風	mai4 ke4 feng1	noun	microphone		
+remote-work	耳機	er3 ji1	noun	headphones		
+remote-work	分享螢幕	fen1 xiang3 ying2 mu4	verb	to share your screen	zh-Hant	
+remote-work	共享屏幕	gong4 xiang3 ping2 mu4	verb	to share your screen	zh-Hans	
+remote-work	你看得到我的螢幕嗎	ni3 kan4 de5 dao4 wo3 de5 ying2 mu4 ma5	phrase	can you see my screen?	zh-Hant	
+remote-work	即時通訊	ji2 shi2 tong1 xun4	noun	instant messaging	zh-Hant	
+remote-work	回覆	hui2 fu4	verb	to reply		
+remote-work	晚點回覆你	wan3 dian3 hui2 fu4 ni3	phrase	I'll get back to you later		
+remote-work	網路很慢	wang3 lu4 hen3 man4	phrase	the internet is slow	zh-Hant	
+remote-work	斷線了	duan4 xian4 le5	phrase	the connection dropped		
+gold-card	就業金卡	jiu4 ye4 jin1 ka3	noun	Employment Gold Card (Taiwan)	zh-Hant	
+gold-card	金卡	jin1 ka3	noun	Gold Card (short form)	zh-Hant	
+gold-card	金卡持有人	jin1 ka3 chi2 you3 ren2	noun	Gold Card holder	zh-Hant	
+gold-card	外國專業人才	wai4 guo2 zhuan1 ye4 ren2 cai2	noun	foreign professional	zh-Hant	
+gold-card	攬才專法	lan3 cai2 zhuan1 fa3	noun	Foreign Professionals Act	zh-Hant	
+gold-card	國發會	guo2 fa1 hui4	noun	National Development Council	zh-Hant	
+gold-card	移民署	yi2 min2 shu3	noun	National Immigration Agency	zh-Hant	
+gold-card	工作簽證	gong1 zuo4 qian1 zheng4	noun	work visa		
+gold-card	居留簽證	ju1 liu2 qian1 zheng4	noun	resident visa		
+gold-card	工作許可	gong1 zuo4 xu3 ke3	noun	work permit		
+gold-card	居留證	ju1 liu2 zheng4	noun	resident certificate (ARC)	zh-Hant	
+gold-card	永久居留	yong3 jiu3 ju1 liu2	noun	permanent residence		
+gold-card	線上申請	xian4 shang4 shen1 qing3	noun	online application	zh-Hant	
+gold-card	申請進度	shen1 qing3 jin4 du4	noun	application status		
+gold-card	審核	shen3 he2	noun	review (of an application)		
+gold-card	核准	he2 zhun3	verb	to approve		
+gold-card	效期	xiao4 qi2	noun	validity period	zh-Hant	
+gold-card	到期	dao4 qi2	verb	to expire		
+gold-card	延期	yan2 qi2	verb	to extend; to postpone		
+gold-card	雇主	gu4 zhu3	noun	employer		
+gold-card	不需要雇主	bu4 xu1 yao4 gu4 zhu3	phrase	no employer needed		
+gold-card	可以自由換工作	ke3 yi3 zi4 you2 huan4 gong1 zuo4	phrase	can change jobs freely		
+gold-card	眷屬	juan4 shu3	noun	dependents (family members)		
+gold-card	依親	yi1 qin1	noun	joining family (residence)	zh-Hant	
+gold-card	在職證明	zai4 zhi2 zheng4 ming2	noun	employment certificate		
+gold-card	薪資證明	xin1 zi1 zheng4 ming2	noun	proof of salary	zh-Hant	
+gold-card	學歷證明	xue2 li4 zheng4 ming2	noun	proof of education		
+gold-card	無犯罪紀錄證明	wu2 fan4 zui4 ji4 lu4 zheng4 ming2	noun	police clearance certificate	zh-Hant	
+gold-card	租稅優惠	zu1 shui4 you1 hui4	noun	tax benefits	zh-Hant	

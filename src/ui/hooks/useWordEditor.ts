@@ -1,16 +1,18 @@
-import { useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 import type { FrequencyTier } from '../../domain/frequencyTier';
+import { listsForAddingWords } from '../../domain/newWordsList';
 import type { Word } from '../../domain/word';
 import type { WordList } from '../../domain/wordList';
 import { WordListKind } from '../../domain/wordList';
 import { findReading, partsOfSpeechOf } from '../../services/dictionaryLookup';
 import { planWordAddition } from '../../services/wordAdditionPlanner';
+import { deleteWordPrompt } from '../../services/wordDeletionText';
 import { useAppServices } from '../AppServicesContext';
 import { confirm, confirmPlannedAdditions } from '../confirm';
 
-/** Loads one word and changes its frequency tier and the lists it belongs to. */
+/** Loads one word and changes its frequency tier and the lists it belongs to, or deletes it. */
 export function useWordEditor(wordId: number) {
   const { profileId, wordRepository, wordListRepository, dictionaryLookup } = useAppServices();
   const [word, setWord] = useState<Word | null>(null);
@@ -19,7 +21,7 @@ export function useWordEditor(wordId: number) {
 
   const reload = useCallback(async () => {
     const summaries = await wordListRepository.listSummaries(profileId);
-    setLists(summaries.map((summary) => summary.list));
+    setLists(listsForAddingWords(summaries.map((summary) => summary.list)));
     setMemberListIds(new Set(await wordListRepository.listIdsContainingWord(wordId)));
     setWord(await wordRepository.getWord(wordId));
   }, [profileId, wordId, wordRepository, wordListRepository]);
@@ -71,5 +73,13 @@ export function useWordEditor(wordId: number) {
     await reload();
   };
 
-  return { word, lists, memberListIds, setFrequencyTier, toggleList };
+  const deleteWord = async () => {
+    if (!word) return;
+    const prompt = deleteWordPrompt(word.headword);
+    if (!(await confirm(prompt.title, prompt.message, prompt.confirmLabel))) return;
+    await wordRepository.deleteWords([word.id]);
+    router.back();
+  };
+
+  return { word, lists, memberListIds, setFrequencyTier, toggleList, deleteWord };
 }
