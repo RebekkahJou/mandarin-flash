@@ -904,6 +904,11 @@ German, for example):
 - Alphabetical sorts use `Intl.Collator` with the language's locale (verify Hermes on Android
   supports the needed locales).
 
+**Profile badge icons (same phase).** With several profiles, every header shows the active
+profile's name in a badge (built 2026-11-22). Later, each profile can choose one of a set of
+simple, colorful icons to show in its badge, so users tell each other apart at a glance. Icons must
+be open-licensed, small, and meet the color rules (no meaning by color alone).
+
 ## Progress data (start early)
 
 Add a `review_events` table (profile, word, answer, time) in Phase 1, since history can't be
@@ -951,9 +956,9 @@ Each phase ships on its own with tests and `npm run check` passing.
    port.
 6. **Add-ons framework and games.**
 7. **OCR add-on.**
-7b. **All words sorting.** Per-language sorts from the language definition, English and learning
-   level sorts, and radical data in the Mandarin pack. Before the new languages, since each brings
-   its own sorts.
+7b. **All words sorting and profile badge icons.** Per-language sorts from the language
+   definition, English and learning level sorts, and radical data in the Mandarin pack. Before the
+   new languages, since each brings its own sorts.
 8. **New languages,** in this order: German (simplest, proves the pipeline), Japanese (best open
    data; reuses the Chinese groundwork), Korean, Scottish Gaelic (beta tester available), Irish
    (shares the mutation handling), Ukrainian, Russian (shares the Cyrillic work), Finnish,

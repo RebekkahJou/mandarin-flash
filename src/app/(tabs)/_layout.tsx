@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { TabIcon } from '../../ui/components/TabIcon';
 import { useProfileBadgeHeader } from '../../ui/hooks/useProfileBadgeHeader';
-import { colors } from '../../ui/theme';
+import { colors, spacing } from '../../ui/theme';
 
 const TAB_ICON_CHARACTERS = {
   practice: '練',
@@ -17,6 +17,7 @@ const TAB_SCREEN_OPTIONS = {
   tabBarInactiveTintColor: colors.textSecondary,
   headerStyle: { backgroundColor: colors.primary },
   headerTintColor: colors.onPrimary,
+  headerRightContainerStyle: { paddingRight: spacing.medium },
   sceneStyle: { backgroundColor: colors.background },
 };
 
