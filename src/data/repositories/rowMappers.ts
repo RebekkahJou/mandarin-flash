@@ -34,8 +34,7 @@ export type WordListEntryRow = WordRow & {
 };
 
 export const WORD_COLUMNS =
-  'words.id, words.profile_id, words.headword, words.variant, words.reading, words.definitions, ' +
-  'words.frequency_tier, words.created_at';
+  'words.id, words.profile_id, words.headword, words.variant, words.reading, words.definitions, words.frequency_tier, words.created_at';
 
 export function serializeDefinitions(definitions: readonly string[]): string {
   return JSON.stringify(definitions);

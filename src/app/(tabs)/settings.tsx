@@ -42,8 +42,7 @@ const NEW_WORDS_SIZE_CHOICES = NEW_WORDS_LIST_SIZES.map((size) => ({
 }));
 
 const NEW_WORDS_HINT =
-  'How many of your newest High practice words the New Words list holds. Marking one Learned ' +
-  'brings in the next newest.';
+  'How many of your newest High practice words the New Words list holds. Marking one Learned brings in the next newest.';
 
 export default function SettingsScreen() {
   const { settings, updateSetting } = useSettings();

@@ -24,12 +24,10 @@ import { useCharacterSplit } from './useCharacterSplit';
 
 const TOPICS_TITLE = 'Topic word sets';
 const TOPICS_HINT =
-  'Choose a topic to see its word sets. Each topic’s words go into a list of their own, ' +
-  'General Vocabulary and their word-type lists.';
+  'Choose a topic to see its word sets. Each topic’s words go into a list of their own, General Vocabulary and their word-type lists.';
 const PREVIEW_HINT = 'Uncheck any words you don’t need. They won’t be added with this set.';
 const SETS_HINT =
-  'Choose the sets you need. We suggest one or two at a time, since smaller batches are easier ' +
-  'to learn. You can add more later.';
+  'Choose the sets you need. We suggest one or two at a time, since smaller batches are easier to learn. You can add more later.';
 
 function toggled<Value>(values: ReadonlySet<Value>, value: Value): Set<Value> {
   const next = new Set(values);

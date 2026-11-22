@@ -83,8 +83,7 @@ describe('word set text', () => {
       'Added 2 words to Health-related words, General Vocabulary and their word-type lists.',
     );
     expect(describeWordSetAddition(additionOf(2, 1))).toBe(
-      'Added 2 words to Health-related words, General Vocabulary and their word-type lists. ' +
-        '1 word you already had was added to Health-related words.',
+      'Added 2 words to Health-related words, General Vocabulary and their word-type lists. 1 word you already had was added to Health-related words.',
     );
   });
 

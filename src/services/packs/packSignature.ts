@@ -23,8 +23,7 @@ const SIGNATURE_CONTEXT = 'mandarin-flash-pack-signature-v1\n';
 
 const NOT_A_PACK_MESSAGE = 'This file is not a language pack.';
 const UNSIGNED_PACK_MESSAGE =
-  'This language pack is not signed by Mandarin Flash, so it was not installed. Download packs ' +
-  'only from the official pack page.';
+  'This language pack is not signed by Mandarin Flash, so it was not installed. Download packs only from the official pack page.';
 
 /** Uses the phone's native SHA-512 for Ed25519; the library's default needs WebCrypto. */
 export function setSha512ForSignatures(

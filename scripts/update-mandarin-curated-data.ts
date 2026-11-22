@@ -64,9 +64,7 @@ function main(): void {
   database.exec('VACUUM');
   database.close();
   console.log(
-    `Wrote ${words.length} starter words, ${components.length} components and ` +
-      `${wordSetEntries.length} entries in ${wordSets.length} word sets ` +
-      `(pack version ${MANDARIN_PACK_VERSION}, schema ${PACK_SCHEMA_VERSION}).`,
+    `Wrote ${words.length} starter words, ${components.length} components and ${wordSetEntries.length} entries in ${wordSets.length} word sets (pack version ${MANDARIN_PACK_VERSION}, schema ${PACK_SCHEMA_VERSION}).`,
   );
 }
 

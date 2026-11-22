@@ -24,8 +24,7 @@ import { colors, fontSizes, spacing } from '../../ui/theme';
 const entryKey = (entry: WordListEntry) => String(entry.entryId);
 
 const NEW_WORDS_NOTE =
-  'Your newest High practice words that you haven’t marked Learned yet. Marking one Learned ' +
-  'brings in the next newest. Change how many it holds in Settings.';
+  'Your newest High practice words that you haven’t marked Learned yet. Marking one Learned brings in the next newest. Change how many it holds in Settings.';
 
 function openWord(wordId: number) {
   router.push({ pathname: '/words/[wordId]', params: { wordId: String(wordId) } });
