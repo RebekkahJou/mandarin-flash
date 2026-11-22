@@ -14,7 +14,7 @@ import { useAppServices } from '../AppServicesContext';
 import { showMessage } from '../confirm';
 import { useCharacterSplit } from './useCharacterSplit';
 
-/** Starter set progress for the Lists tab, refreshed on focus, and adding the next set. */
+/** Starter set progress, refreshed on focus, and adding the next set. */
 export function useStarterVocabulary(onAdded: () => void) {
   const { profileId, languageBundle, dictionaryLookup, wordRepository, wordListRepository } =
     useAppServices();
