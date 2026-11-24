@@ -191,6 +191,10 @@ export const USER_DATABASE_MIGRATIONS: readonly string[] = [
   CREATE INDEX game_results_by_first_profile ON game_results(first_profile_id, played_at);
   CREATE INDEX game_results_by_second_profile ON game_results(second_profile_id, played_at);
   `,
+  // An icon (one of PROFILE_ICONS) shown with the profile's name in screen headers; null for none.
+  `
+  ALTER TABLE profiles ADD COLUMN icon TEXT;
+  `,
 ];
 
 export async function migrateUserDatabase(database: SqlDatabase): Promise<void> {

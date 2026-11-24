@@ -272,3 +272,26 @@ describe('dictionaryLookup components', () => {
     expect(await lookup.components()).toEqual([]);
   });
 });
+
+describe('dictionaryLookup radical positions', () => {
+  it('reads each character’s radical and remaining strokes', async () => {
+    const database = createInMemoryDatabase();
+    await writeTestPack(database);
+    await database.run(
+      'INSERT INTO characters (character, radical, remaining_strokes) VALUES (?, ?, ?), (?, ?, ?)',
+      ['人', 9, 0, '說', 149, 7],
+    );
+    const lookup = createDictionaryLookup(database, TRADITIONAL_TAIWAN, RELIABLE);
+    const positions = await lookup.radicalPositions();
+    expect(positions.get('說')).toEqual({ radical: 149, remainingStrokes: 7 });
+    expect(positions.get('口')).toBeUndefined();
+  });
+
+  it('has none in a pack older than schema 5', async () => {
+    const database = createInMemoryDatabase();
+    await writeTestPack(database);
+    await database.exec('DROP TABLE characters');
+    const lookup = createDictionaryLookup(database, TRADITIONAL_TAIWAN, RELIABLE);
+    expect((await lookup.radicalPositions()).size).toBe(0);
+  });
+});

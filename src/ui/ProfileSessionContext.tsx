@@ -20,6 +20,8 @@ export interface ProfileSession {
   /** Goes back to the welcome screen to pick someone else. */
   chooseAnotherProfile: () => void;
   renameProfile: (profileId: number, name: string) => Promise<void>;
+  /** One of PROFILE_ICONS, or null for no icon. */
+  setProfileIcon: (profileId: number, icon: string | null) => Promise<void>;
   /**
    * Deletes a profile and everything in it. If it was the active one, the only remaining profile
    * opens, or the welcome screen shows when several remain.
@@ -76,6 +78,14 @@ function useProfileSessionState(core: AppCore): ProfileSession {
     [core, reloadProfiles],
   );
 
+  const setProfileIcon = useCallback(
+    async (profileId: number, icon: string | null) => {
+      await core.profileRepository.setProfileIcon(profileId, icon);
+      await reloadProfiles();
+    },
+    [core, reloadProfiles],
+  );
+
   const deleteProfile = useCallback(
     async (profileId: number) => {
       await core.profileRepository.deleteProfile(profileId);
@@ -101,6 +111,7 @@ function useProfileSessionState(core: AppCore): ProfileSession {
       addProfiles,
       chooseAnotherProfile,
       renameProfile,
+      setProfileIcon,
       deleteProfile,
     };
   }, [
@@ -111,6 +122,7 @@ function useProfileSessionState(core: AppCore): ProfileSession {
     addProfiles,
     chooseAnotherProfile,
     renameProfile,
+    setProfileIcon,
     deleteProfile,
   ]);
 }

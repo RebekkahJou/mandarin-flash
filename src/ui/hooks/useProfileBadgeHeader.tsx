@@ -1,6 +1,6 @@
 import type { ColorValue } from 'react-native';
 
-import { activeProfileBadgeName } from '../../domain/profileGroups';
+import { activeProfileBadge } from '../../domain/profileGroups';
 import { ProfileBadge } from '../components/ProfileBadge';
 import { useProfileSession } from '../ProfileSessionContext';
 import { colors } from '../theme';
@@ -15,11 +15,11 @@ interface HeaderRightProps {
  */
 export function useProfileBadgeHeader() {
   const { profiles, activeProfile, showsWelcome } = useProfileSession();
-  const badgeName = activeProfileBadgeName(profiles, activeProfile);
-  if (!badgeName || showsWelcome) return {};
+  const badge = activeProfileBadge(profiles, activeProfile);
+  if (!badge || showsWelcome) return {};
   const headerRight = ({ tintColor }: HeaderRightProps) => {
     const badgeColor = tintColor ?? colors.textPrimary;
-    return <ProfileBadge name={badgeName} color={badgeColor} />;
+    return <ProfileBadge name={badge.name} icon={badge.icon} color={badgeColor} />;
   };
   return { headerRight };
 }

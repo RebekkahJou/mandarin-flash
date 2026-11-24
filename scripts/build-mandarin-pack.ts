@@ -24,6 +24,7 @@ import {
   MANDARIN_COMPONENTS_PATH,
   MANDARIN_PACK_METADATA,
   MANDARIN_PACK_PATH,
+  MANDARIN_RADICAL_STROKES_PATH,
   MANDARIN_STARTER_WORDS_PATH,
   MANDARIN_TAIWAN_READINGS_PATH,
   MANDARIN_WORD_SETS_PATH,
@@ -31,6 +32,7 @@ import {
   writePackMetadata,
 } from './lib/mandarinPack';
 import { tagGloss } from './lib/partOfSpeechTagger';
+import { parseRadicalStrokesFile, writeCharacters } from './lib/radicalStrokesFile';
 import {
   findStarterWordProblems,
   parseStarterWordsFile,
@@ -143,6 +145,10 @@ function main(): void {
   const wordSets = parseWordSetsFile(readFileSync(MANDARIN_WORD_SETS_PATH, 'utf8'));
   const wordSetEntriesText = readFileSync(MANDARIN_WORD_SET_ENTRIES_PATH, 'utf8');
   writeWordSets(database, wordSets, parseWordSetEntriesFile(wordSetEntriesText, wordSets));
+  writeCharacters(
+    database,
+    parseRadicalStrokesFile(readFileSync(MANDARIN_RADICAL_STROKES_PATH, 'utf8')),
+  );
   database.exec('VACUUM');
   database.close();
   const sizeInMegabytes = (statSync(MANDARIN_PACK_PATH).size / BYTES_PER_MEGABYTE).toFixed(1);

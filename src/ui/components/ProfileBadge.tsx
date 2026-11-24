@@ -8,19 +8,22 @@ const MAXIMUM_BADGE_WIDTH = 140;
 
 interface ProfileBadgeProps {
   name: string;
+  /** An emoji shown before the name; undefined for none. */
+  icon?: string;
   /** The header's text color, so the badge reads on both the cerulean and cream headers. */
   color: ColorValue;
 }
 
-/** The active profile's name in a screen header, so it's clear whose words are showing. */
-export function ProfileBadge({ name, color }: ProfileBadgeProps) {
+/** The active profile's icon and name in a screen header, so it's clear whose words are showing. */
+export function ProfileBadge({ name, icon, color }: ProfileBadgeProps) {
   const accessibilityLabel = `Profile: ${name}`;
+  const text = icon ? `${icon} ${name}` : name;
   const badgeStyle = [styles.badge, { borderColor: color }];
   const labelStyle = [styles.label, { color }];
   return (
     <View accessible accessibilityLabel={accessibilityLabel} style={badgeStyle}>
       <Text style={labelStyle} numberOfLines={1}>
-        {name}
+        {text}
       </Text>
     </View>
   );

@@ -1,6 +1,7 @@
 /**
  * Writes the curated Mandarin data (scripts/data/mandarin-taiwan-readings.tsv,
- * mandarin-starter-words.tsv, mandarin-components.tsv and the mandarin-word-set*.tsv files) into
+ * mandarin-starter-words.tsv, mandarin-components.tsv, mandarin-radical-strokes.tsv and the
+ * mandarin-word-set*.tsv files) into
  * the built-in Mandarin pack without rebuilding its dictionary, and rewrites its metadata
  * (versions and licenses) from MANDARIN_PACK_METADATA. Run on a developer machine after
  * editing either file:
@@ -17,12 +18,14 @@ import {
   MANDARIN_PACK_METADATA,
   MANDARIN_PACK_PATH,
   MANDARIN_PACK_VERSION,
+  MANDARIN_RADICAL_STROKES_PATH,
   MANDARIN_STARTER_WORDS_PATH,
   MANDARIN_WORD_SETS_PATH,
   MANDARIN_TAIWAN_READINGS_PATH,
   MANDARIN_WORD_SET_ENTRIES_PATH,
   writePackMetadata,
 } from './lib/mandarinPack';
+import { parseRadicalStrokesFile, writeCharacters } from './lib/radicalStrokesFile';
 import {
   findStarterWordProblems,
   parseStarterWordsFile,
@@ -59,12 +62,16 @@ function main(): void {
   writeComponents(database, components);
   for (const note of findWordSetReadingNotes(database, wordSetEntries)) console.warn(note);
   writeWordSets(database, wordSets, wordSetEntries);
+  const radicalStrokes = parseRadicalStrokesFile(
+    readFileSync(MANDARIN_RADICAL_STROKES_PATH, 'utf8'),
+  );
+  writeCharacters(database, radicalStrokes);
   database.exec('DELETE FROM pack_metadata');
   writePackMetadata(database, MANDARIN_PACK_METADATA);
   database.exec('VACUUM');
   database.close();
   console.log(
-    `Wrote ${words.length} starter words, ${components.length} components and ${wordSetEntries.length} entries in ${wordSets.length} word sets (pack version ${MANDARIN_PACK_VERSION}, schema ${PACK_SCHEMA_VERSION}).`,
+    `Wrote ${words.length} starter words, ${components.length} components and ${wordSetEntries.length} entries in ${wordSets.length} word sets, radical data for ${radicalStrokes.size} characters (pack version ${MANDARIN_PACK_VERSION}, schema ${PACK_SCHEMA_VERSION}).`,
   );
 }
 

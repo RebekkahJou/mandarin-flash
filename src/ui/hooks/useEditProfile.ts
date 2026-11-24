@@ -7,9 +7,13 @@ import { profileNameProblem } from '../../domain/profileName';
 import { confirm, showMessage } from '../confirm';
 import { useProfileSession } from '../ProfileSessionContext';
 
-/** Renames or deletes the active profile. The original profile can be renamed but not deleted. */
+/**
+ * Renames the active profile, sets its badge icon or deletes it. The original profile can be
+ * renamed but not deleted.
+ */
 export function useEditProfile() {
-  const { profiles, activeProfile, renameProfile, deleteProfile } = useProfileSession();
+  const { profiles, activeProfile, renameProfile, setProfileIcon, deleteProfile } =
+    useProfileSession();
   const [name, setName] = useState(activeProfile?.name ?? '');
   const canDelete = activeProfile !== null && !isOriginalProfile(activeProfile, profiles);
   const languageName = activeProfile ? LANGUAGE_DEFINITIONS[activeProfile.languageId].name : '';
@@ -43,5 +47,20 @@ export function useEditProfile() {
     await deleteProfile(activeProfile.id);
   };
 
-  return { name, setName, languageName, canDelete, save, remove };
+  /** Saved straight away, like a setting; null for no icon. */
+  const chooseIcon = (icon: string | null) => {
+    if (!activeProfile) return;
+    void setProfileIcon(activeProfile.id, icon);
+  };
+
+  return {
+    name,
+    setName,
+    languageName,
+    icon: activeProfile?.icon ?? null,
+    chooseIcon,
+    canDelete,
+    save,
+    remove,
+  };
 }

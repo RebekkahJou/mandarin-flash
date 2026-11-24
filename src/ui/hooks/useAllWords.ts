@@ -17,13 +17,15 @@ import {
   allWordsViewOptions,
   selectedAllWordsOptions,
 } from '../../services/allWordsOptions';
+import { WordSortPlace } from '../../services/wordSorting';
 import { deleteSelectedButtonLabel, deleteWordsPrompt } from '../../services/wordDeletionText';
 import { useAppServices, useSettings } from '../AppServicesContext';
 import { confirm } from '../confirm';
+import { useWordSorting } from './useWordSorting';
 
 /**
  * Every word in the profile with the names of its lists, filtered by the saved view options and
- * a search query. Words can be selected and deleted together.
+ * a search query, in the saved sort order. Words can be selected and deleted together.
  */
 export function useAllWords() {
   const { profileId, languageBundle, wordRepository, wordListRepository } = useAppServices();
@@ -60,6 +62,8 @@ export function useAllWords() {
     [shownWords, searchQuery, languageBundle],
   );
 
+  const sorting = useWordSorting(matchingWords, WordSortPlace.AllWords);
+
   const wordListIds = words.map(({ listIds }) => listIds);
   const optionChoices = allWordsOptionChoices({
     scriptStudyName: languageBundle.definition.scriptStudySets[0]?.name ?? null,
@@ -86,7 +90,8 @@ export function useAllWords() {
 
   return {
     totalWordCount: words.length,
-    matchingWords,
+    matchingWords: sorting.sortedRows,
+    sortChoices: sorting.choices,
     searchQuery,
     setSearchQuery,
     describeLists: (listIds: readonly number[]) => describeWordLists(listIds, lists),

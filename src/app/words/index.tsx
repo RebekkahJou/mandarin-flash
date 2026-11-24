@@ -9,6 +9,7 @@ import { InfoModal } from '../../ui/components/InfoModal';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { WordRow } from '../../ui/components/WordRow';
+import { WordSortPicker } from '../../ui/components/WordSortPicker';
 import { useAllWords } from '../../ui/hooks/useAllWords';
 import { colors, fontSizes, radii, spacing } from '../../ui/theme';
 
@@ -28,6 +29,7 @@ export default function AllWordsScreen() {
     countText,
     selection,
     options,
+    sortChoices,
   } = useAllWords();
   const screenOptions = { title: 'All words' };
   const emptyMessage =
@@ -89,6 +91,8 @@ export default function AllWordsScreen() {
 
       <InfoModal isVisible={options.isVisible} onClose={options.close} closeLabel="Done">
         <Text style={styles.optionsTitle}>View options</Text>
+        <WordSortPicker {...sortChoices} />
+        <Text style={styles.optionsHeading}>Show</Text>
         <Checkboxes
           options={options.choices}
           selectedValues={options.selected}
@@ -129,6 +133,11 @@ const styles = StyleSheet.create({
   },
   optionsTitle: {
     fontSize: fontSizes.title,
+    fontWeight: '600',
+    color: colors.textPrimary,
+  },
+  optionsHeading: {
+    fontSize: fontSizes.body,
     fontWeight: '600',
     color: colors.textPrimary,
   },

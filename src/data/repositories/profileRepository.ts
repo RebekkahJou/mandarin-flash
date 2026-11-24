@@ -2,19 +2,18 @@ import { defaultWordListsFor, listKindFor } from '../../domain/defaultWordLists'
 import type { LanguageId } from '../../domain/language';
 import { languageDefinitionFor, toLanguageId } from '../../domain/language';
 import type { Profile } from '../../domain/profileGroups';
+import { toProfileIcon } from '../../domain/profileIcons';
 import type { SqlDatabase } from '../sqlDatabase';
-
-/** The name first run suggests for the first profile. */
-export const DEFAULT_PROFILE_NAME = 'Me';
 
 interface ProfileRow {
   id: number;
   name: string;
   language_id: string;
   last_used_at: number;
+  icon: string | null;
 }
 
-const PROFILE_COLUMNS = 'id, name, language_id, last_used_at';
+const PROFILE_COLUMNS = 'id, name, language_id, last_used_at, icon';
 
 function toProfile(row: ProfileRow): Profile {
   return {
@@ -22,6 +21,7 @@ function toProfile(row: ProfileRow): Profile {
     name: row.name,
     languageId: toLanguageId(row.language_id),
     lastUsedAtMs: row.last_used_at,
+    icon: toProfileIcon(row.icon),
   };
 }
 
@@ -65,12 +65,27 @@ export function createProfileRepository(database: SqlDatabase) {
     await database.run('UPDATE profiles SET name = ? WHERE id = ?', [name, profileId]);
   }
 
+  /** One of PROFILE_ICONS, or null for no icon. */
+  async function setProfileIcon(profileId: number, icon: string | null): Promise<void> {
+    await database.run('UPDATE profiles SET icon = ? WHERE id = ?', [
+      toProfileIcon(icon) ?? null,
+      profileId,
+    ]);
+  }
+
   /** Foreign keys cascade, so the profile's lists, words, settings and history go with it. */
   async function deleteProfile(profileId: number): Promise<void> {
     await database.run('DELETE FROM profiles WHERE id = ?', [profileId]);
   }
 
-  return { createProfile, listProfiles, markProfileUsed, renameProfile, deleteProfile };
+  return {
+    createProfile,
+    listProfiles,
+    markProfileUsed,
+    renameProfile,
+    setProfileIcon,
+    deleteProfile,
+  };
 }
 
 export type ProfileRepository = ReturnType<typeof createProfileRepository>;

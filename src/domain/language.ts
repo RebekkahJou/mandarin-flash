@@ -2,6 +2,7 @@ import type { DefaultWordListDefinition } from './defaultWordLists';
 import { COMPONENTS_LIST_NAME } from './defaultWordLists';
 import { PartOfSpeech } from './partOfSpeech';
 import { WordListKind } from './wordList';
+import { WordSort } from './wordSort';
 
 /** BCP 47 tags. Stored in profiles.language_id, so never change an existing value. */
 export enum LanguageId {
@@ -37,6 +38,8 @@ export interface LanguageDefinition {
   variantSymbol: string;
   /** Lists this language's profiles start with after the shared defaults, e.g. Measure words. */
   extraDefaultWordLists: readonly DefaultWordListDefinition[];
+  /** The language's own orders for All words, in menu order (English and learning level apply to all). */
+  wordSorts: readonly WordSort[];
 }
 
 const MANDARIN_EXTRA_DEFAULT_WORD_LISTS: readonly DefaultWordListDefinition[] = [
@@ -54,6 +57,7 @@ const MANDARIN_TRADITIONAL: LanguageDefinition = {
   variantName: 'Simplified',
   variantSymbol: '简',
   extraDefaultWordLists: MANDARIN_EXTRA_DEFAULT_WORD_LISTS,
+  wordSorts: [WordSort.Pinyin, WordSort.Radical, WordSort.Zhuyin],
 };
 
 /** Mainland conventions: Simplified characters, mainland readings and word forms. */
@@ -67,6 +71,8 @@ const MANDARIN_SIMPLIFIED: LanguageDefinition = {
   variantName: 'Traditional',
   variantSymbol: '繁',
   extraDefaultWordLists: MANDARIN_EXTRA_DEFAULT_WORD_LISTS,
+  // Mainland dictionaries are ordered by pinyin, so there is no separate character sort.
+  wordSorts: [WordSort.Pinyin, WordSort.Zhuyin],
 };
 
 export const LANGUAGE_DEFINITIONS: Readonly<Record<LanguageId, LanguageDefinition>> = {
