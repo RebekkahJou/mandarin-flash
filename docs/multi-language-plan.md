@@ -4,8 +4,8 @@ Status: approved 2026-11-05. **Phases 1–3 done** and merged. **Phase 4, 4b and
 merged into main. **Phase 5 (store-hosted packs) done for Android** and merged into main
 (2026-11-17; see "Phase 5 decisions" below). Its iOS half waits for the iOS port; the real Play
 download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Phase 4e done** (phone-checked
-2026-11-22; see "Practice and word list improvements"). **Phase 6 (add-ons framework and games)
-in progress** (see "Games (Phase 6)").
+2026-11-22; see "Practice and word list improvements"). **Phase 6 games built** (2026-11-24,
+checked on the emulator; phone check pending; see "Games (Phase 6)").
 Update this file as work lands or decisions change.
 
 Phase 5 decisions (2026-11-16):
@@ -826,6 +826,16 @@ least 4 shared words are needed.
 **Separate from learning.** Games never change learning levels, New Words or practice history.
 They keep their own results (`game_results`: game, players, options, scores or times, winner,
 when), and the Games tab lists recent results.
+
+**Built (2026-11-24).** Settings → Add-ons → Games shows the Games tab (遊). Each player's cards
+follow their own pinyin or zhuyin setting, and game screens leave out the header's profile badge
+(the screen says whose turn it is). Answers need the card revealed first; Missed and Gotten
+carry ✗ and ✓. Checked on the emulator with a Traditional and a Simplified profile: 50 shared
+starter words, a full speed race and a full meaning match, results listed on the Games tab.
+- **Phone check still to do:** both games on the Pixel, including zhuyin cards and the hand-off.
+- **Open:** leaving a game with Back discards it without asking; the add-on is per profile, so
+  each profile turns Games on for itself; meaning match options show characters only (no
+  reading), which keeps the question fair but may be hard for beginners.
 
 ## Splitting multi-character words
 

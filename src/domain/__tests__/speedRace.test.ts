@@ -1,6 +1,12 @@
 import { GameWinner } from '../gamePlayers';
 import type { SharedWordPair } from '../sharedWords';
-import { canPlaySpeedRace, planSpeedRaceRounds, speedRaceOutcome } from '../speedRace';
+import {
+  SpeedRaceCardFront,
+  canPlaySpeedRace,
+  parseSpeedRaceOptions,
+  planSpeedRaceRounds,
+  speedRaceOutcome,
+} from '../speedRace';
 import { makeWord, seededRandom } from './testWords';
 
 function makePairs(count: number): SharedWordPair[] {
@@ -67,5 +73,20 @@ describe('canPlaySpeedRace', () => {
   it('needs at least 10 shared words', () => {
     expect(canPlaySpeedRace(9)).toBe(false);
     expect(canPlaySpeedRace(10)).toBe(true);
+  });
+});
+
+describe('parseSpeedRaceOptions', () => {
+  it('reads valid values and falls back to the defaults for others', () => {
+    expect(parseSpeedRaceOptions({ wordCount: '40', roundCount: '3', cardFront: 'word' })).toEqual({
+      wordCount: 40,
+      roundCount: 3,
+      cardFront: SpeedRaceCardFront.Word,
+    });
+    expect(parseSpeedRaceOptions({ wordCount: '25', roundCount: 'x' })).toEqual({
+      wordCount: 20,
+      roundCount: 1,
+      cardFront: SpeedRaceCardFront.Meaning,
+    });
   });
 });

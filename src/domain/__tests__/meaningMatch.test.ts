@@ -8,6 +8,7 @@ import {
   meaningMatchPickList,
   meaningMatchTurn,
   meaningMatchWinner,
+  parseMeaningMatchRoundCount,
 } from '../meaningMatch';
 import type { SharedWordPair } from '../sharedWords';
 import { makeWord, seededRandom } from './testWords';
@@ -77,5 +78,13 @@ describe('scores', () => {
   it('needs at least 4 shared words', () => {
     expect(canPlayMeaningMatch(3)).toBe(false);
     expect(canPlayMeaningMatch(4)).toBe(true);
+  });
+});
+
+describe('parseMeaningMatchRoundCount', () => {
+  it('reads a valid round count and falls back to 5 otherwise', () => {
+    expect(parseMeaningMatchRoundCount('15')).toBe(15);
+    expect(parseMeaningMatchRoundCount('7')).toBe(5);
+    expect(parseMeaningMatchRoundCount(undefined)).toBe(5);
   });
 });

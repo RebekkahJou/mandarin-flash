@@ -29,6 +29,15 @@ export interface MeaningMatchScores {
   secondPlayerCorrect: number;
 }
 
+/** Unknown or missing values (e.g. from route parameters) fall back to the default. */
+export function parseMeaningMatchRoundCount(text: string | undefined): MeaningMatchRoundCount {
+  const roundCount = Number(text);
+  return (
+    MEANING_MATCH_ROUND_COUNTS.find((candidate) => candidate === roundCount) ??
+    DEFAULT_MEANING_MATCH_ROUND_COUNT
+  );
+}
+
 export function canPlayMeaningMatch(sharedWordCount: number): boolean {
   return sharedWordCount >= MEANING_MATCH_OPTION_COUNT;
 }

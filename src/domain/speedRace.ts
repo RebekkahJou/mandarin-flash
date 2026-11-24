@@ -45,6 +45,38 @@ export interface SpeedRaceOutcome {
   winner: GameWinner;
 }
 
+/** Options as text, e.g. from route parameters. */
+export interface SpeedRaceOptionTexts {
+  wordCount?: string;
+  roundCount?: string;
+  cardFront?: string;
+}
+
+function oneOf<Value>(allowed: readonly Value[], value: unknown, fallback: Value): Value {
+  return allowed.find((candidate) => candidate === value) ?? fallback;
+}
+
+/** Unknown or missing values fall back to the defaults. */
+export function parseSpeedRaceOptions(texts: SpeedRaceOptionTexts): SpeedRaceOptions {
+  return {
+    wordCount: oneOf(
+      SPEED_RACE_WORD_COUNTS,
+      Number(texts.wordCount),
+      DEFAULT_SPEED_RACE_WORD_COUNT,
+    ),
+    roundCount: oneOf(
+      SPEED_RACE_ROUND_COUNTS,
+      Number(texts.roundCount),
+      DEFAULT_SPEED_RACE_ROUND_COUNT,
+    ),
+    cardFront: oneOf(
+      Object.values(SpeedRaceCardFront),
+      texts.cardFront,
+      SpeedRaceCardFront.Meaning,
+    ),
+  };
+}
+
 export function canPlaySpeedRace(sharedWordCount: number): boolean {
   return sharedWordCount >= MINIMUM_SHARED_WORDS_FOR_SPEED_RACE;
 }

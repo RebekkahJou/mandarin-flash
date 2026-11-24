@@ -34,6 +34,14 @@ const LEARN_ZHUYIN_OPTIONS = [
   },
 ];
 
+const GAMES_ADD_ON_OPTION = 'gamesAddOn';
+const GAMES_ADD_ON_OPTIONS = [
+  {
+    value: GAMES_ADD_ON_OPTION,
+    label: 'Games: play word games with another profile on this phone, using words you both study',
+  },
+];
+
 const SET_SIZE_CHOICES = PRACTICE_SET_SIZES.map((size) => ({ value: size, label: `${size}` }));
 
 const NEW_WORDS_SIZE_CHOICES = NEW_WORDS_LIST_SIZES.map((size) => ({
@@ -57,6 +65,9 @@ export default function SettingsScreen() {
       onToggle={zhuyinStudy.toggle}
     />
   ) : null;
+  const gamesAddOnSelection = new Set(settings.isGamesAddOnEnabled ? [GAMES_ADD_ON_OPTION] : []);
+  const toggleGamesAddOn = () =>
+    updateSetting('isGamesAddOnEnabled', !settings.isGamesAddOnEnabled);
   const variantSectionTitle = `${variantName} characters`;
   const variantHint = `How to show the ${variantName.toLowerCase()} form on flashcards, when one exists.`;
   return (
@@ -116,6 +127,14 @@ export default function SettingsScreen() {
         choices={NEW_WORDS_SIZE_CHOICES}
         selectedValue={settings.newWordsListSize}
         onSelect={(value) => updateSetting('newWordsListSize', value)}
+      />
+
+      <SectionTitle title="Add-ons" />
+      <Text style={styles.hint}>Extras that are off until you turn them on.</Text>
+      <Checkboxes
+        options={GAMES_ADD_ON_OPTIONS}
+        selectedValues={gamesAddOnSelection}
+        onToggle={toggleGamesAddOn}
       />
 
       <SectionTitle title="Languages" />

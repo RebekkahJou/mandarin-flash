@@ -2,6 +2,7 @@ import { Tabs, useIsFocused } from 'expo-router';
 import type { StatusBarStyle } from 'expo-status-bar';
 import { StatusBar } from 'expo-status-bar';
 
+import { useSettings } from '../../ui/AppServicesContext';
 import { TabIcon } from '../../ui/components/TabIcon';
 import { useProfileBadgeHeader } from '../../ui/hooks/useProfileBadgeHeader';
 import { colors, spacing } from '../../ui/theme';
@@ -9,6 +10,7 @@ import { colors, spacing } from '../../ui/theme';
 const TAB_ICON_CHARACTERS = {
   practice: '練',
   lists: '詞',
+  games: '遊',
   settings: '設',
 } as const;
 
@@ -29,6 +31,8 @@ export default function TabsLayout() {
   const statusBarStyle: StatusBarStyle = isFocused ? 'light' : 'dark';
   const profileBadgeHeader = useProfileBadgeHeader();
   const screenOptions = { ...TAB_SCREEN_OPTIONS, ...profileBadgeHeader };
+  // A null href hides the tab while the Games add-on is off.
+  const gamesHref = useSettings().settings.isGamesAddOnEnabled ? undefined : null;
   return (
     <>
       <StatusBar style={statusBarStyle} />
@@ -48,6 +52,16 @@ export default function TabsLayout() {
             title: 'Word lists',
             tabBarIcon: ({ color }) => (
               <TabIcon character={TAB_ICON_CHARACTERS.lists} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="games"
+          options={{
+            title: 'Games',
+            href: gamesHref,
+            tabBarIcon: ({ color }) => (
+              <TabIcon character={TAB_ICON_CHARACTERS.games} color={color} />
             ),
           }}
         />

@@ -17,6 +17,15 @@ const STACK_SCREEN_OPTIONS = {
 };
 
 /**
+ * Two profiles take turns on a game screen, so the header leaves out the active profile's badge;
+ * the screen itself says whose turn it is.
+ */
+const GAME_SCREEN_OPTIONS = {
+  speedRace: { title: 'Speed race', headerRight: () => null },
+  meaningMatch: { title: 'Meaning match', headerRight: () => null },
+};
+
+/**
  * Each group of screens is only reachable in its state: first run (no profiles yet), the welcome
  * screen (someone must pick a profile) or the app itself. When the state changes, Expo Router
  * leaves the screens that became unreachable and drops them from history.
@@ -38,6 +47,8 @@ function RootStack() {
         <Stack.Screen name="words/add-words" options={{ title: 'Add words' }} />
         <Stack.Screen name="words/add" options={{ title: 'Add a word' }} />
         <Stack.Screen name="profiles/edit" options={{ title: 'Edit profile' }} />
+        <Stack.Screen name="games/speed-race" options={GAME_SCREEN_OPTIONS.speedRace} />
+        <Stack.Screen name="games/meaning-match" options={GAME_SCREEN_OPTIONS.meaningMatch} />
       </Stack.Protected>
       <Stack.Protected guard={showsWelcome} redirectTo="/">
         <Stack.Screen name="welcome" options={{ title: 'Welcome' }} />
