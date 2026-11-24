@@ -11,6 +11,7 @@ import { PartOfSpeech as PartsOfSpeech, hasPartOfSpeech } from '../domain/partOf
 import type { StarterWordType } from '../domain/starterVocabulary';
 import { isStarterWordType } from '../domain/starterVocabulary';
 import type { PackReading } from '../domain/savedReadingUpdates';
+import type { RadicalPosition } from '../domain/wordSort';
 import type { WordSetTopic } from '../domain/wordSets';
 import { isWordSetEntryForLanguage } from '../domain/wordSets';
 import type { DefinitionCandidate, Word } from '../domain/word';
@@ -406,9 +407,36 @@ export function createDictionaryLookup(
     return byHeadword;
   }
 
+  let radicalPositionsLoad: Promise<ReadonlyMap<string, RadicalPosition>> | null = null;
+
+  async function readRadicalPositions(): Promise<ReadonlyMap<string, RadicalPosition>> {
+    if (!(await hasTable(packDatabase, 'characters'))) return new Map();
+    const rows = await packDatabase.getAll<{
+      character: string;
+      radical: number;
+      remaining_strokes: number;
+    }>('SELECT character, radical, remaining_strokes FROM characters');
+    return new Map(
+      rows.map((row) => [
+        row.character,
+        { radical: row.radical, remainingStrokes: row.remaining_strokes },
+      ]),
+    );
+  }
+
+  /**
+   * Each character's radical and remaining strokes, read once and kept, since sorting needs most
+   * of them. Empty for packs older than schema 5.
+   */
+  function radicalPositions(): Promise<ReadonlyMap<string, RadicalPosition>> {
+    radicalPositionsLoad ??= readRadicalPositions();
+    return radicalPositionsLoad;
+  }
+
   return {
     lookUp,
     formatMeaning: form.formatMeaning ?? unchangedMeaning,
+    radicalPositions,
     replacedReadings,
     wordSets,
     wordSetSources,

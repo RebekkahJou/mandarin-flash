@@ -7,7 +7,7 @@
  * Bump PACK_SCHEMA_VERSION whenever the layout changes, and keep reading every version the app
  * still accepts (MIN_SUPPORTED_PACK_SCHEMA_VERSION), since installed packs aren't rebuilt.
  */
-export const PACK_SCHEMA_VERSION = 4;
+export const PACK_SCHEMA_VERSION = 5;
 export const MIN_SUPPORTED_PACK_SCHEMA_VERSION = 1;
 
 /** Written to pack_metadata.format so a stray SQLite file is never mistaken for a pack. */
@@ -62,6 +62,19 @@ export const WORD_SETS_TABLES_SQL = `
   ) WITHOUT ROWID;
 `;
 
+/**
+ * Each character's place in radical order, for sorting words the way Taiwan dictionaries do.
+ * Only characters the pack uses. Schema 5 on.
+ */
+export const CHARACTERS_TABLE_SQL = `
+  CREATE TABLE characters (
+    character TEXT PRIMARY KEY,
+    -- Kangxi radical number (1 to 214) and strokes after the radical (Unihan kRSUnicode).
+    radical INTEGER NOT NULL,
+    remaining_strokes INTEGER NOT NULL
+  ) WITHOUT ROWID;
+`;
+
 export const PACK_SCHEMA_SQL = `
   CREATE TABLE pack_metadata (
     key TEXT PRIMARY KEY,
@@ -108,6 +121,8 @@ export const PACK_SCHEMA_SQL = `
 
   ${WORD_SETS_TABLES_SQL}
 
+  ${CHARACTERS_TABLE_SQL}
+
   -- Fonts and other files, written to app storage when the pack is installed.
   CREATE TABLE pack_files (
     name TEXT PRIMARY KEY,
@@ -143,6 +158,7 @@ const TABLES_ADDED_IN_SCHEMA: Readonly<
       'languages',
     ],
   },
+  5: { characters: ['character', 'radical', 'remaining_strokes'] },
 };
 
 /** Columns added to existing tables in each schema version. */
@@ -171,6 +187,7 @@ export function packTableColumnsFor(
 
 export const COMPONENTS_TABLE_SCHEMA_VERSION = 2;
 export const WORD_SETS_TABLES_SCHEMA_VERSION = 3;
+export const CHARACTERS_TABLE_SCHEMA_VERSION = 5;
 
 export const PACK_INDEX_NAMES: readonly string[] = ['entries_by_headword', 'entries_by_variant'];
 

@@ -1,5 +1,5 @@
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { WordWithListIds } from '../../data/repositories/wordRepository';
 import type { ListForAllWords } from '../../domain/allWordsView';
@@ -9,8 +9,8 @@ import {
   isShownInAllWords,
 } from '../../domain/allWordsView';
 import { WordListKind } from '../../domain/wordList';
-import type { WordSort } from '../../domain/wordSort';
-import { availableSubSorts, availableWordSorts } from '../../domain/wordSort';
+import type { RadicalPosition } from '../../domain/wordSort';
+import { WordSort, availableSubSorts, availableWordSorts } from '../../domain/wordSort';
 import { matchesWordSearch } from '../../domain/wordSearch';
 import type { AllWordsOptionKey } from '../../services/allWordsOptions';
 import {
@@ -30,9 +30,6 @@ import { deleteSelectedButtonLabel, deleteWordsPrompt } from '../../services/wor
 import { useAppServices, useSettings } from '../AppServicesContext';
 import { confirm } from '../confirm';
 
-/** No radical data loaded (yet), so the radical sort falls back to code point order. */
-const NO_RADICAL_DATA: RadicalLookup = () => undefined;
-
 function sortChoices(sorts: readonly WordSort[]) {
   return sorts.map((sort) => ({ value: sort, label: WORD_SORT_LABELS[sort] }));
 }
@@ -42,13 +39,18 @@ function sortChoices(sorts: readonly WordSort[]) {
  * a search query, in the saved sort order. Words can be selected and deleted together.
  */
 export function useAllWords() {
-  const { profileId, languageBundle, wordRepository, wordListRepository } = useAppServices();
+  const { profileId, languageBundle, wordRepository, wordListRepository, dictionaryLookup } =
+    useAppServices();
   const { settings, updateSetting } = useSettings();
   const [words, setWords] = useState<WordWithListIds[]>([]);
   const [lists, setLists] = useState<ListForAllWords[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [selectedWordIds, setSelectedWordIds] = useState<ReadonlySet<number> | null>(null);
+  const [radicalPositions, setRadicalPositions] = useState<ReadonlyMap<
+    string,
+    RadicalPosition
+  > | null>(null);
 
   const refresh = useCallback(async () => {
     setLists(await wordListRepository.listInfos(profileId));
@@ -78,10 +80,19 @@ export function useAllWords() {
 
   const sortContext = wordSortContext(languageBundle.definition, settings);
   const { sort, subSort } = resolvedAllWordsSorts(sortContext, settings);
+  const isRadicalSortChosen = sort === WordSort.Radical || subSort === WordSort.Radical;
+
+  // Radical data is only read once a radical sort is chosen; the pack keeps it after that.
+  useEffect(() => {
+    if (!isRadicalSortChosen) return;
+    void dictionaryLookup.radicalPositions().then(setRadicalPositions);
+  }, [isRadicalSortChosen, dictionaryLookup]);
+
   const sortedWords = useMemo(() => {
     const context = wordSortContext(languageBundle.definition, settings);
-    return sortAllWords(matchingWords, resolvedAllWordsSorts(context, settings), NO_RADICAL_DATA);
-  }, [matchingWords, languageBundle, settings]);
+    const radicalOf: RadicalLookup = (character) => radicalPositions?.get(character);
+    return sortAllWords(matchingWords, resolvedAllWordsSorts(context, settings), radicalOf);
+  }, [matchingWords, languageBundle, settings, radicalPositions]);
 
   const wordListIds = words.map(({ listIds }) => listIds);
   const optionChoices = allWordsOptionChoices({

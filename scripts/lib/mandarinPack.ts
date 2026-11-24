@@ -12,7 +12,7 @@ import { PartOfSpeech } from '../../src/domain/partOfSpeech';
  * (bump BUILT_IN_PACK_COPY_VERSION in src/data/openDatabases.ts too), and an imported Mandarin pack only
  * replaces the built-in one when its version is higher.
  */
-export const MANDARIN_PACK_VERSION = 11;
+export const MANDARIN_PACK_VERSION = 12;
 
 export const MANDARIN_PACK_PATH = path.join(
   __dirname,
@@ -29,6 +29,14 @@ export const MANDARIN_STARTER_WORDS_PATH = path.join(
   '..',
   'data',
   'mandarin-starter-words.tsv',
+);
+
+/** Each pack character's radical and remaining strokes, extracted from Unihan. */
+export const MANDARIN_RADICAL_STROKES_PATH = path.join(
+  __dirname,
+  '..',
+  'data',
+  'mandarin-radical-strokes.tsv',
 );
 
 /** Curated character components for the Components list. */
@@ -83,6 +91,12 @@ export const MANDARIN_PACK_METADATA: PackMetadata = {
       usage: 'Example sentences',
       license: 'Creative Commons Attribution 2.0 France',
       source: 'tatoeba.org',
+    },
+    {
+      name: 'Unihan',
+      usage: 'Radical and stroke order for sorting',
+      license: 'Unicode License v3',
+      source: 'unicode.org (Unicode Han Database)',
     },
   ],
 };

@@ -1,6 +1,7 @@
 import type { PackMetadata } from '../domain/packMetadata';
 import { PackRejectedError, parsePackMetadata } from '../domain/packMetadata';
 import {
+  CHARACTERS_TABLE_SCHEMA_VERSION,
   COMPONENTS_TABLE_SCHEMA_VERSION,
   MIN_SUPPORTED_PACK_SCHEMA_VERSION,
   PACK_FILE_NAME_PATTERN,
@@ -25,6 +26,8 @@ export const PACK_LIMITS = {
   maxWordSetTitleLength: 100,
   maxWordSetMeaningsLength: 2_000,
   maxWordSetLanguagesLength: 100,
+  /** Every CJK ideograph Unicode has, with room to spare. */
+  maxCharacters: 200_000,
   maxFiles: 20,
   maxHeadwordLength: 100,
   maxReadingLength: 300,
@@ -110,6 +113,9 @@ async function checkRowCounts(database: SqlDatabase, schemaVersion: number): Pro
     limits.push(['word_sets', PACK_LIMITS.maxWordSets]);
     limits.push(['word_set_entries', PACK_LIMITS.maxWordSetEntries]);
   }
+  if (schemaVersion >= CHARACTERS_TABLE_SCHEMA_VERSION) {
+    limits.push(['characters', PACK_LIMITS.maxCharacters]);
+  }
   for (const [table, maxRows] of limits) {
     if ((await countRows(database, table)) > maxRows) reject();
   }
@@ -123,6 +129,11 @@ async function hasAnyRow(database: SqlDatabase, sql: string, params: number[]): 
  * Every text value must really be text and within its length limit, and every rank an integer.
  * SQLite doesn't enforce column types, so a pack could otherwise hold blobs or huge strings.
  */
+/** A character is one code point (up to 2 UTF-16 units) with whole-number radical data. */
+const BAD_CHARACTER_QUERY = `SELECT 1 FROM characters WHERE typeof(character) <> 'text'
+  OR length(character) <> 1 OR typeof(radical) <> 'integer'
+  OR typeof(remaining_strokes) <> 'integer' LIMIT 1`;
+
 const BAD_COMPONENT_QUERY = `SELECT 1 FROM components WHERE typeof(position) <> 'integer'
   OR typeof(component) <> 'text' OR typeof(variant) <> 'text' OR typeof(name) <> 'text'
   OR typeof(reading) <> 'text' OR typeof(meaning) <> 'text'
@@ -210,6 +221,9 @@ async function checkValues(database: SqlDatabase, schemaVersion: number): Promis
     ]);
   }
   if (schemaVersion >= WORD_SETS_TABLES_SCHEMA_VERSION) badRowQueries.push(...wordSetQueries());
+  if (schemaVersion >= CHARACTERS_TABLE_SCHEMA_VERSION) {
+    badRowQueries.push([BAD_CHARACTER_QUERY, []]);
+  }
   for (const [sql, params] of badRowQueries) {
     if (await hasAnyRow(database, sql, params)) reject();
   }

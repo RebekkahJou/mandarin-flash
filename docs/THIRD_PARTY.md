@@ -9,6 +9,7 @@ Mandarin pack that is `scripts/lib/mandarinPack.ts`.
 | CC-CEDICT | Dictionary meanings and pinyin (`assets/data/mandarin-pack.db`) | CC BY-SA 4.0 | https://www.mdbg.net/chinese/dictionary?page=cc-cedict |
 | Wiktionary (via kaikki.org) | Taiwan pronunciations (`scripts/data/mandarin-taiwan-readings.tsv`, applied in `assets/data/mandarin-pack.db`) | CC BY-SA 4.0 | https://en.wiktionary.org, extracted by https://kaikki.org/dictionary/Chinese/ |
 | Tatoeba sentences | Example sentences (`assets/data/mandarin-pack.db`) | CC BY 2.0 FR | https://tatoeba.org/downloads |
+| Unihan (Unicode Han Database) | Radical and stroke order for sorting All words (`scripts/data/mandarin-radical-strokes.tsv`, written into `assets/data/mandarin-pack.db`) | Unicode License v3 | https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip |
 | Noto Serif TC | Flashcard font, subset (`assets/fonts/NotoSerifTC-subset.otf`) | SIL OFL 1.1 | https://github.com/notofonts/noto-cjk |
 | LXGW WenKai TC | Flashcard font, subset (`assets/fonts/LXGWWenKaiTC-subset.ttf`) | SIL OFL 1.1 | https://github.com/lxgw/LxgwWenkaiTC |
 | jf open-huninn | Flashcard font, subset (`assets/fonts/OpenHuninn-subset.ttf`) | SIL OFL 1.1 | https://github.com/justfont/open-huninn-font |
@@ -44,6 +45,10 @@ npm run build:mandarin-pack -- <source folder>
 # Taiwan readings: only when refreshing them (1.2 GB download; the result is committed)
 curl -L -o chinese.jsonl https://kaikki.org/dictionary/Chinese/kaikki.org-dictionary-Chinese.jsonl
 npm run extract:taiwan-readings -- chinese.jsonl
+# Radical and stroke data: only when the pack gains characters (the result is committed)
+curl -LO https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip
+unzip Unihan.zip Unihan_IRGSources.txt
+npm run extract:radical-strokes -- Unihan_IRGSources.txt
 npm run update:mandarin-curated-data
 npm run build:font-characters
 pip install fonttools
