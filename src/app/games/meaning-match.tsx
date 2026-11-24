@@ -10,6 +10,7 @@ import { MeaningQuestionView } from '../../ui/components/MeaningQuestionView';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import type { LoadedGamePlayers } from '../../ui/hooks/useGamePlayers';
 import { useGamePlayers } from '../../ui/hooks/useGamePlayers';
+import { useLeaveChallengeConfirmation } from '../../ui/hooks/useLeaveChallengeConfirmation';
 import { MeaningMatchStage, useMeaningMatch } from '../../ui/hooks/useMeaningMatch';
 import { useMeaningMatchView } from '../../ui/hooks/useMeaningMatchView';
 import { colors } from '../../ui/theme';
@@ -44,6 +45,7 @@ interface MeaningMatchProps {
 function MeaningMatch({ players, roundCount }: MeaningMatchProps) {
   const match = useMeaningMatch(players, roundCount);
   const view = useMeaningMatchView(match, players);
+  useLeaveChallengeConfirmation(match.stage !== MeaningMatchStage.Finished);
   // A new key per turn starts each list at the top instead of at the last scroll position.
   const pickKey = `pick-${match.turn.turnIndex}`;
   const questionKey = `question-${match.turn.turnIndex}`;

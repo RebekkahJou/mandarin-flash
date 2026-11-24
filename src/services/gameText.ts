@@ -1,4 +1,4 @@
-/** Text for games between profiles: the Games tab, turn hand-offs, scores and recent results. */
+/** Text for challenges between profiles: the Challenges tab, turn hand-offs, scores and recent results. */
 import { GameKind, GameWinner } from '../domain/gamePlayers';
 import type { GameResult } from '../domain/gameResult';
 import type { MeaningMatchScores } from '../domain/meaningMatch';
@@ -28,7 +28,7 @@ const MINIMUM_SHARED_WORDS: Readonly<Record<GameKind, number>> = {
 };
 
 export const NO_OTHER_PROFILE_TEXT =
-  'Games are played between two profiles on this phone, using words you both study. Add another user to play.';
+  'Challenges are between two profiles on this phone, using words you both study. Add another user to take one on.';
 
 /** The profile's name, plus its language when another profile has the same name. */
 export function opponentLabel(profile: Profile, profiles: readonly Profile[]): string {
@@ -39,12 +39,17 @@ export function opponentLabel(profile: Profile, profiles: readonly Profile[]): s
   return `${profile.name} · ${languageBundleFor(profile.languageId).definition.name}`;
 }
 
+export const LEAVE_CHALLENGE_TITLE = 'Leave this challenge?';
+export const LEAVE_CHALLENGE_MESSAGE = 'The challenge ends here and its scores aren’t saved.';
+export const LEAVE_CHALLENGE_LABEL = 'Leave';
+export const STAY_IN_CHALLENGE_LABEL = 'Keep playing';
+
 export function startGameLabel(game: GameKind): string {
   return `Start ${GAME_NAMES[game].toLowerCase()}`;
 }
 
 export const COUNTING_SHARED_WORDS_TEXT = 'Counting the words you both study…';
-export const NO_RECENT_GAMES_TEXT = 'No games yet.';
+export const NO_RECENT_GAMES_TEXT = 'No challenges yet.';
 
 export const SPEED_RACE_CARD_FRONT_LABELS: Readonly<Record<SpeedRaceCardFront, string>> = {
   [SpeedRaceCardFront.Meaning]: 'English meaning',

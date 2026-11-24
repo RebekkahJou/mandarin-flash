@@ -104,7 +104,7 @@ export default function GamesScreen() {
       />
       <Text style={styles.hint}>{text.sharedWords}</Text>
 
-      <SectionTitle title="Game" />
+      <SectionTitle title="Challenge" />
       <ChoiceChips choices={GAME_CHOICES} selectedValue={setup.game} onSelect={setup.chooseGame} />
       <Text style={styles.hint}>{text.gameDescription}</Text>
       {speedRaceOptions}
@@ -115,7 +115,7 @@ export default function GamesScreen() {
         <PrimaryButton label={text.startLabel} onPress={setup.start} isDisabled={!text.canStart} />
       </View>
 
-      <SectionTitle title="Recent games" />
+      <SectionTitle title="Recent challenges" />
       {text.recentLines.map((line) => (
         <Text key={line.key} style={styles.body}>
           {line.text}

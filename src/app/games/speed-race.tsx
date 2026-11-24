@@ -10,6 +10,7 @@ import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { SpeedRaceTurnView } from '../../ui/components/SpeedRaceTurnView';
 import type { LoadedGamePlayers } from '../../ui/hooks/useGamePlayers';
 import { useGamePlayers } from '../../ui/hooks/useGamePlayers';
+import { useLeaveChallengeConfirmation } from '../../ui/hooks/useLeaveChallengeConfirmation';
 import { SpeedRaceStage, useSpeedRace } from '../../ui/hooks/useSpeedRace';
 import { useSpeedRaceText } from '../../ui/hooks/useSpeedRaceText';
 import { colors } from '../../ui/theme';
@@ -48,6 +49,7 @@ interface SpeedRaceProps {
 function SpeedRace({ players, options }: SpeedRaceProps) {
   const race = useSpeedRace(players, options);
   const text = useSpeedRaceText(race, players);
+  useLeaveChallengeConfirmation(race.stage !== SpeedRaceStage.Finished);
 
   if (race.stage === SpeedRaceStage.Finished) {
     return (

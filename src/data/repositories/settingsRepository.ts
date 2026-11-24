@@ -29,7 +29,7 @@ export interface AppSettings {
   allWordsShowsComponents: boolean;
   allWordsShowsRetentionWords: boolean;
   allWordsShowsLearningLevel: boolean;
-  /** The Games add-on (games with another profile) is turned on, so the Games tab shows. */
+  /** The Challenges add-on (games with another profile) is turned on, so the Challenges tab shows. */
   isGamesAddOnEnabled: boolean;
 }
 

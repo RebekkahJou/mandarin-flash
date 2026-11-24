@@ -10,7 +10,7 @@ import { colors, spacing } from '../../ui/theme';
 const TAB_ICON_CHARACTERS = {
   practice: '練',
   lists: '詞',
-  games: '遊',
+  games: '賽',
   settings: '設',
 } as const;
 
@@ -31,7 +31,7 @@ export default function TabsLayout() {
   const statusBarStyle: StatusBarStyle = isFocused ? 'light' : 'dark';
   const profileBadgeHeader = useProfileBadgeHeader();
   const screenOptions = { ...TAB_SCREEN_OPTIONS, ...profileBadgeHeader };
-  // A null href hides the tab while the Games add-on is off.
+  // A null href hides the tab while the Challenges add-on is off.
   const gamesHref = useSettings().settings.isGamesAddOnEnabled ? undefined : null;
   return (
     <>
@@ -58,7 +58,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="games"
           options={{
-            title: 'Games',
+            title: 'Challenges',
             href: gamesHref,
             tabBarIcon: ({ color }) => (
               <TabIcon character={TAB_ICON_CHARACTERS.games} color={color} />

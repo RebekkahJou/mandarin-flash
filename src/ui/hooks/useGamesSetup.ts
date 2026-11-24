@@ -15,7 +15,7 @@ import { loadSharedWords } from '../../services/sharedWordsLoader';
 import { useAppServices } from '../AppServicesContext';
 import { useProfileSession } from '../ProfileSessionContext';
 
-/** How many finished games the Games tab lists. */
+/** How many finished games the Challenges tab lists. */
 const RECENT_GAME_COUNT = 5;
 
 const DEFAULT_SPEED_RACE_OPTIONS: SpeedRaceOptions = {
@@ -25,7 +25,7 @@ const DEFAULT_SPEED_RACE_OPTIONS: SpeedRaceOptions = {
 };
 
 /**
- * The Games tab's choices: who to play, which game and its options, how many words the two
+ * The Challenges tab's choices: who to play, which game and its options, how many words the two
  * profiles share, and recent results. Starting a game opens its screen.
  */
 export function useGamesSetup() {

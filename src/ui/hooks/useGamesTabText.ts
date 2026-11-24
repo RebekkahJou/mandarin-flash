@@ -30,7 +30,7 @@ function recentLines(setup: GamesSetup): RecentLine[] {
   }));
 }
 
-/** What the Games tab says, worked out from its choices. */
+/** What the Challenges tab says, worked out from its choices. */
 export function useGamesTabText(setup: GamesSetup) {
   const { opponent, sharedWordCount } = setup;
   const isCounting = sharedWordCount === null;

@@ -4,7 +4,7 @@ Status: approved 2026-11-05. **Phases 1–3 done** and merged. **Phase 4, 4b and
 merged into main. **Phase 5 (store-hosted packs) done for Android** and merged into main
 (2026-11-17; see "Phase 5 decisions" below). Its iOS half waits for the iOS port; the real Play
 download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Phase 4e done** (phone-checked
-2026-11-22; see "Practice and word list improvements"). **Phase 6 games built** (2026-11-24,
+2026-11-22; see "Practice and word list improvements"). **Phase 6 challenges built** (2026-11-24,
 checked on the emulator; phone check pending; see "Games (Phase 6)").
 Update this file as work lands or decisions change.
 
@@ -794,9 +794,13 @@ saved sets, which reuses the paused-set storage.
 
 Decided with the user on 2026-11-22. Two profiles play on one phone, passing it between turns.
 
-**Add-on switch.** Settings gets an Add-ons section with "Games", off by default (a per-profile
-setting). While it is on, a Games tab shows between Word lists and Settings. Games need a second
-profile; with only one, the Games tab says so and offers Add a new user.
+**Named "Challenges" in the app** (user, 2026-11-24): the tab, the Settings switch and all text say
+Challenges; code and the `game_results` table keep "game" internally.
+
+**Add-on switch.** Settings gets an Add-ons section with "Challenges", off by default. Each
+profile turns it on for itself (decided). While it is on, a Challenges tab (賽) shows between Word
+lists and Settings. Challenges need a second profile; with only one, the tab says so and offers
+Add a new user.
 
 **Shared words.** A game uses words both profiles have in All words, leaving out Components and
 script study cards (zhuyin). Words match by meaning:
@@ -827,15 +831,15 @@ least 4 shared words are needed.
 They keep their own results (`game_results`: game, players, options, scores or times, winner,
 when), and the Games tab lists recent results.
 
-**Built (2026-11-24).** Settings → Add-ons → Games shows the Games tab (遊). Each player's cards
-follow their own pinyin or zhuyin setting, and game screens leave out the header's profile badge
-(the screen says whose turn it is). Answers need the card revealed first; Missed and Gotten
+**Built (2026-11-24).** Settings → Add-ons → Challenges shows the Challenges tab (賽). Each
+player's cards follow their own pinyin or zhuyin setting, and challenge screens leave out the
+header's profile badge (the screen says whose turn it is). Answers need the card revealed first; Missed and Gotten
 carry ✗ and ✓. Checked on the emulator with a Traditional and a Simplified profile: 50 shared
 starter words, a full speed race and a full meaning match, results listed on the Games tab.
 - **Phone check still to do:** both games on the Pixel, including zhuyin cards and the hand-off.
-- **Open:** leaving a game with Back discards it without asking; the add-on is per profile, so
-  each profile turns Games on for itself; meaning match options show characters only (no
-  reading), which keeps the question fair but may be hard for beginners.
+- Leaving a challenge before it ends asks "Leave this challenge?" (Leave / Keep playing); its
+  scores aren't saved. Meaning match options stay characters only for now, and "Me's turn" is
+  fine for now (user, 2026-11-24).
 
 ## Splitting multi-character words
 

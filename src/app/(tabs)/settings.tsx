@@ -38,7 +38,7 @@ const GAMES_ADD_ON_OPTION = 'gamesAddOn';
 const GAMES_ADD_ON_OPTIONS = [
   {
     value: GAMES_ADD_ON_OPTION,
-    label: 'Games: play word games with another profile on this phone, using words you both study',
+    label: 'Challenges: take on another profile on this phone, using words you both study',
   },
 ];
 
