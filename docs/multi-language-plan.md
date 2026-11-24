@@ -976,7 +976,11 @@ open-licensed, small, and meet the color rules (no meaning by color alone).
   `profiles.icon`. Emoji come from the phone's own color emoji font, so they add no size and
   need no license; each differs in shape. Checked on the emulator (badge "🐼 Me", radical order
   一 三 不 不客氣 之).
-- **Phone check still to do:** the sort menu, radical order and a badge icon on the Pixel.
+- Phone check passed (2026-11-24, temporary profile): 🦊 badge on cream and blue headers; sort
+  menu without zhuyin for a pinyin-only profile (offered for Me, which shows zhuyin); pinyin,
+  radical (一 三 不 不客氣 也) and English order; Learning level with pinyin within each level
+  puts a Retention word last. Fixed on the phone: a meaning wholly in brackets ("(classifier
+  used before a noun…)") sorted first in English order; it now sorts by the words inside.
 
 ## Progress data (start early)
 

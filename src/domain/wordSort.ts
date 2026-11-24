@@ -66,8 +66,17 @@ export function sortByKey<Item>(items: readonly Item[], keyFor: (item: Item) => 
     .map(({ item }) => item);
 }
 
+const BRACKET_CHARACTERS = /[()[\]（）]/g;
+
+/**
+ * By the first meaning without brackets or a leading "to"; a meaning that is all in brackets,
+ * such as "(classifier for books)", sorts by the words inside them.
+ */
 export function englishSortKey(definitions: readonly string[]): SortKey {
-  return [englishMeaningKeys(definitions)[0] ?? ''];
+  const [firstMeaning = ''] = definitions;
+  const [key] = englishMeaningKeys([firstMeaning]);
+  if (key) return [key];
+  return [englishMeaningKeys([firstMeaning.replace(BRACKET_CHARACTERS, '')])[0] ?? ''];
 }
 
 export function learningLevelSortKey(tier: FrequencyTier): SortKey {

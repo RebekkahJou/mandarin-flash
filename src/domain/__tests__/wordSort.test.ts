@@ -34,6 +34,15 @@ describe('sort keys', () => {
     expect(sorted).toEqual([['apple'], ['to walk'], ['(polite) you']]);
   });
 
+  it('sorts a meaning that is all in brackets by the words inside', () => {
+    const meanings = [['to walk'], ['(classifier for books)'], ['apple']];
+    expect(sortByKey(meanings, englishSortKey)).toEqual([
+      ['apple'],
+      ['(classifier for books)'],
+      ['to walk'],
+    ]);
+  });
+
   it('puts High practice first', () => {
     const tiers = [FrequencyTier.Retention, FrequencyTier.HighIncidence];
     expect(sortByKey(tiers, learningLevelSortKey)).toEqual([
