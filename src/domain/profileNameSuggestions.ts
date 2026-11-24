@@ -11,7 +11,7 @@ export const FIRST_PROFILE_NAME_SUGGESTIONS: readonly string[] = [
   'Sovereign of the Phone',
   'Monarch of this Phonedom',
   'Household Hero',
-  'Leader of the Adventuring Party',
+  'Party Leader',
   'Dragon Tyrant',
 ];
 
