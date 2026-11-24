@@ -6,9 +6,8 @@ merged into main. **Phase 5 (store-hosted packs) done for Android** and merged i
 download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Phase 4e done** (phone-checked
 2026-11-22; see "Practice and word list improvements"). **Phase 6 challenges built** (2026-11-24,
 phone-checked; see "Games (Phase 6)"). **Phase 7b built** (2026-11-24, phone-checked; see "All
-words sorting"). **Next: Phase 7 (OCR)**, after discussing the library with the user: ML Kit may
-send usage data to Google, which the no-telemetry rule forbids, so offline options get compared
-first.
+words sorting"). **Phase 7 (OCR) in progress:** PaddleOCR on ONNX Runtime was chosen over ML Kit
+(2026-11-24); step 1, Find words in text, comes first. See "Photo text recognition (Phase 7)".
 Update this file as work lands or decisions change.
 
 Phase 5 decisions (2026-11-16):
@@ -323,10 +322,9 @@ Phase 1 notes for later phases:
   screen.
 - **Starter set unlock:** set n+1 can be added once at least 90% of set n's words still in the
   profile have moved down to **Reinforcement or lower** (at least one "Learned").
-- **OCR on Android uses Google's ML Kit, unbundled:** about 260 KB in the app; the recognition
-  model is downloaded by Google Play services when the user turns OCR on. Play devices only.
-  **ML Kit can't read Arabic or Cyrillic**, so the add-on's download screen says so. iOS uses
-  Apple's built-in Vision text recognition. Verify ML Kit works with no INTERNET permission.
+- **OCR uses PaddleOCR models on ONNX Runtime, fully offline, on Android and iOS** (decided
+  2026-11-24; ML Kit was dropped because it sends usage data to Google). The models come in a
+  signed OCR pack when the user turns the add-on on. See "Photo text recognition (Phase 7)".
 - **Pack delivery: store-hosted packs where available, smoother file import everywhere else**
   (routes A + B below).
 - **Language order:** German, Japanese, Korean, Scottish Gaelic, Irish, Ukrainian, Russian,
@@ -998,7 +996,61 @@ the same language compare on shared words via (language, headword, reading).
 | Add-on | In app | Extra download | Notes |
 |---|---|---|---|
 | Self-challenges and between-profile games | small, off by default | none | local only; uses `review_events` and starter sets |
-| Photo text recognition (OCR) | ML Kit unbundled (Android), Vision (iOS), off by default | Play services fetches the model | No Arabic or Cyrillic on Android; use the system photo picker and camera app so no camera permission is needed (verify) |
+| Photo text recognition (OCR) | ONNX Runtime and a small native module per platform, off by default | a signed OCR pack with the PaddleOCR models | Fully offline; see "Photo text recognition (Phase 7)". Use the system photo picker and camera app so no camera permission is needed (verify) |
+
+## Photo text recognition (Phase 7)
+
+Decided with the user on 2026-11-24, replacing the earlier ML Kit choice.
+
+**Why not ML Kit.** Google's ML Kit data-disclosure page and terms (checked 2026-11-24) say
+photos and recognised text stay on the phone, but every ML Kit library, bundled or through Play
+services, sends device and app details, a per-install identifier and usage metrics to Google,
+with no documented way to turn it off. That breaks the no-telemetry rule. It also can't read
+Cyrillic or Arabic and needs Play services.
+
+**Engine: PaddleOCR PP-OCRv5 mobile models on ONNX Runtime.**
+- Fully offline: nothing is sent anywhere. PaddleOCR is Apache 2.0 and ONNX Runtime is MIT; both
+  are free and need only credit in docs/THIRD_PARTY.md and on the About screen (confirm each model
+  file's license when it is added).
+- Models cover every planned language: the main model reads Traditional, Simplified, Japanese,
+  English and pinyin; a Korean model; a Latin model (German, Finnish, Irish; Scottish Gaelic isn't
+  named but its à è ì ò ù are in the dictionary, so the beta tester checks it); an East Slavic
+  model (Russian, Ukrainian with і ї є ґ); an Arabic model. Irish in the old Gaelic typeface
+  (dotted consonants) won't be read.
+- An add-on: the code ships switched off, and turning OCR on fetches a signed **OCR pack** with
+  the models the user's languages need (store-hosted or file import, like language packs), so the
+  models don't count against the 30 MB app budget. ONNX Runtime itself is in the app: measure its
+  size first.
+- iOS uses the same models and pack through ONNX Runtime's iOS build (instead of Apple Vision, so
+  results match on both platforms); the native part (image preparation, text detection and
+  decoding) is written in Kotlin and Swift, the rest is shared TypeScript.
+- Expected use: road signs, shop signs, menus and night markets. PaddleOCR's own Chinese
+  benchmarks (whole-line accuracy) for the mobile model: everyday scenes 77%, vertical text 81%,
+  handwriting 42% (the large server model: 84%, 93%, 58%). Printed signs and menus should read
+  well; handwritten boards, neon, low light and decorative fonts are the weak cases. So the user
+  crops or taps the part of the photo they want, and always picks and checks the words before
+  anything is added.
+
+**Order (each step ships on its own):**
+1. **Find words in text.** Add words → "Find words in text": the user pastes or types text, the
+   app splits it into dictionary words (longest match against the pack, since Chinese has no
+   spaces) and lists them with reading and meaning, checked, except words the profile already
+   has. The checked words go into the chosen lists (General Vocabulary by default) the same way
+   CSV import adds words, with suggested meanings and counted as new words. Useful without OCR
+   too: text from a website, a message or a teacher. Text is capped in length (untrusted input).
+2. **Share text into the app (Android).** The app appears in the Share sheet for plain text and
+   opens step 1's screen with it (app config; no new permission). Users can already read photo
+   text with Android's text selection or Google Lens, or Live Text on iPhone (paste works there;
+   an iOS share extension waits for the iOS port). That is the user's own tool choice, outside
+   the app.
+3. **Measuring step**, once the user has taken test photos of Taiwan signs and menus: add ONNX
+   Runtime, run the mobile models, and report download size, speed on the Pixel 8 Pro and
+   accuracy before building the add-on.
+4. **The OCR add-on:** Settings → Add-ons switch, the OCR pack, the photo picker or camera
+   feeding step 1's screen.
+
+Languages that write words with spaces (Phase 8) will split text on spaces and punctuation
+instead of longest match; the language definition says which.
 
 ## Phases
 
@@ -1033,7 +1085,8 @@ Each phase ships on its own with tests and `npm run check` passing.
 5. **Store-hosted packs (route A):** Play Asset Delivery, then Apple-hosted packs with the iOS
    port.
 6. **Add-ons framework and games.**
-7. **OCR add-on.**
+7. **OCR add-on,** in four steps: Find words in text, sharing text into the app, a measuring
+   step, then the add-on itself. See "Photo text recognition (Phase 7)".
 7b. **All words sorting and profile badge icons** (built 2026-11-24). Per-language sorts from the language
    definition, English and learning level sorts, and radical data in the Mandarin pack. Before the
    new languages, since each brings its own sorts.
