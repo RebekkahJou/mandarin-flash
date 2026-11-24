@@ -5,7 +5,7 @@ merged into main. **Phase 5 (store-hosted packs) done for Android** and merged i
 (2026-11-17; see "Phase 5 decisions" below). Its iOS half waits for the iOS port; the real Play
 download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Phase 4e done** (phone-checked
 2026-11-22; see "Practice and word list improvements"). **Phase 6 challenges built** (2026-11-24,
-checked on the emulator; phone check pending; see "Games (Phase 6)").
+phone-checked; see "Games (Phase 6)").
 Update this file as work lands or decisions change.
 
 Phase 5 decisions (2026-11-16):
@@ -836,7 +836,10 @@ player's cards follow their own pinyin or zhuyin setting, and challenge screens 
 header's profile badge (the screen says whose turn it is). Answers need the card revealed first; Missed and Gotten
 carry ✗ and ✓. Checked on the emulator with a Traditional and a Simplified profile: 50 shared
 starter words, a full speed race and a full meaning match, results listed on the Games tab.
-- **Phone check still to do:** both games on the Pixel, including zhuyin cards and the hand-off.
+- Phone check passed (2026-11-24, temporary Traditional and Simplified profiles): word-first and
+  meaning-first races, swipes and buttons, zhuyin cards for the zhuyin profile, the hand-off and
+  results; a full meaning match; the phone's Back button asks "Leave this challenge?" and Leave
+  saves nothing; Recent challenges lists both finished challenges.
 - Leaving a challenge before it ends asks "Leave this challenge?" (Leave / Keep playing); its
   scores aren't saved. Meaning match options stay characters only for now, and "Me's turn" is
   fine for now (user, 2026-11-24).
