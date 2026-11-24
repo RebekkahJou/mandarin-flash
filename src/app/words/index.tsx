@@ -3,14 +3,13 @@ import type { ListRenderItemInfo } from 'react-native';
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import type { WordWithListIds } from '../../data/repositories/wordRepository';
-import { WordSort } from '../../domain/wordSort';
 import { Checkboxes } from '../../ui/components/Checkboxes';
-import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { CompactButton } from '../../ui/components/CompactButton';
 import { InfoModal } from '../../ui/components/InfoModal';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { WordRow } from '../../ui/components/WordRow';
+import { WordSortPicker } from '../../ui/components/WordSortPicker';
 import { useAllWords } from '../../ui/hooks/useAllWords';
 import { colors, fontSizes, radii, spacing } from '../../ui/theme';
 
@@ -30,6 +29,7 @@ export default function AllWordsScreen() {
     countText,
     selection,
     options,
+    sortChoices,
   } = useAllWords();
   const screenOptions = { title: 'All words' };
   const emptyMessage =
@@ -40,17 +40,6 @@ export default function AllWordsScreen() {
       <PrimaryButton label={selection.deleteLabel} onPress={selection.deleteSelected} />
     </View>
   ) : null;
-  const subSortSection =
-    options.selectedSort === WordSort.LearningLevel ? (
-      <>
-        <Text style={styles.optionsHeading}>Within each level</Text>
-        <ChoiceChips
-          choices={options.subSortChoices}
-          selectedValue={options.selectedSubSort}
-          onSelect={options.chooseSubSort}
-        />
-      </>
-    ) : null;
   const renderWord = ({ item }: ListRenderItemInfo<WordWithListIds>) => {
     const openWord = () =>
       router.push({ pathname: '/words/[wordId]', params: { wordId: String(item.word.id) } });
@@ -102,13 +91,7 @@ export default function AllWordsScreen() {
 
       <InfoModal isVisible={options.isVisible} onClose={options.close} closeLabel="Done">
         <Text style={styles.optionsTitle}>View options</Text>
-        <Text style={styles.optionsHeading}>Sort by</Text>
-        <ChoiceChips
-          choices={options.sortChoices}
-          selectedValue={options.selectedSort}
-          onSelect={options.chooseSort}
-        />
-        {subSortSection}
+        <WordSortPicker {...sortChoices} />
         <Text style={styles.optionsHeading}>Show</Text>
         <Checkboxes
           options={options.choices}

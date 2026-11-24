@@ -1,7 +1,7 @@
-import { PhoneticDisplay } from '../../data/repositories/settingsRepository';
+import { DEFAULT_SETTINGS, PhoneticDisplay } from '../../data/repositories/settingsRepository';
 import { FrequencyTier } from '../../domain/frequencyTier';
 import { WordSort } from '../../domain/wordSort';
-import { resolvedAllWordsSorts, sortAllWords, wordSortContext } from '../allWordsSorting';
+import { WordSortPlace, resolvedWordSorts, sortWords, wordSortContext } from '../wordSorting';
 
 function row(headword: string, reading: string, meaning: string, frequencyTier: FrequencyTier) {
   return { word: { headword, reading, frequencyTier }, meanings: [meaning] };
@@ -20,10 +20,10 @@ function headwords(rows: readonly { word: { headword: string } }[]) {
   return rows.map(({ word }) => word.headword);
 }
 
-describe('sortAllWords', () => {
+describe('sortWords', () => {
   it('keeps newest first, or sorts by pinyin, zhuyin or English', () => {
     const sortBy = (sort: WordSort) =>
-      headwords(sortAllWords(ROWS, { sort, subSort: WordSort.Newest }, NO_RADICALS));
+      headwords(sortWords(ROWS, { sort, subSort: WordSort.Newest }, NO_RADICALS));
     expect(sortBy(WordSort.Newest)).toEqual(['水', '媽媽', '八', '人']);
     expect(sortBy(WordSort.Pinyin)).toEqual(['八', '媽媽', '人', '水']);
     expect(sortBy(WordSort.Zhuyin)).toEqual(['八', '媽媽', '水', '人']);
@@ -31,13 +31,13 @@ describe('sortAllWords', () => {
   });
 
   it('sorts by learning level, then by the sub-sort within each level', () => {
-    const sorted = sortAllWords(
+    const sorted = sortWords(
       ROWS,
       { sort: WordSort.LearningLevel, subSort: WordSort.Pinyin },
       NO_RADICALS,
     );
     expect(headwords(sorted)).toEqual(['八', '媽媽', '人', '水']);
-    const newestWithin = sortAllWords(
+    const newestWithin = sortWords(
       ROWS,
       { sort: WordSort.LearningLevel, subSort: WordSort.Newest },
       NO_RADICALS,
@@ -46,7 +46,7 @@ describe('sortAllWords', () => {
   });
 });
 
-describe('resolvedAllWordsSorts', () => {
+describe('resolvedWordSorts', () => {
   const definition = { wordSorts: [WordSort.Pinyin, WordSort.Radical, WordSort.Zhuyin] };
 
   it('treats zhuyin as in use when shown or studied', () => {
@@ -62,10 +62,19 @@ describe('resolvedAllWordsSorts', () => {
       phoneticDisplay: PhoneticDisplay.Pinyin,
       learnZhuyin: false,
     });
-    const sorts = resolvedAllWordsSorts(context, {
+    const settings = {
+      ...DEFAULT_SETTINGS,
       allWordsSort: WordSort.Zhuyin,
       allWordsSubSort: WordSort.English,
+      wordListsSort: WordSort.Pinyin,
+    };
+    expect(resolvedWordSorts(context, settings, WordSortPlace.AllWords)).toEqual({
+      sort: WordSort.Newest,
+      subSort: WordSort.English,
     });
-    expect(sorts).toEqual({ sort: WordSort.Newest, subSort: WordSort.English });
+    expect(resolvedWordSorts(context, settings, WordSortPlace.WordLists)).toEqual({
+      sort: WordSort.Pinyin,
+      subSort: WordSort.Newest,
+    });
   });
 });

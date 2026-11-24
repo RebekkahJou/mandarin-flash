@@ -15,7 +15,7 @@ import {
 import type { Word } from '../domain/word';
 import { pinyinSortKey, zhuyinSortKey } from './pinyin';
 
-/** What sorting needs of an All words row. */
+/** What sorting needs of a row in All words or a word list. */
 export interface SortableWord {
   word: Pick<Word, 'headword' | 'reading' | 'frequencyTier'>;
   /** The meanings shown for the word; English sorts by the first. */
@@ -44,14 +44,35 @@ export function wordSortContext(
   };
 }
 
-/** The saved sort and sub-sort, each falling back to newest first when it no longer applies. */
-export function resolvedAllWordsSorts(
+/** A sort and the order within each learning level when sorting by level. */
+export interface WordSorts {
+  sort: WordSort;
+  subSort: WordSort;
+}
+
+/** Where words are sorted; each place remembers its own sort. */
+export enum WordSortPlace {
+  AllWords = 'allWords',
+  /** Every word list shares one sort. */
+  WordLists = 'wordLists',
+}
+
+/** The settings that hold each place's sort and sub-sort. */
+export const WORD_SORT_SETTING_KEYS = {
+  [WordSortPlace.AllWords]: { sort: 'allWordsSort', subSort: 'allWordsSubSort' },
+  [WordSortPlace.WordLists]: { sort: 'wordListsSort', subSort: 'wordListsSubSort' },
+} as const satisfies Record<WordSortPlace, { sort: keyof AppSettings; subSort: keyof AppSettings }>;
+
+/** A place's saved sort and sub-sort, each falling back to newest first when it no longer applies. */
+export function resolvedWordSorts(
   context: WordSortContext,
-  settings: Pick<AppSettings, 'allWordsSort' | 'allWordsSubSort'>,
-): { sort: WordSort; subSort: WordSort } {
+  settings: AppSettings,
+  place: WordSortPlace,
+): WordSorts {
+  const keys = WORD_SORT_SETTING_KEYS[place];
   return {
-    sort: resolveWordSort(settings.allWordsSort, availableWordSorts(context)),
-    subSort: resolveWordSort(settings.allWordsSubSort, availableSubSorts(context)),
+    sort: resolveWordSort(settings[keys.sort], availableWordSorts(context)),
+    subSort: resolveWordSort(settings[keys.subSort], availableSubSorts(context)),
   };
 }
 
@@ -71,9 +92,9 @@ function sortKeyFor(sort: WordSort, item: SortableWord, radicalOf: RadicalLookup
  * Words in the chosen order. Learning level sorts within each level by the sub-sort. The rows
  * come in newest first, which every sort keeps for words that tie.
  */
-export function sortAllWords<Row extends SortableWord>(
+export function sortWords<Row extends SortableWord>(
   rows: readonly Row[],
-  sorts: { sort: WordSort; subSort: WordSort },
+  sorts: WordSorts,
   radicalOf: RadicalLookup,
 ): Row[] {
   if (sorts.sort === WordSort.Newest) return [...rows];

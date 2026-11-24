@@ -969,6 +969,8 @@ open-licensed, small, and meet the color rules (no meaning by color alone).
   saved sort that no longer applies (zhuyin turned off) falls back to newest first.
 - English sorts by the first meaning ignoring brackets and a leading "to"/"a"/"the", so verbs
   don't all land under T. Pinyin puts ü after u (lu, luan, lü) and the neutral tone last.
+- Word lists sort too (Sort button on each list, user 2026-11-24): every list shares one saved
+  sort, separate from All words, so All words can stay newest first. Phone-checked.
 - Radical data: `scripts/data/mandarin-radical-strokes.tsv` (12,969 of the pack's 12,984
   characters; the rest are symbols) from Unihan kRSUnicode via `npm run extract:radical-strokes`,
   written into pack schema 5's `characters` table (+164 KB). Mandarin pack version 12.

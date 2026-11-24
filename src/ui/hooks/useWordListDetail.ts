@@ -1,18 +1,23 @@
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { isNewWordsList } from '../../domain/newWordsList';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import type { WordList, WordListEntry } from '../../domain/wordList';
-import { definitionsOverrideFor } from '../../domain/wordList';
+import { definitionsForEntry, definitionsOverrideFor } from '../../domain/wordList';
 import { buildWordListCsv, csvFileNameForList } from '../../services/csvExport';
 import { findPartOfSpeechMismatches } from '../../services/partOfSpeechCheck';
+import { WordSortPlace } from '../../services/wordSorting';
 import { useAppServices } from '../AppServicesContext';
 import { confirm } from '../confirm';
 import { shareCsvFile } from '../csvFiles';
 import { CsvImportResult, useCsvImport } from './useCsvImport';
+import { useWordSorting } from './useWordSorting';
 
-/** Loads one word list and handles removing words, editing meanings and CSV import/export. */
+/**
+ * Loads one word list in the saved word list sort order, and handles removing words, editing
+ * meanings and CSV import/export.
+ */
 export function useWordListDetail(wordListId: number) {
   const { languageBundle, wordListRepository, dictionaryLookup } = useAppServices();
   const importCsvIntoLists = useCsvImport();
@@ -32,6 +37,22 @@ export function useWordListDetail(wordListId: number) {
       );
     }
   }, [wordListId, wordListRepository, dictionaryLookup]);
+
+  // Entries load newest first; each row carries the meanings the list shows, for English sorting.
+  const rows = useMemo(
+    () =>
+      (list?.words ?? []).map((entry) => ({
+        entry,
+        word: entry.word,
+        meanings: definitionsForEntry(entry),
+      })),
+    [list],
+  );
+  const sorting = useWordSorting(rows, WordSortPlace.WordLists);
+  const sortedEntries = useMemo(
+    () => sorting.sortedRows.map(({ entry }) => entry),
+    [sorting.sortedRows],
+  );
 
   // Shown on highlighted rows in Nouns, Verbs and Adjectives.
   const mismatchWarning =
@@ -74,6 +95,8 @@ export function useWordListDetail(wordListId: number) {
 
   return {
     list,
+    sortedEntries,
+    sortChoices: sorting.choices,
     reload,
     mismatchedWordIds,
     mismatchWarning,

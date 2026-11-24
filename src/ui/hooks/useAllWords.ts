@@ -1,5 +1,5 @@
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import type { WordWithListIds } from '../../data/repositories/wordRepository';
 import type { ListForAllWords } from '../../domain/allWordsView';
@@ -9,8 +9,6 @@ import {
   isShownInAllWords,
 } from '../../domain/allWordsView';
 import { WordListKind } from '../../domain/wordList';
-import type { RadicalPosition } from '../../domain/wordSort';
-import { WordSort, availableSubSorts, availableWordSorts } from '../../domain/wordSort';
 import { matchesWordSearch } from '../../domain/wordSearch';
 import type { AllWordsOptionKey } from '../../services/allWordsOptions';
 import {
@@ -19,38 +17,24 @@ import {
   allWordsViewOptions,
   selectedAllWordsOptions,
 } from '../../services/allWordsOptions';
-import type { RadicalLookup } from '../../services/allWordsSorting';
-import {
-  WORD_SORT_LABELS,
-  resolvedAllWordsSorts,
-  sortAllWords,
-  wordSortContext,
-} from '../../services/allWordsSorting';
+import { WordSortPlace } from '../../services/wordSorting';
 import { deleteSelectedButtonLabel, deleteWordsPrompt } from '../../services/wordDeletionText';
 import { useAppServices, useSettings } from '../AppServicesContext';
 import { confirm } from '../confirm';
-
-function sortChoices(sorts: readonly WordSort[]) {
-  return sorts.map((sort) => ({ value: sort, label: WORD_SORT_LABELS[sort] }));
-}
+import { useWordSorting } from './useWordSorting';
 
 /**
  * Every word in the profile with the names of its lists, filtered by the saved view options and
  * a search query, in the saved sort order. Words can be selected and deleted together.
  */
 export function useAllWords() {
-  const { profileId, languageBundle, wordRepository, wordListRepository, dictionaryLookup } =
-    useAppServices();
+  const { profileId, languageBundle, wordRepository, wordListRepository } = useAppServices();
   const { settings, updateSetting } = useSettings();
   const [words, setWords] = useState<WordWithListIds[]>([]);
   const [lists, setLists] = useState<ListForAllWords[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [selectedWordIds, setSelectedWordIds] = useState<ReadonlySet<number> | null>(null);
-  const [radicalPositions, setRadicalPositions] = useState<ReadonlyMap<
-    string,
-    RadicalPosition
-  > | null>(null);
 
   const refresh = useCallback(async () => {
     setLists(await wordListRepository.listInfos(profileId));
@@ -78,21 +62,7 @@ export function useAllWords() {
     [shownWords, searchQuery, languageBundle],
   );
 
-  const sortContext = wordSortContext(languageBundle.definition, settings);
-  const { sort, subSort } = resolvedAllWordsSorts(sortContext, settings);
-  const isRadicalSortChosen = sort === WordSort.Radical || subSort === WordSort.Radical;
-
-  // Radical data is only read once a radical sort is chosen; the pack keeps it after that.
-  useEffect(() => {
-    if (!isRadicalSortChosen) return;
-    void dictionaryLookup.radicalPositions().then(setRadicalPositions);
-  }, [isRadicalSortChosen, dictionaryLookup]);
-
-  const sortedWords = useMemo(() => {
-    const context = wordSortContext(languageBundle.definition, settings);
-    const radicalOf: RadicalLookup = (character) => radicalPositions?.get(character);
-    return sortAllWords(matchingWords, resolvedAllWordsSorts(context, settings), radicalOf);
-  }, [matchingWords, languageBundle, settings, radicalPositions]);
+  const sorting = useWordSorting(matchingWords, WordSortPlace.AllWords);
 
   const wordListIds = words.map(({ listIds }) => listIds);
   const optionChoices = allWordsOptionChoices({
@@ -120,7 +90,8 @@ export function useAllWords() {
 
   return {
     totalWordCount: words.length,
-    matchingWords: sortedWords,
+    matchingWords: sorting.sortedRows,
+    sortChoices: sorting.choices,
     searchQuery,
     setSearchQuery,
     describeLists: (listIds: readonly number[]) => describeWordLists(listIds, lists),
@@ -142,12 +113,6 @@ export function useAllWords() {
       choices: optionChoices,
       selected: selectedAllWordsOptions(settings),
       toggle: (key: AllWordsOptionKey) => updateSetting(key, !settings[key]),
-      sortChoices: sortChoices(availableWordSorts(sortContext)),
-      selectedSort: sort,
-      chooseSort: (choice: WordSort) => updateSetting('allWordsSort', choice),
-      subSortChoices: sortChoices(availableSubSorts(sortContext)),
-      selectedSubSort: subSort,
-      chooseSubSort: (choice: WordSort) => updateSetting('allWordsSubSort', choice),
     },
   };
 }

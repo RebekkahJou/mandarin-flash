@@ -34,6 +34,9 @@ export interface AppSettings {
   allWordsSort: WordSort;
   /** The order within each level when All words is sorted by learning level. */
   allWordsSubSort: WordSort;
+  /** How every word list orders its words, and the order within each level for learning level. */
+  wordListsSort: WordSort;
+  wordListsSubSort: WordSort;
   /** The Challenges add-on (games with another profile) is turned on, so the Challenges tab shows. */
   isGamesAddOnEnabled: boolean;
 }
@@ -50,6 +53,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   allWordsShowsLearningLevel: true,
   allWordsSort: WordSort.Newest,
   allWordsSubSort: WordSort.Newest,
+  wordListsSort: WordSort.Newest,
+  wordListsSubSort: WordSort.Newest,
   isGamesAddOnEnabled: false,
 };
 
@@ -113,6 +118,16 @@ function parseSettings(storedValues: Record<string, unknown>): AppSettings {
       Object.values(WordSort),
       storedValues.allWordsSubSort,
       DEFAULT_SETTINGS.allWordsSubSort,
+    ),
+    wordListsSort: oneOf(
+      Object.values(WordSort),
+      storedValues.wordListsSort,
+      DEFAULT_SETTINGS.wordListsSort,
+    ),
+    wordListsSubSort: oneOf(
+      Object.values(WordSort),
+      storedValues.wordListsSubSort,
+      DEFAULT_SETTINGS.wordListsSubSort,
     ),
   };
 }

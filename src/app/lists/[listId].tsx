@@ -7,12 +7,14 @@ import type { WordListEntry } from '../../domain/wordList';
 import { definitionsForEntry } from '../../domain/wordList';
 import { formatWordCount } from '../../services/wordCount';
 import { ChineseText } from '../../ui/components/ChineseText';
+import { CompactButton } from '../../ui/components/CompactButton';
 import { InfoModal } from '../../ui/components/InfoModal';
 import { ListNameModal } from '../../ui/components/ListNameModal';
 import { MeaningsEditor } from '../../ui/components/MeaningsEditor';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
 import { ScreenContainer } from '../../ui/components/ScreenContainer';
 import { WordRow } from '../../ui/components/WordRow';
+import { WordSortPicker } from '../../ui/components/WordSortPicker';
 import {
   ListDeletionResult,
   useWordListRenameDelete,
@@ -26,6 +28,8 @@ const entryKey = (entry: WordListEntry) => String(entry.entryId);
 const NEW_WORDS_NOTE =
   'Your newest High practice words that you haven’t marked Learned yet. Marking one Learned brings in the next newest. Change how many it holds in Settings.';
 
+const SORT_HINT = 'Every word list uses this order. All words keeps its own.';
+
 function openWord(wordId: number) {
   router.push({ pathname: '/words/[wordId]', params: { wordId: String(wordId) } });
 }
@@ -34,6 +38,8 @@ export default function WordListScreen() {
   const { listId } = useLocalSearchParams<{ listId: string }>();
   const {
     list,
+    sortedEntries,
+    sortChoices,
     mismatchedWordIds,
     mismatchWarning,
     removeEntry,
@@ -47,6 +53,7 @@ export default function WordListScreen() {
   const listHiding = useListHiding(list);
   const [editingEntry, setEditingEntry] = useState<WordListEntry | null>(null);
   const [editedMeanings, setEditedMeanings] = useState<string[]>([]);
+  const [isSortVisible, setIsSortVisible] = useState(false);
 
   const startEditing = (entry: WordListEntry) => {
     setEditingEntry(entry);
@@ -79,7 +86,6 @@ export default function WordListScreen() {
 
   const screenOptions = { title: list ? `${list.name} (${list.length})` : 'Word list' };
   const isExportDisabled = !list || list.length === 0;
-  const entries = list?.words ?? [];
   const mismatchCount = formatWordCount(mismatchedWordIds.size);
   const mismatchSummary =
     mismatchedWordIds.size > 0 ? (
@@ -142,8 +148,11 @@ export default function WordListScreen() {
       {hideButtonRow}
       {automaticNote}
       {mismatchSummary}
+      <View style={styles.sortRow}>
+        <CompactButton label="Sort" onPress={() => setIsSortVisible(true)} isOutlined />
+      </View>
       <FlatList
-        data={entries}
+        data={sortedEntries}
         keyExtractor={entryKey}
         contentContainerStyle={styles.entries}
         ListEmptyComponent={<Text style={styles.empty}>No words in this list yet.</Text>}
@@ -159,6 +168,15 @@ export default function WordListScreen() {
         onConfirm={() => void renameDelete.saveRename()}
         onCancel={renameDelete.closeRename}
       />
+      <InfoModal
+        isVisible={isSortVisible}
+        onClose={() => setIsSortVisible(false)}
+        closeLabel="Done"
+      >
+        <Text style={styles.sortTitle}>Sort word lists</Text>
+        <Text style={styles.empty}>{SORT_HINT}</Text>
+        <WordSortPicker {...sortChoices} />
+      </InfoModal>
       <InfoModal isVisible={isEditorVisible} onClose={finishEditing} closeLabel="Save">
         {editorContent}
       </InfoModal>
@@ -170,6 +188,15 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     gap: spacing.small,
+  },
+  sortRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  sortTitle: {
+    fontSize: fontSizes.title,
+    fontWeight: '600',
+    color: colors.textPrimary,
   },
   entries: {
     gap: spacing.small,
