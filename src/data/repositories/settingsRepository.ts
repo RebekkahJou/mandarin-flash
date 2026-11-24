@@ -29,6 +29,8 @@ export interface AppSettings {
   allWordsShowsComponents: boolean;
   allWordsShowsRetentionWords: boolean;
   allWordsShowsLearningLevel: boolean;
+  /** The Challenges add-on (games with another profile) is turned on, so the Challenges tab shows. */
+  isGamesAddOnEnabled: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -41,6 +43,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   allWordsShowsComponents: true,
   allWordsShowsRetentionWords: true,
   allWordsShowsLearningLevel: true,
+  isGamesAddOnEnabled: false,
 };
 
 type BooleanSettingKey = {
@@ -53,6 +56,7 @@ const BOOLEAN_SETTING_KEYS: readonly BooleanSettingKey[] = [
   'allWordsShowsComponents',
   'allWordsShowsRetentionWords',
   'allWordsShowsLearningLevel',
+  'isGamesAddOnEnabled',
 ];
 
 function oneOf<T extends string | number | boolean>(

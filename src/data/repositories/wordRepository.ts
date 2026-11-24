@@ -279,6 +279,22 @@ export function createWordRepository(database: SqlDatabase) {
     return row ? toWord(row) : null;
   }
 
+  /**
+   * The profile's words for games with another profile: everything in All words except component
+   * cards and script study cards (such as zhuyin symbols), which study a script, not a word.
+   */
+  async function listGameWords(profileId: number): Promise<Word[]> {
+    const rows = await database.getAll<WordRow>(
+      `SELECT ${WORD_COLUMNS} FROM words
+       WHERE profile_id = ? AND NOT EXISTS (
+         SELECT 1 FROM word_list_entries JOIN word_lists ON word_lists.id = word_list_entries.word_list_id
+         WHERE word_list_entries.word_id = words.id AND word_lists.kind IN (?, ?))
+       ORDER BY id`,
+      [profileId, WordListKind.Components, WordListKind.ScriptStudy],
+    );
+    return rows.map(toWord);
+  }
+
   /** Records which words make up a compound; a position already linked is replaced. */
   async function linkWordParts(
     compoundWordId: number,
@@ -348,6 +364,7 @@ export function createWordRepository(database: SqlDatabase) {
     assignStarterSet,
     starterSetTierCounts,
     findWordByHeadword,
+    listGameWords,
     linkWordParts,
     listWordParts,
   };

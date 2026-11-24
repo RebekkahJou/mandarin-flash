@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import type { PhoneticDisplay } from '../../data/repositories/settingsRepository';
 import type { Word } from '../../domain/word';
 import { LEARNING_LEVEL_LABELS } from '../../services/learningLevelText';
 import { ENGLISH_FONT_FAMILY, colors, fontSizes, radii, spacing } from '../theme';
@@ -27,6 +28,8 @@ interface WordRowProps {
   showsLearningLevel?: boolean;
   /** Shows a checkbox, checked or not, while the user selects words; undefined otherwise. */
   isSelected?: boolean;
+  /** Another profile's pinyin or zhuyin setting, e.g. a game player's; the active profile's by default. */
+  phoneticDisplay?: PhoneticDisplay;
 }
 
 export function WordRow({
@@ -40,6 +43,7 @@ export function WordRow({
   warning,
   showsLearningLevel = true,
   isSelected,
+  phoneticDisplay,
 }: WordRowProps) {
   const hasWarning = warning !== undefined;
   const rowStyle = [styles.row, hasWarning && styles.warningRow];
@@ -82,7 +86,11 @@ export function WordRow({
         {selectionMark}
         <ChineseText text={word.headword} style={styles.character} />
         <View style={styles.text}>
-          <PhoneticText numberedPinyin={word.reading} style={styles.phonetic} />
+          <PhoneticText
+            numberedPinyin={word.reading}
+            style={styles.phonetic}
+            phoneticDisplay={phoneticDisplay}
+          />
           <Text style={styles.meanings} numberOfLines={meaningLineLimit}>
             {meaningsText}
           </Text>

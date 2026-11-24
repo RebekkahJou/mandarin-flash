@@ -3,13 +3,16 @@
  */
 import { ComponentsWordList } from '../../domain/componentsWordList';
 import { FrequencyTier } from '../../domain/frequencyTier';
+import { GameKind, GameWinner } from '../../domain/gamePlayers';
 import { GeneralWordList } from '../../domain/generalWordList';
 import { LanguageId } from '../../domain/language';
 import { PartOfSpeech } from '../../domain/partOfSpeech';
 import { distinctPracticeCards } from '../../domain/practiceCard';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { ReviewAnswer } from '../../domain/reviewEvent';
+import { WordListKind } from '../../domain/wordList';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
+import { createGameResultRepository } from '../repositories/gameResultRepository';
 import { createInstalledPackRepository } from '../repositories/installedPackRepository';
 import { createPracticeSessionRepository } from '../repositories/practiceSessionRepository';
 import { createProfileRepository } from '../repositories/profileRepository';
@@ -656,5 +659,55 @@ describe('added word sets', () => {
       LanguageId.MandarinTraditional,
     );
     expect(await repository.addedSetIds(other.id, 'mandarin')).toEqual(new Set());
+  });
+
+  it('lists game words without component or script study cards', async () => {
+    const { profile, wordRepository, wordListRepository, listIdByName } = await setUp();
+    const walk = await wordRepository.findOrCreateWord({ profileId: profile.id, ...walkWord });
+    const water = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: '氵',
+      reading: 'shui3',
+      definitions: ['water'],
+    });
+    const zhuyinListId = await wordListRepository.createList(profile.id, {
+      name: 'Zhuyin',
+      kind: WordListKind.ScriptStudy,
+    });
+    const symbol = await wordRepository.findOrCreateWord({
+      profileId: profile.id,
+      headword: 'ㄅ',
+      reading: 'b',
+      definitions: ['b'],
+    });
+    await wordListRepository.addWordToLists(walk.id, [{ wordListId: listIdByName('Verbs') }]);
+    await wordListRepository.addWordToLists(water.id, [{ wordListId: listIdByName('Components') }]);
+    await wordListRepository.addWordToLists(symbol.id, [{ wordListId: zhuyinListId }]);
+    const gameWords = await wordRepository.listGameWords(profile.id);
+    expect(gameWords.map((word) => word.headword)).toEqual(['走']);
+  });
+
+  it('keeps game results for both players, newest first', async () => {
+    const { database, profile } = await setUp();
+    const other = await createProfileRepository(database).createProfile(
+      'Kid',
+      LanguageId.MandarinSimplified,
+    );
+    const repository = createGameResultRepository(database);
+    const result = {
+      game: GameKind.MeaningMatch,
+      firstProfileId: profile.id,
+      secondProfileId: other.id,
+      options: { roundCount: 5 },
+      firstScore: 4,
+      secondScore: 3,
+      winner: GameWinner.First,
+      playedAtMs: 1_000,
+    };
+    await repository.saveGameResult(result);
+    await repository.saveGameResult({ ...result, winner: GameWinner.Tie, playedAtMs: 2_000 });
+    const forOther = await repository.listRecentGameResults(other.id, 10);
+    expect(forOther.map((saved) => saved.winner)).toEqual([GameWinner.Tie, GameWinner.First]);
+    expect(forOther[1]).toEqual(result);
   });
 });
