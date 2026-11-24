@@ -9,6 +9,9 @@ import type { Choice } from './ChoiceChips';
 import { ChoiceChips } from './ChoiceChips';
 import { SectionTitle } from './SectionTitle';
 
+const NAME_HINT =
+  'Type any name, or leave it blank to use the suggestion. You can change it later in Settings.';
+
 interface NewProfileFieldsProps {
   languageQuestion: string;
   languageChoices: readonly Choice<LanguageId>[];
@@ -73,6 +76,7 @@ export function NewProfileFields({
         style={styles.input}
         returnKeyType="done"
       />
+      <Text style={styles.hint}>{NAME_HINT}</Text>
       {copySection}
     </>
   );

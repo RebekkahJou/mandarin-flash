@@ -1,4 +1,4 @@
-export const MAX_PROFILE_NAME_LENGTH = 30;
+export const MAX_PROFILE_NAME_LENGTH = 40;
 
 /**
  * Why a new profile name can't be used in a language, or null when it can. Names only need to be

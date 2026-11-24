@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { DEFAULT_PROFILE_NAME } from '../data/repositories/profileRepository';
+import { FIRST_PROFILE_NAME_SUGGESTIONS } from '../domain/profileNameSuggestions';
 import { NewProfileFields } from '../ui/components/NewProfileFields';
 import { PrimaryButton } from '../ui/components/PrimaryButton';
 import { ScreenContainer } from '../ui/components/ScreenContainer';
@@ -9,7 +9,7 @@ import { useProfileSession } from '../ui/ProfileSessionContext';
 import { colors, fontSizes } from '../ui/theme';
 
 export default function FirstRunScreen() {
-  const form = useNewProfileForm(DEFAULT_PROFILE_NAME);
+  const form = useNewProfileForm(FIRST_PROFILE_NAME_SUGGESTIONS);
   const { selectProfile } = useProfileSession();
   const start = async () => {
     const [profile] = await form.submit();
@@ -27,7 +27,7 @@ export default function FirstRunScreen() {
         onSelectLanguage={form.selectLanguage}
         name={form.name}
         onChangeName={form.setName}
-        namePlaceholder={DEFAULT_PROFILE_NAME}
+        namePlaceholder={form.suggestedName}
         copyableNames={form.copyableNames}
         copiedNames={form.copiedNames}
         onToggleCopiedName={form.toggleCopiedName}

@@ -5,9 +5,6 @@ import type { Profile } from '../../domain/profileGroups';
 import { toProfileIcon } from '../../domain/profileIcons';
 import type { SqlDatabase } from '../sqlDatabase';
 
-/** The name first run suggests for the first profile. */
-export const DEFAULT_PROFILE_NAME = 'Me';
-
 interface ProfileRow {
   id: number;
   name: string;

@@ -5,6 +5,7 @@ import { DEFAULT_LANGUAGE_ID, LANGUAGE_DEFINITIONS } from '../../domain/language
 import type { Profile } from '../../domain/profileGroups';
 import { otherNamesInLanguage, profileNamesToCopy } from '../../domain/profileGroups';
 import { namesToCreate, profileNameProblem } from '../../domain/profileName';
+import { nameOrSuggestion, pickProfileNameSuggestion } from '../../domain/profileNameSuggestions';
 import { showMessage } from '../confirm';
 import { useProfileSession } from '../ProfileSessionContext';
 
@@ -36,13 +37,22 @@ function namesProblem(
 }
 
 /**
- * State for creating profiles: a language, a typed name and, when the language has no profiles
- * yet, other languages' profile names to copy.
+ * State for creating profiles: a language, a typed name (or a playful suggested one, used when
+ * nothing is typed) and, when the language has no profiles yet, other languages' profile names
+ * to copy.
  */
-export function useNewProfileForm(initialName: string) {
+export function useNewProfileForm(nameSuggestions: readonly string[]) {
   const { profiles, addProfiles } = useProfileSession();
   const [languageId, setLanguageId] = useState<LanguageId>(DEFAULT_LANGUAGE_ID);
-  const [name, setName] = useState(initialName);
+  const [name, setName] = useState('');
+  // Picked once, so the placeholder doesn't change while the user is on the screen.
+  const [suggestedName] = useState(() =>
+    pickProfileNameSuggestion(
+      nameSuggestions,
+      profiles.map((profile) => profile.name),
+      Math.random,
+    ),
+  );
   const [copiedNames, setCopiedNames] = useState<ReadonlySet<string>>(new Set());
 
   const isNewLanguage = !profiles.some((profile) => profile.languageId === languageId);
@@ -55,7 +65,7 @@ export function useNewProfileForm(initialName: string) {
 
   /** Creates the profiles, or explains why it can't and returns an empty list. */
   const submit = async (): Promise<Profile[]> => {
-    const names = namesToCreate(name, [...copiedNames]);
+    const names = namesToCreate(nameOrSuggestion(name, suggestedName), [...copiedNames]);
     const problem = namesProblem(names, profiles, languageId);
     if (problem) {
       showMessage('Check the name', problem);
@@ -69,6 +79,7 @@ export function useNewProfileForm(initialName: string) {
     selectLanguage,
     name,
     setName,
+    suggestedName,
     copyableNames,
     copiedNames,
     toggleCopiedName: (copiedName: string) => setCopiedNames(toggled(copiedNames, copiedName)),
