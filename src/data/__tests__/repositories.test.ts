@@ -11,6 +11,7 @@ import { distinctPracticeCards } from '../../domain/practiceCard';
 import { PartOfSpeechWordList } from '../../domain/partOfSpeechWordList';
 import { ReviewAnswer } from '../../domain/reviewEvent';
 import { WordListKind } from '../../domain/wordList';
+import { WordSort } from '../../domain/wordSort';
 import { migrateUserDatabase } from '../migrations/userDatabaseMigrations';
 import { createGameResultRepository } from '../repositories/gameResultRepository';
 import { createInstalledPackRepository } from '../repositories/installedPackRepository';
@@ -564,6 +565,17 @@ describe('settings', () => {
     expect((await settingsRepository.loadSettings(profile.id)).learnZhuyin).toBe(false);
     await settingsRepository.saveSetting(profile.id, 'learnZhuyin', true);
     expect((await settingsRepository.loadSettings(profile.id)).learnZhuyin).toBe(true);
+  });
+
+  it('sorts All words newest first by default and remembers a chosen sort', async () => {
+    const { database, profile } = await setUp();
+    const settingsRepository = createSettingsRepository(database);
+    expect((await settingsRepository.loadSettings(profile.id)).allWordsSort).toBe(WordSort.Newest);
+    await settingsRepository.saveSetting(profile.id, 'allWordsSort', WordSort.LearningLevel);
+    await settingsRepository.saveSetting(profile.id, 'allWordsSubSort', WordSort.Pinyin);
+    const settings = await settingsRepository.loadSettings(profile.id);
+    expect(settings.allWordsSort).toBe(WordSort.LearningLevel);
+    expect(settings.allWordsSubSort).toBe(WordSort.Pinyin);
   });
 
   it('keeps internal values beside the settings without disturbing them', async () => {

@@ -9,6 +9,8 @@ import {
   isShownInAllWords,
 } from '../../domain/allWordsView';
 import { WordListKind } from '../../domain/wordList';
+import type { WordSort } from '../../domain/wordSort';
+import { availableSubSorts, availableWordSorts } from '../../domain/wordSort';
 import { matchesWordSearch } from '../../domain/wordSearch';
 import type { AllWordsOptionKey } from '../../services/allWordsOptions';
 import {
@@ -17,13 +19,27 @@ import {
   allWordsViewOptions,
   selectedAllWordsOptions,
 } from '../../services/allWordsOptions';
+import type { RadicalLookup } from '../../services/allWordsSorting';
+import {
+  WORD_SORT_LABELS,
+  resolvedAllWordsSorts,
+  sortAllWords,
+  wordSortContext,
+} from '../../services/allWordsSorting';
 import { deleteSelectedButtonLabel, deleteWordsPrompt } from '../../services/wordDeletionText';
 import { useAppServices, useSettings } from '../AppServicesContext';
 import { confirm } from '../confirm';
 
+/** No radical data loaded (yet), so the radical sort falls back to code point order. */
+const NO_RADICAL_DATA: RadicalLookup = () => undefined;
+
+function sortChoices(sorts: readonly WordSort[]) {
+  return sorts.map((sort) => ({ value: sort, label: WORD_SORT_LABELS[sort] }));
+}
+
 /**
  * Every word in the profile with the names of its lists, filtered by the saved view options and
- * a search query. Words can be selected and deleted together.
+ * a search query, in the saved sort order. Words can be selected and deleted together.
  */
 export function useAllWords() {
   const { profileId, languageBundle, wordRepository, wordListRepository } = useAppServices();
@@ -60,6 +76,13 @@ export function useAllWords() {
     [shownWords, searchQuery, languageBundle],
   );
 
+  const sortContext = wordSortContext(languageBundle.definition, settings);
+  const { sort, subSort } = resolvedAllWordsSorts(sortContext, settings);
+  const sortedWords = useMemo(() => {
+    const context = wordSortContext(languageBundle.definition, settings);
+    return sortAllWords(matchingWords, resolvedAllWordsSorts(context, settings), NO_RADICAL_DATA);
+  }, [matchingWords, languageBundle, settings]);
+
   const wordListIds = words.map(({ listIds }) => listIds);
   const optionChoices = allWordsOptionChoices({
     scriptStudyName: languageBundle.definition.scriptStudySets[0]?.name ?? null,
@@ -86,7 +109,7 @@ export function useAllWords() {
 
   return {
     totalWordCount: words.length,
-    matchingWords,
+    matchingWords: sortedWords,
     searchQuery,
     setSearchQuery,
     describeLists: (listIds: readonly number[]) => describeWordLists(listIds, lists),
@@ -108,6 +131,12 @@ export function useAllWords() {
       choices: optionChoices,
       selected: selectedAllWordsOptions(settings),
       toggle: (key: AllWordsOptionKey) => updateSetting(key, !settings[key]),
+      sortChoices: sortChoices(availableWordSorts(sortContext)),
+      selectedSort: sort,
+      chooseSort: (choice: WordSort) => updateSetting('allWordsSort', choice),
+      subSortChoices: sortChoices(availableSubSorts(sortContext)),
+      selectedSubSort: subSort,
+      chooseSubSort: (choice: WordSort) => updateSetting('allWordsSubSort', choice),
     },
   };
 }

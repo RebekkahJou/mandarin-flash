@@ -3,7 +3,9 @@ import type { ListRenderItemInfo } from 'react-native';
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import type { WordWithListIds } from '../../data/repositories/wordRepository';
+import { WordSort } from '../../domain/wordSort';
 import { Checkboxes } from '../../ui/components/Checkboxes';
+import { ChoiceChips } from '../../ui/components/ChoiceChips';
 import { CompactButton } from '../../ui/components/CompactButton';
 import { InfoModal } from '../../ui/components/InfoModal';
 import { PrimaryButton } from '../../ui/components/PrimaryButton';
@@ -38,6 +40,17 @@ export default function AllWordsScreen() {
       <PrimaryButton label={selection.deleteLabel} onPress={selection.deleteSelected} />
     </View>
   ) : null;
+  const subSortSection =
+    options.selectedSort === WordSort.LearningLevel ? (
+      <>
+        <Text style={styles.optionsHeading}>Within each level</Text>
+        <ChoiceChips
+          choices={options.subSortChoices}
+          selectedValue={options.selectedSubSort}
+          onSelect={options.chooseSubSort}
+        />
+      </>
+    ) : null;
   const renderWord = ({ item }: ListRenderItemInfo<WordWithListIds>) => {
     const openWord = () =>
       router.push({ pathname: '/words/[wordId]', params: { wordId: String(item.word.id) } });
@@ -89,6 +102,14 @@ export default function AllWordsScreen() {
 
       <InfoModal isVisible={options.isVisible} onClose={options.close} closeLabel="Done">
         <Text style={styles.optionsTitle}>View options</Text>
+        <Text style={styles.optionsHeading}>Sort by</Text>
+        <ChoiceChips
+          choices={options.sortChoices}
+          selectedValue={options.selectedSort}
+          onSelect={options.chooseSort}
+        />
+        {subSortSection}
+        <Text style={styles.optionsHeading}>Show</Text>
         <Checkboxes
           options={options.choices}
           selectedValues={options.selected}
@@ -129,6 +150,11 @@ const styles = StyleSheet.create({
   },
   optionsTitle: {
     fontSize: fontSizes.title,
+    fontWeight: '600',
+    color: colors.textPrimary,
+  },
+  optionsHeading: {
+    fontSize: fontSizes.body,
     fontWeight: '600',
     color: colors.textPrimary,
   },

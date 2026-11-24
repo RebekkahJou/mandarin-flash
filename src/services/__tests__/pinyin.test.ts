@@ -1,4 +1,11 @@
-import { toNumberedPinyin, toToneMarkedPinyin, toZhuyin } from '../pinyin';
+import { compareSortKeys } from '../../domain/wordSort';
+import {
+  pinyinSortKey,
+  toNumberedPinyin,
+  toToneMarkedPinyin,
+  toZhuyin,
+  zhuyinSortKey,
+} from '../pinyin';
 
 describe('toToneMarkedPinyin', () => {
   it.each([
@@ -57,5 +64,38 @@ describe('toZhuyin', () => {
     ['Bei3 jing1', 'ㄅㄟˇ ㄐㄧㄥ'],
   ])('%s → %s', (numbered, zhuyin) => {
     expect(toZhuyin(numbered)).toBe(zhuyin);
+  });
+});
+
+function sortedBy(keyFor: (reading: string) => readonly (string | number)[], readings: string[]) {
+  return [...readings].sort((first, second) => compareSortKeys(keyFor(first), keyFor(second)));
+}
+
+describe('pinyinSortKey', () => {
+  it('sorts by letters, then tone, syllable by syllable', () => {
+    expect(sortedBy(pinyinSortKey, ['ma3', 'ma1', 'mai4', 'ma5', 'ma1 ma5', 'ma2'])).toEqual([
+      'ma1',
+      'ma1 ma5',
+      'ma2',
+      'ma3',
+      'ma5',
+      'mai4',
+    ]);
+  });
+
+  it('puts ü after u', () => {
+    expect(sortedBy(pinyinSortKey, ['lu:4', 'luan4', 'lu4'])).toEqual(['lu4', 'luan4', 'lu:4']);
+  });
+});
+
+describe('zhuyinSortKey', () => {
+  it('sorts by zhuyin symbol order, then tone', () => {
+    // ㄅ (b) before ㄆ (p) before ㄇ (m), whatever their pinyin letters.
+    expect(sortedBy(zhuyinSortKey, ['ma1', 'pa2', 'ba4', 'ba1'])).toEqual([
+      'ba1',
+      'ba4',
+      'pa2',
+      'ma1',
+    ]);
   });
 });

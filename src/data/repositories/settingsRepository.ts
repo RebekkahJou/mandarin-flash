@@ -2,6 +2,7 @@ import type { NewWordsListSize } from '../../domain/newWordsList';
 import { DEFAULT_NEW_WORDS_LIST_SIZE, NEW_WORDS_LIST_SIZES } from '../../domain/newWordsList';
 import type { PracticeSetSize } from '../../domain/practiceSetBuilder';
 import { DEFAULT_PRACTICE_SET_SIZE, PRACTICE_SET_SIZES } from '../../domain/practiceSetBuilder';
+import { WordSort } from '../../domain/wordSort';
 import type { SqlDatabase } from '../sqlDatabase';
 
 export enum PhoneticDisplay {
@@ -29,6 +30,10 @@ export interface AppSettings {
   allWordsShowsComponents: boolean;
   allWordsShowsRetentionWords: boolean;
   allWordsShowsLearningLevel: boolean;
+  /** How All words orders the words. */
+  allWordsSort: WordSort;
+  /** The order within each level when All words is sorted by learning level. */
+  allWordsSubSort: WordSort;
   /** The Challenges add-on (games with another profile) is turned on, so the Challenges tab shows. */
   isGamesAddOnEnabled: boolean;
 }
@@ -43,6 +48,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   allWordsShowsComponents: true,
   allWordsShowsRetentionWords: true,
   allWordsShowsLearningLevel: true,
+  allWordsSort: WordSort.Newest,
+  allWordsSubSort: WordSort.Newest,
   isGamesAddOnEnabled: false,
 };
 
@@ -96,6 +103,16 @@ function parseSettings(storedValues: Record<string, unknown>): AppSettings {
       NEW_WORDS_LIST_SIZES,
       storedValues.newWordsListSize,
       DEFAULT_SETTINGS.newWordsListSize,
+    ),
+    allWordsSort: oneOf(
+      Object.values(WordSort),
+      storedValues.allWordsSort,
+      DEFAULT_SETTINGS.allWordsSort,
+    ),
+    allWordsSubSort: oneOf(
+      Object.values(WordSort),
+      storedValues.allWordsSubSort,
+      DEFAULT_SETTINGS.allWordsSubSort,
     ),
   };
 }

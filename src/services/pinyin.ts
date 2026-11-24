@@ -2,8 +2,11 @@
  * Pinyin is stored with tone numbers ("ni3 hao3", "lu:4"); these helpers convert it
  * for display (tone marks or Zhuyin) and normalize tone-marked input.
  */
+import type { SortKey, SortKeyPart } from '../domain/wordSort';
 
 const NEUTRAL_TONE = 5;
+/** Tone 1 adds no mark in zhuyin, so it gives a syllable's symbols alone. */
+const FIRST_TONE = 1;
 const SYLLABLE_PATTERN = /^([a-zü:]+)([1-5])?$/;
 
 const TONE_MARKS: Readonly<Record<string, readonly string[]>> = {
@@ -173,4 +176,44 @@ function addZhuyinTone(zhuyin: string, tone: number): string {
 /** "ni3 hao3" → "ㄋㄧˇ ㄏㄠˇ". Unrecognized syllables are kept unchanged. */
 export function toZhuyin(numberedPinyin: string): string {
   return mapSyllables(numberedPinyin, syllableToZhuyin);
+}
+
+/** ü sorts after u, as v does in computer pinyin, so lu < luan < lü. */
+const UMLAUT_U_SORT_LETTER = 'v';
+/** Unreadable syllables keep their text and sort before tone 1. */
+const UNKNOWN_TONE = 0;
+
+function syllableSortParts(
+  syllable: string,
+  lettersKey: (parsed: ParsedSyllable) => string,
+): SortKeyPart[] {
+  const parsed = parseSyllable(syllable);
+  if (!parsed) return [syllable.toLowerCase(), UNKNOWN_TONE];
+  return [lettersKey(parsed), parsed.tone];
+}
+
+/** Syllable by syllable: letters, then tone ("ma1" before "ma2", neutral tone last). */
+export function pinyinSortKey(numberedPinyin: string): SortKey {
+  return numberedPinyin
+    .trim()
+    .split(/\s+/)
+    .flatMap((syllable) =>
+      syllableSortParts(syllable, ({ letters }) => letters.replace(/ü/g, UMLAUT_U_SORT_LETTER)),
+    );
+}
+
+/**
+ * Syllable by syllable: zhuyin symbols in ㄅㄆㄇㄈ order (the Unicode Bopomofo block is in that
+ * order), then tone.
+ */
+export function zhuyinSortKey(numberedPinyin: string): SortKey {
+  return numberedPinyin
+    .trim()
+    .split(/\s+/)
+    .flatMap((syllable) =>
+      syllableSortParts(
+        syllable,
+        ({ letters }) => syllableToZhuyin({ letters, tone: FIRST_TONE }) ?? letters,
+      ),
+    );
 }
