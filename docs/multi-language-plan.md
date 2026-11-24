@@ -5,7 +5,10 @@ merged into main. **Phase 5 (store-hosted packs) done for Android** and merged i
 (2026-11-17; see "Phase 5 decisions" below). Its iOS half waits for the iOS port; the real Play
 download and the Play Console declaration wait for the account (docs/RELEASE.md). **Phase 4d done** (2026-11-20). **Phase 4e done** (phone-checked
 2026-11-22; see "Practice and word list improvements"). **Phase 6 challenges built** (2026-11-24,
-phone-checked; see "Games (Phase 6)").
+phone-checked; see "Games (Phase 6)"). **Phase 7b built** (2026-11-24, phone-checked; see "All
+words sorting"). **Next: Phase 7 (OCR)**, after discussing the library with the user: ML Kit may
+send usage data to Google, which the no-telemetry rule forbids, so offline options get compared
+first.
 Update this file as work lands or decisions change.
 
 Phase 5 decisions (2026-11-16):
