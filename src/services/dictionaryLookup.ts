@@ -83,6 +83,8 @@ export interface WordSetEntry {
 }
 
 const MAX_EXAMPLE_SENTENCES = 3;
+/** Words checked per query, kept well under SQLite's limit on bound values (each is bound twice). */
+const KNOWN_WORDS_BATCH_SIZE = 400;
 const ENTRY_COLUMNS = 'headword, variant, reading, variant_reading, glosses, rank';
 const JOINED_ENTRY_COLUMNS =
   'entries.headword, entries.variant, entries.reading, entries.variant_reading, entries.glosses';
@@ -251,6 +253,36 @@ export function createDictionaryLookup(
   async function lookUp(headword: string): Promise<DictionaryEntry[]> {
     const rows = await findRows(headword);
     return mergeSameReadings(rows.map((row) => toDictionaryEntry(row, form)));
+  }
+
+  async function findKnownWordsInBatch(batch: readonly string[]): Promise<string[]> {
+    const placeholders = batch.map(() => '?').join(', ');
+    if (!form.readsVariants) {
+      const rows = await packDatabase.getAll<{ word: string }>(
+        `SELECT DISTINCT headword AS word FROM entries WHERE headword IN (${placeholders})`,
+        [...batch],
+      );
+      return rows.map((row) => row.word);
+    }
+    // The same two branches as findRows, so each uses its own index.
+    const rows = await packDatabase.getAll<{ word: string }>(
+      `SELECT variant AS word FROM entries WHERE variant IN (${placeholders}) AND variant <> ''
+       UNION
+       SELECT headword AS word FROM entries WHERE headword IN (${placeholders}) AND variant = ''`,
+      [...batch, ...batch],
+    );
+    return rows.map((row) => row.word);
+  }
+
+  /** Which of the candidates are dictionary words, written as this language writes them. */
+  async function findKnownWords(candidates: Iterable<string>): Promise<Set<string>> {
+    const all = [...candidates];
+    const known = new Set<string>();
+    for (let start = 0; start < all.length; start += KNOWN_WORDS_BATCH_SIZE) {
+      const batch = all.slice(start, start + KNOWN_WORDS_BATCH_SIZE);
+      for (const word of await findKnownWordsInBatch(batch)) known.add(word);
+    }
+    return known;
   }
 
   /** Shortest example sentences containing the word, shown in the language's script. */
@@ -435,6 +467,7 @@ export function createDictionaryLookup(
 
   return {
     lookUp,
+    findKnownWords,
     formatMeaning: form.formatMeaning ?? unchangedMeaning,
     radicalPositions,
     replacedReadings,

@@ -15,7 +15,10 @@ import { useWordLists } from '../../ui/hooks/useWordLists';
 import { useWordSets } from '../../ui/hooks/useWordSets';
 import { spacing } from '../../ui/theme';
 
-/** Every way to add words: one at a time, a CSV file, topic word sets and starter vocabulary. */
+/**
+ * Every way to add words: one at a time, a CSV file, words found in text, topic word sets and
+ * starter vocabulary.
+ */
 export default function AddWordsScreen() {
   const { lists, refresh } = useWordLists();
   const importableLists = listsForAddingWords(lists);
@@ -52,6 +55,13 @@ export default function AddWordsScreen() {
       </View>
       <View style={styles.buttonRow}>
         <PrimaryButton label="Import CSV" onPress={csvImport.openPicker} isOutlined />
+      </View>
+      <View style={styles.buttonRow}>
+        <PrimaryButton
+          label="Find words in text"
+          onPress={() => router.push('/words/find-in-text')}
+          isOutlined
+        />
       </View>
       {wordSetsButton}
       {starterCard}

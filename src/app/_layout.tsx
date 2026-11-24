@@ -46,6 +46,7 @@ function RootStack() {
         <Stack.Screen name="words/[wordId]" options={{ title: 'Word' }} />
         <Stack.Screen name="words/add-words" options={{ title: 'Add words' }} />
         <Stack.Screen name="words/add" options={{ title: 'Add a word' }} />
+        <Stack.Screen name="words/find-in-text" options={{ title: 'Find words in text' }} />
         <Stack.Screen name="profiles/edit" options={{ title: 'Edit profile' }} />
         <Stack.Screen name="games/speed-race" options={GAME_SCREEN_OPTIONS.speedRace} />
         <Stack.Screen name="games/meaning-match" options={GAME_SCREEN_OPTIONS.meaningMatch} />
