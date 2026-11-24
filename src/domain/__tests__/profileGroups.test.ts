@@ -1,7 +1,7 @@
 import { LanguageId } from '../language';
 import type { Profile } from '../profileGroups';
 import {
-  activeProfileBadgeName,
+  activeProfileBadge,
   groupProfilesByLanguage,
   isOriginalProfile,
   otherNamesInLanguage,
@@ -55,14 +55,18 @@ describe('profileNamesToCopy', () => {
   });
 });
 
-describe('activeProfileBadgeName', () => {
-  it('names the active profile when there are several', () => {
-    expect(activeProfileBadgeName(profiles, profiles[1])).toBe('Kid');
+describe('activeProfileBadge', () => {
+  it('names the active profile, with its icon, when there are several', () => {
+    expect(activeProfileBadge(profiles, profiles[1])).toEqual({ name: 'Kid', icon: undefined });
+    expect(activeProfileBadge(profiles, { ...profiles[1], icon: '🐼' })).toEqual({
+      name: 'Kid',
+      icon: '🐼',
+    });
   });
 
   it('is null with a single profile or none active', () => {
-    expect(activeProfileBadgeName([profiles[0]], profiles[0])).toBeNull();
-    expect(activeProfileBadgeName(profiles, null)).toBeNull();
+    expect(activeProfileBadge([profiles[0]], profiles[0])).toBeNull();
+    expect(activeProfileBadge(profiles, null)).toBeNull();
   });
 });
 

@@ -5,6 +5,8 @@ export interface Profile {
   name: string;
   languageId: LanguageId;
   lastUsedAtMs: number;
+  /** Shown with the name in screen headers, to tell profiles apart; one of PROFILE_ICONS. */
+  icon?: string;
 }
 
 export interface LanguageProfileGroup {
@@ -32,13 +34,13 @@ export function groupProfilesByLanguage(profiles: readonly Profile[]): LanguageP
   }));
 }
 
-/** The active profile's name for screen headers; null when there is no one else to mix it up with. */
-export function activeProfileBadgeName(
+/** The active profile for screen headers; null when there is no one else to mix it up with. */
+export function activeProfileBadge(
   profiles: readonly Profile[],
   activeProfile: Profile | null,
-): string | null {
+): Pick<Profile, 'name' | 'icon'> | null {
   if (!activeProfile || profiles.length < 2) return null;
-  return activeProfile.name;
+  return { name: activeProfile.name, icon: activeProfile.icon };
 }
 
 /** The first profile created. It can't be deleted, so there is always someone to practice as. */

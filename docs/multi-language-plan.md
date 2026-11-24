@@ -959,9 +959,24 @@ German, for example):
   supports the needed locales).
 
 **Profile badge icons (same phase).** With several profiles, every header shows the active
-profile's name in a badge (built 2026-11-22). Later, each profile can choose one of a set of
-simple, colorful icons to show in its badge, so users tell each other apart at a glance. Icons must
-be open-licensed, small, and meet the color rules (no meaning by color alone).
+profile's name in a badge (built 2026-11-22). Each profile can choose one of a set of simple,
+colorful icons to show in its badge, so users tell each other apart at a glance. Icons must be
+open-licensed, small, and meet the color rules (no meaning by color alone).
+
+**Built (2026-11-24, branch `all-words-sorting`).**
+- All words → Options → Sort by: Newest first (default), the language's sorts, English A-Z and
+  Learning level, which shows "Within each level" with the other sorts. Saved per profile; a
+  saved sort that no longer applies (zhuyin turned off) falls back to newest first.
+- English sorts by the first meaning ignoring brackets and a leading "to"/"a"/"the", so verbs
+  don't all land under T. Pinyin puts ü after u (lu, luan, lü) and the neutral tone last.
+- Radical data: `scripts/data/mandarin-radical-strokes.tsv` (12,969 of the pack's 12,984
+  characters; the rest are symbols) from Unihan kRSUnicode via `npm run extract:radical-strokes`,
+  written into pack schema 5's `characters` table (+164 KB). Mandarin pack version 12.
+- Badge icons: 16 emoji (animals, flowers, fruit, objects) picked on Edit profile, stored in
+  `profiles.icon`. Emoji come from the phone's own color emoji font, so they add no size and
+  need no license; each differs in shape. Checked on the emulator (badge "🐼 Me", radical order
+  一 三 不 不客氣 之).
+- **Phone check still to do:** the sort menu, radical order and a badge icon on the Pixel.
 
 ## Progress data (start early)
 
@@ -1010,7 +1025,7 @@ Each phase ships on its own with tests and `npm run check` passing.
    port.
 6. **Add-ons framework and games.**
 7. **OCR add-on.**
-7b. **All words sorting and profile badge icons.** Per-language sorts from the language
+7b. **All words sorting and profile badge icons** (built 2026-11-24). Per-language sorts from the language
    definition, English and learning level sorts, and radical data in the Mandarin pack. Before the
    new languages, since each brings its own sorts.
 8. **New languages,** in this order: German (simplest, proves the pipeline), Japanese (best open

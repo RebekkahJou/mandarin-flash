@@ -722,4 +722,16 @@ describe('added word sets', () => {
     expect(forOther.map((saved) => saved.winner)).toEqual([GameWinner.Tie, GameWinner.First]);
     expect(forOther[1]).toEqual(result);
   });
+
+  it('saves a profile icon from the set and clears it again', async () => {
+    const { database, profile } = await setUp();
+    const repository = createProfileRepository(database);
+    await repository.setProfileIcon(profile.id, '🐼');
+    expect((await repository.listProfiles())[0].icon).toBe('🐼');
+    await repository.setProfileIcon(profile.id, '💀');
+    expect((await repository.listProfiles())[0].icon).toBeUndefined();
+    await repository.setProfileIcon(profile.id, '🦊');
+    await repository.setProfileIcon(profile.id, null);
+    expect((await repository.listProfiles())[0].icon).toBeUndefined();
+  });
 });
