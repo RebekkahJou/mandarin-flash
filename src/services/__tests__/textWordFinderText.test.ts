@@ -29,6 +29,13 @@ describe('foundWordsSummary', () => {
       'Found 3 words. 2 words you already have are unchecked.',
     );
   });
+
+  it('uses "is" for a single word the profile has', () => {
+    const words = [foundWord('牛肉'), foundWord('好吃', true)];
+    expect(foundWordsSummary(search({ words }))).toBe(
+      'Found 2 words. 1 word you already have is unchecked.',
+    );
+  });
 });
 
 describe('foundWordsNotes', () => {

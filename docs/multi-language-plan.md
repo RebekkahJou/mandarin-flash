@@ -7,7 +7,8 @@ download and the Play Console declaration wait for the account (docs/RELEASE.md)
 2026-11-22; see "Practice and word list improvements"). **Phase 6 challenges built** (2026-11-24,
 phone-checked; see "Games (Phase 6)"). **Phase 7b built** (2026-11-24, phone-checked; see "All
 words sorting"). **Phase 7 (OCR) in progress:** PaddleOCR on ONNX Runtime was chosen over ML Kit
-(2026-11-24); step 1, Find words in text, comes first. See "Photo text recognition (Phase 7)".
+(2026-11-24). Steps 1 (Find words in text) and 2 (sharing text into the app on Android) are
+built and phone-checked; step 3 waits for the user's test photos. See "Photo text recognition (Phase 7)".
 Update this file as work lands or decisions change.
 
 Phase 5 decisions (2026-11-16):
@@ -1048,6 +1049,28 @@ Cyrillic or Arabic and needs Play services.
    accuracy before building the add-on.
 4. **The OCR add-on:** Settings → Add-ons switch, the OCR pack, the photo picker or camera
    feeding step 1's screen.
+
+**Step 1 built (2026-11-25).** Settings or Word lists → Add words → Find words in text. The text
+is converted like a typed headword (Simplified to Taiwan Traditional, phrase by phrase), split by
+longest match (up to 8 characters) against the pack, and each word gets its most common reading
+and first meaning. Found words go through CSV import's planning, so the "Add words?" summary,
+part-of-speech warnings and the character-splitting question are the same. Phone check passed
+(temporary profile): splitting, unchecking, adding to General Vocabulary and Nouns, New Words, and
+"Already added" on a second search; the user pasted text from a website. 滷肉飯 isn't in the
+dictionary, so it splits into 滷肉 + 飯 (common Taiwan food names may be worth adding to the
+curated data).
+
+**Step 2 built (2026-11-25).** `plugins/withSharedTextActivity.ts` adds a windowless
+SharedTextActivity for ACTION_SEND text/plain. It trims the text, keeps the first 1,000
+characters and forwards it to MainActivity (new task) as `mandarinflash://shared-text?text=…`.
+`+native-intent` leaves the text in an in-memory inbox (`src/services/sharedText.ts`, never
+saved) and opens Find words in text, which searches it at once; text shared while that screen
+is open replaces its text. If the welcome or first-run screen shows first, the text waits and
+the screen opens once someone is in the app. No permission or dependency added. Phone check
+passed (Pixel, shares sent with adb): app running, screen already open (no second copy of the
+screen), and app closed (one task, one copy of the app); `&` and `%` arrive intact. Back from a
+share that started the app closes it, returning to the app that shared, as share targets do.
+Not phone-checked: the welcome-screen case (one profile on the phone).
 
 Languages that write words with spaces (Phase 8) will split text on spaces and punctuation
 instead of longest match; the language definition says which.

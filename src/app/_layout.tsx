@@ -7,6 +7,7 @@ import { BUNDLED_CHINESE_FONTS } from '../services/fontRotation';
 import { useAppCoreLoader } from '../ui/AppServicesContext';
 import { LanguagePacksProvider } from '../ui/LanguagePacksContext';
 import { useProfileBadgeHeader } from '../ui/hooks/useProfileBadgeHeader';
+import { useSharedTextAfterProfileChoice } from '../ui/hooks/useSharedTextAfterProfileChoice';
 import { ProfileSessionProvider, useProfileSession } from '../ui/ProfileSessionContext';
 import { colors, fontSizes, spacing } from '../ui/theme';
 
@@ -35,6 +36,7 @@ function RootStack() {
   const isInApp = !showsFirstRun && !showsWelcome;
   const appRedirect = showsFirstRun ? '/first-run' : '/welcome';
   const profileBadgeHeader = useProfileBadgeHeader();
+  useSharedTextAfterProfileChoice(isInApp);
   const screenOptions = { ...STACK_SCREEN_OPTIONS, ...profileBadgeHeader };
   return (
     <Stack screenOptions={screenOptions}>

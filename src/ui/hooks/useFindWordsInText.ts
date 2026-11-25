@@ -9,6 +9,7 @@ import { useAppServices } from '../AppServicesContext';
 import type { CheckableWord } from '../components/CheckableWordRows';
 import { showMessage } from '../confirm';
 import type { WordImportWording } from './useWordImport';
+import { useSharedTextReceiver } from './useSharedTextReceiver';
 import { useWordImport } from './useWordImport';
 
 const FOUND_WORDS_WORDING: WordImportWording = {
@@ -42,7 +43,7 @@ function toggled<Value>(values: ReadonlySet<Value>, value: Value): Set<Value> {
 }
 
 /**
- * Find words in text: the user pastes text, sees the dictionary words in it, unchecks the ones
+ * Find words in text: the user pastes text (or shares it from another app), sees the dictionary words in it, unchecks the ones
  * they don't need and adds the rest to the chosen lists.
  */
 export function useFindWordsInText(lists: readonly WordList[]) {
@@ -60,12 +61,12 @@ export function useFindWordsInText(lists: readonly WordList[]) {
     .map((word) => word.entry)
     .filter((entry) => !uncheckedKeys.has(entry.headword));
 
-  const findWords = async () => {
+  const searchText = async (textToSearch: string) => {
     if (isBusy) return;
     setIsBusy(true);
     try {
       const services = { profileId, languageBundle, dictionaryLookup, wordRepository };
-      const found = await findWordsInText(services, text);
+      const found = await findWordsInText(services, textToSearch);
       setUncheckedKeys(initiallyUnchecked(found));
       setSearch(found);
     } finally {
@@ -77,6 +78,11 @@ export function useFindWordsInText(lists: readonly WordList[]) {
     setText(nextText);
     setSearch(null);
   };
+
+  useSharedTextReceiver((sharedText) => {
+    changeText(sharedText);
+    void searchText(sharedText);
+  });
 
   const addCheckedWords = async () => {
     const targetLists = lists.filter((list) => selectedListIds.has(list.id));
@@ -99,7 +105,7 @@ export function useFindWordsInText(lists: readonly WordList[]) {
   return {
     text,
     changeText,
-    findWords,
+    findWords: () => searchText(text),
     search,
     words,
     uncheckedKeys,

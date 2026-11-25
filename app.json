@@ -32,6 +32,7 @@
       "expo-font",
       "expo-asset",
       "./plugins/withOpenedFileActivity.ts",
+      "./plugins/withSharedTextActivity.ts",
       "./plugins/withPlayAssetPacks.ts"
     ]
   }

@@ -11,7 +11,8 @@ export function foundWordsSummary(search: TextWordSearch): string {
   const found = `Found ${formatWordCount(search.words.length)}.`;
   const alreadyAddedCount = search.words.filter((word) => word.isInProfile).length;
   if (alreadyAddedCount === 0) return found;
-  return `${found} ${formatWordCount(alreadyAddedCount)} you already have are unchecked.`;
+  const verb = alreadyAddedCount === 1 ? 'is' : 'are';
+  return `${found} ${formatWordCount(alreadyAddedCount)} you already have ${verb} unchecked.`;
 }
 
 /** Notes under the summary: characters the dictionary lacks and a shortened text. */
