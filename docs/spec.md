@@ -6,8 +6,8 @@ The build plan's decisions refine this spec:
   level**: 'high incidence' is shown as **High practice**, 'memory reinforcement' as
   **Reinforcement**, and Retention keeps its name (stored values are unchanged).
 - Words are added from the Add words screen (opened from the Word lists tab or Settings): add a
-  word, import a CSV file, topic word sets (health, parenting and more: choose a topic, then its
-  sets; see docs/multi-language-plan.md) and the starter vocabulary.
+  word, import a CSV file, find words in pasted text, topic word sets (health, parenting and more:
+  choose a topic, then its sets; see docs/multi-language-plan.md) and the starter vocabulary.
 - Fonts are open-licensed (OFL) rather than strictly public domain.
 
 ---

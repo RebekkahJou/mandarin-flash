@@ -7,6 +7,7 @@ import { BUNDLED_CHINESE_FONTS } from '../services/fontRotation';
 import { useAppCoreLoader } from '../ui/AppServicesContext';
 import { LanguagePacksProvider } from '../ui/LanguagePacksContext';
 import { useProfileBadgeHeader } from '../ui/hooks/useProfileBadgeHeader';
+import { useSharedTextAfterProfileChoice } from '../ui/hooks/useSharedTextAfterProfileChoice';
 import { ProfileSessionProvider, useProfileSession } from '../ui/ProfileSessionContext';
 import { colors, fontSizes, spacing } from '../ui/theme';
 
@@ -35,6 +36,7 @@ function RootStack() {
   const isInApp = !showsFirstRun && !showsWelcome;
   const appRedirect = showsFirstRun ? '/first-run' : '/welcome';
   const profileBadgeHeader = useProfileBadgeHeader();
+  useSharedTextAfterProfileChoice(isInApp);
   const screenOptions = { ...STACK_SCREEN_OPTIONS, ...profileBadgeHeader };
   return (
     <Stack screenOptions={screenOptions}>
@@ -46,6 +48,7 @@ function RootStack() {
         <Stack.Screen name="words/[wordId]" options={{ title: 'Word' }} />
         <Stack.Screen name="words/add-words" options={{ title: 'Add words' }} />
         <Stack.Screen name="words/add" options={{ title: 'Add a word' }} />
+        <Stack.Screen name="words/find-in-text" options={{ title: 'Find words in text' }} />
         <Stack.Screen name="profiles/edit" options={{ title: 'Edit profile' }} />
         <Stack.Screen name="games/speed-race" options={GAME_SCREEN_OPTIONS.speedRace} />
         <Stack.Screen name="games/meaning-match" options={GAME_SCREEN_OPTIONS.meaningMatch} />

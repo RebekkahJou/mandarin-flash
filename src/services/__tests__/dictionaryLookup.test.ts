@@ -295,3 +295,23 @@ describe('dictionaryLookup radical positions', () => {
     expect((await lookup.radicalPositions()).size).toBe(0);
   });
 });
+
+describe('findKnownWords', () => {
+  it('finds Traditional headwords', async () => {
+    const lookup = await createLookup(TRADITIONAL_TAIWAN);
+    const known = await lookup.findKnownWords(['軟體', '软体', '行', '走路']);
+    expect([...known].sort()).toEqual(['行', '軟體'].sort());
+  });
+
+  it('finds Simplified forms, and headwords that have no Simplified form', async () => {
+    const lookup = await createLookup(SIMPLIFIED_MAINLAND);
+    const known = await lookup.findKnownWords(['软体', '軟體', '行', '垃圾']);
+    expect([...known].sort()).toEqual(['垃圾', '行', '软体'].sort());
+  });
+
+  it('checks more candidates than fit in one query', async () => {
+    const lookup = await createLookup(TRADITIONAL_TAIWAN);
+    const fillers = Array.from({ length: 1000 }, (_, index) => `x${index}`);
+    expect([...(await lookup.findKnownWords([...fillers, '行']))]).toEqual(['行']);
+  });
+});
