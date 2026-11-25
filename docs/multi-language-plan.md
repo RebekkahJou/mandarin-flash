@@ -1070,7 +1070,7 @@ the screen opens once someone is in the app. No permission or dependency added. 
 passed (Pixel, shares sent with adb): app running, screen already open (no second copy of the
 screen), and app closed (one task, one copy of the app); `&` and `%` arrive intact. Back from a
 share that started the app closes it, returning to the app that shared, as share targets do.
-Not phone-checked: the welcome-screen case (one profile on the phone).
+A real share of text selected in Google Lens also arrived correctly. Not phone-checked: the welcome-screen case (one profile on the phone).
 
 Languages that write words with spaces (Phase 8) will split text on spaces and punctuation
 instead of longest match; the language definition says which.
